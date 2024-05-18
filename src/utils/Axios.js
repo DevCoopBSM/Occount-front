@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const currentDomain = window.location.hostname;
+const isInternal = currentDomain.includes('10.129.57.12'); // 내부 네트워크 도메인을 지정
+
 export const axiosInstance = axios.create({
-  baseURL: `http://${currentDomain}/api`,
+  baseURL: isInternal ? `http://${currentDomain}/api` : `https://${currentDomain}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
