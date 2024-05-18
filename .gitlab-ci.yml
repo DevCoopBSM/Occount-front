@@ -15,12 +15,12 @@ build:
   stage: build
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose build kiosk
+    - docker-compose build frontend
 
 deploy:
   stage: deploy
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose up -d kiosk
+    - docker-compose up -d frontend
   only:
     - main
