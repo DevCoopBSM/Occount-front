@@ -9,6 +9,7 @@ before_script:
 pull:
   stage: pull
   script:
+    - cd aripay/DevCoop-front
     - git pull
 
 build:
