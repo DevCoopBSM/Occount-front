@@ -22,6 +22,6 @@ deploy:
   stage: deploy
   script:
     - cd docker-composes
-    - docker-compose -f docker-compose.aripay.yml aripay-front up -d
+    - docker-compose -f docker-compose.aripay.yml up -d aripay-front
   only:
     - main
