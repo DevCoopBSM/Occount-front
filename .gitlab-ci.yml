@@ -4,26 +4,25 @@ stages:
   - deploy
 
 before_script:
-  - cd $PROJECT_PATH
+    - cd $DOCKER_COMPOSE_PATH
 
 pull:
   stage: pull
   script:
-    - cd docker-composes
-    - docker-compose -f docker-compose.aripay.yml down aripay-front
-    - cd $PROJECT_PATH/aripay/DevCoop-front
+    - docker-compose -f docker-compose.aripay.yml stop aripay-back
+    - cd $PROJECT_PATH
     - git pull
 
 build:
   stage: build
   script:
-    - cd docker-composes
-    - docker-compose -f docker-compose.aripay.yml build aripay-front
+    - cd $DOCKER_COMPOSE_PATH
+    - docker-compose -f docker-compose.aripay.yml build --no-cache aripay-back
 
 deploy:
   stage: deploy
   script:
-    - cd docker-composes
-    - docker-compose -f docker-compose.aripay.yml up -d aripay-front
+    - cd $DOCKER_COMPOSE_PATH
+    - docker-compose -f docker-compose.aripay.yml up -d aripay-back
   only:
     - main
