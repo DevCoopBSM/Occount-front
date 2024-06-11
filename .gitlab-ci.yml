@@ -14,13 +14,13 @@ pull:
 build:
   stage: build
   script:
-    - cd $DOCKER_COMPOSE_PATH
-    - docker-compose build frontend
+    - cd docker-composes
+    - docker-compose -f docker-compose.aripay.yml build aripay-front
 
 deploy:
   stage: deploy
   script:
-    - cd $DOCKER_COMPOSE_PATH
-    - docker-compose up -d frontend
+    - cd docker-composes
+    - docker-compose -f docker-compose.aripay.yml aripay-front up -d
   only:
     - main
