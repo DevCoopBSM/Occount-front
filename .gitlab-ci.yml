@@ -9,7 +9,9 @@ before_script:
 pull:
   stage: pull
   script:
-    - cd aripay/DevCoop-front
+    - cd docker-composes
+    - docker-compose -f docker-compose.aripay.yml down aripay-front
+    - cd $PROJECT_PATH/aripay/DevCoop-front
     - git pull
 
 build:
