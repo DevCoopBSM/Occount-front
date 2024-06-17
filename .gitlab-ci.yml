@@ -9,7 +9,7 @@ before_script:
 pull:
   stage: pull
   script:
-    - docker-compose -f docker-compose.aripay.yml stop aripay-back
+    - docker-compose -p aripay -f docker-compose.aripay.yml stop aripay-back
     - cd $PROJECT_PATH
     - git pull
 
@@ -17,12 +17,12 @@ build:
   stage: build
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -f docker-compose.aripay.yml build --no-cache aripay-back
+    - docker-compose -p aripay -f docker-compose.aripay.yml build --no-cache aripay-back
 
 deploy:
   stage: deploy
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -f docker-compose.aripay.yml up -d aripay-back
+    - docker-compose -p aripay -f docker-compose.aripay.yml up -d aripay-back
   only:
     - main
