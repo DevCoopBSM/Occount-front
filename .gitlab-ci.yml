@@ -12,12 +12,16 @@ pull:
     - docker-compose -p aripay -f docker-compose.aripay.yml stop aripay-back
     - cd $PROJECT_PATH
     - git pull
+  tags:
+    - docker
 
 build:
   stage: build
   script:
     - cd $DOCKER_COMPOSE_PATH
     - docker-compose -p aripay -f docker-compose.aripay.yml build --no-cache aripay-back
+  tags:
+    - docker
 
 deploy:
   stage: deploy
@@ -26,3 +30,5 @@ deploy:
     - docker-compose -p aripay -f docker-compose.aripay.yml up -d aripay-back
   only:
     - main
+  tags:
+    - docker
