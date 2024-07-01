@@ -28,16 +28,15 @@ export default function ReceiptCheck() {
           console.log('No content');
           setData([]);
         } else {
+
           // 받아온 데이터의 필드를 재매핑합니다.
           const remappedData = response.data.map((item) => ({
-            거래번호: item.number,
-            가격: item.dcm_sale_amt,
+            거래번호: item.receiptId,
+            가격: item.tradedPoint,
             상품번호: item.item_id,
-            판매or반품여부: item.sale_yn,
-            영수증번호: item.bill_num,
-            상품이름: item.item_name,
-            판매량: item.sale_qty,
-            거래일시: PrettyDateTime(item.date),
+            상품이름: item.itemName,
+            판매량: item.saleQty,
+            거래일시: PrettyDateTime(item.saleDate),
           }));
 
           // 재매핑된 데이터를 상태에 설정합니다.

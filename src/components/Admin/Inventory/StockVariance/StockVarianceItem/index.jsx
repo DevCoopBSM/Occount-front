@@ -14,6 +14,9 @@ export const StockVarianceItem = ({ stockVariance }) => {
           <_.Infotext>{stockVariance.item_name}</_.Infotext>
         </_.Infochooses>
         <_.Infochoose>
+          <_.Infotext>{stockVariance.total_negative_change}</_.Infotext>
+        </_.Infochoose>
+        <_.Infochoose>
           <_.Infotext>{stockVariance.total_change}</_.Infotext>
         </_.Infochoose>
         <_.Infochooses>
