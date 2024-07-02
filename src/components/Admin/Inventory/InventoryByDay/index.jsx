@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TableHeader from 'pages/Admin/TablePage/TableHeader';
-import DataTable from 'pages/Admin/TablePage/Table';
 import DataTablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import Modal from 'components/Modal';
+import styled from 'styled-components';
 import * as _ from './style';
 import { PrettyDateTime } from 'utils/Date';
 
@@ -12,9 +11,12 @@ export default function InventoryByDay() {
   const movePage = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [barcode, setBarcode] = useState('');
+  const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [itemInfo, setItemInfo] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [itemList, setItemList] = useState([]);
+  const [filteredItemList, setFilteredItemList] = useState([]);
   const barcodeInputRef = useRef(null);
 
   const [endDate, setEndDate] = useState(
@@ -31,54 +33,60 @@ export default function InventoryByDay() {
   const closeModal = () => {
     setIsModalOpen(false);
     setBarcode('');
+    setItemName('');
     setItemInfo('');
     setQuantity('');
+    setErrorMessage('');
+    handleSearch(); // 모달이 닫힐 때 리스트를 다시 불러오기
   };
 
   useEffect(() => {
     if (isModalOpen) {
-      // 모달이 열릴 때 바코드 입력창에 포커스를 설정
       barcodeInputRef.current.focus();
     }
   }, [isModalOpen]);
 
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  useEffect(() => {
+    const filteredItems = itemList.filter((item) =>
+      item.상품이름.includes(itemName)
+    );
+    setFilteredItemList(filteredItems);
+  }, [itemName, itemList]);
+
   const handleBarcodeChange = (e) => {
     setBarcode(e.target.value);
+
+    const selectedItem = itemList.find(item => item.바코드 === e.target.value);
+    if (selectedItem) {
+      handleItemSelect(selectedItem);
+    }
+  };
+
+  const handleBarcodeKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      const selectedItem = itemList.find(item => item.바코드 === barcode);
+      if (selectedItem) {
+        handleItemSelect(selectedItem);
+      }
+    }
   };
 
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
   };
 
-  const handleAddItem = async () => {
-    try {
-      if (!barcode) {
-        setErrorMessage('바코드를 입력하세요.');
-        return;
-      }
-
-      const response = await axiosInstance.get(
-        `/admin/insertinventory/${barcode}`
-      );
-
-      if (response.data.message === '바코드가 존재하지 않습니다.') {
-        setItemInfo('바코드가 존재하지 않습니다.');
-      } else {
-        setItemInfo(response.data.name);
-
-        // 바코드 조회 성공 후, 수량 입력과 재고등록 버튼 활성화
-        setQuantity('');
-      }
-    } catch (error) {
-      console.error('Error in handleAddItem:', error);
-      setErrorMessage('바코드 인식에 실패했습니다.');
-    }
+  const handleItemNameChange = (e) => {
+    setItemName(e.target.value);
   };
 
   const handleSnapshotItem = async () => {
     try {
       if (!barcode || !quantity) {
-        setErrorMessage('바코드, 수량을 모두 입력하세요.');
+        setErrorMessage('바코드와 수량을 모두 입력하세요.');
         return;
       }
 
@@ -90,17 +98,32 @@ export default function InventoryByDay() {
     }
   };
 
-  const sendBarcodeForSnapshot = async (barcode, quantity, reason) => {
+  const sendBarcodeForSnapshot = async (barcode, quantity) => {
     try {
-      const response = await axiosInstance.post('/admin/createsnapshots', {
+      await axiosInstance.post('/admin/createsnapshots', {
         barcode,
         quantity,
-        reason,
       });
       movePage('/admin/inventorybyday');
     } catch (error) {
       console.error('Error in sendBarcodeForSnapshot:', error);
       setErrorMessage('스냅샷 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const fetchItems = async () => {
+    try {
+      const response = await axiosInstance.get('/admin/itemCheck');
+      const remappedData = response.data.map((item) => ({
+        상품번호: item.item_id,
+        상품이름: item.item_name,
+        바코드: item.barcode,
+        상품가격: item.item_price,
+      }));
+      setItemList(remappedData);
+      setFilteredItemList(remappedData); // 초기 필터링된 리스트는 전체 리스트
+    } catch (error) {
+      console.error('아이템 리스트를 불러오는 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -120,7 +143,6 @@ export default function InventoryByDay() {
             수량: item.quantity,
             최종업데이트: PrettyDateTime(item.last_updated),
           }));
-          console.log('Data sent:', remappedData);
           setData(remappedData);
         }
       })
@@ -132,6 +154,11 @@ export default function InventoryByDay() {
   useEffect(() => {
     handleSearch();
   }, [endDate]);
+
+  const handleItemSelect = (item) => {
+    setBarcode(item.바코드);
+    setItemInfo(item.상품이름);
+  };
 
   return (
     <>
@@ -145,50 +172,121 @@ export default function InventoryByDay() {
         <_.Dbutton onClick={openModal}>재고기준등록</_.Dbutton>
       </_.ButtonContainer>
 
-      <Modal isOpen={isModalOpen}>
-        <_.ModalContent>
-          <_.ModalTitle>스냅샷(재고기준점) 등록</_.ModalTitle>
-          <_.StockInfoWrap>
-            <_.Infotext>바코드</_.Infotext>
-            <_.InfoInput
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ContentWrap>
+          <InfoHeader>
+            <ContentTitle>스냅샷(재고기준점) 등록</ContentTitle>
+          </InfoHeader>
+          <InfoBody>
+            <InfoText>바코드</InfoText>
+            <InfoInput
               ref={barcodeInputRef}
               name="barcode"
               value={barcode}
               onChange={handleBarcodeChange}
+              onKeyPress={handleBarcodeKeyPress}
+              autoFocus
             />
-            <_.Infobutton mRight={'10px'} onClick={handleAddItem}>
-              바코드조회
-            </_.Infobutton>
+            <InfoText>상품명으로 검색</InfoText>
+            <InfoInput
+              name="itemName"
+              value={itemName}
+              onChange={handleItemNameChange}
+            />
+            {filteredItemList.length > 0 && (
+              <ItemList>
+                {filteredItemList.map((item) => (
+                  <Item key={item.바코드} onClick={() => handleItemSelect(item)}>
+                    {item.상품이름}
+                  </Item>
+                ))}
+              </ItemList>
+            )}
             {itemInfo && (
               <>
-                <_.Infotext>수량</_.Infotext>
-                <_.InfoInput
+                <InfoText>수량</InfoText>
+                <InfoInput
                   name="quantity"
                   value={quantity}
                   onChange={handleQuantityChange}
                 />
               </>
             )}
-            {itemInfo && <_.Infotext>상품명: {itemInfo}</_.Infotext>}
+            {itemInfo && <InfoText>상품명: {itemInfo}</InfoText>}
             {errorMessage && (
-              <_.Infotext style={{ color: 'red' }}>{errorMessage}</_.Infotext>
+              <InfoText style={{ color: 'red' }}>{errorMessage}</InfoText>
             )}
-          </_.StockInfoWrap>
-
-          <_.BtnWrap>
+          </InfoBody>
+          <BtnWrap>
             {itemInfo ? (
               <>
-                <_.Infobutton mRight={'10px'} onClick={handleSnapshotItem}>
+                <Dbutton mRight={'10px'} onClick={handleSnapshotItem}>
                   재고기준등록
-                </_.Infobutton>
-                <_.Infobutton onClick={closeModal}>닫기</_.Infobutton>
+                </Dbutton>
+                <Dbutton onClick={closeModal}>닫기</Dbutton>
               </>
             ) : (
-              <_.Infobutton onClick={closeModal}>닫기</_.Infobutton>
+              <Dbutton onClick={closeModal}>닫기</Dbutton>
             )}
-          </_.BtnWrap>
-        </_.ModalContent>
+          </BtnWrap>
+        </ContentWrap>
       </Modal>
     </>
   );
 }
+
+const ContentWrap = styled.div`
+  padding: 20px;
+`;
+
+const InfoHeader = styled.div`
+  margin-bottom: 20px;
+`;
+
+const ContentTitle = styled.h2`
+  margin: 0;
+`;
+
+const InfoBody = styled.div`
+  margin-bottom: 20px;
+`;
+
+const InfoText = styled.p`
+  margin: 10px 0;
+`;
+
+const InfoInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+`;
+
+const ItemList = styled.ul`
+  max-height: 200px;
+  overflow-y: scroll;
+  border: 1px solid #d3d3d3;
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+`;
+
+const Item = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+const BtnWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Dbutton = styled.button`
+  margin-right: 5px;
+  margin-left: 5px;
+  width: 200px;
+  height: 40px;
+  color: #fff;
+`;

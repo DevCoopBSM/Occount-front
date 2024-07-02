@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import { PrettyDateTime } from 'utils/Date';
-const stockData = [
-  {
-    item_id: 1,
-    item_name: '상품 A',
-    quantity: 100,
-    last_updated: '2023-11-14 18:46:41',
-  },
-];
+import StockBarcode from './StockBarcode';
+import styled from 'styled-components';
 
 export default function InventoryCheck() {
   const [startDate, setStartDate] = useState(
@@ -20,10 +14,9 @@ export default function InventoryCheck() {
       Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
     )
   );
-  const [isEndDateVisible, setIsEndDateVisible] = useState(false);
   const [data, setData] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // 월초부터 월말까지 기본 조회
   const handleSearch = () => {
     const queryParams = `?start_date=${
       startDate.toISOString().split('T')[0]
@@ -33,11 +26,9 @@ export default function InventoryCheck() {
       .get(`/admin/inventoryCheck${queryParams}`)
       .then((response) => {
         if (response.status === 204) {
-          // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.
           console.log('No content');
           setData([]);
         } else {
-          // 받아온 데이터의 필드를 재매핑합니다.
           const remappedData = response.data.map((item) => ({
             재고번호: item.inventory_id,
             상품번호: item.item_id,
@@ -48,8 +39,6 @@ export default function InventoryCheck() {
             사유: item.reason,
           }));
 
-          // 재매핑된 데이터를 상태에 설정합니다.
-          console.log('Data sent:', remappedData);
           setData(remappedData);
         }
       })
@@ -63,13 +52,25 @@ export default function InventoryCheck() {
   }, [startDate, endDate]);
 
   return (
-    <DataTable
-      TableName="입고&손실 내역"
-      startDate={startDate}
-      endDate={endDate}
-      setStartDate={setStartDate}
-      setEndDate={setEndDate}
-      data={data}
-    />
+    <>
+      <Dbutton onClick={() => setModalOpen(true)}>재고변동등록</Dbutton>
+      <DataTable
+        TableName="입고&손실 내역"
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        data={data}
+      />
+      <StockBarcode isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+    </>
   );
 }
+
+const Dbutton = styled.button`
+  margin-right: 5px;
+  margin-left: 5px;
+  width: 200px;
+  height: 40px;
+  color: #fff;
+`;

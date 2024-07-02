@@ -81,10 +81,6 @@ const StockVariance = () => {
     movePage('/admin');
   }
 
-  function barcode() {
-    movePage('/admin/stockbarcode');
-  }
-
   return (
     <>
       <P.InfoContainer>
@@ -115,7 +111,6 @@ const StockVariance = () => {
           <_.ButtonContainer>
             {/* <_.Dbutton onClick={handleSearch}>조회</_.Dbutton> */}
             <_.Dbutton onClick={handleDownload}>출력</_.Dbutton>
-            <_.Dbutton onClick={barcode}>재고변동</_.Dbutton>
             <_.Dbutton onClick={main}>메인으로</_.Dbutton>
           </_.ButtonContainer>
         </_.FlexRow>
