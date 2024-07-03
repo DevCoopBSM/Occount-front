@@ -165,7 +165,7 @@ export default function StockBarcode({ isOpen, onClose }) {
             <_.SelectedItemList>
               {selectedItems.map((item, index) => (
                 <_.SelectedItem key={index}>
-                  {item.item_name} - {item.quantity}개 (사유: {item.reason})
+                  {item.item_name} : {item.quantity}개 (사유: {item.reason})
                   <_.RemoveButton onClick={() => handleRemoveItem(index)}>
                     제거
                   </_.RemoveButton>
