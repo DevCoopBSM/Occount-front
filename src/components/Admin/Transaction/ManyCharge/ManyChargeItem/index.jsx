@@ -7,6 +7,7 @@ export const ManyChargeItem = ({
   selectedStudents,
   onToggleStudentSelection,
   searchTerm,
+  studentIdSearchTerm,
 }) => {
   const [alluser, setAllUser] = useState([]);
   const [checkboxValues, setCheckboxValues] = useState({});
@@ -39,7 +40,8 @@ export const ManyChargeItem = ({
   };
 
   const filteredUsers = alluser.filter((user) =>
-    user.student_name.includes(searchTerm)
+    user.student_name.includes(searchTerm) &&
+    user.student_id?.startsWith(studentIdSearchTerm)
   );
 
   return (
@@ -53,6 +55,9 @@ export const ManyChargeItem = ({
               checked={checkboxValues[user.code_number] || false}
               onChange={handleCheckboxChange}
             />
+          </_.Infochoose>
+          <_.Infochoose>
+            <_.Infotext>{user.student_id}</_.Infotext>
           </_.Infochoose>
           <_.Infochoose>
             <_.Infotext>{user.student_name}</_.Infotext>
