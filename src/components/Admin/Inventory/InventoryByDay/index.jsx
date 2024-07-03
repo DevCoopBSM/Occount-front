@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import DataTablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import Modal from 'components/Modal';
-import styled from 'styled-components';
 import * as _ from './style';
 import { PrettyDateTime } from 'utils/Date';
 
 export default function InventoryByDay() {
-  const movePage = useNavigate();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [barcode, setBarcode] = useState('');
   const [itemName, setItemName] = useState('');
@@ -17,33 +16,16 @@ export default function InventoryByDay() {
   const [errorMessage, setErrorMessage] = useState('');
   const [itemList, setItemList] = useState([]);
   const [filteredItemList, setFilteredItemList] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const barcodeInputRef = useRef(null);
 
   const [endDate, setEndDate] = useState(
-    new Date(
-      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
-    )
+    new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0))
   );
   const [data, setData] = useState([]);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setBarcode('');
-    setItemName('');
-    setItemInfo('');
-    setQuantity('');
-    setErrorMessage('');
-    handleSearch(); // 모달이 닫힐 때 리스트를 다시 불러오기
-  };
-
   useEffect(() => {
-    if (isModalOpen) {
-      barcodeInputRef.current.focus();
-    }
+    if (isModalOpen) barcodeInputRef.current.focus();
   }, [isModalOpen]);
 
   useEffect(() => {
@@ -51,77 +33,25 @@ export default function InventoryByDay() {
   }, []);
 
   useEffect(() => {
-    const filteredItems = itemList.filter((item) =>
-      item.상품이름.includes(itemName)
-    );
+    const filteredItems = itemList.filter(item => item.상품이름.includes(itemName));
     setFilteredItemList(filteredItems);
   }, [itemName, itemList]);
 
-  const handleBarcodeChange = (e) => {
-    setBarcode(e.target.value);
-
-    const selectedItem = itemList.find(item => item.바코드 === e.target.value);
-    if (selectedItem) {
-      handleItemSelect(selectedItem);
-    }
-  };
-
-  const handleBarcodeKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      const selectedItem = itemList.find(item => item.바코드 === barcode);
-      if (selectedItem) {
-        handleItemSelect(selectedItem);
-      }
-    }
-  };
-
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handleItemNameChange = (e) => {
-    setItemName(e.target.value);
-  };
-
-  const handleSnapshotItem = async () => {
-    try {
-      if (!barcode || !quantity) {
-        setErrorMessage('바코드와 수량을 모두 입력하세요.');
-        return;
-      }
-
-      await sendBarcodeForSnapshot(barcode, quantity);
-      closeModal();
-    } catch (error) {
-      console.error('스냅샷 생성 중 오류가 발생했습니다.', error);
-      setErrorMessage('스냅샷 생성 중 오류가 발생했습니다.');
-    }
-  };
-
-  const sendBarcodeForSnapshot = async (barcode, quantity) => {
-    try {
-      await axiosInstance.post('/admin/createsnapshots', {
-        barcode,
-        quantity,
-      });
-      movePage('/admin/inventorybyday');
-    } catch (error) {
-      console.error('Error in sendBarcodeForSnapshot:', error);
-      setErrorMessage('스냅샷 생성 중 오류가 발생했습니다.');
-    }
-  };
+  useEffect(() => {
+    handleSearch();
+  }, [endDate]);
 
   const fetchItems = async () => {
     try {
       const response = await axiosInstance.get('/admin/itemCheck');
-      const remappedData = response.data.map((item) => ({
+      const remappedData = response.data.map(item => ({
         상품번호: item.item_id,
         상품이름: item.item_name,
         바코드: item.barcode,
         상품가격: item.item_price,
       }));
       setItemList(remappedData);
-      setFilteredItemList(remappedData); // 초기 필터링된 리스트는 전체 리스트
+      setFilteredItemList(remappedData);
     } catch (error) {
       console.error('아이템 리스트를 불러오는 중 오류가 발생했습니다.', error);
     }
@@ -129,15 +59,14 @@ export default function InventoryByDay() {
 
   const handleSearch = () => {
     const queryParams = `?end_date=${endDate.toISOString().split('T')[0]}`;
-
     axiosInstance
       .get(`/admin/inventorybyday${queryParams}`)
-      .then((response) => {
+      .then(response => {
         if (response.status === 204) {
           console.log('No content');
           setData([]);
         } else {
-          const remappedData = response.data.map((item) => ({
+          const remappedData = response.data.map(item => ({
             상품번호: item.item_id,
             상품이름: item.item_name,
             수량: item.quantity,
@@ -146,40 +75,115 @@ export default function InventoryByDay() {
           setData(remappedData);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error sending data:', error);
       });
   };
 
-  useEffect(() => {
-    handleSearch();
-  }, [endDate]);
-
-  const handleItemSelect = (item) => {
+  const handleItemSelect = item => {
     setBarcode(item.바코드);
     setItemInfo(item.상품이름);
+    setItemName(item.상품이름); // 상품명 상태 업데이트
   };
 
+  const handleBarcodeChange = e => {
+    setBarcode(e.target.value);
+    const selectedItem = itemList.find(item => item.바코드 === e.target.value);
+    if (selectedItem) handleItemSelect(selectedItem);
+  };
+
+  const handleBarcodeKeyPress = e => {
+    if (e.key === 'Enter') {
+      const selectedItem = itemList.find(item => item.바코드 === barcode);
+      if (selectedItem) handleItemSelect(selectedItem);
+    }
+  };
+
+  const handleQuantityChange = e => setQuantity(e.target.value);
+
+  const handleItemNameChange = e => setItemName(e.target.value);
+
+  const handleAddItem = () => {
+    if ((!barcode && !itemInfo) || !quantity) {
+      setErrorMessage('바코드 또는 상품명과 수량을 입력하세요.');
+      return;
+    }
+
+    const newItem = { barcode, quantity, item_name: itemInfo };
+    setSelectedItems([...selectedItems, newItem]);
+
+    clearInputFields();
+  };
+
+  const handleRemoveItem = index => {
+    const updatedItems = [...selectedItems];
+    updatedItems.splice(index, 1);
+    setSelectedItems(updatedItems);
+  };
+
+  const handleSnapshotItems = async () => {
+    if (selectedItems.length === 0) {
+      setErrorMessage('등록할 항목을 추가하세요.');
+      return;
+    }
+
+    try {
+      await sendItemsForSnapshot(selectedItems);
+      closeModal();
+    } catch (error) {
+      console.error('스냅샷 생성 중 오류가 발생했습니다.', error);
+      setErrorMessage('스냅샷 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const sendItemsForSnapshot = async items => {
+    try {
+      await axiosInstance.post('/admin/createsnapshots', { items });
+      navigate('/admin/inventorybyday');
+    } catch (error) {
+      console.error('Error in sendItemsForSnapshot:', error);
+      setErrorMessage('스냅샷 생성 중 오류가 발생했습니다.');
+    }
+  };
+
+  const clearInputFields = () => {
+    setBarcode('');
+    setItemName('');
+    setItemInfo('');
+    setQuantity('');
+    setErrorMessage('');
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    clearInputFields();
+    setSelectedItems([]); // 선택된 항목 초기화
+    handleSearch(); // 모달이 닫힐 때 리스트를 다시 불러오기
+  };
   return (
     <>
+      <_.ButtonContainer>
+        <_.Dbutton onClick={openModal}>재고기준등록</_.Dbutton>
+      </_.ButtonContainer>
       <DataTablePage
         data={data}
         TableName="일별재고조회"
         endDate={endDate}
         setEndDate={setEndDate}
       />
-      <_.ButtonContainer>
-        <_.Dbutton onClick={openModal}>재고기준등록</_.Dbutton>
-      </_.ButtonContainer>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ContentWrap>
-          <InfoHeader>
-            <ContentTitle>스냅샷(재고기준점) 등록</ContentTitle>
-          </InfoHeader>
-          <InfoBody>
-            <InfoText>바코드</InfoText>
-            <InfoInput
+        <_.ContentWrap>
+          <_.InfoHeader>
+            <_.ContentTitle>스냅샷(재고기준점) 등록</_.ContentTitle>
+          </_.InfoHeader>
+          <_.InfoBody>
+            <_.InfoText>바코드</_.InfoText>
+            <_.InfoInput
               ref={barcodeInputRef}
               name="barcode"
               value={barcode}
@@ -187,106 +191,56 @@ export default function InventoryByDay() {
               onKeyPress={handleBarcodeKeyPress}
               autoFocus
             />
-            <InfoText>상품명으로 검색</InfoText>
-            <InfoInput
+            <_.InfoText>상품명으로 검색</_.InfoText>
+            <_.InfoInput
               name="itemName"
               value={itemName}
               onChange={handleItemNameChange}
             />
             {filteredItemList.length > 0 && (
-              <ItemList>
-                {filteredItemList.map((item) => (
-                  <Item key={item.바코드} onClick={() => handleItemSelect(item)}>
+              <_.ItemList>
+                {filteredItemList.map(item => (
+                  <_.Item key={item.바코드} onClick={() => handleItemSelect(item)}>
                     {item.상품이름}
-                  </Item>
+                  </_.Item>
                 ))}
-              </ItemList>
+              </_.ItemList>
             )}
             {itemInfo && (
               <>
-                <InfoText>수량</InfoText>
-                <InfoInput
+                <_.InfoText>수량</_.InfoText>
+                <_.InfoInput
                   name="quantity"
                   value={quantity}
                   onChange={handleQuantityChange}
                 />
+                <_.AddButton onClick={handleAddItem}>추가</_.AddButton>
               </>
             )}
-            {itemInfo && <InfoText>상품명: {itemInfo}</InfoText>}
+            {selectedItems.length > 0 && (
+              <_.SelectedItemList>
+                {selectedItems.map((item, index) => (
+                  <_.SelectedItem key={index}>
+                    {item.item_name} - {item.quantity}개
+                    <_.RemoveButton onClick={() => handleRemoveItem(index)}>
+                      제거
+                    </_.RemoveButton>
+                  </_.SelectedItem>
+                ))}
+              </_.SelectedItemList>
+            )}
             {errorMessage && (
-              <InfoText style={{ color: 'red' }}>{errorMessage}</InfoText>
+              <_.InfoText style={{ color: 'red' }}>{errorMessage}</_.InfoText>
             )}
-          </InfoBody>
-          <BtnWrap>
-            {itemInfo ? (
-              <>
-                <Dbutton mRight={'10px'} onClick={handleSnapshotItem}>
-                  재고기준등록
-                </Dbutton>
-                <Dbutton onClick={closeModal}>닫기</Dbutton>
-              </>
-            ) : (
-              <Dbutton onClick={closeModal}>닫기</Dbutton>
-            )}
-          </BtnWrap>
-        </ContentWrap>
+          </_.InfoBody>
+          <_.BtnWrap>
+            <_.Dbutton mRight={'10px'} onClick={handleSnapshotItems}>
+              재고기준등록
+            </_.Dbutton>
+            <_.Dbutton onClick={closeModal}>닫기</_.Dbutton>
+          </_.BtnWrap>
+        </_.ContentWrap>
       </Modal>
     </>
   );
 }
-
-const ContentWrap = styled.div`
-  padding: 20px;
-`;
-
-const InfoHeader = styled.div`
-  margin-bottom: 20px;
-`;
-
-const ContentTitle = styled.h2`
-  margin: 0;
-`;
-
-const InfoBody = styled.div`
-  margin-bottom: 20px;
-`;
-
-const InfoText = styled.p`
-  margin: 10px 0;
-`;
-
-const InfoInput = styled.input`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-`;
-
-const ItemList = styled.ul`
-  max-height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #d3d3d3;
-  margin: 10px 0;
-  padding: 0;
-  list-style: none;
-`;
-
-const Item = styled.li`
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const BtnWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Dbutton = styled.button`
-  margin-right: 5px;
-  margin-left: 5px;
-  width: 200px;
-  height: 40px;
-  color: #fff;
-`;

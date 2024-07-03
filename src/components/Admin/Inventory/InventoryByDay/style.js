@@ -67,6 +67,7 @@ export const Infochoose = styled.div`
   text-align: center;
   line-height: 60px;
 `;
+
 export const Infochooses = styled.div`
   width: 300px;
   height: 55px;
@@ -77,6 +78,7 @@ export const Infochooses = styled.div`
   flex-direction: row;
   gap: 10px;
 `;
+
 export const Infotext = styled.span`
   font-size: 20px;
   font-weight: bold;
@@ -212,7 +214,6 @@ export const BtnWrap = styled.div`
   padding-top: 30px;
   text-align: center;
   justify-content: flex-end;
-
   width: 500px;
   height: 100px;
 `;
@@ -236,4 +237,78 @@ export const StyledDatePickerWrapper = styled.div`
     font-size: 20px; // 원하는 폰트 크기로 설정
     margin-right: 10px;
   }
+`;
+
+export const ContentWrap = styled.div`
+  padding: 20px;
+`;
+
+export const ContentTitle = styled.h2`
+  margin: 0;
+`;
+
+export const InfoBody = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const InfoText = styled.p`
+  margin: 10px 0;
+`;
+
+// export const InfoInput = styled.input`
+//   width: 100%;
+//   padding: 8px;
+//   margin-bottom: 10px;
+// `;
+
+export const ItemList = styled.ul`
+  max-height: 200px;
+  overflow-y: scroll;
+  border: 1px solid #d3d3d3;
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+`;
+
+
+export const Item = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+export const AddButton = styled.button`
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+export const SelectedItemList = styled.ul`
+  border: 1px solid #d3d3d3;
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+`;
+
+export const SelectedItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #d3d3d3;
+`;
+
+
+export const RemoveButton = styled.button`
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;

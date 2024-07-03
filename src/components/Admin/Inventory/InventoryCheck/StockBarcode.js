@@ -1,238 +1,189 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import Modal from 'components/Modal';
 import axiosInstance from 'utils/Axios';
+import Modal from 'components/Modal';
+import * as _ from './style';
 
-const StockBarcode = ({ isOpen, onClose }) => {
+export default function StockBarcode({ isOpen, onClose }) {
   const [barcode, setBarcode] = useState('');
   const [itemName, setItemName] = useState('');
-  const [itemInfo, setItemInfo] = useState(null);
   const [quantity, setQuantity] = useState('');
   const [reason, setReason] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [itemList, setItemList] = useState([]);
   const [filteredItemList, setFilteredItemList] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const barcodeInputRef = useRef(null);
 
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await axiosInstance.get('/admin/itemCheck');
-        const remappedData = response.data.map((item) => ({
-          상품번호: item.item_id,
-          상품이름: item.item_name,
-          바코드: item.barcode,
-          상품가격: item.item_price,
-        }));
-        setItemList(remappedData);
-        setFilteredItemList(remappedData); // 초기 필터링된 리스트는 전체 리스트
-      } catch (error) {
-        console.error('아이템 리스트를 불러오는 중 오류가 발생했습니다.', error);
-      }
-    };
+    if (isOpen) barcodeInputRef.current.focus();
+  }, [isOpen]);
 
+  useEffect(() => {
     fetchItems();
   }, []);
 
   useEffect(() => {
-    if (isOpen && barcodeInputRef.current) {
-      barcodeInputRef.current.focus();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const filteredItems = itemList.filter((item) =>
-      item.상품이름.includes(itemName)
-    );
+    const filteredItems = itemList.filter(item => item.상품이름.includes(itemName));
     setFilteredItemList(filteredItems);
   }, [itemName, itemList]);
 
-  const sendBarcodeForInsert = async (barcode, quantity, reason) => {
+  const fetchItems = async () => {
     try {
-      await axiosInstance.post('/admin/insertinventory', {
-        barcode,
-        quantity,
-        reason,
-      });
+      const response = await axiosInstance.get('/admin/itemCheck');
+      const remappedData = response.data.map(item => ({
+        상품번호: item.item_id,
+        상품이름: item.item_name,
+        바코드: item.barcode,
+        상품가격: item.item_price,
+      }));
+      setItemList(remappedData);
+      setFilteredItemList(remappedData);
+    } catch (error) {
+      console.error('아이템 리스트를 불러오는 중 오류가 발생했습니다.', error);
+    }
+  };
+
+  const handleItemSelect = item => {
+    setBarcode(item.바코드);
+    setItemName(item.상품이름);
+  };
+
+  const handleBarcodeChange = e => {
+    setBarcode(e.target.value);
+    const selectedItem = itemList.find(item => item.바코드 === e.target.value);
+    if (selectedItem) handleItemSelect(selectedItem);
+  };
+
+  const handleBarcodeKeyPress = e => {
+    if (e.key === 'Enter') {
+      const selectedItem = itemList.find(item => item.바코드 === barcode);
+      if (selectedItem) handleItemSelect(selectedItem);
+    }
+  };
+
+  const handleQuantityChange = e => setQuantity(e.target.value);
+
+  const handleItemNameChange = e => setItemName(e.target.value);
+
+  const handleReasonChange = e => setReason(e.target.value);
+
+  const handleAddItem = () => {
+    if ((!barcode && !itemName) || !quantity || !reason) {
+      setErrorMessage('바코드 또는 상품명, 수량 및 사유를 입력하세요.');
+      return;
+    }
+
+    const newItem = { barcode, quantity, item_name: itemName, reason };
+    setSelectedItems([...selectedItems, newItem]);
+
+    clearInputFields();
+  };
+
+  const handleRemoveItem = index => {
+    const updatedItems = [...selectedItems];
+    updatedItems.splice(index, 1);
+    setSelectedItems(updatedItems);
+  };
+
+  const handleSaveItems = async () => {
+    if (selectedItems.length === 0) {
+      setErrorMessage('등록할 항목을 추가하세요.');
+      return;
+    }
+
+    try {
+      await sendItems(selectedItems);
       onClose();
     } catch (error) {
-      console.error('Error in sendBarcode:', error);
+      console.error('재고 변동 등록 중 오류가 발생했습니다.', error);
+      setErrorMessage('재고 변동 등록 중 오류가 발생했습니다.');
     }
   };
 
-  const handleAddItem = async () => {
+  const sendItems = async items => {
     try {
-      await sendBarcodeForInsert(barcode, quantity, reason);
-      resetForm();
+      await axiosInstance.post('/admin/stockchanges', { items });
     } catch (error) {
-      console.error('재고 등록 중 오류가 발생했습니다.', error);
+      console.error('Error in sendItems:', error);
+      setErrorMessage('재고 변동 등록 중 오류가 발생했습니다.');
     }
   };
 
-  const handleRemoveItem = async () => {
-    try {
-      await sendBarcodeForInsert(barcode, -quantity, reason);
-      resetForm();
-    } catch (error) {
-      console.error('손실 등록 중 오류가 발생했습니다.', error);
-    }
-  };
-
-  const resetForm = () => {
+  const clearInputFields = () => {
     setBarcode('');
     setItemName('');
-    setItemInfo(null);
     setQuantity('');
     setReason('');
     setErrorMessage('');
   };
 
-  const handleItemSelect = (item) => {
-    setBarcode(item.바코드);
-    setItemInfo(item.상품이름);
-  };
-
-  const handleBarcodeChange = (e) => {
-    setBarcode(e.target.value);
-
-    const selectedItem = itemList.find(item => item.바코드 === e.target.value);
-    if (selectedItem) {
-      handleItemSelect(selectedItem);
-    }
-  };
-
-  const handleBarcodeKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      const selectedItem = itemList.find(item => item.바코드 === barcode);
-      if (selectedItem) {
-        handleItemSelect(selectedItem);
-      }
-    }
-  };
-
-  const handleItemNameChange = (e) => {
-    setItemName(e.target.value);
-  };
-
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
-  const handleReasonChange = (e) => {
-    setReason(e.target.value);
-  };
-
-  if (!isOpen) return null;
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ContentWrap>
-        <InfoHeader>
-          <ContentTitle>{itemInfo || '아이템 선택 또는 바코드 입력'}</ContentTitle>
-        </InfoHeader>
-        <InfoBody>
-          <InfoText>아이템 리스트</InfoText>
-          <ItemList>
-            {filteredItemList.map((item) => (
-              <Item key={item.바코드} onClick={() => handleItemSelect(item)}>
-                {item.상품이름}
-              </Item>
-            ))}
-          </ItemList>
-          <InfoText>상품명으로 검색</InfoText>
-          <InfoInput
-            placeholder="상품명을 입력해주세요"
-            type="text"
-            onChange={handleItemNameChange}
-            value={itemName}
-          />
-          <InfoText>바코드 입력</InfoText>
-          <InfoInput
+      <_.ContentWrap>
+        <_.InfoHeader>
+          <_.ContentTitle>재고 변동 등록</_.ContentTitle>
+        </_.InfoHeader>
+        <_.InfoBody>
+          <_.InfoText>바코드</_.InfoText>
+          <_.InfoInput
             ref={barcodeInputRef}
-            placeholder="상품 바코드를 입력해주세요"
-            type="text"
+            name="barcode"
+            value={barcode}
             onChange={handleBarcodeChange}
             onKeyPress={handleBarcodeKeyPress}
-            value={barcode}
             autoFocus
           />
-          <InfoText>수량</InfoText>
-          <InfoInput
+          <_.InfoText>상품명으로 검색</_.InfoText>
+          <_.InfoInput
+            name="itemName"
+            value={itemName}
+            onChange={handleItemNameChange}
+          />
+          {filteredItemList.length > 0 && (
+            <_.ItemList>
+              {filteredItemList.map(item => (
+                <_.Item key={item.바코드} onClick={() => handleItemSelect(item)}>
+                  {item.상품이름}
+                </_.Item>
+              ))}
+            </_.ItemList>
+          )}
+          <_.InfoText>수량</_.InfoText>
+          <_.InfoInput
             name="quantity"
             value={quantity}
             onChange={handleQuantityChange}
           />
-          <InfoText>사유</InfoText>
-          <InfoInput
+          <_.InfoText>사유</_.InfoText>
+          <_.InfoInput
             name="reason"
             value={reason}
             onChange={handleReasonChange}
           />
-        </InfoBody>
-        <BtnWrap>
-          <Dbutton onClick={handleAddItem}>입고</Dbutton>
-          <Dbutton onClick={handleRemoveItem}>손실</Dbutton>
-          <Dbutton onClick={onClose}>취소</Dbutton>
-        </BtnWrap>
-      </ContentWrap>
+          <_.AddButton onClick={handleAddItem}>추가</_.AddButton>
+          {selectedItems.length > 0 && (
+            <_.SelectedItemList>
+              {selectedItems.map((item, index) => (
+                <_.SelectedItem key={index}>
+                  {item.item_name} - {item.quantity}개 (사유: {item.reason})
+                  <_.RemoveButton onClick={() => handleRemoveItem(index)}>
+                    제거
+                  </_.RemoveButton>
+                </_.SelectedItem>
+              ))}
+            </_.SelectedItemList>
+          )}
+          {errorMessage && (
+            <_.InfoText style={{ color: 'red' }}>{errorMessage}</_.InfoText>
+          )}
+        </_.InfoBody>
+        <_.BtnWrap>
+          <_.Dbutton mRight={'10px'} onClick={handleSaveItems}>
+            저장
+          </_.Dbutton>
+          <_.Dbutton onClick={onClose}>닫기</_.Dbutton>
+        </_.BtnWrap>
+      </_.ContentWrap>
     </Modal>
   );
-};
-
-export default StockBarcode;
-
-const ContentWrap = styled.div`
-  padding: 20px;
-`;
-
-const InfoHeader = styled.div`
-  margin-bottom: 20px;
-`;
-
-const ContentTitle = styled.h2`
-  margin: 0;
-`;
-
-const InfoBody = styled.div`
-  margin-bottom: 20px;
-`;
-
-const InfoText = styled.p`
-  margin: 10px 0;
-`;
-
-const InfoInput = styled.input`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-`;
-
-const ItemList = styled.ul`
-  max-height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #d3d3d3;
-  margin: 10px 0;
-  padding: 0;
-  list-style: none;
-`;
-
-const Item = styled.li`
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const BtnWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Dbutton = styled.button`
-  margin-right: 5px;
-  margin-left: 5px;
-  width: 200px;
-  height: 40px;
-  color: #fff;
-`;
+}
