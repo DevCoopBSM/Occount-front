@@ -69,7 +69,7 @@ const ManyCharge = () => {
     <>
       <P.InfoContainer>
         <P.InfoHeader>
-          <_.Infotitle>학생 정보 조회</_.Infotitle>
+          <_.Infotitle>일괄 충전</_.Infotitle>
           <_.ButtonContainer>
             <_.Barcode onClick={barcode}></_.Barcode>
             <_.Infobutton onClick={handleSelectAll} mRight="10px">

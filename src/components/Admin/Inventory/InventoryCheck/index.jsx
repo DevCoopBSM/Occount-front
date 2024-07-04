@@ -3,7 +3,7 @@ import DataTable from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import { PrettyDateTime } from 'utils/Date';
 import StockBarcode from './StockBarcode';
-import styled from 'styled-components';
+import * as _ from './style';
 
 export default function InventoryCheck() {
   const [startDate, setStartDate] = useState(
@@ -52,8 +52,9 @@ export default function InventoryCheck() {
   }, [startDate, endDate]);
 
   return (
-    <>
-      <Dbutton onClick={() => setModalOpen(true)}>재고변동등록</Dbutton>
+    <><_.ButtonContainer>
+        <_.Dbutton onClick={() => setModalOpen(true)}>재고변동등록</_.Dbutton>
+      </_.ButtonContainer>
       <DataTable
         TableName="입고&손실 내역"
         startDate={startDate}
@@ -66,11 +67,3 @@ export default function InventoryCheck() {
     </>
   );
 }
-
-const Dbutton = styled.button`
-  margin-right: 5px;
-  margin-left: 5px;
-  width: 200px;
-  height: 40px;
-  color: #fff;
-`;

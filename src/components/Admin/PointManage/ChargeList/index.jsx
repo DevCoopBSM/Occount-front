@@ -36,7 +36,7 @@ export default function ReceiptCheck() {
             학생이름: item.student_name,
             타입: item.type,
             이전포인트: item.point,
-            변환포인트: item.inner_point,
+            충전포인트: item.inner_point,
             최종포인트: parseInt(item.point) + parseInt(item.inner_point),
             충전담당ID: item.charger_id,
             거래일시: PrettyDateTime(item.date),

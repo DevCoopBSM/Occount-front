@@ -8,6 +8,14 @@ export const Dbutton = styled.button`
   color: #fff;
 `;
 
+export const ButtonContainer = styled.div`
+  margin-right: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+  display: flex;
+`;
+
 export const ContentWrap = styled.div`
   padding: 20px;
 `;
