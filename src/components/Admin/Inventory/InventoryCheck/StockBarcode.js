@@ -77,6 +77,7 @@ export default function StockBarcode({ isOpen, onClose }) {
     setSelectedItems([...selectedItems, newItem]);
 
     clearInputFields();
+    barcodeInputRef.current.focus(); // 바코드 입력란에 포커스를 설정합니다.
   };
 
   const handleRemoveItem = index => {

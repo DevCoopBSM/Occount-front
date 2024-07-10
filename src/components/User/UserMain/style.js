@@ -118,3 +118,99 @@ export const MainTopInBox = styled.div`
     font-weight: 600;
   }
 `;
+
+export const RechargeButton = styled.button`
+  font-size: 24px;
+  padding: 10px 10px;
+  margin-top: 20px;
+  background-color: rgb(240, 206, 0);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 90px;
+  height: 90px;
+`;
+
+export const ModalHeader = styled.h2`
+  text-align: center;
+`;
+
+export const ModalList = styled.ul`
+  text-align: left;
+  line-height: 1.6;
+  padding-left: 20px;
+`;
+
+export const ModalListItem = styled.li`
+  margin-bottom: 10px;
+`;
+
+export const ModalInputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+`;
+
+export const ModalInput = styled.input`
+  font-size: 24px;
+  padding: 8px;
+  width: 60%;
+  text-align: center;
+  -webkit-appearance: none;
+  margin: 0;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  & {
+    -moz-appearance: textfield;
+  }
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const IncreaseButton = styled.button`
+  font-size: 24px;
+  padding: 8px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+`;
+
+export const DecreaseButton = styled.button`
+  font-size: 24px;
+  padding: 8px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+`;
+
+export const ModalButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+export const ModalButton = styled.button`
+  font-size: 20px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  width: 150px;
+`;
+
+export const ModalFooterButton = styled.button`
+  font-size: 20px;
+  padding: 10px 20px;
+  flex: 1;
+  margin: 0 10px;
+`;

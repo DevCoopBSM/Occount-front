@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { axiosInstance } from '../utils/Axios'; 
 
@@ -15,22 +14,14 @@ export const AuthProvider = ({ children }) => {
 
 function useProvideAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // 쿠키에서 로그인 상태를 가져와 초기 값으로 설정
     return document.cookie.includes('isLoggedIn');
   });
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
-    // 쿠키에서 관리자 로그인 상태를 가져와 초기 값으로 설정
     return document.cookie.includes('isAdminLoggedIn');
   });
   const [errorMessage, setErrorMessage] = useState("");
-  useEffect(() => {
-    setIsLoggedIn(document.cookie.includes('isLoggedIn'));
-    setIsAdminLoggedIn(document.cookie.includes('isAdminLoggedIn'));
-    // console.log("Here is authContext, IsLoggedIn? : " + isLoggedIn);
-    // console.log("Here is authContext, IsAdminLoggedIn? : " + isAdminLoggedIn)
-  }, []);
 
-  
+
   const unifiedLogin = async (email, password, navigate, admin = false)  => {
     try {
       const url = admin ? "/admin/login" : "/login";
@@ -38,34 +29,27 @@ function useProvideAuth() {
         email: email,
         password: password,
       });
-      const { name, point, message } = response.data; // 여기에서 name 값을 구조 분해 할당으로 받음
+      const { name, point, message } = response.data;
       if (admin) {
-        localStorage.setItem("adminname", name); // 관리자 로그인 성공시 name 값을 localStorage에 저장
+        localStorage.setItem("adminname", name);
         setIsAdminLoggedIn(true);
-        setIsLoggedIn(true);
       } else {
-        localStorage.setItem("clientname", name); // 관리자 로그인 성공시 name 값을 localStorage에 저장
-        setIsLoggedIn(true);
+        localStorage.setItem("clientname", name);
       }
+      setIsLoggedIn(true);
       navigate(admin ? "/admin" : "/");
-      setErrorMessage("")
-      return {
-        name,
-        point,
-        message
-      };
+      setErrorMessage("");
+      return { email, name, point, message };
     } catch (error) {
-
-      let errMsg = "내부 서버 오류"; // 기본 에러 메시지
+      let errMsg = "내부 서버 오류";
       if (error.response) {
-          if (error.response.status === 401) {
-              errMsg = "아이디 또는 암호가 잘못되었습니다.";
-          } else if (error.response.status === 403) {
-              errMsg = "관리자가 아닙니다.";
-          }
+        if (error.response.status === 401) {
+          errMsg = "아이디 또는 암호가 잘못되었습니다.";
+        } else if (error.response.status === 403) {
+          errMsg = "관리자가 아닙니다.";
+        }
       }  
       setErrorMessage(errMsg);
-      
       setTimeout(() => {
         setErrorMessage("");
       }, 2000);
@@ -74,24 +58,14 @@ function useProvideAuth() {
 
   const logout = async (admin = false, navigate) => {
     try {
-        await axiosInstance.post("/logout");
-
-        // isMounted 체크를 제거하고 바로 상태 업데이트를 수행
-        if (admin) {
-            setIsAdminLoggedIn(false);
-            setIsLoggedIn(false);
-            navigate("/admin");
-            console.log(isLoggedIn)
-        } else {
-            setIsLoggedIn(false);
-            navigate("/");
-            console.log(isLoggedIn)
-        }
-
+      await axiosInstance.post("/logout");
+      setIsLoggedIn(false);
+      setIsAdminLoggedIn(false);
+      navigate(admin ? "/admin" : "/");
     } catch (error) {
-        console.error("Error during logout:", error);
+      console.error("Error during logout:", error);
     }
-};
+  };
 
   return {
     isLoggedIn,
@@ -103,7 +77,23 @@ function useProvideAuth() {
     errorMessage,
     setErrorMessage
   };
+}
+
+export const getUser = async () => {
+  try {
+    const response = await axiosInstance.get("/userinfo");
+    return {
+      email: response.data.email,
+      name: response.data.student_name,
+      code: response.data.code_number,
+      point: response.data.point,
+    };
+  } catch (error) {
+    throw error;
+  }
 };
+
+
 export const useAuth = () => {
   return useContext(AuthContext);
 };

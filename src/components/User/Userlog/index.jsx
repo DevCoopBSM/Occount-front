@@ -1,12 +1,12 @@
 import React from "react";
 import UserLogItem from "./UserLogItem";
-import { usePoint } from "hooks/usePoint";
+import { useUser } from "hooks/getUserInfo";
 import { color } from "constants/color";
 import * as _ from "./style";
 
 export const Userlog = () => {
-  const { point } = usePoint();
-  const formatPoint = point.toLocaleString();
+  const { user } = useUser();
+  const formatPoint = user.point.toLocaleString();
   return (
     <_.CompeleteWrap>
       <_.ExChangeDetailWrap width={"900px"} paddingTop={"10px"}>

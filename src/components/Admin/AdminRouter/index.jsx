@@ -13,7 +13,6 @@ import PayListComponent from 'components/Admin/PointManage/PayList';
 import UserListComponent from 'components/Admin/Auth/UserList';
 
 import StockVarianceComponent from 'components/Admin/Inventory/StockVariance';
-import StockBarcodeComponent from 'components/Admin/Inventory/StockBarcode';
 import ItemInfoComponent from 'components/Admin/Inventory/ItemInfo';
 import InventoryCheckComponent from 'components/Admin/Inventory/InventoryCheck';
 import InventoryByDayComponent from 'components/Admin/Inventory/InventoryByDay';
@@ -34,7 +33,6 @@ const AdminRoutes = () => {
       <Route path="barcode" element={<BarcodeComponent />} />
       <Route path="userlist" element={<UserListComponent />} />
       <Route path="stockvariance" element={<StockVarianceComponent />} />
-      <Route path="stockbarcode" element={<StockBarcodeComponent />} />
       <Route path="item" element={<ItemInfoComponent />} />
       <Route path="inventory" element={<InventoryCheckComponent />} />
       <Route path="inventorybyday" element={<InventoryByDayComponent />} />
