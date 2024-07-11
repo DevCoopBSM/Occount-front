@@ -86,7 +86,6 @@ const Main = () => {
               </>
             ) : (
               <p style={{ fontSize: '42px' }}>로그인 후 조회 가능합니다</p>
-              
             )}
           </_.MainTopInBox>
         </_.TopBox>
