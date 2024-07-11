@@ -6,6 +6,7 @@ import NotFoundPage from 'pages/NotFoundPage';
 import PrepairPage from 'pages/Admin/Preparing';
 import LoginPage from 'pages/User/LoginPage';
 import UserlogPage from 'pages/User/UserlogPage';
+import HowToPage from 'pages/User/HowToPage';
 import AdminLoginPage from 'pages/Admin/LoginPage';
 import AdminMainPage from 'pages/Admin/MainPage';
 import {PaymentSuccessPage} from 'pages/Toss/Success';
@@ -19,6 +20,7 @@ const Router = () => {
       <Route path="/toss/fail" element={<FailPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/userlog" element={<UserlogPage />} />
+      <Route path="/howto" element={<HowToPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/admin/*" element={<AdminMainPage />} />
       <Route path="/preparing" element={<PrepairPage />} />
