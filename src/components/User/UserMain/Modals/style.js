@@ -28,10 +28,10 @@ export const TopBox = styled.div`
 
 export const BottomBox = styled.div`
   display: flex;
-  justify-content: center; /* 수평 가운데 정렬을 위해 변경 */
-  align-items: center; /* 수직 정렬 */
+  justify-content: space-between;
   margin: 0 auto;
   padding: 70px;
+
   width: 970px;
   height: 100px;
   background: #34343c;
@@ -43,10 +43,13 @@ export const UseBox = styled.div`
   justify-content: space-between;
   margin: 15px 10px 15px 15px;
   padding: 20px;
+
   width: 400px;
   height: 270px;
+
   background: #f0ce00;
   border-radius: 12px;
+
   color: #fff;
   font-weight: 700;
   font-size: 40px;
@@ -85,6 +88,7 @@ export const AskInTop = styled.div`
     display: block;
     width: 150px;
     height: 50px;
+
     margin: 20px;
     font-size: 30px;
     font-weight: 600;
@@ -99,16 +103,7 @@ export const CallLogoStyle = styled(CallLogo)`
 `;
 
 export const UserlogLink = styled(Link)`
-  display: block;
-  width: 60%;
-  padding: 30px; /* padding 값을 더 크게 설정하여 두껍게 만듭니다 */
-  background: rgb(240, 206, 0);
   color: #fff;
-  text-align: center;
-  border-radius: 10px;
-  font-size: 24px; /* font-size를 더 크게 설정하여 버튼을 눈에 띄게 만듭니다 */
-  font-weight: bold; /* 텍스트를 굵게 설정 */
-  text-decoration: none;
 `;
 
 export const MainTopInBox = styled.div`
@@ -117,7 +112,6 @@ export const MainTopInBox = styled.div`
   margin-top: 20px;
   font-size: 20px;
   color: #fff;
-
   p {
     margin-top: 10px;
     font-size: 50px;
@@ -143,16 +137,29 @@ export const RechargeButton = styled.button`
 
 export const ModalHeader = styled.h2`
   text-align: center;
+  margin-bottom: 20px;
 `;
-
 export const ModalList = styled.ul`
-  text-align: left;
-  line-height: 1.6;
-  padding-left: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 `;
 
 export const ModalListItem = styled.li`
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 10px;
   margin-bottom: 10px;
+  font-size: 16px;
+`;
+
+export const HighlightText = styled.span`
+  color: red;
+  font-weight: bold;
+  font-size: 24px;
+  display: block;
+  text-align: center;
+  margin-bottom: 20px;
 `;
 
 export const ModalInputWrapper = styled.div`
@@ -179,13 +186,13 @@ export const ModalInput = styled.input`
     -moz-appearance: textfield;
   }
 `;
-
 export const InputWrapper = styled.div`
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 20px 0;
 `;
+
 
 export const IncreaseButton = styled.button`
   font-size: 24px;

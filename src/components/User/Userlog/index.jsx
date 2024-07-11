@@ -1,12 +1,65 @@
-import React from "react";
-import UserLogItem from "./UserLogItem";
-import { useUser } from "hooks/getUserInfo";
+import React, { useEffect, useState } from "react";
+import PointLogItem from "./PointLogItem";
+import { useAuth } from "context/authContext";
+import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
+import { axiosInstance } from "utils/Axios";
 import { color } from "constants/color";
 import * as _ from "./style";
 
 export const Userlog = () => {
-  const { user } = useUser();
-  const formatPoint = user.point.toLocaleString();
+  const { user, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [useLogData, setUseLogData] = useState([]);
+  const [chargeLogData, setChargeLogData] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login", { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    fetchUserLog(0);
+    fetchUserLog(1);
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
+
+  const fetchUserLog = (type) => {
+    axiosInstance
+      .get("/userlog", { params: { type } })
+      .then((response) => {
+        console.log(response.data);
+        if (type === 0) {
+          setUseLogData(response.data);
+        } else {
+          setChargeLogData(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const updateItemsPerPage = () => {
+    const height = window.innerHeight;
+    const newItemsPerPage = Math.floor((height - 400) / 70); // 70은 각 항목의 대략적인 높이, 400은 상단 여백
+    setItemsPerPage(newItemsPerPage > 0 ? newItemsPerPage : 1);
+  };
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+
+  const formatPoint = user ? user.point.toLocaleString() : "0";
+
+  const maxLength = Math.max(useLogData.length, chargeLogData.length);
+  const pageCount = Math.ceil(maxLength / itemsPerPage);
+
   return (
     <_.CompeleteWrap>
       <_.ExChangeDetailWrap width={"900px"} paddingTop={"10px"}>
@@ -16,22 +69,45 @@ export const Userlog = () => {
         </_.Exchange>
       </_.ExChangeDetailWrap>
 
-      <_.UseLogWrap style={{flexDirection: "column"}}>
-        <_.InfoText>사용내역</_.InfoText>
-        
-          <_.PointContainer>
-            <_.rightWrap>
-              <li style={{display: "flex"}}>
-                <UserLogItem type={0}/>
-              </li>
-            </_.rightWrap>
-            <_.leftWrap>
-              <li style={{display: "flex"}}>
-                <UserLogItem type={1}/>
-              </li>
-            </_.leftWrap>
-          </_.PointContainer>
+      <_.UseLogWrap style={{ flexDirection: "column" }}>
+        <_.InfoText>이용 내역</_.InfoText>
 
+        <_.PointContainer>
+          <_.rightWrap>
+            <li style={{ display: "flex" }}>
+              <PointLogItem 
+                type={0} 
+                data={useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
+                fetchUserLog={fetchUserLog}
+              />
+            </li>
+          </_.rightWrap>
+          <_.leftWrap>
+            <li style={{ display: "flex" }}>
+              <PointLogItem 
+                type={1} 
+                data={chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
+                fetchUserLog={fetchUserLog}
+              />
+            </li>
+          </_.leftWrap>
+        </_.PointContainer>
+
+        <_.Pagination>
+          <ReactPaginate
+            previousLabel={"이전페이지"}
+            nextLabel={"다음페이지"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            subContainerClassName={"pages pagination"}
+            activeClassName={"selected"}
+          />
+        </_.Pagination>
       </_.UseLogWrap>
     </_.CompeleteWrap>
   );

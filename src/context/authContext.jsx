@@ -20,9 +20,35 @@ function useProvideAuth() {
     return document.cookie.includes('isAdminLoggedIn');
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState(null);
 
+  const fetchUserInformation = async () => {
+    try {
+      const response = await axiosInstance.get("/userinfo");
+      const userInfo = {
+        point: response.data.point,
+        name: response.data.student_name,
+        code: response.data.code_number,
+        email: response.data.email,
+        todayTotalCharge: response.data.todayTotalCharge
+      };
+      setUser(userInfo);
+      return userInfo;
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+      return null;
+    }
+  };
 
-  const unifiedLogin = async (email, password, navigate, admin = false)  => {
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserInformation();
+    } else {
+      setUser(null);
+    }
+  }, [isLoggedIn]);
+
+  const unifiedLogin = async (email, password, navigate, admin = false) => {
     try {
       const url = admin ? "/admin/login" : "/login";
       const response = await axiosInstance.post(url, {
@@ -37,6 +63,7 @@ function useProvideAuth() {
         localStorage.setItem("clientname", name);
       }
       setIsLoggedIn(true);
+      await fetchUserInformation();
       navigate(admin ? "/admin" : "/");
       setErrorMessage("");
       return { email, name, point, message };
@@ -61,6 +88,7 @@ function useProvideAuth() {
       await axiosInstance.post("/logout");
       setIsLoggedIn(false);
       setIsAdminLoggedIn(false);
+      setUser(null);
       navigate(admin ? "/admin" : "/");
     } catch (error) {
       console.error("Error during logout:", error);
@@ -75,24 +103,12 @@ function useProvideAuth() {
     setIsLoggedIn,
     setIsAdminLoggedIn,
     errorMessage,
-    setErrorMessage
+    setErrorMessage,
+    user,  // user 정보를 포함시킵니다.
+    setUser,
+    refetchUser: fetchUserInformation  // refetch 기능 추가
   };
 }
-
-export const getUser = async () => {
-  try {
-    const response = await axiosInstance.get("/userinfo");
-    return {
-      email: response.data.email,
-      name: response.data.student_name,
-      code: response.data.code_number,
-      point: response.data.point,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
 
 export const useAuth = () => {
   return useContext(AuthContext);

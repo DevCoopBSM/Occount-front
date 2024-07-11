@@ -1,52 +1,20 @@
 import styled from "styled-components";
 
-export const PointContainer = styled.div`
-  width: "900px";
-  margin-top: "5px";
-  display: flex;
-`;
-
-export const PointList = styled.ul`
-  display: flex;
-  justify-content: space-between;
-  padding: 0;
-`;
-
 export const CompeleteWrap = styled.div`
   margin: 0 auto;
   width: 900px;
   height: 700px;
 `;
 
-export const PaymentsTopWrap = styled.div`
-  width: 100%;
-  height: 300px;
-
-  text-align: center;
-
-  border-bottom: 1px solid #333;
-`;
-
-export const PaymentsTopTitle = styled.h1`
-  font-size: 70px;
-  letter-spacing: 3px;
-`;
-
-export const PaymentsTopSubTitle = styled.h2`
-  font-size: 40px;
-  color: #adaeb3;
-`;
-
-export const PaymentsBottomWrap = styled.div`
-  margin-top: 10px;
-  width: 100%;
-  height: 300px;
-`;
-
-export const StudentInfo = styled.div`
+export const ExChangeDetailWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  margin: 0 auto;
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "0")};
+  padding-top: ${(props) => (props.paddingTop ? props.paddingTop : "0")};
+  width: ${(props) => (props.width ? props.width : "800px")};
+  height: 50px;
+  border-top: ${(props) => (props.border ? props.border : null)};
 `;
 
 export const InfoText = styled.div`
@@ -57,90 +25,9 @@ export const InfoText = styled.div`
   margin-left: 5px;
 `;
 
-export const StudentInfoDetail = styled.div`
-  display: flex;
-  justify-content: right;
-  width: 100%;
-  width: 300px;
-`;
-
-export const ExChangeWrap = styled.div`
-  margin-top: 30px;
-  width: 100%;
-  height: 200px;
-
-  border-radius: 4px;
-  border: 1px solid #eef0f0;
-
-  background-color: #fafafa;
-`;
-
-export const ExChangeDetailWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  margin: 0 auto;
-  margin-top: ${(props) => (props.marginTop ? props.marginTop : "0")};
-  padding-top: ${(props) => (props.paddingTop ? props.paddingTop : "0")};
-
-  width: ${(props) => (props.width ? props.width : "800px")};
-  height: 50px;
-
-  border-top: ${(props) => (props.border ? props.border : null)};
-`;
-
 export const Exchange = styled.p`
   font-size: ${(props) => (props.fontSize ? props.fontSize : "25px")};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : null)};
-`;
-
-export const GoBackBtn = styled.button`
-  width: 100%;
-  height: 60px;
-
-  font-size: 30px;
-  font-weight: 700;
-`;
-
-
-
-export const PointWrap = styled.div`
-  margin-top: 20px;
-  padding-top: 20px;
-  width: 100%;
-  height: 150px;
-
-  border-top: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
-`;
-
-export const PointInTop = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-export const PointInput = styled.input`
-  width: 450px;
-  border-radius: 10px;
-  border: 1px solid #ccc; /* 기본값 설정 */
-  
-  border: ${({ isError }) => (isError ? "2px solid red" : "1px solid #ccc")};
-  font-weight: ${({ isError }) => (isError ? "bold" : "normal")};
-`;
-
-export const NumberInput = styled.input`
-  border-radius: 10px 0px 0px 10px;
-  width: 240px;
-`;
-
-export const PointBottom = styled.div`
-  display: flex;
-  justify-content: end;
-
-  margin-top: 10px;
-
-  width: 100%;
-  height: 50px;
 `;
 
 export const UseLogWrap = styled.div`
@@ -149,10 +36,126 @@ export const UseLogWrap = styled.div`
   width: 100%;
 `;
 
+export const PointContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
 export const rightWrap = styled.div`
   width: 50%;
 `;
 
 export const leftWrap = styled.div`
   width: 50%;
+`;
+
+// 페이지네이션 스타일
+export const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 0 5px;
+
+      &.selected a {
+        background-color: #007bff;
+        color: white;
+      }
+
+      &.disabled a {
+        color: #ccc;
+      }
+
+      a {
+        display: block;
+        padding: 8px 12px;
+        border: 1px solid #007bff;
+        border-radius: 4px;
+        color: #007bff;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+          background-color: #007bff;
+          color: white;
+        }
+      }
+    }
+  }
+`;
+
+export const PointLogWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  padding-top: 15px;
+  width: 440px;
+  height: 70px;
+  background-color: ${(props) => props.backgroundColor || "#eff0f2"};
+  border: 1px solid ${(props) => props.borderColor || "#EFF0F2"};
+  border-radius: 8px;
+  cursor: pointer;
+`;
+
+export const DateText = styled.span`
+  margin-left: 70px;
+  text-align: left;
+  font-size: 23px;
+`;
+
+export const AmountText = styled.span`
+  margin-right: 50px;
+  text-align: right;
+  font-size: 23px;
+`;
+
+export const DetailWrap = styled.div`
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: expand 0.3s ease-out;
+  @keyframes expand {
+    from {
+      max-height: 0;
+      opacity: 0;
+    }
+    to {
+      max-height: 1000px;
+      opacity: 1;
+    }
+  }
+`;
+
+export const DetailRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+export const DetailLabel = styled.div`
+  font-weight: bold;
+  color: #333;
+`;
+
+export const DetailValue = styled.div`
+  color: #666;
+`;
+
+export const ModalButton = styled.button`
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+  width: 200px;
+  display: flex;
+  justify-content: center;
 `;
