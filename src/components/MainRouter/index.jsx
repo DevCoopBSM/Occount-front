@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
 import MainPage from 'pages/User/MainPage';
+import HowToPage from 'pages/user/HowToPage';
 import NotFoundPage from 'pages/NotFoundPage';
 import PrepairPage from 'pages/Admin/Preparing';
 import LoginPage from 'pages/User/LoginPage';
@@ -15,6 +16,7 @@ const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<MainPage />} />
+      <Route path="/howto" element={<HowToPage />} />
       <Route path="/toss/success" element={<PaymentSuccessPage />} />
       <Route path="/toss/fail" element={<FailPage />} />
       <Route path="/login" element={<LoginPage />} />

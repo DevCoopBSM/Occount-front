@@ -97,10 +97,7 @@ const Main = () => {
       </_.Maintop>
 
       <_.Mainbottom>
-        <a
-          href="https://www.instagram.com/p/Cxc21Z0Plc5/?utm_source=ig_web_copy_link&igshid=MzRlODBiNWFlZA=="
-          target="_blank"
-        >
+        <Link to ="/howto">
           <_.UseBox>
             <div>
               How
@@ -116,7 +113,7 @@ const Main = () => {
               </p>
             </div>
           </_.UseBox>
-        </a>
+        </Link>
 
         <_.AskBox>
           <_.AskInTop>
