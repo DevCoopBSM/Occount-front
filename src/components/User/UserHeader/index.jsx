@@ -1,5 +1,5 @@
 import * as H from 'common/PageWrapStyle';
-import { ReactComponent as AriPayLogo } from 'assets/AriPayL_ver2.svg';
+import { ReactComponent as AriPayLogo } from 'assets/AriPayLogo.svg';
 import { useAuth } from 'context/authContext';
 import { useNavigate } from 'react-router-dom';
 

@@ -64,31 +64,32 @@ export const Pagination = styled.div`
       margin: 0 5px;
 
       &.selected a {
-        background-color: #007bff;
+        background-color: #F0CE00;
         color: white;
       }
 
       &.disabled a {
-        color: #ccc;
+        color: black;
       }
 
       a {
         display: block;
         padding: 8px 12px;
-        border: 1px solid #007bff;
+        border: 1px solid #F0CE00; /* 수정된 부분 */
         border-radius: 4px;
-        color: #007bff;
+        color: #F0CE00;
         cursor: pointer;
         text-decoration: none;
 
         &:hover {
-          background-color: #007bff;
+          background-color: #F0CE00;
           color: white;
         }
       }
     }
   }
 `;
+
 
 export const PointLogWrap = styled.div`
   display: flex;

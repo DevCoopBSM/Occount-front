@@ -34,23 +34,25 @@ export const LogoImg = styled.img`
 export const ScrollButtons = styled.div`
   position: fixed;
   top: 50%;
-  right: 10px;
+  left: 10px; /* 왼쪽에 위치하도록 변경 */
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 10px;
   z-index: 1000; /* 스크롤 버튼이 다른 요소 위에 표시되도록 설정 */
 `;
-
 export const ScrollButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 120px; /* 한글 5글자를 담을 수 있는 너비 */
+  height: 40px; /* 높이는 기존과 동일하게 유지 */
+  border-radius: 20px; /* 모서리를 둥글게 */
   border: none;
   background-color: #f0f0f0;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     background-color: #ddd;
   }
@@ -74,8 +76,8 @@ export const ImageTextBlock = styled.div`
   display: flex;
   align-items: center;
   justify-content: center; /* 추가된 부분 */
-  margin-top: 300px;
-  margin-bottom: 30px;
+  margin-top: 500px;
+  margin-bottom: 100px;
   width: 90%;
 `;
 

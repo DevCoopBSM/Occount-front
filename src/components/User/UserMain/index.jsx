@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import * as _ from './style';
+import { Link } from 'react-router-dom';
 import { useAuth } from 'context/authContext';
-import RechargeModal from './Modals/RechargeModal';
-import TossModal from './Modals/TossModal';
+import ChargeModal from './Modals/ChargeModal';
 
 const Main = () => {
-  const { isLoggedIn, user, refetchUser } = useAuth();  // user 정보를 가져옵니다.
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rechargeAmount, setRechargeAmount] = useState(1000);
-  const [isTossModalOpen, setIsTossModalOpen] = useState(false);
+  const { isLoggedIn, user, refetchUser } = useAuth();
+  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
+  const [chargeAmount, setChargeAmount] = useState(1000);
   const [formatPoint, setFormatPoint] = useState("");
 
   useEffect(() => {
@@ -18,51 +17,30 @@ const Main = () => {
   }, [user]);
 
   useEffect(() => {
-    if (!isTossModalOpen) {
-      refetchUser(); // Toss 모달이 닫힐 때 사용자 정보를 다시 가져옵니다.
+    if (!isChargeModalOpen) {
+      refetchUser();
     }
-  }, [isTossModalOpen]);
+  }, [isChargeModalOpen]);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  const handleOpenChargeModal = () => {
+    setIsChargeModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleOpenTossModal = () => {
-    setIsTossModalOpen(true);
-  };
-
-  const handleCloseTossModal = () => {
-    setIsTossModalOpen(false);
-  };
-
-  const handleRecharge = () => {
-    if (rechargeAmount < 1000) {
-      alert('충전 금액은 천 원 이상 입력해야 합니다.');
-    } else if (rechargeAmount % 1000 !== 0) {
-      alert('충전 금액은 천 원 단위로 입력해야 합니다.');
-    } else if (rechargeAmount > 50000 - (user?.todayTotalCharge || 0)) {
-      alert('하루 충전 금액은 5만원을 넘을 수 없습니다.');
-    } else {
-      handleCloseModal();
-      handleOpenTossModal();
-    }
+  const handleCloseChargeModal = () => {
+    setIsChargeModalOpen(false);
   };
 
   const increaseAmount = () => {
-    if (rechargeAmount + 1000 <= 50000 - user.todayTotalCharge) {
-      setRechargeAmount(rechargeAmount + 1000);
+    if (chargeAmount + 1000 <= 50000 - user.todayTotalCharge) {
+      setChargeAmount(chargeAmount + 1000);
     } else {
       alert('하루 충전 금액은 5만원을 넘을 수 없습니다.');
     }
   };
-  
+
   const decreaseAmount = () => {
-    if (rechargeAmount - 1000 >= 1000) {
-      setRechargeAmount(rechargeAmount - 1000);
+    if (chargeAmount - 1000 >= 1000) {
+      setChargeAmount(chargeAmount - 1000);
     } else {
       alert('충전 금액은 천 원 이상 입력해야 합니다.');
     }
@@ -79,9 +57,9 @@ const Main = () => {
             {isLoggedIn ? (
               <>
                 <p style={{ fontSize: '70px' }}>{formatPoint}원</p>
-                <_.RechargeButton onClick={handleOpenModal}>
+                <_.ChargeButton onClick={handleOpenChargeModal}>
                   충전하기
-                </_.RechargeButton>
+                </_.ChargeButton>
               </>
             ) : (
               <p style={{ fontSize: '42px' }}>로그인 후 조회 가능합니다</p>
@@ -97,7 +75,7 @@ const Main = () => {
       </_.Maintop>
 
       <_.Mainbottom>
-        <Link to ="/howto">
+        <Link to="/howto">
           <_.UseBox>
             <div>
               How
@@ -129,25 +107,15 @@ const Main = () => {
         </_.AskBox>
       </_.Mainbottom>
 
-      <RechargeModal 
-        isOpen={isModalOpen} 
-        onRequestClose={handleCloseModal}
-        rechargeAmount={rechargeAmount}
-        setRechargeAmount={setRechargeAmount}
+      <ChargeModal 
+        isOpen={isChargeModalOpen} 
+        onRequestClose={handleCloseChargeModal}
+        chargeAmount={chargeAmount}
+        setChargeAmount={setChargeAmount}
         user={user}
-        handleRecharge={handleRecharge}
         increaseAmount={increaseAmount}
         decreaseAmount={decreaseAmount}
       />
-      
-      {user && (
-        <TossModal 
-          isOpen={isTossModalOpen}
-          onRequestClose={handleCloseTossModal}
-          user={user}
-          rechargeAmount={rechargeAmount}
-        />
-      )}
     </>
   );
 };

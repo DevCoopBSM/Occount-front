@@ -119,7 +119,7 @@ export const MainTopInBox = styled.div`
   }
 `;
 
-export const RechargeButton = styled.button`
+export const ChargeButton = styled.button`
   font-size: 24px;
   padding: 10px 10px;
   margin-top: 20px;
