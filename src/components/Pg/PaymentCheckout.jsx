@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'components/Modal';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
+import * as PortOne from "@portone/browser-sdk/v2";
 
 const storeId = process.env.REACT_APP_STORE_ID;
 const channelKey = process.env.REACT_APP_CHANNEL_KEY;
@@ -18,7 +19,7 @@ export function PaymentCheckoutPage({ customerEmail, customerName, rechargeAmoun
   const [modalContent, setModalContent] = useState(null);
   const navigate = useNavigate();
 
-  const requestPay = (PortOne) => {
+  const requestPay = () => {
     if (!PortOne) {
       console.error("PortOne SDK가 로드되지 않았습니다.");
       setModalContent(<p>결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.</p>);
@@ -73,58 +74,25 @@ export function PaymentCheckoutPage({ customerEmail, customerName, rechargeAmoun
             } 
           });
         } else {
-          console.log('Navigate to failure:', { 
+          console.log('Payment failed:', { 
             status: 'failure', 
             code: response.code, 
             message: response.message 
           });
-          navigate('/payment-redirect', { 
-            state: { 
-              status: 'failure', 
-              code: response.code, 
-              message: response.message 
-            } 
-          });
+          setModalContent(<p>결제가 취소되었습니다. 다시 시도해 주세요.</p>);
+          setTimeout(() => onRequestClose(), 3000); // 3초 뒤 모달 닫기
         }
-        setTimeout(() => onRequestClose(), 3000); // 3초 뒤 모달 닫기
       })
       .catch(error => {
         console.error("결제 요청 실패", error);
-        navigate('/payment-redirect', { 
-          state: { 
-            status: 'failure', 
-            code: 'REQUEST_FAILURE', 
-            message: error.message 
-          } 
-        });
+        setModalContent(<p>결제가 취소되었습니다. 다시 시도해 주세요.</p>);
         setTimeout(() => onRequestClose(), 3000); // 3초 뒤 모달 닫기
       });
   };
 
   useEffect(() => {
     if (payMethod) {
-      const loadPortOneScript = () => {
-        return new Promise((resolve, reject) => {
-          if (window.PortOne) {
-            resolve(window.PortOne);
-          } else {
-            const script = document.createElement('script');
-            script.src = "https://cdn.portone.io/v2/browser-sdk.js";
-            script.onload = () => resolve(window.PortOne);
-            script.onerror = () => reject(new Error('PortOne SDK 로드 실패'));
-            document.body.appendChild(script);
-          }
-        });
-      };
-
-      loadPortOneScript()
-        .then((PortOne) => {
-          requestPay(PortOne);
-        })
-        .catch((error) => {
-          console.error("PortOne SDK 로드 실패", error);
-          setModalContent(<p>결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.</p>);
-        });
+      requestPay();
     }
   }, [payMethod]);
 
