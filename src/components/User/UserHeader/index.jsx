@@ -4,7 +4,7 @@ import { useAuth } from 'context/authContext';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth(); // setIsLoggedIn 제거
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -16,8 +16,7 @@ const Header = () => {
   };
 
   const handleLogoutClick = () => {
-    setIsLoggedIn(false);
-    logout(false, navigate); // assuming `logout` function in `useAuth` is using `navigate` properly
+    logout(false, navigate); // `logout` 함수만 호출하여 상태를 처리
   };
 
   return (

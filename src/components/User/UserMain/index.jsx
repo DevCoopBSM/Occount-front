@@ -11,7 +11,7 @@ const Main = () => {
   const [formatPoint, setFormatPoint] = useState("");
 
   useEffect(() => {
-    if (user) {
+    if (user && user.point !== undefined) {
       setFormatPoint(user.point.toLocaleString());
     }
   }, [user]);
