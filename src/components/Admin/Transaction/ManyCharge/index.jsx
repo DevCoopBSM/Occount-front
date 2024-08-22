@@ -12,8 +12,27 @@ const ManyCharge = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [studentIdSearchTerm, setStudentIdSearchTerm] = useState('');
   const [allStudents, setAllStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const movePage = useNavigate();
+  const navigate = useNavigate();
+
+  const toggleStudentSelection = (stuCode) => {
+    setSelectedStudents((prevSelected) =>
+      prevSelected.includes(stuCode)
+        ? prevSelected.filter((code) => code !== stuCode)
+        : [...prevSelected, stuCode]
+    );
+  };
+
+  const handleSelectAll = (allStudentIds) => {
+    if (selectedStudents.length === allStudentIds.length) {
+      setSelectedStudents([]);
+    } else {
+      setSelectedStudents(allStudentIds);
+    }
+  };
+
+  const handleNavigateToBarcode = () => {
+    navigate('/admin/barcode');
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -23,47 +42,25 @@ const ManyCharge = () => {
     setStudentIdSearchTerm(event.target.value);
   };
 
-  const toggleStudentSelection = (studentId) => {
-    const isSelected = selectedStudents.includes(studentId);
-    if (isSelected) {
-      setSelectedStudents(selectedStudents.filter((id) => id !== studentId));
-    } else {
-      setSelectedStudents([...selectedStudents, studentId]);
-    }
-  };
-
-  const handleSelectAll = () => {
-    if (selectedStudents.length === filteredStudents.length) {
-      setSelectedStudents([]);
-    } else {
-      const allStudentIds = filteredStudents.map(student => student.code_number);
-      setSelectedStudents(allStudentIds);
-    }
-  };
-
   useEffect(() => {
     axiosInstance
-      .get('/admin/userlist')
+      .get('v2/account/studentlist')
       .then((response) => {
-        setAllStudents(response.data);
-        setFilteredStudents(response.data);
+        const validStudents = response.data.filter(
+          (student) => student.stuNumber // 학번이 null이 아닌 학생만 포함
+        );
+        setAllStudents(validStudents); // 전체 학생 목록을 저장
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  useEffect(() => {
-    const filtered = allStudents.filter(student =>
-      student.student_name.includes(searchTerm) &&
-      student.student_id?.startsWith(studentIdSearchTerm)
-    );
-    setFilteredStudents(filtered);
-  }, [searchTerm, studentIdSearchTerm, allStudents]);
-
-  function barcode() {
-    movePage('/admin/barcode');
-  }
+  const filteredStudents = allStudents.filter(
+    (student) =>
+      (!searchTerm || student.stuName.includes(searchTerm)) &&
+      (!studentIdSearchTerm || student.stuNumber.startsWith(studentIdSearchTerm))
+  );
 
   return (
     <>
@@ -71,10 +68,7 @@ const ManyCharge = () => {
         <P.InfoHeader>
           <_.Infotitle>일괄 충전</_.Infotitle>
           <_.ButtonContainer>
-            <_.Barcode onClick={barcode}></_.Barcode>
-            <_.Infobutton onClick={handleSelectAll} mRight="10px">
-              전체선택
-            </_.Infobutton>
+            <_.Barcode onClick={handleNavigateToBarcode} />
             <StudentCharge
               selectedStudents={selectedStudents}
               setSelectedStudents={setSelectedStudents}
@@ -99,28 +93,13 @@ const ManyCharge = () => {
               <FilterIcon />
             </_.Filter>
           </_.Infosearch>
-          <_.Info>
-            <_.Infochoose>
-              <_.Infotext>선택</_.Infotext>
-            </_.Infochoose>
-            <_.Infochoose>
-              <_.Infotext>학번</_.Infotext>
-            </_.Infochoose>
-            <_.Infochoose>
-              <_.Infotext>이름</_.Infotext>
-            </_.Infochoose>
-            <_.Infochoose>
-              <_.Infotext>바코드번호</_.Infotext>
-            </_.Infochoose>
-          </_.Info>
-          <div>
-            <ManyChargeItem
-              onToggleStudentSelection={toggleStudentSelection}
-              selectedStudents={selectedStudents}
-              searchTerm={searchTerm}
-              studentIdSearchTerm={studentIdSearchTerm}
-            />
-          </div>
+
+          <ManyChargeItem
+            students={filteredStudents}
+            onToggleStudentSelection={toggleStudentSelection}
+            selectedStudents={selectedStudents}
+            onSelectAll={handleSelectAll} // 전체 선택 기능을 추가합니다.
+          />
         </_.Infolist>
       </P.InfoContainer>
     </>

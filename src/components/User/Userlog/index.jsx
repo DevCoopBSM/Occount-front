@@ -30,20 +30,24 @@ export const Userlog = () => {
   }, []);
 
   const fetchUserLog = (type) => {
+    const endpoint = type === 0 ? "pay" : "charge";
+    const url = `v2/transaction/log/${endpoint}`;
+    
     axiosInstance
-      .get("/userlog", { params: { type } })
+      .get(url)
       .then((response) => {
-        console.log(response.data);
+        console.log('API Response:', response.data); // API 응답 확인
         if (type === 0) {
-          setUseLogData(response.data);
+          setUseLogData(response.data.payLogList);
         } else {
-          setChargeLogData(response.data);
+          setChargeLogData(response.data.chargeLogList);
         }
       })
       .catch((error) => {
         console.error(error);
       });
   };
+  
 
   const updateItemsPerPage = () => {
     const height = window.innerHeight;

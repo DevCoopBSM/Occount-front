@@ -7,7 +7,7 @@ const AuthContext = createContext();
 // 초기 상태 정의
 const initialState = {
   isLoggedIn: !!getAccessToken(), // 세션 스토리지에 토큰이 있으면 로그인 상태로 간주
-  isAdminLoggedIn: false, // 초기에는 false로 설정
+  isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'), // 세션 스토리지에서 isAdminLoggedIn 상태 로드
   user: null, // 사용자 정보
   errorMessage: '', // 에러 메시지
 };
@@ -25,6 +25,7 @@ const actionTypes = {
 const authReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.LOGIN_SUCCESS:
+      sessionStorage.setItem('isAdminLoggedIn', action.isAdmin || false); // 로그인 성공 시 isAdminLoggedIn 상태를 세션 스토리지에 저장
       return {
         ...state,
         isLoggedIn: true,
@@ -32,6 +33,7 @@ const authReducer = (state, action) => {
         errorMessage: '',
       };
     case actionTypes.LOGOUT:
+      sessionStorage.removeItem('isAdminLoggedIn'); // 로그아웃 시 isAdminLoggedIn 상태를 세션 스토리지에서 제거
       return {
         ...state,
         isLoggedIn: false,
@@ -66,30 +68,30 @@ export const AuthProvider = ({ children }) => {
     try {
       const url = 'v2/auth/login';
       const response = await axiosInstance.post(url, { userEmail: email, userPassword: password });
-  
+
       const { accessToken, user, roles } = response.data;
-  
+
       // roles 값이 'ROLE_ADMIN'인지 확인하여 어드민 여부 설정
       const isAdmin = roles.includes('ROLE_ADMIN');
-  
+
       // admin 변수가 true로 전달되었지만, 로그인한 사용자가 어드민이 아닌 경우
       if (admin && !isAdmin) {
         throw new Error('권한이 없습니다.');
       }
-  
+
       // 액세스 토큰을 세션 스토리지에 저장
       setAccessToken(accessToken);
-  
+
       dispatch({
         type: actionTypes.LOGIN_SUCCESS,
         isAdmin: isAdmin, // 서버에서 받은 roles에 따라 상태 설정
       });
-  
+
       await fetchUserInformation();
-  
+
       // admin 변수가 true면 어드민 페이지로 리디렉션, 그렇지 않으면 일반 페이지로 리디렉션
       navigate(admin ? '/admin' : '/');
-  
+
       dispatch({ type: actionTypes.CLEAR_ERROR });
       return { email, ...user };
     } catch (error) {
@@ -108,7 +110,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserInformation = async () => {
     try {
-      const response = await axiosInstance.get('/userinfo');
+      const response = await axiosInstance.get('v2/account/userinfo');
       const userInfo = {
         point: response.data.userPoint,        // 서버 응답에 맞게 필드명 수정
         name: response.data.userName,          // 서버 응답에 맞게 필드명 수정
@@ -126,8 +128,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async (navigate) => {
     try {
-      // 서버 로그아웃 요청을 다시 활성화
-      await axiosInstance.post('/logout'); // 서버 로그아웃 요청
 
       // 상태 업데이트
       dispatch({ type: actionTypes.LOGOUT });

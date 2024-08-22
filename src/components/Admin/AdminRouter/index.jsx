@@ -4,14 +4,10 @@ import { useAuth } from 'context/authContext';
 import ManyChargeComponent from 'components/Admin/Transaction/ManyCharge';
 import PaymentsComponent from 'components/Admin/Transaction/Payments';
 import BarcodeComponent from 'components/Admin/Transaction/Barcode';
-import ChargeCompleteComponent from 'components/Admin/Transaction/ChargeComplete';
-import PayCompleteComponent from 'components/Admin/Transaction/PayComplete';
-
+import CompleteComponent from 'components/Admin/Transaction/Complete';
 import ChargeListComponent from 'components/Admin/PointManage/ChargeList';
 import PayListComponent from 'components/Admin/PointManage/PayList';
-
 import UserListComponent from 'components/Admin/Auth/UserList';
-
 import StockVarianceComponent from 'components/Admin/Inventory/StockVariance';
 import ItemInfoComponent from 'components/Admin/Inventory/ItemInfo';
 import InventoryCheckComponent from 'components/Admin/Inventory/InventoryCheck';
@@ -28,8 +24,7 @@ const AdminRoutes = () => {
       <Route path="/" element={<BarcodeComponent />} />
       <Route path="manycharge" element={<ManyChargeComponent />} />
       <Route path="payments" element={<PaymentsComponent />} />
-      <Route path="chargecomplete" element={<ChargeCompleteComponent />} />
-      <Route path="paycomplete" element={<PayCompleteComponent />} />
+      <Route path="complete" element={<CompleteComponent />} />
       <Route path="barcode" element={<BarcodeComponent />} />
       <Route path="userlist" element={<UserListComponent />} />
       <Route path="stockvariance" element={<StockVarianceComponent />} />

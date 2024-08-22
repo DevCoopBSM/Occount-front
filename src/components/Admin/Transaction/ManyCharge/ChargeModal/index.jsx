@@ -1,49 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'components/Modal';
 import * as S from './style';
-import { axiosInstance } from 'utils/Axios';
-import { handleBulkCharge } from 'utils/Charge';
+import axiosInstance from 'utils/Axios';
+import { useAuth } from 'context/authContext'; // authContext 가져오기
 
 const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [studentsInfo, setStudentsInfo] = useState([]);
-  const [point, setPoint] = useState('');
-  const charger = localStorage.getItem('adminname');
+  const [chargedPoint, setChargedPoint] = useState('');
+  const { user } = useAuth(); // authContext에서 user 정보 가져오기
 
-  const onBulkCharge = (amount) => {
-    const validAmount = parseInt(amount, 10);
-    if (isNaN(validAmount) || validAmount <= 0) {
-      alert('올바른 금액을 입력해주세요 (자연수).');
-      return;
-    }
-    console.log('Selected Students:');
-    console.log(selectedStudents);
-
-    // 선택된 학생들에게 일정 금액을 똑같이 충전합니다.
-    handleBulkCharge({
-      list_code_number: selectedStudents,
-      plusPoint: validAmount,
-    })
-      .then((response) => {
-        console.log(response.data);
-        alert('충전이 성공적으로 완료되었습니다.');
-        setSelectedStudents([]);
-        setStudentsInfo([]);
-        // 충전 후 필요한 상태 업데이트나 UI 업데이트를 여기에 추가하세요.
-      })
-      .catch((error) => {
-        console.error(error);
-        alert('충전 중 오류가 발생했습니다.');
-      });
-  };
-
-  useEffect(() => {
+  // 학생 정보를 가져오는 함수
+  const fetchStudentsInfo = () => {
     if (selectedStudents.length) {
       axiosInstance
-        .get('/admin/userlist')
+        .get('v2/account/studentlist')
         .then((response) => {
           const matchedStudents = response.data.filter((student) =>
-            selectedStudents.includes(student.code_number)
+            selectedStudents.includes(student.stuCode)
           );
           setStudentsInfo(matchedStudents);
         })
@@ -51,14 +25,53 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
           console.error(error);
         });
     }
+  };
+
+  const BulkCharge = async (userCodeList, chargedPoint) => {
+    try {
+      const validAmount = parseInt(chargedPoint, 10);
+      if (isNaN(validAmount) || validAmount <= 0) {
+        alert('올바른 금액을 입력해주세요 (자연수).');
+        return null;
+      }
+
+      const response = await axiosInstance.post('v2/transaction/bulkcharge', {
+        userCodeList,
+        chargedPoint: validAmount,
+      });
+
+      console.log('충전 결과:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchStudentsInfo();
   }, [selectedStudents]);
 
   const handlePointChange = (e) => {
-    setPoint(e.target.value);
+    setChargedPoint(e.target.value);
   };
 
-  const handleBulkChargeClick = () => {
-    onBulkCharge(point, selectedStudents);
+  const handleBulkChargeClick = async () => {
+    try {
+      const results = await BulkCharge(selectedStudents, chargedPoint);
+      if (results && results.length > 0) {
+        const resultMessages = results.map(
+          (result) =>
+            `학생 ${result.userCode}: 이전 포인트 ${result.beforePoint} -> 이후 포인트 ${result.afterPoint}`
+        ).join('\n');
+        alert(`충전 결과:\n${resultMessages}`);
+
+        // 충전이 성공적으로 완료되면 체크박스를 해제
+        setSelectedStudents([]);
+      }
+    } catch (error) {
+      alert('충전 중 오류가 발생했습니다.');
+    }
     setModalOpen(false);
   };
 
@@ -67,6 +80,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
       alert('학생을 선택해주세요');
       return;
     }
+    fetchStudentsInfo();
     setModalOpen(true);
   };
 
@@ -81,8 +95,8 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
         </S.TitleWrap>
         <S.StudentList>
           {studentsInfo.map((student) => (
-            <S.StudentListItem key={student.code_number}>
-              이름: {student.student_name} - 바코드: {student.code_number}
+            <S.StudentListItem key={student.stuCode}>
+              학번: {student.stuNumber} - 이름: {student.stuName}
             </S.StudentListItem>
           ))}
         </S.StudentList>
@@ -92,12 +106,12 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
             <S.InfoText color="#8A8A8A">포인트</S.InfoText>
             <S.PointInput
               name="point"
-              value={point.toLocaleString()}
+              value={chargedPoint}
               onChange={handlePointChange}
             />
           </S.PointInTop>
           <S.PointBottom>
-            <span>관리자: {charger}</span>
+            <span>관리자: {user?.name}</span> {/* authContext에서 가져온 사용자 이름 사용 */}
           </S.PointBottom>
         </S.PointWrap>
         <S.BtnWrap>

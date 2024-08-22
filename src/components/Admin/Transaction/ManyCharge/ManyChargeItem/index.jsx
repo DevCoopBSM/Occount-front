@@ -1,73 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as _ from './style';
 import styled from 'styled-components';
-import axiosInstance from 'utils/Axios';
 
 export const ManyChargeItem = ({
+  students,
   selectedStudents,
   onToggleStudentSelection,
-  searchTerm,
-  studentIdSearchTerm,
+  onSelectAll,
 }) => {
-  const [alluser, setAllUser] = useState([]);
-  const [checkboxValues, setCheckboxValues] = useState({});
-
-  useEffect(() => {
-    axiosInstance
-      .get('/admin/userlist')
-      .then((response) => {
-        setAllUser(response.data);
-        const initialCheckboxValues = {};
-        response.data.forEach((user) => {
-          initialCheckboxValues[user.code_number] = selectedStudents.includes(
-            user.code_number
-          );
-        });
-        setCheckboxValues(initialCheckboxValues);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [selectedStudents]);
-
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    setCheckboxValues((prevValues) => ({
-      ...prevValues,
-      [name]: checked,
-    }));
     onToggleStudentSelection(name);
   };
 
-  const filteredUsers = alluser.filter((user) =>
-    user.student_name.includes(searchTerm) &&
-    user.student_id?.startsWith(studentIdSearchTerm)
-  );
+  const handleSelectAllChange = () => {
+    const allStudentIds = students.map((student) => student.stuCode);
+    onSelectAll(allStudentIds);
+  };
 
   return (
-    <InfoWrap>
-      {filteredUsers.map((user, index) => (
-        <_.Info key={index}>
+    <>
+      <InfoWrap>
+        <_.Info>
           <_.Infochoose>
             <input
               type="checkbox"
-              name={`${user.code_number}`}
-              checked={checkboxValues[user.code_number] || false}
-              onChange={handleCheckboxChange}
+              onChange={handleSelectAllChange}
+              checked={selectedStudents.length === students.length}
             />
           </_.Infochoose>
           <_.Infochoose>
-            <_.Infotext>{user.student_id}</_.Infotext>
+            <_.Infotext>학번</_.Infotext>
           </_.Infochoose>
           <_.Infochoose>
-            <_.Infotext>{user.student_name}</_.Infotext>
+            <_.Infotext>이름</_.Infotext>
           </_.Infochoose>
           <_.Infochoose>
-            <_.Infotext>{user.code_number}</_.Infotext>
+            <_.Infotext>바코드번호</_.Infotext>
           </_.Infochoose>
         </_.Info>
-      ))}
-    </InfoWrap>
+        {students.map((student, index) => (
+          <_.Info key={index}>
+            <_.Infochoose>
+              <input
+                type="checkbox"
+                name={student.stuCode}
+                checked={selectedStudents.includes(student.stuCode)}
+                onChange={handleCheckboxChange}
+              />
+            </_.Infochoose>
+            <_.Infochoose>
+              <_.Infotext>{student.stuNumber || 'N/A'}</_.Infotext> {/* 학번이 없는 경우 "N/A"로 표시 */}
+            </_.Infochoose>
+            <_.Infochoose>
+              <_.Infotext>{student.stuName}</_.Infotext>
+            </_.Infochoose>
+            <_.Infochoose>
+              <_.Infotext>{student.stuCode}</_.Infotext>
+            </_.Infochoose>
+          </_.Info>
+        ))}
+      </InfoWrap>
+    </>
   );
 };
 

@@ -43,7 +43,7 @@ export default function InventoryByDay() {
 
   const fetchItems = async () => {
     try {
-      const response = await axiosInstance.get('/admin/itemCheck');
+      const response = await axiosInstance.get('v2/admin/itemCheck');
       const remappedData = response.data.map(item => ({
         상품번호: item.item_id,
         상품이름: item.item_name,
@@ -139,7 +139,7 @@ export default function InventoryByDay() {
 
   const sendItemsForSnapshot = async items => {
     try {
-      await axiosInstance.post('/admin/createsnapshots', { items });
+      await axiosInstance.post('v2/admin/createsnapshots', { items });
       navigate('/admin/inventorybyday');
     } catch (error) {
       console.error('Error in sendItemsForSnapshot:', error);

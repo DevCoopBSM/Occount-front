@@ -16,7 +16,7 @@ const ReceiptCheck = () => {
     const queryParams = `?start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}&type=0`;
 
     axiosInstance
-      .get(`/admin/pointlog${queryParams}`)
+      .get(`v2/admin/pointlog${queryParams}`)
       .then((response) => {
         if (response.status === 204) {
           setData([]);

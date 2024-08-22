@@ -21,7 +21,7 @@ export default function ReceiptCheck() {
     }&end_date=${endDate.toISOString().split('T')[0]}`;
 
     axiosInstance
-      .get(`/admin/receiptCheck${queryParams}`)
+      .get(`v2/admin/receiptCheck${queryParams}`)
       .then((response) => {
         if (response.status === 204) {
           // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.

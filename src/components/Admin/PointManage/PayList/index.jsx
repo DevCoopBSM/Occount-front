@@ -22,7 +22,7 @@ export default function ReceiptCheck() {
     &type=1`;
 
     axiosInstance
-      .get(`/admin/pointlog${queryParams}`)
+      .get(`v2/admin/pointlog${queryParams}`)
       .then((response) => {
         if (response.status === 204) {
           // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.

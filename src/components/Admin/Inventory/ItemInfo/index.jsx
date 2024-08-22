@@ -16,7 +16,7 @@ export default function ItemPage() {
 
   const fetchData = () => {
     axiosInstance
-      .get(`/admin/itemCheck`)
+      .get(`v2/item`)
       .then((response) => {
         if (response.status === 204) {
           // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.
@@ -24,13 +24,12 @@ export default function ItemPage() {
           setData([]);
         } else {
           // 받아온 데이터의 필드를 재매핑합니다.
-          const remappedData = response.data.map((item) => ({
-            상품번호: item.item_id,
-            상품이름: item.item_name,
-            바코드: item.barcode,
-            상품가격: item.item_price,
+          const remappedData = response.data.itemList.map((item) => ({
+            상품번호: item.itemId,
+            상품이름: item.itemName,
+            바코드: item.itemCode,
+            상품가격: item.itemPrice,
           }));
-
           // 재매핑된 데이터를 상태에 설정합니다.
           console.log('Data sent:', remappedData);
           setData(remappedData);

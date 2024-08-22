@@ -4,7 +4,7 @@ import { axiosInstance } from "../utils/Axios";
 export const sendBarcode = async (barcode) => {
     try {
       console.log(barcode);
-      const response = await axiosInstance.post("/admin/barcode", {
+      const response = await axiosInstance.post("v2/admin/barcode", {
         code_number: barcode,
       });
       return {
