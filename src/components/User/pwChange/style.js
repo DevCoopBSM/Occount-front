@@ -13,15 +13,7 @@ export const LogoImg = styled.img`
   margin-bottom: 50px;
 `;
 
-export const LogoSubText = styled.p`
-  color: #000;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  margin-bottom: 10px;
-`;
-
-export const LoginWrap = styled.form`
+export const PwChangeWrap = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,12 +26,13 @@ export const InputContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const LoginInput = styled.input`
+export const PwChangeInput = styled.input`
   width: 100%;
   height: 60px;
   border: none;
   margin-bottom: 5px;
   padding: 10px;
+  padding-left: 24px;
   border-radius: 4px;
   background: #F2F2F2;
 
@@ -49,26 +42,27 @@ export const LoginInput = styled.input`
   font-weight: 400;
 `;
 
-export const ActionLinks = styled.div`
+export const PwChangeEmailContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 20%;
-  height: 100px;
-  margin-bottom: 20px;
+  align-items: center;
 `;
 
-export const ActionButton = styled.button`
-  width: 100%;
-  background: none;
+export const VerifyButton = styled.button`
+  width: 20%;
+  height: 60px;
+  margin-left: 5px;
+  outline: 2px solid var(--Gray, #999);
+  background-color: #fff;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  color: #0085FF;
-  font-size: 22px;
-  font-style: normal;
+  
+  color: #808080;
+  font-size: 24px;
   font-weight: 400;
 `;
 
-export const LoginButton = styled.button`
+export const PwChangeButton = styled.button`
   width: 48%;
   height: 80px;
   background-color: #41434C;
