@@ -5,10 +5,6 @@ import RefundFormModal from './RefundFormModal';
 import { handleRefundRequest } from './refundService';
 
 const PointLogItem = ({ type, data, fetchUserLog }) => {
-  const Type = type === 1 ? "충전" : "사용";
-  const background = type === 1 ? "#E6EBFF" : "#EFF0F2";
-  const usedBackground = type === 1 ? "#d4f4dd" : "#EFF0F2";
-  const overWeekBackground = "#fffacd";
   const [expandedItemId, setExpandedItemId] = useState(null);
   const [refundAccount, setRefundAccount] = useState({ bank: "", holderName: "", number: "", holderPhoneNumber: "" });
   const [showRefundForm, setShowRefundForm] = useState(false);
@@ -32,22 +28,26 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
     }
   }, [data, expandedItemId]);
 
-  // 데이터가 undefined일 경우를 대비해 기본값 설정
   const logList = data || [];
 
-  // 데이터를 적절히 변환
   const formattedData = logList
     .map((item) => {
-      const chargeDate = new Date(...item.chargeDate); // 배열을 스프레드해서 Date 객체로 변환
+      const chargeDate = new Date(item.chargeDate[0], item.chargeDate[1] - 1, item.chargeDate[2], item.chargeDate[3], item.chargeDate[4], item.chargeDate[5]);
       return {
         ...item,
-        date: chargeDate, // 날짜 형식을 JS Date 객체로 변환
-        inner_point: item.chargedPoint || item.payedPoint, // 포인트 금액 필드
-        type: item.chargeType || item.payType, // 타입 필드
-        charger_id: item.managedEmail // 관리자 이메일 필드
+        date: chargeDate,
+        inner_point: item.chargedPoint || item.payedPoint,
+        type: item.chargeType || item.payType,
       };
     })
-    .sort((a, b) => b.date - a.date); // 내림차순 정렬
+    .sort((a, b) => b.date - a.date);
+
+  const getBackgroundColor = (item, type, isOverWeek) => {
+    if (item.refundState) return "#ffcccc";
+    if (item.type === "1" && type === 1) return "#fffacd"; // 오프라인 충전 (type === 1) 일 때
+    if (isOverWeek && type === 1) return "#fffacd";
+    return type === 0 ? "#d4f4dd" : "#E6EBFF";
+  };
 
   return (
     <div style={{ flexDirection: "column" }}>
@@ -58,28 +58,24 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
         const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
         const isOverWeek = dayDiff > 7;
 
-        const chargeType = item.type === "2" ? "카드 충전" : item.type === "3" ? "계좌 충전" : "기타 충전";
+        const chargeType = item.type === "1" 
+          ? "오프라인 충전" 
+          : item.type === "2" 
+          ? "카드 충전" 
+          : item.type === "3" 
+          ? "계좌 충전" 
+          : "기타 충전";
 
         return (
           <div key={`${type}-${index}`}>
             <_.PointLogWrap
               onClick={() => handleItemClick(item)}
-              style={{
-                background: item.refundState
-                  ? "#ffcccc"
-                  : item.charger_id !== "Online" && type === 1
-                  ? "#fffacd"
-                  : isOverWeek && type === 1
-                  ? overWeekBackground
-                  : type === 0
-                  ? usedBackground
-                  : background,
-              }}
+              style={{ background: getBackgroundColor(item, type, isOverWeek) }}
             >
               <_.DateText>{item.date.toLocaleDateString()}</_.DateText>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <_.AmountText>
-                  {`${item.inner_point.toLocaleString()}원 ${Type}`}
+                  {`${item.inner_point.toLocaleString()}원 ${type === 1 ? "충전" : "사용"}`}
                 </_.AmountText>
                 <_.ChargeTypeText>{chargeType}</_.ChargeTypeText>
               </div>
@@ -103,14 +99,14 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
                           ? "환불 완료" 
                           : isOverWeek 
                           ? "1주일 초과" 
-                          : item.charger_id === "Online" 
-                          ? "환불신청가능" 
-                          : "온라인으로 충전된 내역이 아님"}
+                          : item.type >= 2 
+                          ? (item.type === 3 ? "환불 신청 시 계좌 정보가 필요합니다." : "환불신청가능") 
+                          : "오프라인 충전된 내역"}
                       </_.DetailValue>
                     </_.DetailRow>
-                    {item.charger_id === "Online" && !item.refundState && !isOverWeek && (
+                    {item.type >= 2 && !item.refundState && !isOverWeek && (
                       <>
-                        {showRefundForm && item.type === "3" && (
+                        {showRefundForm && item.type === 3 && (
                           <RefundFormModal
                             isOpen={showRefundForm}
                             closeModal={closeModal}
@@ -121,8 +117,8 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
                         )}
                         <div style={{ display: "flex", justifyContent: "center" }}>
                           <_.ModalButton onClick={() => {
-                            if (item.type === "3") {
-                              setShowRefundForm(true);
+                            if (item.type === 3) {
+                              setShowRefundForm(true); // 계좌 입력이 필요함
                             } else {
                               handleRefundRequest(item, refundAccount, type, fetchUserLog, refetchUser, closeModal);
                             }

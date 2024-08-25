@@ -38,16 +38,21 @@ export const Userlog = () => {
       .then((response) => {
         console.log('API Response:', response.data); // API 응답 확인
         if (type === 0) {
-          setUseLogData(response.data.payLogList);
+          setUseLogData(response.data || []); // 데이터가 없을 경우 빈 배열 설정
         } else {
-          setChargeLogData(response.data.chargeLogList);
+          console.log('Charge Log Data:', response.data); // 차지 로그 데이터 확인
+          setChargeLogData(response.data || []); // 데이터가 없을 경우 빈 배열 설정
         }
       })
       .catch((error) => {
         console.error(error);
+        if (type === 0) {
+          setUseLogData([]); // 에러 발생 시에도 빈 배열 설정
+        } else {
+          setChargeLogData([]); // 에러 발생 시에도 빈 배열 설정
+        }
       });
-  };
-  
+};
 
   const updateItemsPerPage = () => {
     const height = window.innerHeight;
@@ -79,20 +84,24 @@ export const Userlog = () => {
         <_.PointContainer>
           <_.rightWrap>
             <li style={{ display: "flex" }}>
-              <PointLogItem 
-                type={0} 
-                data={useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
-                fetchUserLog={fetchUserLog}
-              />
+              {useLogData.length > 0 && (
+                <PointLogItem 
+                  type={0} 
+                  data={useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
+                  fetchUserLog={fetchUserLog}
+                />
+              )}
             </li>
           </_.rightWrap>
           <_.leftWrap>
             <li style={{ display: "flex" }}>
-              <PointLogItem 
-                type={1} 
-                data={chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
-                fetchUserLog={fetchUserLog}
-              />
+              {chargeLogData.length > 0 && (
+                <PointLogItem 
+                  type={1} 
+                  data={chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)}
+                  fetchUserLog={fetchUserLog}
+                />
+              )}
             </li>
           </_.leftWrap>
         </_.PointContainer>
