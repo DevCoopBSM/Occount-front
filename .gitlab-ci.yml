@@ -9,7 +9,7 @@ before_script:
 pull:
   stage: pull
   script:
-    - docker-compose -p aripay -f docker-compose.aripay.yml stop aripay-back
+    - docker-compose -p oring -f docker-compose.oring.yml down occount-front
     - cd $PROJECT_PATH
     - git pull
   tags:
@@ -19,7 +19,7 @@ build:
   stage: build
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -p aripay -f docker-compose.aripay.yml build --no-cache aripay-back
+    - docker-compose -p oring -f docker-compose.oring.yml build --no-cache occount-front
   tags:
     - docker
 
@@ -27,7 +27,7 @@ deploy:
   stage: deploy
   script:
     - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -p aripay -f docker-compose.aripay.yml up -d aripay-back
+    - docker-compose -p oring -f docker-compose.oring.yml up -d occount-front
   only:
     - main
   tags:
