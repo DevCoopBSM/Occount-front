@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-syntax-flow": "^7.24.7",
+    "@babel/plugin-transform-react-jsx": "^7.25.2",
     "@portone/browser-sdk": "^0.0.9",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -18,8 +22,9 @@
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-google-button": "^0.7.2",
+    "react-is": "^18.3.1",
     "react-paginate": "^8.2.0",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6",
     "react-scripts": "5.0.1",
     "styled-component": "^2.8.0",
     "styled-components": "^5.3.10",
@@ -52,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "typescript": "^5.5.4"
