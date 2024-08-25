@@ -10140,11 +10140,6 @@ mz@^2.7.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-n@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.npmjs.org/n/-/n-9.1.0.tgz"
-  integrity sha512-fFezMcaE/xD1UXIeC1vKgxzCrAwOjlj4AaX3x7slEdxA/NTQhFKK2JK7iU1d897xf5dJyv8HDrDzk83PEkaZAA==
-
 nan@^2.12.1:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.20.0.tgz#08c5ea813dd54ed16e5bd6505bf42af4f7838ca3"

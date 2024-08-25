@@ -1,10 +1,10 @@
-# AriPay Client
+# O-ccount Client
 
 ### 실핼방법
 
 ```
 
-git clone https://github.com/DevCoopBSM/DevCoop-front.git
+git clone http://gitlab.bsm-aripay.kr/DevCoop/o-ccount_front_v1.git
 yarn
 yarn start
 
