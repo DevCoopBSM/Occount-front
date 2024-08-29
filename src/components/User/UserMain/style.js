@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const Maintop = styled.div`
   margin: 0 auto;
-  width: 1000px;
+  width: 100%;
   height: 400px;
 `;
 
@@ -14,7 +14,7 @@ export const Mainbottom = styled.div`
   margin: 0 auto;
   width: 1000px;
   height: 300px;
-  background: #e3e5e7;
+  background: #fff;
 `;
 
 export const TopBox = styled.div`
@@ -64,7 +64,7 @@ export const AskBox = styled.div`
   margin: 15px 10px 15px 10px;
   width: 550px;
   height: 270px;
-  background: #fff;
+  background: #FFF4B2;
   border-radius: 12px;
 `;
 
@@ -78,7 +78,7 @@ export const AskInTop = styled.div`
   display: flex;
   width: 100%;
   height: 150px;
-  background-color: #fff;
+  background-color: #FFF4B2;
   border-radius: 12px;
 
   a {
@@ -88,7 +88,7 @@ export const AskInTop = styled.div`
     margin: 20px;
     font-size: 30px;
     font-weight: 600;
-    color: #8a8a8a;
+    color: #000;
   }
 `;
 

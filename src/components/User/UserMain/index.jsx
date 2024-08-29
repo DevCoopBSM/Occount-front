@@ -98,7 +98,7 @@ const Main = () => {
               target="_blank"
               rel="noreferrer"
             >
-              문의하기
+              인스타로 문의하기
             </a>
           </_.AskInTop>
           <_.CallLogoStyle />
