@@ -99,3 +99,17 @@ export const ModalContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
 `;
+
+export const SuccessMessageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const SuccessMessage = styled.div`
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 400;
+  color: #4CAF50; /* 성공 메시지 색상 */
+`;
