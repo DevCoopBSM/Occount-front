@@ -67,7 +67,10 @@ export const AuthProvider = ({ children }) => {
   const unifiedLogin = async (email, password, navigate, admin = false) => {
     try {
       const url = 'v2/auth/login';
-      const response = await axiosInstance.post(url, { userEmail: email, userPassword: password });
+      const response = await axiosInstance.post(url, {
+        userEmail: email,
+        userPassword: password,
+      });
 
       const { accessToken, user, roles } = response.data;
 
@@ -112,11 +115,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axiosInstance.get('v2/account/userinfo');
       const userInfo = {
-        point: response.data.userPoint,        // 서버 응답에 맞게 필드명 수정
-        name: response.data.userName,          // 서버 응답에 맞게 필드명 수정
-        code: response.data.userCode,        // 서버 응답에 맞게 필드명 수정
-        email: response.data.userEmail,        // 서버 응답에 맞게 필드명 수정
-        todayTotalCharge: response.data.todayTotalCharge // 서버 응답에 맞게 필드명 수정
+        point: response.data.userPoint, // 서버 응답에 맞게 필드명 수정
+        name: response.data.userName, // 서버 응답에 맞게 필드명 수정
+        code: response.data.userCode, // 서버 응답에 맞게 필드명 수정
+        email: response.data.userEmail, // 서버 응답에 맞게 필드명 수정
+        todayTotalCharge: response.data.userTotalCharge, // 서버 응답에 맞게 필드명 수정
       };
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       return userInfo;
@@ -128,7 +131,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async (navigate) => {
     try {
-
       // 상태 업데이트
       dispatch({ type: actionTypes.LOGOUT });
 
@@ -155,7 +157,8 @@ export const AuthProvider = ({ children }) => {
         ...state,
         unifiedLogin,
         logout,
-        setErrorMessage: (msg) => dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
+        setErrorMessage: (msg) =>
+          dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
         clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
         refetchUser: fetchUserInformation,
       }}

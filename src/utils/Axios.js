@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
       // 401 응답을 받은 경우 로그아웃 처리
       try {
         console.error('액세스 토큰이 만료되었습니다. 로그아웃을 수행합니다.');
-        
+
         // 로그아웃 요청을 서버로 전송 (필요에 따라 로그아웃 API 경로 수정 가능)
         // await axiosInstance.post('v2/auth/logout');
 

@@ -8,7 +8,7 @@ const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(1000);
-  const [formatPoint, setFormatPoint] = useState("");
+  const [formatPoint, setFormatPoint] = useState('');
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -68,9 +68,7 @@ const Main = () => {
         </_.TopBox>
 
         <_.BottomBox>
-          <_.UserlogLink to="/userlog">
-            거래 내역 및 충전 환불
-          </_.UserlogLink>
+          <_.UserlogLink to="/userlog">거래 내역 및 충전 환불</_.UserlogLink>
         </_.BottomBox>
       </_.Maintop>
 
@@ -107,8 +105,8 @@ const Main = () => {
         </_.AskBox>
       </_.Mainbottom>
 
-      <ChargeModal 
-        isOpen={isChargeModalOpen} 
+      <ChargeModal
+        isOpen={isChargeModalOpen}
         onRequestClose={handleCloseChargeModal}
         chargeAmount={chargeAmount}
         setChargeAmount={setChargeAmount}
