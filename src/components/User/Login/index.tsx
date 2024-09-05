@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "reac
 import { useNavigate } from 'react-router-dom';
 import imgLogo from "assets/occLoginlogo.svg";
 import { useAuth } from "context/authContext";
+import * as G from "../../../common/GlobalStyle"
 import * as L from "./style";
 
 const Login: React.FC = () => {
@@ -91,6 +92,16 @@ const Login: React.FC = () => {
           </L.ModalContent>
         </L.ModalOverlay>
       )}
+       <G.Footer>
+        <G.FooterText>
+          상호: 부산소마고 사회적협동조합
+          대표: 김민경(이사장)
+          사업자 등록번호: 214-82-16238<br/>
+          주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
+          전화번호: 051-970-1709<br/>
+          INSTA | GITHUB
+        </G.FooterText>
+      </G.Footer>
     </L.Container>
   );
 };
