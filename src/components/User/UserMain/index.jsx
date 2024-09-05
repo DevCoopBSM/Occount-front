@@ -77,15 +77,12 @@ const Main = () => {
           <_.UseBox>
             <div>
               How
-              <br />
               To
-              <br />
               Use?
               <br />
               <p>
                 아리페이를 더 똑똑하게
-                <br />
-                사용하는 방법
+                사용하는 법
               </p>
             </div>
           </_.UseBox>
