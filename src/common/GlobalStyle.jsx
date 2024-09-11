@@ -64,16 +64,16 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 export const Footer = styled.footer`
-  margin-top: 300%;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   height: 150px;
   background-color: #999;
   color: #fff;
-  position: absolute;
   bottom: 0;
-  width: 100%;
+  
 `;
 
 export const FooterText = styled.p`

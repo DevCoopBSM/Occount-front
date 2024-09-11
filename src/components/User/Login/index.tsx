@@ -84,15 +84,17 @@ const Login: React.FC = () => {
           <L.ActionButton type="button" onClick={() => navigate('/pwChange')}>비밀번호 찾기</L.ActionButton>
         </L.ActionLinks>
         <L.LoginButton type="submit">로그인</L.LoginButton>
+
       </L.LoginWrap>
       {errorMessage && (
         <L.ModalOverlay>
           <L.ModalContent>
             {errorMessage}
           </L.ModalContent>
+          
         </L.ModalOverlay>
       )}
-       <G.Footer>
+      <G.Footer>
         <G.FooterText>
           상호: 부산소마고 사회적협동조합
           대표: 김민경(이사장)
@@ -103,6 +105,7 @@ const Login: React.FC = () => {
         </G.FooterText>
       </G.Footer>
     </L.Container>
+    
   );
 };
 

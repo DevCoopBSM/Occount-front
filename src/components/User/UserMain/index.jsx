@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as _ from './style';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'context/authContext';
+import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 
 const Main = () => {
@@ -51,26 +52,32 @@ const Main = () => {
       <_.Maintop>
         <_.TopBox>
           <_.MainTopInBox>
-            <p style={{ paddingTop: '10px', fontSize: '30px' }}>
-              현재 사용 가능한 금액
-            </p>
+            
             {isLoggedIn ? (
               <>
+              <p style={{ paddingTop: '10px', fontSize: '30px' }}>현재 사용 가능한 금액</p>
                 <p style={{ fontSize: '70px' }}>{formatPoint}원</p>
                 <_.ChargeButton onClick={handleOpenChargeModal}>
                   충전하기
                 </_.ChargeButton>
               </>
             ) : (
-              <p style={{ fontSize: '42px' }}>로그인 후 조회 가능합니다</p>
+              <p style={{ fontSize: '42px' }}><br/>
+              <p style={{ paddingTop: '10px', fontSize: '24px', fontWeight: '400' }}>현재 사용 가능한 금액 </p>
+              로그인 후 조회 가능합니다</p>
             )}
           </_.MainTopInBox>
         </_.TopBox>
 
         <_.BottomBox>
+          
           <_.UserlogLink to="/userlog">
-            거래 내역 및 충전 환불
+            사용 내역이 궁금하다면?
           </_.UserlogLink>
+          <_.UserlogLink to="/userlog">
+            보러가기 ㄱ
+          </_.UserlogLink>
+
         </_.BottomBox>
       </_.Maintop>
 
@@ -97,12 +104,24 @@ const Main = () => {
               target="_blank"
               rel="noreferrer"
             >
+              <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
               인스타로 문의하기
             </a>
           </_.AskInTop>
           <_.CallLogoStyle />
         </_.AskBox>
       </_.Mainbottom>
+
+      <G.Footer>
+        <G.FooterText>
+          상호: 부산소마고 사회적협동조합
+          대표: 김민경(이사장)
+          사업자 등록번호: 214-82-16238<br/>
+          주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
+          전화번호: 051-970-1709<br/>
+          INSTA | GITHUB
+        </G.FooterText>
+      </G.Footer>
 
       <ChargeModal 
         isOpen={isChargeModalOpen} 

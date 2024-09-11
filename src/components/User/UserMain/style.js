@@ -19,7 +19,7 @@ export const Mainbottom = styled.div`
 
 export const TopBox = styled.div`
   margin: 0 auto;
-  padding: 70px;
+  padding-left: 70px;
   width: 970px;
   height: 250px;
   background: #41434c;
@@ -68,12 +68,6 @@ export const AskBox = styled.div`
   border-radius: 12px;
 `;
 
-export const Infotext = styled.p`
-  font-size: 20px;
-  text-align: center;
-  color: #fff;
-`;
-
 export const AskInTop = styled.div`
   display: flex;
   width: 100%;
@@ -82,8 +76,9 @@ export const AskInTop = styled.div`
   border-radius: 12px;
 
   a {
+    
     display: block;
-    width: 150px;
+    width: 100%;
     height: 50px;
     margin: 20px;
     font-size: 30px;
@@ -99,22 +94,18 @@ export const CallLogoStyle = styled(CallLogo)`
 `;
 
 export const UserlogLink = styled(Link)`
-  display: block;
-  width: 60%;
-  padding: 30px; /* padding 값을 더 크게 설정하여 두껍게 만듭니다 */
-  background: rgb(240, 206, 0);
+  padding: 50px;
   color: #fff;
   text-align: center;
   border-radius: 10px;
-  font-size: 24px; /* font-size를 더 크게 설정하여 버튼을 눈에 띄게 만듭니다 */
-  font-weight: bold; /* 텍스트를 굵게 설정 */
+  font-size: 24px; 
+  font-weight: 400;
   text-decoration: none;
 `;
 
 export const MainTopInBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
   font-size: 20px;
   color: #fff;
 
