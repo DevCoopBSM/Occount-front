@@ -4,12 +4,19 @@ import { Link } from 'react-router-dom';
 import { useAuth } from 'context/authContext';
 import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
+import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(1000);
   const [formatPoint, setFormatPoint] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -55,16 +62,22 @@ const Main = () => {
             
             {isLoggedIn ? (
               <>
-              <p style={{ paddingTop: '10px', fontSize: '30px' }}>현재 사용 가능한 금액</p>
-                <p style={{ fontSize: '70px' }}>{formatPoint}원</p>
+
+                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+                <_.TopBoxText2>{formatPoint}원</_.TopBoxText2>
+                
                 <_.ChargeButton onClick={handleOpenChargeModal}>
                   충전하기
                 </_.ChargeButton>
               </>
             ) : (
-              <p style={{ fontSize: '42px' }}><br/>
+              <>
+
+              <p style={{ fontSize: '42px' }}>  <br/>
               <p style={{ paddingTop: '10px', fontSize: '24px', fontWeight: '400' }}>현재 사용 가능한 금액 </p>
+
               로그인 후 조회 가능합니다</p>
+              </>
             )}
           </_.MainTopInBox>
         </_.TopBox>
@@ -77,15 +90,22 @@ const Main = () => {
       <_.Mainbottom>
         <Link to="/howto">
           <_.UseBox>
-            <div>
-              How
-              To
-              Use?
-              <br />
-              <p>
-                아리페이를 더 똑똑하게
-                사용하는 법
-              </p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div>
+                How
+                To
+                Use?
+                <br />
+                <p>
+                  아리페이를 더 똑똑하게
+                  사용하는 법
+                </p>
+              </div>
+              <How2Use
+                width={'90%'}
+                height={'120px'}
+                style={{ marginTop: '10px' }}
+              />
             </div>
           </_.UseBox>
         </Link>
