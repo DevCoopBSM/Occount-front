@@ -1,11 +1,13 @@
-import * as H from 'common/PageWrapStyle';
-import { ReactComponent as AriPayLogo } from 'assets/AriPayLogo.svg';
+import * as H from './style';
+import { ReactComponent as AriPayLogo } from 'assets/OccountLogo.svg';
 import { useAuth } from 'context/authContext';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Header = () => {
-  const { isLoggedIn, logout } = useAuth(); // setIsLoggedIn 제거
+  const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const handleLogoClick = () => {
     navigate('/');
@@ -16,7 +18,15 @@ const Header = () => {
   };
 
   const handleLogoutClick = () => {
-    logout(false, navigate); // `logout` 함수만 호출하여 상태를 처리
+    logout(false, navigate);
+  };
+
+  const handleSettingsClick = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handlePasswordChangeClick = () => {
+    navigate('/pwChange'); // 비밀번호 변경 페이지로 이동
   };
 
   return (
@@ -28,7 +38,15 @@ const Header = () => {
           onClick={handleLogoClick}
         />
         {isLoggedIn ? (
-          <H.LogOutBtn onClick={handleLogoutClick}>로그아웃</H.LogOutBtn>
+          <H.SettingsContainer>
+            <H.SettingsButton onClick={handleSettingsClick}>설정</H.SettingsButton>
+            {dropdownVisible && (
+              <H.DropdownMenu>
+                <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
+                <H.DropdownItem onClick={handlePasswordChangeClick}>비밀번호 변경</H.DropdownItem>
+              </H.DropdownMenu>
+            )}
+          </H.SettingsContainer>
         ) : (
           <H.LogOutBtn onClick={handleLoginClick}>로그인</H.LogOutBtn>
         )}

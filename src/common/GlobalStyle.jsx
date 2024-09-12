@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import styled from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
 *, *::before, *::after {
@@ -60,4 +61,22 @@ export const GlobalStyle = createGlobalStyle`
   li,ol {
     list-style: none;
   }
+`;
+
+export const Footer = styled.footer`
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 150px;
+  background-color: #999;
+  color: #fff;
+  bottom: 0;
+  
+`;
+
+export const FooterText = styled.p`
+  margin: 0;
+  text-align: center;
 `;
