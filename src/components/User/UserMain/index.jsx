@@ -70,10 +70,7 @@ const Main = () => {
         </_.TopBox>
 
         <_.BottomBox>
-          <_.UserlogLink to="/userlog">
-            보러가기 ㄱ
-          </_.UserlogLink>
-
+          <_.UserlogLink to="/userlog">거래 내역 및 충전 환불</_.UserlogLink>
         </_.BottomBox>
       </_.Maintop>
 
