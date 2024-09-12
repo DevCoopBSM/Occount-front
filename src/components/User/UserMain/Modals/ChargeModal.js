@@ -38,39 +38,63 @@ const ChargeModal = ({
 
   return (
     <>
-      <Modal 
-        isOpen={isOpen} 
+      <Modal
+        isOpen={isOpen}
         onRequestClose={onRequestClose}
-        style={{ content: { width: '90%', maxWidth: '500px', margin: '0 auto', overflow: 'auto', maxHeight: '90vh' } }}
+        style={{
+          content: {
+            width: '90%',
+            maxWidth: '500px',
+            margin: '0 auto',
+            overflow: 'auto',
+            maxHeight: '90vh',
+          },
+        }}
       >
         <_.ModalHeader>충전하기</_.ModalHeader>
         <_.HighlightText>
-          현재 {(50000 - (user?.todayTotalCharge || 0)).toLocaleString()}원 충전 가능
+          현재 {(50000 - (user?.todayTotalCharge || 0)).toLocaleString()}원 충전
+          가능
         </_.HighlightText>
         <_.ModalList>
-          <_.ModalListItem>1. 아리페이란 공간 아리소리(이하 매점)에서 사용하는 포인트입니다.</_.ModalListItem>
           <_.ModalListItem>
-            2. 아리페이 충전에 대한 환불은 다음 조건을 모두 충족해야 가능합니다.<br />
-            2.1-환불하고자 하는 충전 금액 이상 포인트를 보유함<br />
+            1. 아리페이란 공간 아리소리(이하 매점)에서 사용하는 포인트입니다.
+          </_.ModalListItem>
+          <_.ModalListItem>
+            2. 아리페이 충전에 대한 환불은 다음 조건을 모두 충족해야 가능합니다.
+            <br />
+            2.1-환불하고자 하는 충전 금액 이상 포인트를 보유함
+            <br />
             2.2-충전이 이뤄진 시점으로부터 7일 이내에 환불 신청을 함
           </_.ModalListItem>
-          <_.ModalListItem>3. 아리페이의 일일 충전 한도는 5만원입니다.</_.ModalListItem>
           <_.ModalListItem>
-            4. 아리페이는 환전, 조합원 간 양도 및 교환이 불가하며,<br />
-            소유자가 직접 식품, 잡화 등 매점에서 판매하는 물품을 구매하는 용도로만 사용해야 합니다.
+            3. 아리페이의 일일 충전 한도는 5만원입니다.
           </_.ModalListItem>
           <_.ModalListItem>
-            5. 아리페이의 유지 기간은 충전한 시점부터 조합원 자격을 유지하는 동안 모두 소진하기 전까지이며 (최대 3년),<br />
-            조합 탈퇴 및 졸업 등으로 조합원 자격 상실 시 포인트는 전액 소멸됩니다.
+            4. 아리페이는 환전, 조합원 간 양도 및 교환이 불가하며,
+            <br />
+            소유자가 직접 식품, 잡화 등 매점에서 판매하는 물품을 구매하는
+            용도로만 사용해야 합니다.
+          </_.ModalListItem>
+          <_.ModalListItem>
+            5. 아리페이의 유지 기간은 충전한 시점부터 조합원 자격을 유지하는
+            동안 모두 소진하기 전까지이며 (최대 3년),
+            <br />
+            조합 탈퇴 및 졸업 등으로 조합원 자격 상실 시 포인트는 전액
+            소멸됩니다.
           </_.ModalListItem>
         </_.ModalList>
         <_.InputWrapper>
-          <_.ModalInput 
-            type="number" 
-            value={chargeAmount} 
+          <_.ModalInput
+            type="number"
+            value={chargeAmount}
             onChange={(e) => {
               const value = parseInt(e.target.value, 10);
-              if (value >= 1000 && value <= 50000 - (user?.todayTotalCharge || 0) && value % 1000 === 0) {
+              if (
+                value >= 1000 &&
+                value <= 50000 - (user?.todayTotalCharge || 0) &&
+                value % 1000 === 0
+              ) {
                 setChargeAmount(value);
               } else if (value < 1000) {
                 alert('충전 금액은 천 원 이상 입력해야 합니다.');
@@ -79,7 +103,7 @@ const ChargeModal = ({
               } else if (value % 1000 !== 0) {
                 alert('충전 금액은 천 원 단위로 입력해야 합니다.');
               }
-            }} 
+            }}
             placeholder="충전 금액 (천 원 단위)"
             step="1000"
             min="1000"
@@ -88,7 +112,13 @@ const ChargeModal = ({
           <_.IncreaseButton onClick={increaseAmount}>▲</_.IncreaseButton>
           <_.DecreaseButton onClick={decreaseAmount}>▼</_.DecreaseButton>
         </_.InputWrapper>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '20px',
+          }}
+        >
           <_.ModalFooterButton onClick={handleChargeClick}>
             결제진행
           </_.ModalFooterButton>
@@ -98,16 +128,24 @@ const ChargeModal = ({
         </div>
       </Modal>
 
-      <Modal 
-        isOpen={isPaymentModalOpen} 
+      <Modal
+        isOpen={isPaymentModalOpen}
         onRequestClose={handleClosePaymentModal}
-        style={{ content: { width: '90%', maxWidth: '600px', margin: '0 auto', overflow: 'auto', maxHeight: '90vh' } }}
+        style={{
+          content: {
+            width: '90%',
+            maxWidth: '600px',
+            margin: '0 auto',
+            overflow: 'auto',
+            maxHeight: '90vh',
+          },
+        }}
       >
-        <PaymentCheckoutPage 
-          customerEmail={user?.email} 
-          customerName={user?.name} 
-          rechargeAmount={chargeAmount} 
-          onRequestClose={handleClosePaymentModal} 
+        <PaymentCheckoutPage
+          customerEmail={user?.email}
+          customerName={user?.name}
+          rechargeAmount={chargeAmount}
+          onRequestClose={handleClosePaymentModal}
         />
       </Modal>
     </>
