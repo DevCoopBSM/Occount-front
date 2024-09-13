@@ -43,12 +43,12 @@ export default function InventoryByDay() {
 
   const fetchItems = async () => {
     try {
-      const response = await axiosInstance.get('v2/admin/itemCheck');
+      const response = await axiosInstance.get('v2/items/');
       const remappedData = response.data.map(item => ({
-        상품번호: item.item_id,
-        상품이름: item.item_name,
-        바코드: item.barcode,
-        상품가격: item.item_price,
+        상품번호: item.itemId,
+        상품이름: item.itemName,
+        바코드: item.itemCode,
+        상품가격: item.itemPrice,
       }));
       setItemList(remappedData);
       setFilteredItemList(remappedData);
@@ -60,17 +60,17 @@ export default function InventoryByDay() {
   const handleSearch = () => {
     const queryParams = `?end_date=${endDate.toISOString().split('T')[0]}`;
     axiosInstance
-      .get(`/admin/inventorybyday${queryParams}`)
+      .get(`/v2/inventory/byday${queryParams}`)
       .then(response => {
         if (response.status === 204) {
           console.log('No content');
           setData([]);
         } else {
           const remappedData = response.data.map(item => ({
-            상품번호: item.item_id,
-            상품이름: item.item_name,
-            수량: item.quantity,
-            최종업데이트: PrettyDateTime(item.last_updated),
+            상품번호: item.itemId,
+            상품이름: item.itemName,
+            수량: item.itemQuantity,
+            최종업데이트: PrettyDateTime(item.snapshotDate),
           }));
           setData(remappedData);
         }

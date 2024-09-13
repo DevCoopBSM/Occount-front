@@ -23,19 +23,19 @@ export default function InventoryCheck() {
     }&end_date=${endDate.toISOString().split('T')[0]}`;
 
     axiosInstance
-      .get(`/admin/inventoryCheck${queryParams}`)
+      .get(`/v2/inventory${queryParams}`)
       .then((response) => {
         if (response.status === 204) {
           console.log('No content');
           setData([]);
         } else {
           const remappedData = response.data.map((item) => ({
-            재고번호: item.inventory_id,
-            상품번호: item.item_id,
-            상품이름: item.item_name,
-            수량: item.quantity,
-            최종업데이트: PrettyDateTime(item.last_updated),
-            작성자아이디: item.writer_id,
+            재고번호: item.inventoryId,
+            상품번호: item.itemId,
+            상품이름: item.itemName,
+            수량: item.itemQuantity,
+            최종업데이트: PrettyDateTime(item.lastUpdated),
+            작성자아이디: item.managedEmail,
             사유: item.reason,
           }));
 
