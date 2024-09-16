@@ -7,39 +7,50 @@ export function PaymentRedirectPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  const status = searchParams.get('code') === 'FAILURE_TYPE_PG' ? 'fail' : 'success';
-  const paymentId = searchParams.get('paymentId');
-  const orderId = searchParams.get('txId');
-  const message = decodeURIComponent(searchParams.get('message') || '');
+  
+  // URL 파라미터와 state에서 모두 paymentId를 확인
+  const paymentId = searchParams.get('paymentId') || location.state?.paymentId;
+  const code = searchParams.get('code');
+  const message = searchParams.get('message');
+
+  const isSuccess = !code  || location.state?.status === 'success';
 
   useEffect(() => {
     console.log('Redirect Page Loaded');
-    console.log('Status:', status);
+    console.log('Is Success:', isSuccess);
+    console.log('PaymentId:', paymentId);
 
-    if (status === 'success') {
+    if (isSuccess && paymentId) {
       handlePaymentSuccess();
     } else {
       handlePaymentFail();
     }
-  }, [status]);
+  }, [isSuccess, paymentId]);
 
   const handlePaymentSuccess = async () => {
-    const requestData = {
-      orderId,
-      paymentId,
-    };
-
     try {
-      console.log('Sending confirm request:', requestData);
+      console.log('Sending confirm request:', { paymentId });
       const confirmResponse = await axiosInstance.post(
         'v2/pg/confirm',
-        requestData
+        { paymentId }
       );
       console.log('Confirm response:', confirmResponse.data);
-      navigate('/payment-result', { state: confirmResponse.data });
+      
+      // 필요한 정보만 추출
+      const { method, amount, customer } = confirmResponse.data;
+      const paymentInfo = {
+        success: true,
+        paymentId,
+        method: method?.type,
+        amount: amount?.total,
+        currency: amount?.currency,
+        customer: customer?.name
+      };
+      
+      navigate('/payment-result', { state: paymentInfo });
     } catch (error) {
       console.error('Confirm request failed:', error);
-      navigate('/payment-result', { state: { error } });
+      navigate('/payment-result', { state: { success: false, error } });
     }
   };
 
@@ -48,11 +59,8 @@ export function PaymentRedirectPage() {
     navigate('/payment-result', {
       state: {
         success: false,
-        error: {
-          code: searchParams.get('pgCode'),
-          message: message,
-        },
-      },
+        error: message || '결제에 실패했습니다.'
+      }
     });
   };
 

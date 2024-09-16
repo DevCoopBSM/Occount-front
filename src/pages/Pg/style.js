@@ -2,50 +2,59 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+export const ResultContainer = styled.div`
+  background-color: white;
+  border-radius: 10px;
   padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+export const ResultContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-export const BoxSection = styled.div`
-  width: 80%;
-  max-width: 600px;
+export const Title = styled.h1`
+  font-size: 1.5rem;
   margin-bottom: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 `;
 
-export const Button = styled.button`
-  font-size: 20px; /* Increased font size */
-  padding: 15px 20px; /* Increased padding */
-  margin: 10px;
-  width: 150px; /* Fixed width */
-  height: 60px; /* Fixed height */
+export const InfoItem = styled.p`
+  font-size: 1rem;
+  margin: 10px 0;
+  text-align: center;
+`;
+
+export const CloseButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
   background-color: #007bff;
-  border: none;
-  border-radius: 10px; /* Increased border radius */
   color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
+
   &:hover {
     background-color: #0056b3;
   }
 `;
 
-export const ButtonSecondary = styled(Button)`
-  background-color: #6c757d;
-  &:hover {
-    background-color: #5a6268;
-  }
-`;
-
-export const ModalButton = styled(Button)`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  font-size: 20px;
-  padding: 10px 20px;
+export const BoxSection = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 `;
