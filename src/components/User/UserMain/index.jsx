@@ -7,12 +7,19 @@ import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(1000);
   const [formatPoint, setFormatPoint] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
   const navigate = useNavigate();
 
   const handleLogoClick = () => {

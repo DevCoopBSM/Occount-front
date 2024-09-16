@@ -11,12 +11,21 @@ export const Maintop = styled.div`
   @media (max-width: 480px) {
     padding: 10px 0;
   }
+  height: auto;
+  padding: 20px 0;
+
+  @media (max-width: 480px) {
+    padding: 10px 0;
+  }
 `;
 
 export const Mainbottom = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
   width: 100%;
   max-width: 1000px;
   height: auto;
@@ -27,10 +36,20 @@ export const Mainbottom = styled.div`
     flex-direction: column;
     align-items: center;
   }
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const TopBox = styled.div`
   margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 970px;
+  height: auto;
   padding: 20px;
   width: 100%;
   max-width: 970px;
@@ -49,7 +68,13 @@ export const BottomBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 970px;
+  height: auto;
   padding: 20px;
   width: 100%;
   max-width: 970px;
@@ -132,7 +157,6 @@ export const AskInTop = styled.div`
   border-radius: 12px;
 
   a {
-    
     display: block;
     width: 100%;
     width: 100%;
@@ -191,6 +215,11 @@ export const UserlogLink = styled(Link)`
     font-size: 20px;
     padding: 12px 20px;
   }
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    padding: 30px;
+  }
 `;
 
 export const MainTopInBox = styled.div`
@@ -236,6 +265,16 @@ export const TopBoxText2 = styled.p`
 
   @media (max-width: 480px) {
     font-size: 20px;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      font-size: 36px;
+      margin-top: 5px;
+    }
   }
 `;
 
