@@ -5,37 +5,80 @@ import { Link } from 'react-router-dom';
 export const Maintop = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 400px;
+  height: auto;
+  padding: 20px 0;
+
+  @media (max-width: 480px) {
+    padding: 10px 0;
+  }
 `;
 
 export const Mainbottom = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  width: 1000px;
-  height: 300px;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
   background: #fff;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const TopBox = styled.div`
   margin: 0 auto;
-  padding-left: 70px;
-  width: 970px;
-  height: 250px;
+  padding: 20px;
+  width: 100%;
+  max-width: 970px;
+  height: auto;
   background: #41434c;
   border-radius: 50px 50px 0 0;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 25px 25px 0 0;
+  }
+`;
+
+export const TopBoxText = styled.p`
+  padding-top: 10px;
+  font-size: 30px;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 25px 25px 0 0;
+  }
+`;
+
+export const TopBoxText2 = styled.p`
+  font-size: 30px;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 25px 25px 0 0;
+  }
 `;
 
 export const BottomBox = styled.div`
   display: flex;
-  justify-content: center; /* 수평 가운데 정렬을 위해 변경 */
-  align-items: center; /* 수직 정렬 */
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
-  padding: 70px;
-  width: 970px;
-  height: 100px;
+  padding: 20px;
+  width: 100%;
+  max-width: 970px;
+  height: auto;
   background: #34343c;
   border-radius: 0 0 50px 50px;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 0 0 25px 25px;
+  }
 `;
 
 export const UseBox = styled.div`
@@ -56,6 +99,12 @@ export const UseBox = styled.div`
     width: 200px;
     font-size: 15px;
   }
+
+  @media (max-width: 480px) {
+    width: 90%;
+    margin: 10px 0;
+    font-size: 30px;
+  }
 `;
 
 export const AskBox = styled.div`
@@ -66,6 +115,11 @@ export const AskBox = styled.div`
   height: 270px;
   background: #FFF4B2;
   border-radius: 12px;
+
+  @media (max-width: 480px) {
+    width: 90%;
+    margin: 10px 0;
+  }
 `;
 
 export const AskInTop = styled.div`
@@ -76,7 +130,6 @@ export const AskInTop = styled.div`
   border-radius: 12px;
 
   a {
-    
     display: block;
     width: 100%;
     height: 50px;
@@ -85,12 +138,23 @@ export const AskInTop = styled.div`
     font-weight: 600;
     color: #000;
   }
+
+  @media (max-width: 480px) {
+    a {
+      font-size: 24px;
+    }
+  }
 `;
 
 export const CallLogoStyle = styled(CallLogo)`
   width: 550px;
   height: 300px;
   border-radius: 12px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const UserlogLink = styled(Link)`
@@ -101,6 +165,11 @@ export const UserlogLink = styled(Link)`
   font-size: 24px; 
   font-weight: 400;
   text-decoration: none;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    padding: 30px;
+  }
 `;
 
 export const MainTopInBox = styled.div`
@@ -113,6 +182,16 @@ export const MainTopInBox = styled.div`
     margin-top: 10px;
     font-size: 50px;
     font-weight: 600;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      font-size: 36px;
+      margin-top: 5px;
+    }
   }
 `;
 
@@ -130,6 +209,13 @@ export const ChargeButton = styled.button`
   text-align: center;
   width: 90px;
   height: 90px;
+
+  @media (max-width: 480px) {
+    margin-top: 10px;
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+  }
 `;
 
 export const ModalHeader = styled.h2`
