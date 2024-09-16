@@ -3,13 +3,28 @@ import * as _ from './style';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'context/authContext';
 import * as G from "../../../common/GlobalStyle"
+import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
+import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
+import { useNavigate } from 'react-router-dom';
+import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
   const [chargeAmount, setChargeAmount] = useState(1000);
   const [formatPoint, setFormatPoint] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -52,43 +67,53 @@ const Main = () => {
       <_.Maintop>
         <_.TopBox>
           <_.MainTopInBox>
-            
             {isLoggedIn ? (
               <>
-              <p style={{ paddingTop: '10px', fontSize: '30px' }}>현재 사용 가능한 금액</p>
-                <p style={{ fontSize: '70px' }}>{formatPoint}원</p>
-                <_.ChargeButton onClick={handleOpenChargeModal}>
-                  충전하기
-                </_.ChargeButton>
-              </>
+              <_.TopBoxTextWrapper>
+              <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+              <_.TopBoxText2>{formatPoint}원</_.TopBoxText2>
+            </_.TopBoxTextWrapper>
+            <_.ChargeButton onClick={handleOpenChargeModal}>
+              충전하기
+            </_.ChargeButton>
+            </>
+              
             ) : (
-              <p style={{ fontSize: '42px' }}><br/>
-              <p style={{ paddingTop: '10px', fontSize: '24px', fontWeight: '400' }}>현재 사용 가능한 금액 </p>
-              로그인 후 조회 가능합니다</p>
+                <>
+                <_.TopBoxTextWrapper>
+                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+                <_.TopBoxText2>로그인 후 조회 가능합니다</_.TopBoxText2>
+              </_.TopBoxTextWrapper>
+              </>
             )}
           </_.MainTopInBox>
         </_.TopBox>
 
         <_.BottomBox>
-          <_.UserlogLink to="/userlog">거래 내역 및 충전 환불</_.UserlogLink>
+          <_.UserlogLink to="/userlog">
+            거래 내역 및 충전 환불
+          </_.UserlogLink>
         </_.BottomBox>
       </_.Maintop>
 
       <_.Mainbottom>
-        <Link to="/howto">
-          <_.UseBox>
-            <div>
-              How
-              To
-              Use?
-              <br />
+        <_.UseBox>
+          <_.UseBoxContent>
+            <_.UseBoxText>
+              How To Use?
               <p>
                 아리페이를 더 똑똑하게
                 사용하는 법
               </p>
-            </div>
-          </_.UseBox>
-        </Link>
+            </_.UseBoxText>
+            <_.How2UseWrapper>
+              <How2Use
+                width={'90%'}
+                height={'120px'}
+              />
+            </_.How2UseWrapper>
+          </_.UseBoxContent>
+        </_.UseBox>
 
         <_.AskBox>
           <_.AskInTop>
@@ -99,11 +124,24 @@ const Main = () => {
             >
               <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
               인스타로 문의하기
+              <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
+              인스타로 문의하기
             </a>
           </_.AskInTop>
           <_.CallLogoStyle />
         </_.AskBox>
       </_.Mainbottom>
+
+      <G.Footer>
+        <G.FooterText>
+          상호: 부산소마고 사회적협동조합
+          대표: 김민경(이사장)
+          사업자 등록번호: 214-82-16238<br/>
+          주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
+          전화번호: 051-970-1709<br/>
+          INSTA | GITHUB
+        </G.FooterText>
+      </G.Footer>
 
       <G.Footer>
         <G.FooterText>

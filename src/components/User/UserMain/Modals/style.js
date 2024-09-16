@@ -138,19 +138,31 @@ export const ChargeButton = styled.button`
 export const ModalHeader = styled.h2`
   text-align: center;
   margin-bottom: 20px;
+  font-size: 24px;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
+
 export const ModalList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 20px 0;
 `;
 
 export const ModalListItem = styled.li`
   background-color: #f1f1f1;
   border-radius: 10px;
-  padding: 10px;
+  padding: 15px;
   margin-bottom: 10px;
   font-size: 16px;
+  line-height: 1.5;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 10px;
+  }
 `;
 
 export const HighlightText = styled.span`
@@ -160,12 +172,16 @@ export const HighlightText = styled.span`
   display: block;
   text-align: center;
   margin-bottom: 20px;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 export const ModalInputWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 export const ModalInput = styled.input`
@@ -175,6 +191,8 @@ export const ModalInput = styled.input`
   text-align: center;
   -webkit-appearance: none;
   margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -185,33 +203,56 @@ export const ModalInput = styled.input`
   & {
     -moz-appearance: textfield;
   }
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    width: 80%;
+  }
 `;
+
 export const InputWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 20px 0;
-`;
 
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+`;
 
 export const IncreaseButton = styled.button`
   font-size: 24px;
   padding: 8px 12px;
   margin-left: 10px;
   cursor: pointer;
+  background-color: #f0ce00;
+  border: none;
+  border-radius: 5px;
+  color: white;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    margin: 10px 0 0 0;
+  }
 `;
 
-export const DecreaseButton = styled.button`
-  font-size: 24px;
-  padding: 8px 12px;
+export const DecreaseButton = styled(IncreaseButton)`
   margin-left: 10px;
-  cursor: pointer;
+
+  @media (max-width: 480px) {
+    margin: 10px 0 0 0;
+  }
 `;
 
 export const ModalButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
 
 export const ModalButton = styled.button`
@@ -219,11 +260,32 @@ export const ModalButton = styled.button`
   padding: 10px 20px;
   margin: 0 10px;
   width: 150px;
+  background-color: #f0ce00;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    margin: 5px 0;
+  }
 `;
 
-export const ModalFooterButton = styled.button`
-  font-size: 20px;
-  padding: 10px 20px;
+export const ModalFooterButton = styled(ModalButton)`
   flex: 1;
-  margin: 0 10px;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    margin: 5px 0;
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
