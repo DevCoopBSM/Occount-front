@@ -56,6 +56,9 @@ export function PaymentCheckoutPage({
         customerId: customerEmail,
         email: customerEmail,
       },
+      WindowType: {
+        mobile: "REDIRECTION",
+      },
       redirectUrl: 'https://occount.bsm-aripay.kr/payment-redirect',
     };
 
