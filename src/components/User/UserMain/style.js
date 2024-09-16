@@ -128,10 +128,13 @@ export const AskInTop = styled.div`
   width: 100%;
   height: 150px;
   background-color: #FFF4B2;
+  background-color: #FFF4B2;
   border-radius: 12px;
 
   a {
+    
     display: block;
+    width: 100%;
     width: 100%;
     height: 50px;
     margin: 20px;
@@ -170,6 +173,8 @@ export const UserlogLink = styled(Link)`
   color: #fff;
   text-align: center;
   border-radius: 10px;
+  font-size: 24px; 
+  font-weight: 400;
   font-size: 24px; 
   font-weight: 400;
   text-decoration: none;

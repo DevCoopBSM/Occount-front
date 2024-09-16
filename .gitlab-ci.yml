@@ -1,6 +1,6 @@
 stages:
   - pull
-  - build
+#  - build
   - deploy
 
 before_script:
@@ -15,13 +15,13 @@ pull:
   tags:
     - docker
 
-build:
-  stage: build
-  script:
-    - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -p oring -f docker-compose.oring.yml build --no-cache occount-front
-  tags:
-    - docker
+# build:
+#   stage: build
+#   script:
+#     - cd $DOCKER_COMPOSE_PATH
+#     - docker-compose -p oring -f docker-compose.oring.yml build --no-cache occount-front
+#   tags:
+#     - docker
 
 deploy:
   stage: deploy

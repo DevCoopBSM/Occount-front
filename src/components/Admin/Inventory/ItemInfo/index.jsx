@@ -16,7 +16,7 @@ export default function ItemPage() {
 
   const fetchData = () => {
     axiosInstance
-      .get(`v2/item`)
+      .get(`v2/item/`)
       .then((response) => {
         if (response.status === 204) {
           // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.

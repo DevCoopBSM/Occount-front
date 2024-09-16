@@ -6,11 +6,11 @@ import * as S from './style';
 export function PaymentRedirectPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.state);
-  const status = searchParams.get('status');
+  const searchParams = new URLSearchParams(location.search);
+  const status = searchParams.get('code') === 'FAILURE_TYPE_PG' ? 'fail' : 'success';
   const paymentId = searchParams.get('paymentId');
-  const orderId = searchParams.get('orderId');
-  const amount = searchParams.get('amount');
+  const orderId = searchParams.get('txId');
+  const message = decodeURIComponent(searchParams.get('message') || '');
 
   useEffect(() => {
     console.log('Redirect Page Loaded');
@@ -26,28 +26,20 @@ export function PaymentRedirectPage() {
   const handlePaymentSuccess = async () => {
     const requestData = {
       orderId,
-      amount,
       paymentId,
     };
 
     try {
-      console.log('Sending confirm request:', requestData); // 디버그용 로그 추가
+      console.log('Sending confirm request:', requestData);
       const confirmResponse = await axiosInstance.post(
         'v2/pg/confirm',
         requestData
       );
-      console.log('Confirm response:', confirmResponse.data); // 디버그용 로그 추가
-      if (
-        confirmResponse.data.status === 'PAID' ||
-        confirmResponse.data.status === 'VIRTUAL_ACCOUNT_ISSUED'
-      ) {
-        navigate('/payment-result', { state: confirmResponse.data });
-      } else {
-        navigate('/payment-result', { state: confirmResponse.data });
-      }
+      console.log('Confirm response:', confirmResponse.data);
+      navigate('/payment-result', { state: confirmResponse.data });
     } catch (error) {
-      console.error('Confirm request failed:', error); // 디버그용 로그 추가
-      navigate('/payment-result', { state: error });
+      console.error('Confirm request failed:', error);
+      navigate('/payment-result', { state: { error } });
     }
   };
 
@@ -57,8 +49,8 @@ export function PaymentRedirectPage() {
       state: {
         success: false,
         error: {
-          code: searchParams.get('code'),
-          message: searchParams.get('message'),
+          code: searchParams.get('pgCode'),
+          message: message,
         },
       },
     });

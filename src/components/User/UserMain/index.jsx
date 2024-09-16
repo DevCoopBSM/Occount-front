@@ -3,6 +3,7 @@ import * as _ from './style';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'context/authContext';
 import * as G from "../../../common/GlobalStyle"
+import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
 import { useNavigate } from 'react-router-dom';
@@ -116,6 +117,8 @@ const Main = () => {
             >
               <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
               인스타로 문의하기
+              <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
+              인스타로 문의하기
             </a>
           </_.AskInTop>
           <_.CallLogoStyle />
@@ -133,8 +136,19 @@ const Main = () => {
         </G.FooterText>
       </G.Footer>
 
-      <ChargeModal
-        isOpen={isChargeModalOpen}
+      <G.Footer>
+        <G.FooterText>
+          상호: 부산소마고 사회적협동조합
+          대표: 김민경(이사장)
+          사업자 등록번호: 214-82-16238<br/>
+          주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
+          전화번호: 051-970-1709<br/>
+          INSTA | GITHUB
+        </G.FooterText>
+      </G.Footer>
+
+      <ChargeModal 
+        isOpen={isChargeModalOpen} 
         onRequestClose={handleCloseChargeModal}
         chargeAmount={chargeAmount}
         setChargeAmount={setChargeAmount}
