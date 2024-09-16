@@ -59,56 +59,53 @@ const Main = () => {
       <_.Maintop>
         <_.TopBox>
           <_.MainTopInBox>
-            
             {isLoggedIn ? (
               <>
-
-                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
-                <_.TopBoxText2>{formatPoint}원</_.TopBoxText2>
-                
-                <_.ChargeButton onClick={handleOpenChargeModal}>
-                  충전하기
-                </_.ChargeButton>
-              </>
+              <_.TopBoxTextWrapper>
+              <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+              <_.TopBoxText2>{formatPoint}원</_.TopBoxText2>
+            </_.TopBoxTextWrapper>
+            <_.ChargeButton onClick={handleOpenChargeModal}>
+              충전하기
+            </_.ChargeButton>
+            </>
+              
             ) : (
-              <>
-
-              <p style={{ fontSize: '42px' }}>  <br/>
-              <p style={{ paddingTop: '10px', fontSize: '24px', fontWeight: '400' }}>현재 사용 가능한 금액 </p>
-
-              로그인 후 조회 가능합니다</p>
+                <>
+                <_.TopBoxTextWrapper>
+                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+                <_.TopBoxText2>로그인 후 조회 가능합니다</_.TopBoxText2>
+              </_.TopBoxTextWrapper>
               </>
             )}
           </_.MainTopInBox>
         </_.TopBox>
 
         <_.BottomBox>
-          <_.UserlogLink to="/userlog">거래 내역 및 충전 환불</_.UserlogLink>
+          <_.UserlogLink to="/userlog">
+            거래 내역 및 충전 환불
+          </_.UserlogLink>
         </_.BottomBox>
       </_.Maintop>
 
       <_.Mainbottom>
-        <Link to="/howto">
-          <_.UseBox>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div>
-                How
-                To
-                Use?
-                <br />
-                <p>
-                  아리페이를 더 똑똑하게
-                  사용하는 법
-                </p>
-              </div>
+        <_.UseBox>
+          <_.UseBoxContent>
+            <_.UseBoxText>
+              How To Use?
+              <p>
+                아리페이를 더 똑똑하게
+                사용하는 법
+              </p>
+            </_.UseBoxText>
+            <_.How2UseWrapper>
               <How2Use
                 width={'90%'}
                 height={'120px'}
-                style={{ marginTop: '10px' }}
               />
-            </div>
-          </_.UseBox>
-        </Link>
+            </_.How2UseWrapper>
+          </_.UseBoxContent>
+        </_.UseBox>
 
         <_.AskBox>
           <_.AskInTop>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'components/Modal';
 import * as _ from './style';
 import { PaymentCheckoutPage } from 'components/Pg/PaymentCheckout';
@@ -13,6 +13,50 @@ const ChargeModal = ({
   decreaseAmount,
 }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [modalStyle, setModalStyle] = useState({});
+
+  useEffect(() => {
+    const updateModalStyle = () => {
+      const width = window.innerWidth;
+      if (width <= 480) {
+        setModalStyle({
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '95%',
+            maxWidth: '95%',
+            padding: '15px',
+            maxHeight: '80vh',
+            overflow: 'auto',
+          },
+        });
+      } else {
+        setModalStyle({
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: '500px',
+            padding: '20px',
+            maxHeight: '90vh',
+            overflow: 'auto',
+          },
+        });
+      }
+    };
+
+    updateModalStyle();
+    window.addEventListener('resize', updateModalStyle);
+    return () => window.removeEventListener('resize', updateModalStyle);
+  }, []);
 
   const handleChargeClick = () => {
     if (!user) {
@@ -41,15 +85,7 @@ const ChargeModal = ({
       <Modal
         isOpen={isOpen}
         onRequestClose={onRequestClose}
-        style={{
-          content: {
-            width: '90%',
-            maxWidth: '500px',
-            margin: '0 auto',
-            overflow: 'auto',
-            maxHeight: '90vh',
-          },
-        }}
+        style={modalStyle}
       >
         <_.ModalHeader>충전하기</_.ModalHeader>
         <_.HighlightText>
@@ -112,34 +148,20 @@ const ChargeModal = ({
           <_.IncreaseButton onClick={increaseAmount}>▲</_.IncreaseButton>
           <_.DecreaseButton onClick={decreaseAmount}>▼</_.DecreaseButton>
         </_.InputWrapper>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: '20px',
-          }}
-        >
+        <_.ButtonWrapper>
           <_.ModalFooterButton onClick={handleChargeClick}>
             결제진행
           </_.ModalFooterButton>
           <_.ModalFooterButton onClick={onRequestClose}>
             닫기
           </_.ModalFooterButton>
-        </div>
+        </_.ButtonWrapper>
       </Modal>
 
       <Modal
         isOpen={isPaymentModalOpen}
         onRequestClose={handleClosePaymentModal}
-        style={{
-          content: {
-            width: '90%',
-            maxWidth: '600px',
-            margin: '0 auto',
-            overflow: 'auto',
-            maxHeight: '90vh',
-          },
-        }}
+        style={modalStyle}
       >
         <PaymentCheckoutPage
           customerEmail={user?.email}
