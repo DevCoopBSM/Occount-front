@@ -16,26 +16,25 @@ export default function UserList() {
 
   const fetchData = () => {
     axiosInstance
-      .get(`v2/admin/userlist`)
+      .get(`v2/account/userlist`)
       .then((response) => {
-        if (response.status === 204) {
-          // 사용자에게 데이터가 없음을 알리고, data 상태를 빈 배열로 설정합니다.
-          console.log('No content');
-          setData([]);
-        } else {
+        // response.data.userList에서 userList 배열을 가져옵니다.
+        const userList = response.data.userList;
+        if (Array.isArray(userList)) {
           // 받아온 데이터의 필드를 재매핑합니다.
-          const remappedData = response.data.map((item) => ({
-            사용자바코드: item.code_number,
-            이름: item.student_name,
-            협동조합원: item.is_coop,
-            이메일: item.email,
-            아리페이잔액: item.point,
-            관리자: item.is_admin,
+          const remappedData = userList.map((item) => ({
+            조합원번호: item.userNumber,
+            이름: item.userName,
+            권한: item.roles,
+            이메일: item.userEmail,
+            아리페이잔액: item.userPoint
           }));
 
           // 재매핑된 데이터를 상태에 설정합니다.
           console.log('Data sent:', remappedData);
           setData(remappedData);
+        } else {
+          console.error('userList is not an array');
         }
       })
       .catch((error) => {

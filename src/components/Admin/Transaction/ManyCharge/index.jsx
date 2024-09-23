@@ -15,11 +15,13 @@ const ManyCharge = () => {
   const navigate = useNavigate();
 
   const toggleStudentSelection = (stuCode) => {
-    setSelectedStudents((prevSelected) =>
-      prevSelected.includes(stuCode)
+    setSelectedStudents((prevSelected) => {
+      const newSelected = prevSelected.includes(stuCode)
         ? prevSelected.filter((code) => code !== stuCode)
-        : [...prevSelected, stuCode]
-    );
+        : [...prevSelected, stuCode];
+      console.log('Updated selectedStudents:', newSelected);
+      return newSelected;
+    });
   };
 
   const handleSelectAll = (allStudentIds) => {
@@ -46,10 +48,15 @@ const ManyCharge = () => {
     axiosInstance
       .get('v2/account/studentlist')
       .then((response) => {
-        const validStudents = response.data.filter(
-          (student) => student.stuNumber // 학번이 null이 아닌 학생만 포함
-        );
-        setAllStudents(validStudents); // 전체 학생 목록을 저장
+        if (response.data && Array.isArray(response.data.studentList)) {
+          const validStudents = response.data.studentList.filter(
+            (student) => student.stuNumber // 학번이 null이 아닌 학생만 포함
+          );
+          setAllStudents(validStudents); // 전체 학생 목록을 저장
+        } else {
+          console.error('Expected studentList array, but received:', response.data);
+          setAllStudents([]); // 데이터가 예상한 형식이 아닌 경우 빈 배열로 설정
+        }
       })
       .catch((error) => {
         console.error(error);

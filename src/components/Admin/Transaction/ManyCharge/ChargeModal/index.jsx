@@ -13,13 +13,19 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
   // 학생 정보를 가져오는 함수
   const fetchStudentsInfo = () => {
     if (selectedStudents.length) {
+      console.log('Fetching info for selectedStudents:', selectedStudents);
       axiosInstance
         .get('v2/account/studentlist')
         .then((response) => {
-          const matchedStudents = response.data.filter((student) =>
-            selectedStudents.includes(student.stuCode)
-          );
-          setStudentsInfo(matchedStudents);
+          if (response.data && Array.isArray(response.data.studentList)) {
+            const matchedStudents = response.data.studentList.filter((student) =>
+              selectedStudents.includes(student.stuCode)
+            );
+            setStudentsInfo(matchedStudents);
+          } else {
+            console.error('Expected studentList array, but received:', response.data);
+            setStudentsInfo([]); // 데이터가 예상한 형식이 아닌 경우 빈 배열로 설정
+          }
         })
         .catch((error) => {
           console.error(error);
