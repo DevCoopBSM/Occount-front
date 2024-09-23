@@ -34,7 +34,8 @@ export const handleRefundRequest = async (item, refundAccount, type, fetchUserLo
         }
       } catch (error) {
         console.error(error);
-        alert(`환불에 실패하였습니다. 다시 시도해주세요. 에러: ${error.response?.data?.message || error.message}, ${error.response?.data?.details || ''}`);
+        const errorMessage = error.response?.data?.error || error.message;
+        alert(`환불에 실패하였습니다. 다시 시도해주세요. 에러: ${errorMessage}`);
       }
     }
   } else {
