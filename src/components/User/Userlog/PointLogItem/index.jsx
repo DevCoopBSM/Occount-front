@@ -33,10 +33,8 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
     });
   };
 
-  const logList = data || [];
-
   // 포인트 로그 데이터를 형식화
-  const formattedData = logList
+  const formattedData = data
     .map((item) => {
       const dateArray = item.chargeDate || item.payDate; // 충전일 또는 결제일 선택
 
@@ -61,6 +59,7 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
       };
     })
     .sort((a, b) => b.date - a.date); // 날짜 순으로 정렬
+
 
   const getBackgroundColor = (item, type, isOverWeek) => {
     if (item.refundState) return '#ffcccc';

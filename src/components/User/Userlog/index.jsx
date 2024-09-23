@@ -22,8 +22,8 @@ export const Userlog = () => {
   }, [isLoggedIn, navigate]);
 
   useEffect(() => {
-    fetchUserLog(0);
-    fetchUserLog(1);
+    fetchUserLog(0); // paylog
+    fetchUserLog(1); // chargelog
     updateItemsPerPage();
     window.addEventListener("resize", updateItemsPerPage);
     return () => window.removeEventListener("resize", updateItemsPerPage);
@@ -32,16 +32,14 @@ export const Userlog = () => {
   const fetchUserLog = (type) => {
     const endpoint = type === 0 ? "paylog" : "chargelog";
     const url = `v2/transaction/${endpoint}`;
-    
+
     axiosInstance
       .get(url)
       .then((response) => {
-        console.log('API Response:', response.data); // API 응답 확인
         if (type === 0) {
-          setUseLogData(response.data || []); // 데이터가 없을 경우 빈 배열 설정
+          setUseLogData(response.data.payLogList || []); // payLogList를 상태로 설정
         } else {
-          console.log('Charge Log Data:', response.data); // 차지 로그 데이터 확인
-          setChargeLogData(response.data || []); // 데이터가 없을 경우 빈 배열 설정
+          setChargeLogData(response.data.chargeLogList || []); // chargeLogList를 상태로 설정
         }
       })
       .catch((error) => {
@@ -52,7 +50,7 @@ export const Userlog = () => {
           setChargeLogData([]); // 에러 발생 시에도 빈 배열 설정
         }
       });
-};
+  };
 
   const updateItemsPerPage = () => {
     const height = window.innerHeight;
