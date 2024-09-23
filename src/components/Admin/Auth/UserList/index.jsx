@@ -24,6 +24,7 @@ export default function UserList() {
           // 받아온 데이터의 필드를 재매핑합니다.
           const remappedData = userList.map((item) => ({
             조합원번호: item.userNumber,
+            바코드: item.userCode,
             이름: item.userName,
             권한: item.roles,
             이메일: item.userEmail,
