@@ -30,8 +30,8 @@ export const Userlog = () => {
   }, []);
 
   const fetchUserLog = (type) => {
-    const endpoint = type === 0 ? "pay" : "charge";
-    const url = `v2/transaction/log/${endpoint}`;
+    const endpoint = type === 0 ? "paylog" : "chargelog";
+    const url = `v2/transaction/${endpoint}`;
     
     axiosInstance
       .get(url)
