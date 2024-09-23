@@ -145,6 +145,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const requestEmailVerification = async (email) => { // 이메일 인증 요청
+    try {
+      const response = await axiosInstance.post('v2/auth/request-password-reset', {
+        userEmail: email
+      });
+      
+      if (response.data.success) {
+        return { success: true, message: '인증 이메일 전송이 성공적으로 완료되었습니다.' };
+      } else {
+        throw new Error('이메일 인증 요청 실패');
+      }
+    } catch (error) {
+      console.error('Email verification request error:', error);
+      let errorMessage = '이메일 인증 요청 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
   useEffect(() => {
     if (state.isLoggedIn) {
       fetchUserInformation();
@@ -161,6 +184,7 @@ export const AuthProvider = ({ children }) => {
           dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
         clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
         refetchUser: fetchUserInformation,
+        requestEmailVerification, // 이메일 인증 요청
       }}
     >
       {children}
@@ -171,3 +195,6 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+// Verify
+

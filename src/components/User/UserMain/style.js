@@ -6,6 +6,7 @@ export const Maintop = styled.div`
   margin: 0 auto;
   width: 100%;
   height: auto;
+  
   padding: 20px 0;
 
   @media (max-width: 480px) {
@@ -13,6 +14,7 @@ export const Maintop = styled.div`
   }
   height: auto;
   padding: 20px 0;
+  
 
   @media (max-width: 480px) {
     padding: 10px 0;
@@ -45,6 +47,7 @@ export const Mainbottom = styled.div`
 `;
 
 export const TopBox = styled.div`
+  
   margin: 0 auto;
   padding: 20px;
   width: 100%;

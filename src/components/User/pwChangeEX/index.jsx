@@ -8,8 +8,7 @@ function PwChange() {
   const navigate = useNavigate();
   const { 
     unifiedLogin, 
-    errorMessage,
-    requestEmailVerification // 이메일 인증 요청
+    errorMessage 
   } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -51,25 +50,6 @@ function PwChange() {
     navigate('/login'); // 로그인 페이지로 이동
   };
 
-  const handleVerifyEmail = async () => {
-    if (!email) {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
-
-    try {
-      const result = await requestEmailVerification(email);
-      if (result.success) {
-        setSuccessMessage(`${name} 님의 이메일로 비밀번호 재설정 링크가 전송되었어요!`);
-      } else {
-        alert(result.message);
-      }
-    } catch (error) {
-      console.error('Email verification error:', error);
-      alert('이메일 인증 요청 중 오류가 발생했습니다.');
-    }
-  };
-
   return (
     <L.Container>
       <L.PwChangeWrap onSubmit={handleSubmit}>
@@ -90,7 +70,7 @@ function PwChange() {
               onChange={handleInputChange}
               placeholder="이메일 또는 전화번호를 입력해주세요"
             />
-            <L.VerifyButton type="button" onClick={handleVerifyEmail}>인증하기</L.VerifyButton>
+            <L.VerifyButton type="button">인증하기</L.VerifyButton>
           </L.PwChangeEmailContainer>
         </L.InputContainer>
         <L.PwChangeButton type="submit">본인확인</L.PwChangeButton>
