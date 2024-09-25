@@ -72,6 +72,14 @@ export const AuthProvider = ({ children }) => {
         userPassword: password,
       });
 
+      // 302 Found 상태 확인
+      if (response.status === 302) {
+        // 서버에서 반환한 JWT 토큰 추출 (헤더나 응답 본문에서)
+        const jwtToken = response.data.jwtToken; // 실제 응답 구조에 따라 수정 필요
+        navigate(`/pwChange/${jwtToken}`);
+        return;
+      }
+
       const { accessToken, user, roles } = response.data;
 
       // roles 값이 'ROLE_ADMIN'인지 확인하여 어드민 여부 설정
@@ -87,7 +95,7 @@ export const AuthProvider = ({ children }) => {
 
       dispatch({
         type: actionTypes.LOGIN_SUCCESS,
-        isAdmin: isAdmin, // 서버에서 받은 roles에 따라 상태 설정
+        isAdmin: isAdmin,
       });
 
       await fetchUserInformation();
