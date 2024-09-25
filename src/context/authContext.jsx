@@ -145,6 +145,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerStudent = async (userName, userEmail, userPassword) => { // 회원가입
+    try {
+      const response = await axiosInstance.post('v2/auth/register', {
+        userName,
+        userEmail,
+        userPassword
+      });
+      
+      if (response.data.message) {
+        return { success: true, message: response.data.message };
+      } else {
+        throw new Error('회원가입 실패');
+      }
+    } catch (error) {
+      console.error('Student registration error:', error);
+      let errorMessage = '회원가입 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
   const requestEmailVerification = async (email) => { // 이메일 인증 요청
     try {
       const response = await axiosInstance.post('v2/auth/request-password-reset', {
@@ -159,6 +184,29 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Email verification request error:', error);
       let errorMessage = '이메일 인증 요청 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
+  const changePassword = async (jwtToken, newPassword) => { // 비밀번호 변경
+    try {
+      const response = await axiosInstance.post(`v2/auth/reset-password/${jwtToken}`, {
+        newPassword
+      });
+      
+      if (response.data.message) {
+        return { success: true, message: response.data.message };
+      } else {
+        throw new Error('비밀번호 변경 실패');
+      }
+    } catch (error) {
+      console.error('Password change error:', error);
+      let errorMessage = '비밀번호 변경 중 오류가 발생했습니다.';
       if (error.response && error.response.data && error.response.data.message) {
         errorMessage = error.response.data.message;
       }
@@ -184,7 +232,9 @@ export const AuthProvider = ({ children }) => {
           dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
         clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
         refetchUser: fetchUserInformation,
-        requestEmailVerification, // 이메일 인증 요청
+        requestEmailVerification,
+        registerStudent, // 회원가입
+        changePassword, // 비밀번호 변경
       }}
     >
       {children}
@@ -196,5 +246,4 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// Verify
 

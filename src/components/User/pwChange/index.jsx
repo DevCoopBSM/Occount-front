@@ -7,56 +7,25 @@ import * as L from "./style";
 function PwChange() {
   const navigate = useNavigate();
   const { 
-    unifiedLogin, 
+    requestEmailVerification,
     errorMessage,
-    requestEmailVerification // 이메일 인증 요청
   } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); // 추가된 이름 상태
-  const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 상태
+  const [name, setName] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    const name = e.target.name;
-
+    const { name, value } = e.target;
     if (name === "email") {
       setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    } else if (name === "name") { // 이름 입력 처리
+    } else if (name === "name") {
       setName(value);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await unifiedLogin(email, password, navigate);
-      
-      if (response.data.success) {
-        // 성공 시 메시지 설정
-        setSuccessMessage(`${name} 님의 이메일로 비밀번호 재설정 링크가 전송되었어요!`);
-      } else {
-        alert("일치하는 정보 없음! - 혹시 회원가입이 되지 않은 것은 아닐까요?");
-      }
-    } catch (error) {
-      console.error("PwChange component error:", error);
-    }
-  };
-
-  const handleBackToLogin = () => {
-    navigate('/login'); // 로그인 페이지로 이동
-  };
-
-  const handleVerifyEmail = async () => {
-    if (!email) {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
-
     try {
       const result = await requestEmailVerification(email);
       if (result.success) {
@@ -65,9 +34,13 @@ function PwChange() {
         alert(result.message);
       }
     } catch (error) {
-      console.error('Email verification error:', error);
-      alert('이메일 인증 요청 중 오류가 발생했습니다.');
+      console.error("PwChange component error:", error);
+      alert('비밀번호 재설정 요청 중 오류가 발생했습니다.');
     }
+  };
+
+  const handleBackToLogin = () => {
+    navigate('/login');
   };
 
   return (
@@ -88,9 +61,8 @@ function PwChange() {
               name="email"
               value={email}
               onChange={handleInputChange}
-              placeholder="이메일 또는 전화번호를 입력해주세요"
+              placeholder="이메일을 입력해주세요"
             />
-            <L.VerifyButton type="button" onClick={handleVerifyEmail}>인증하기</L.VerifyButton>
           </L.PwChangeEmailContainer>
         </L.InputContainer>
         <L.PwChangeButton type="submit">본인확인</L.PwChangeButton>

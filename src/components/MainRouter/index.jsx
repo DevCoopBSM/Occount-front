@@ -13,6 +13,7 @@ import AdminLoginPage from 'pages/Admin/LoginPage';
 import AdminMainPage from 'pages/Admin/MainPage';
 import { PaymentRedirectPage } from 'pages/Pg/PaymentRedirect';
 import { PaymentResultPage } from 'pages/Pg/PaymentResult';
+import PwChangeEX from 'pages/User/pwChangePageEX';
 
 const Router = () => {
   return (
@@ -28,6 +29,7 @@ const Router = () => {
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/admin/*" element={<AdminMainPage />} />
       <Route path="/preparing" element={<PrepairPage />} />
+      <Route path="/pwChange/test" element={<PwChangeEX />} />
       <Route path="/*" element={<NotFoundPage />} />
     </Routes>
   );
