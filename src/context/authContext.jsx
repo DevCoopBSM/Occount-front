@@ -72,6 +72,14 @@ export const AuthProvider = ({ children }) => {
         userPassword: password,
       });
 
+      // 302 Found 상태 확인
+      if (response.status === 302) {
+        // 서버에서 반환한 JWT 토큰 추출 (헤더나 응답 본문에서)
+        const jwtToken = response.data.jwtToken; // 실제 응답 구조에 따라 수정 필요
+        navigate(`/pwChange/${jwtToken}`);
+        return;
+      }
+
       const { accessToken, user, roles } = response.data;
 
       // roles 값이 'ROLE_ADMIN'인지 확인하여 어드민 여부 설정
@@ -87,7 +95,7 @@ export const AuthProvider = ({ children }) => {
 
       dispatch({
         type: actionTypes.LOGIN_SUCCESS,
-        isAdmin: isAdmin, // 서버에서 받은 roles에 따라 상태 설정
+        isAdmin: isAdmin,
       });
 
       await fetchUserInformation();
@@ -145,6 +153,77 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerStudent = async (userName, userEmail, userPassword) => { // 회원가입
+    try {
+      const response = await axiosInstance.post('v2/auth/register', {
+        userName,
+        userEmail,
+        userPassword
+      });
+      
+      if (response.data.message) {
+        return { success: true, message: response.data.message };
+      } else {
+        throw new Error('회원가입 실패');
+      }
+    } catch (error) {
+      console.error('Student registration error:', error);
+      let errorMessage = '회원가입 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
+  const requestEmailVerification = async (email) => { // 이메일 인증 요청
+    try {
+      const response = await axiosInstance.post('v2/auth/request-password-reset', {
+        userEmail: email
+      });
+      
+      if (response.data.success) {
+        return { success: true, message: '인증 이메일 전송이 성공적으로 완료되었습니다.' };
+      } else {
+        throw new Error('이메일 인증 요청 실패');
+      }
+    } catch (error) {
+      console.error('Email verification request error:', error);
+      let errorMessage = '이메일 인증 요청 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
+  const changePassword = async (jwtToken, newPassword) => { // 비밀번호 변경
+    try {
+      const response = await axiosInstance.post(`v2/auth/reset-password/${jwtToken}`, {
+        newPassword
+      });
+      
+      if (response.data.message) {
+        return { success: true, message: response.data.message };
+      } else {
+        throw new Error('비밀번호 변경 실패');
+      }
+    } catch (error) {
+      console.error('Password change error:', error);
+      let errorMessage = '비밀번호 변경 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage = error.response.data.message;
+      }
+      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      return { success: false, message: errorMessage };
+    }
+  };
+
   useEffect(() => {
     if (state.isLoggedIn) {
       fetchUserInformation();
@@ -161,6 +240,9 @@ export const AuthProvider = ({ children }) => {
           dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
         clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
         refetchUser: fetchUserInformation,
+        requestEmailVerification,
+        registerStudent, // 회원가입
+        changePassword, // 비밀번호 변경
       }}
     >
       {children}
@@ -171,3 +253,5 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+
+

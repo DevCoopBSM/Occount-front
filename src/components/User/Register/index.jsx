@@ -3,22 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import imgLogo from "assets/occregisterLogo.svg";
 import { useAuth } from "context/authContext";
 import * as R from "./style";
-  
+
 function Register() {
   const navigate = useNavigate();
   const { 
-    unifiedRegister, 
-    errorMessage
+    registerStudent, 
+    errorMessage,
+    setErrorMessage,
+    clearErrorMessage
   } = useAuth();
   
-  const [userType, setUserType] = useState("student"); // 학생 / 일반 회원가입 상태 조절
+  const [userType, setUserType] = useState("student");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    phoneNumber: "",
   });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +32,31 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    clearErrorMessage();
+
+    if (userType === "general") {
+      setErrorMessage("일반 회원가입은 현재 지원되지 않습니다.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      return;
+    }
 
     try {
-      await unifiedRegister(formData, navigate);
+      const result = await registerStudent(formData.name, formData.email, formData.password);
+      if (result.success) {
+        setSuccessMessage(result.message);
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
+      } else {
+        setErrorMessage(result.message);
+      }
     } catch (error) {
       console.error("Register component error:", error);
+      setErrorMessage("회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -63,6 +85,7 @@ function Register() {
             value={formData.name}
             onChange={handleInputChange}
             placeholder="이름을 입력해주세요"
+            required
           />
           <R.EmailContainer>
             <R.RegisterInput
@@ -70,30 +93,17 @@ function Register() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder={
-                userType === "student" ? "학교 이메일을 입력해주세요" : "이메일을 입력해주세요"
-              }
+              placeholder={userType === "student" ? "학교 이메일을 입력해주세요" : "이메일을 입력해주세요"}
+              required
             />
-            <R.VerifyButton>인증하기</R.VerifyButton>
           </R.EmailContainer>
-          {userType === "general" && (
-            <R.EmailContainer>
-              <R.RegisterInput
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="전화번호를 입력해주세요"
-              />
-              <R.VerifyButton>인증하기</R.VerifyButton>
-            </R.EmailContainer>
-          )}
           <R.RegisterInput
             type="password"
             name="password"
             value={formData.password}
             onChange={handleInputChange}
             placeholder="비밀번호를 입력해주세요"
+            required
           />
           <R.RegisterInput
             type="password"
@@ -101,14 +111,17 @@ function Register() {
             value={formData.confirmPassword}
             onChange={handleInputChange}
             placeholder="비밀번호를 다시 입력해주세요"
+            required
           />
         </R.InputContainer>
-        <R.RegisterButton type="submit">회원가입</R.RegisterButton>
+        <R.RegisterButton type="submit" disabled={userType === "general"}>
+          회원가입
+        </R.RegisterButton>
       </R.RegisterWrap>
-      {errorMessage && (
+      {(errorMessage || successMessage) && (
         <R.ModalOverlay>
           <R.ModalContent>
-            {errorMessage}
+            {errorMessage || successMessage}
           </R.ModalContent>
         </R.ModalOverlay>
       )}

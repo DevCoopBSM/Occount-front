@@ -44,7 +44,8 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      await unifiedLogin(email, password, navigate);
+      const result = await unifiedLogin(email, password, navigate);
+      
     } catch (error) {
       console.error("Login component error:", error);
     }
