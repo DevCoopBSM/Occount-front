@@ -18,9 +18,16 @@ export const axiosInstance = axios.create({
   },
 });
 
+let setGlobalLoading = null;
+
+export const setLoadingFunction = (setLoadingFn) => {
+  setGlobalLoading = setLoadingFn;
+};
+
 // 요청 인터셉터: 요청에 액세스 토큰을 추가
 axiosInstance.interceptors.request.use(
   (config) => {
+    if (setGlobalLoading) setGlobalLoading(true);
     const token = getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -28,14 +35,19 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    if (setGlobalLoading) setGlobalLoading(false);
     return Promise.reject(error);
   }
 );
 
 // 응답 인터셉터: 401 에러를 처리
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (setGlobalLoading) setGlobalLoading(false);
+    return response;
+  },
   async (error) => {
+    if (setGlobalLoading) setGlobalLoading(false);
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
 
