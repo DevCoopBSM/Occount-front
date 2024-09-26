@@ -4,13 +4,14 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 85vh;
+  min-height: 85vh;
   background-color: #ffffff;
+  padding: 20px;
 `;
 
 export const LogoImg = styled.img`
-  height: 100px;
-  margin-bottom: 50px;
+  height: 80px;
+  margin-bottom: 40px;
 `;
 
 export const RegisterWrap = styled.form`
@@ -18,6 +19,7 @@ export const RegisterWrap = styled.form`
   flex-direction: column;
   align-items: center;
   width: 80%;
+  max-width: 500px;
 `;
 
 export const ToggleButtonContainer = styled.div`
@@ -30,7 +32,7 @@ export const ToggleButtonContainer = styled.div`
 export const ToggleButton = styled.button`
   background-color: #FFFFFF;
   color: ${({ active }) => (active ? "var(--Primary, #F49E15)" : "var(--Gray, #999)")};
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   font-style: normal;
   font-weight: ${({ active }) => (active ? 700 : 400)};
   padding: 10px 20px;
@@ -38,11 +40,17 @@ export const ToggleButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   margin: 0 10px;
-  width: 20%;
+  width: 40%;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    font-size: clamp(14px, 2.5vw, 20px);
+    padding: 8px 16px;
+  }
 `;
 
 export const InputContainer = styled.div`
-  width: 50%;
+  width: 100%;
   padding: 20px;
   margin-bottom: 20px;
 `;
@@ -51,14 +59,18 @@ export const RegisterInput = styled.input`
   width: 100%;
   height: 60px;
   border: none;
-  margin-bottom: 5px;
-  padding: 10px;
-  padding-left: 24px;
+  margin-bottom: 10px;
+  padding: 10px 24px;
   border-radius: 4px;
   background: #F2F2F2;
   color: #808080;
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 400;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    font-size: clamp(14px, 2.5vw, 20px);
+  }
 `;
 
 export const EmailContainer = styled.div`
@@ -79,25 +91,35 @@ export const VerifyButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  
   color: #808080;
-  font-size: 24px;
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 400;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    font-size: clamp(14px, 2.5vw, 20px);
+  }
 `;
 
 export const RegisterButton = styled.button`
-  width: 48%;
-  height: 80px;
+  width: 100%;
+  max-width: 400px;
+  height: clamp(50px, 8vw, 80px);
   background-color: #41434C;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-
-  color: #FFF;
-  font-size: 32px;
+  font-size: clamp(20px, 4vw, 32px);
   font-style: normal;
   font-weight: 800;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    max-width: 80%;
+    height: clamp(40px, 6vw, 60px);
+    font-size: clamp(16px, 3vw, 24px);
+  }
 `;
 
 export const ModalOverlay = styled.div`

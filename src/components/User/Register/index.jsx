@@ -6,13 +6,8 @@ import * as R from "./style";
 
 function Register() {
   const navigate = useNavigate();
-  const { 
-    registerStudent, 
-    errorMessage,
-    setErrorMessage,
-    clearErrorMessage
-  } = useAuth();
-  
+  const { register, errorMessage } = useAuth();
+
   const [userType, setUserType] = useState("student");
   const [formData, setFormData] = useState({
     name: "",
@@ -20,43 +15,32 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    clearErrorMessage();
-
-    if (userType === "general") {
-      setErrorMessage("일반 회원가입은 현재 지원되지 않습니다.");
-      return;
-    }
-
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
     try {
-      const result = await registerStudent(formData.name, formData.email, formData.password);
+      const result = await register(formData.name, formData.email, formData.password, userType);
       if (result.success) {
-        setSuccessMessage(result.message);
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
+        alert("회원가입이 완료되었습니다.");
+        navigate('/');
       } else {
-        setErrorMessage(result.message);
+        alert(result.message);
       }
     } catch (error) {
       console.error("Register component error:", error);
-      setErrorMessage("회원가입 중 오류가 발생했습니다.");
+      alert('회원가입 중 오류가 발생했습니다.');
     }
   };
 
@@ -68,12 +52,14 @@ function Register() {
           <R.ToggleButton 
             active={userType === "student"}
             onClick={() => setUserType("student")}
+            type="button"
           >
             학생 회원가입
           </R.ToggleButton>
           <R.ToggleButton 
             active={userType === "general"}
             onClick={() => setUserType("general")}
+            type="button"
           >
             일반 회원가입
           </R.ToggleButton>
@@ -87,16 +73,14 @@ function Register() {
             placeholder="이름을 입력해주세요"
             required
           />
-          <R.EmailContainer>
-            <R.RegisterInput
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder={userType === "student" ? "학교 이메일을 입력해주세요" : "이메일을 입력해주세요"}
-              required
-            />
-          </R.EmailContainer>
+          <R.RegisterInput
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder={userType === "student" ? "학교 이메일을 입력해주세요" : "이메일을 입력해주세요"}
+            required
+          />
           <R.RegisterInput
             type="password"
             name="password"
@@ -114,14 +98,12 @@ function Register() {
             required
           />
         </R.InputContainer>
-        <R.RegisterButton type="submit" disabled={userType === "general"}>
-          회원가입
-        </R.RegisterButton>
+        <R.RegisterButton type="submit">회원가입</R.RegisterButton>
       </R.RegisterWrap>
-      {(errorMessage || successMessage) && (
+      {errorMessage && (
         <R.ModalOverlay>
           <R.ModalContent>
-            {errorMessage || successMessage}
+            {errorMessage}
           </R.ModalContent>
         </R.ModalOverlay>
       )}

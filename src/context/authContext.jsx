@@ -1,18 +1,15 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { axiosInstance, setAccessToken, getAccessToken } from 'utils/Axios';
 
-// AuthContext 생성
 const AuthContext = createContext();
 
-// 초기 상태 정의
 const initialState = {
-  isLoggedIn: !!getAccessToken(), // 세션 스토리지에 토큰이 있으면 로그인 상태로 간주
-  isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'), // 세션 스토리지에서 isAdminLoggedIn 상태 로드
-  user: null, // 사용자 정보
-  errorMessage: '', // 에러 메시지
+  isLoggedIn: !!getAccessToken(),
+  isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'),
+  user: null,
+  errorMessage: '',
 };
 
-// 액션 타입 정의
 const actionTypes = {
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGOUT: 'LOGOUT',
@@ -21,19 +18,18 @@ const actionTypes = {
   SET_USER: 'SET_USER',
 };
 
-// 리듀서 함수 정의
 const authReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.LOGIN_SUCCESS:
-      sessionStorage.setItem('isAdminLoggedIn', action.isAdmin || false); // 로그인 성공 시 isAdminLoggedIn 상태를 세션 스토리지에 저장
+      sessionStorage.setItem('isAdminLoggedIn', action.isAdmin);
       return {
         ...state,
         isLoggedIn: true,
-        isAdminLoggedIn: action.isAdmin || false,
+        isAdminLoggedIn: action.isAdmin,
         errorMessage: '',
       };
     case actionTypes.LOGOUT:
-      sessionStorage.removeItem('isAdminLoggedIn'); // 로그아웃 시 isAdminLoggedIn 상태를 세션 스토리지에서 제거
+      sessionStorage.removeItem('isAdminLoggedIn');
       return {
         ...state,
         isLoggedIn: false,
@@ -41,93 +37,62 @@ const authReducer = (state, action) => {
         user: null,
       };
     case actionTypes.SET_ERROR:
-      return {
-        ...state,
-        errorMessage: action.payload,
-      };
+      return { ...state, errorMessage: action.payload };
     case actionTypes.CLEAR_ERROR:
-      return {
-        ...state,
-        errorMessage: '',
-      };
+      return { ...state, errorMessage: '' };
     case actionTypes.SET_USER:
-      return {
-        ...state,
-        user: action.payload,
-      };
+      return { ...state, user: action.payload };
     default:
       return state;
   }
 };
 
-// AuthProvider 컴포넌트
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const unifiedLogin = async (email, password, navigate, admin = false) => {
+  const unifiedLogin = useCallback(async (email, password, navigate, admin = false) => {
     try {
-      const url = 'v2/auth/login';
-      const response = await axiosInstance.post(url, {
-        userEmail: email,
-        userPassword: password,
-      });
-
-      // 302 Found 상태 확인
-      if (response.status === 302) {
-        // 서버에서 반환한 JWT 토큰 추출 (헤더나 응답 본문에서)
-        const jwtToken = response.data.jwtToken; // 실제 응답 구조에 따라 수정 필요
-        navigate(`/pwChange/${jwtToken}`);
+      const response = await axiosInstance.post('v2/auth/login', { userEmail: email, userPassword: password });
+      
+      if (response.data.status === "REDIRECT") {
+        navigate(response.data.redirectUrl);
         return;
       }
 
       const { accessToken, user, roles } = response.data;
-
-      // roles 값이 'ROLE_ADMIN'인지 확인하여 어드민 여부 설정
       const isAdmin = roles.includes('ROLE_ADMIN');
 
-      // admin 변수가 true로 전달되었지만, 로그인한 사용자가 어드민이 아닌 경우
       if (admin && !isAdmin) {
         throw new Error('권한이 없습니다.');
       }
 
-      // 액세스 토큰을 세션 스토리지에 저장
       setAccessToken(accessToken);
-
-      dispatch({
-        type: actionTypes.LOGIN_SUCCESS,
-        isAdmin: isAdmin,
-      });
-
+      dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
       await fetchUserInformation();
-
-      // admin 변수가 true면 어드민 페이지로 리디렉션, 그렇지 않으면 일반 페이지로 리디렉션
       navigate(admin ? '/admin' : '/');
-
       dispatch({ type: actionTypes.CLEAR_ERROR });
       return { email, ...user };
     } catch (error) {
       let errMsg = '내부 서버 오류';
       if (error.message === '권한이 없습니다.') {
-        errMsg = error.message; // 권한이 없을 때의 오류 메시지
-      } else if (error.response) {
-        if (error.response.status === 401) {
-          errMsg = '아이디 또는 암호가 잘못되었습니다.';
-        }
+        errMsg = error.message;
+      } else if (error.response?.status === 401) {
+        errMsg = '아이디 또는 암호가 잘못되었습니다.';
       }
       dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
       setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 2000);
     }
-  };
+  }, []);
 
-  const fetchUserInformation = async () => {
+  const fetchUserInformation = useCallback(async () => {
     try {
       const response = await axiosInstance.get('v2/account/userinfo');
       const userInfo = {
-        point: response.data.userPoint, // 서버 응답에 맞게 필드명 수정
-        name: response.data.userName, // 서버 응답에 맞게 필드명 수정
-        code: response.data.userCode, // 서버 응답에 맞게 필드명 수정
-        email: response.data.userEmail, // 서버 응답에 맞게 필드명 수정
-        todayTotalCharge: response.data.userTotalCharge, // 서버 응답에 맞게 필드명 수정
+        point: response.data.userPoint,
+        name: response.data.userName,
+        code: response.data.userCode,
+        email: response.data.userEmail,
+        todayTotalCharge: response.data.userTotalCharge,
       };
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       return userInfo;
@@ -135,25 +100,20 @@ export const AuthProvider = ({ children }) => {
       console.error('Error fetching user information:', error);
       return null;
     }
-  };
+  }, []);
 
-  const logout = async (navigate) => {
+  const logout = useCallback(async (navigate) => {
     try {
-      // 상태 업데이트
       dispatch({ type: actionTypes.LOGOUT });
-
-      // 세션 스토리지에서 토큰 제거
       setAccessToken(null);
-
-      // 모든 세션 스토리지 항목을 지우고 리디렉션
       sessionStorage.clear();
       navigate('/');
     } catch (error) {
       console.error('Error during logout:', error);
     }
-  };
+  }, []);
 
-  const registerStudent = async (userName, userEmail, userPassword) => { // 회원가입
+  const registerStudent = useCallback(async (userName, userEmail, userPassword) => {
     try {
       const response = await axiosInstance.post('v2/auth/register', {
         userName,
@@ -169,89 +129,80 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Student registration error:', error);
       let errorMessage = '회원가입 중 오류가 발생했습니다.';
-      if (error.response && error.response.data && error.response.data.message) {
+      if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
       dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 2000);
       return { success: false, message: errorMessage };
     }
-  };
+  }, []);
 
-  const requestEmailVerification = async (email) => { // 이메일 인증 요청
+  const requestEmailVerification = useCallback(async (email, name) => {
     try {
-      const response = await axiosInstance.post('v2/auth/request-password-reset', {
-        userEmail: email
-      });
-      
+      const response = await axiosInstance.post('v2/verify/send', { userEmail: email, userName: name });
       if (response.data.success) {
-        return { success: true, message: '인증 이메일 전송이 성공적으로 완료되었습니다.' };
+        return { success: true, message: response.data.message };
       } else {
-        throw new Error('이메일 인증 요청 실패');
+        throw new Error(response.data.message || '이메일 인증 요청에 실패했습니다.');
       }
     } catch (error) {
-      console.error('Email verification request error:', error);
-      let errorMessage = '이메일 인증 요청 중 오류가 발생했습니다.';
-      if (error.response && error.response.data && error.response.data.message) {
+      console.error('Email verification request failed:', error);
+      let errorMessage = '이메일 인증 요청에 실패했습니다.';
+      if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
       return { success: false, message: errorMessage };
     }
-  };
+  }, []);
 
-  const changePassword = async (jwtToken, newPassword) => { // 비밀번호 변경
+  const changePassword = useCallback(async (jwtToken, newPassword) => {
     try {
-      const response = await axiosInstance.post(`v2/auth/reset-password/${jwtToken}`, {
+      const response = await axiosInstance.post(`v2/auth/pwChange/${jwtToken}`, {
         newPassword
       });
       
-      if (response.data.message) {
-        return { success: true, message: response.data.message };
-      } else {
-        throw new Error('비밀번호 변경 실패');
-      }
+      // 서버 응답에서 메시지를 직접 사용
+      return { success: true, message: response.data.message };
     } catch (error) {
       console.error('Password change error:', error);
-      let errorMessage = '비밀번호 변경 중 오류가 발생했습니다.';
-      if (error.response && error.response.data && error.response.data.message) {
-        errorMessage = error.response.data.message;
+      let errorMessage;
+      
+      if (error.response?.data) {
+        // 서버에서 보낸 에러 메시지를 그대로 사용
+        errorMessage = typeof error.response.data === 'string' ? error.response.data : error.response.data.message;
+      } else {
+        errorMessage = '비밀번호 변경 중 오류가 발생했습니다.';
       }
-      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
       return { success: false, message: errorMessage };
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (state.isLoggedIn) {
       fetchUserInformation();
     }
-  }, [state.isLoggedIn]);
+  }, [state.isLoggedIn, fetchUserInformation]);
+
+  const contextValue = {
+    ...state,
+    unifiedLogin,
+    logout,
+    setErrorMessage: (msg) => dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
+    clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
+    refetchUser: fetchUserInformation,
+    requestEmailVerification,
+    registerStudent,
+    changePassword,
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        unifiedLogin,
-        logout,
-        setErrorMessage: (msg) =>
-          dispatch({ type: actionTypes.SET_ERROR, payload: msg }),
-        clearErrorMessage: () => dispatch({ type: actionTypes.CLEAR_ERROR }),
-        refetchUser: fetchUserInformation,
-        requestEmailVerification,
-        registerStudent, // 회원가입
-        changePassword, // 비밀번호 변경
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 

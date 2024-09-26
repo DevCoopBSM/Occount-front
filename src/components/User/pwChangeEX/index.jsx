@@ -14,7 +14,6 @@ function PwChangeEX() {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +33,19 @@ function PwChangeEX() {
     try {
       const result = await changePassword(jwtToken, newPassword);
       if (result.success) {
-        setSuccessMessage(result.message);
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
+        alert(result.message);
+        navigate('/');
       } else {
         alert(result.message);
       }
     } catch (error) {
       console.error("PwChangeEX component error:", error);
-      alert('비밀번호 변경 중 오류가 발생했습니다.');
+      if (error.response && error.response.status === 401) {
+        alert('토큰이 만료되었습니다. 새로운 비밀번호 변경 링크를 요청해주세요.');
+        navigate('/pwchange');
+      } else {
+        alert('비밀번호 변경 중 오류가 발생했습니다.');
+      }
     }
   };
 
@@ -68,11 +70,6 @@ function PwChangeEX() {
           />
         </L.InputContainer>
         <L.PwChangeButton type="submit">비밀번호 변경</L.PwChangeButton>
-        {successMessage && (
-          <L.SuccessMessageContainer>
-            <L.SuccessMessage>{successMessage}</L.SuccessMessage>
-          </L.SuccessMessageContainer>
-        )}
       </L.PwChangeWrap>
       {errorMessage && (
         <L.ModalOverlay>

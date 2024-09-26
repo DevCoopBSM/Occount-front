@@ -39,17 +39,19 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
 
-      // 401 응답을 받은 경우 로그아웃 처리
+      // 로그인 요청에 대한 401 에러는 별도로 처리
+      if (originalRequest.url === 'v2/auth/login') {
+        return Promise.reject(error);
+      }
+
+      // 그 외의 401 응답을 받은 경우 로그아웃 처리
       try {
         console.error('액세스 토큰이 만료되었습니다. 로그아웃을 수행합니다.');
-
-        // 로그아웃 요청을 서버로 전송 (필요에 따라 로그아웃 API 경로 수정 가능)
-        // await axiosInstance.post('v2/auth/logout');
 
         // 세션 스토리지에서 토큰 제거
         sessionStorage.clear();
 
-        // 로그인 페이지로 리디렉션
+        // 로그인 페이지로 즉시 리디렉션
         window.location.href = '/login';
 
         return Promise.reject(error);

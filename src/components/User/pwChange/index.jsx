@@ -13,7 +13,6 @@ function PwChange() {
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,13 +22,14 @@ function PwChange() {
       setName(value);
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await requestEmailVerification(email);
+      const result = await requestEmailVerification(email, name);
       if (result.success) {
-        setSuccessMessage(`${name} 님의 이메일로 비밀번호 재설정 링크가 전송되었어요!`);
+        alert(`${name} 님의 이메일로 비밀번호 재설정 링크가 전송되었습니다.`);
+        navigate("/");
       } else {
         alert(result.message);
       }
@@ -37,10 +37,6 @@ function PwChange() {
       console.error("PwChange component error:", error);
       alert('비밀번호 재설정 요청 중 오류가 발생했습니다.');
     }
-  };
-
-  const handleBackToLogin = () => {
-    navigate('/login');
   };
 
   return (
@@ -55,23 +51,15 @@ function PwChange() {
             onChange={handleInputChange}
             placeholder="이름을 입력해주세요"
           />
-          <L.PwChangeEmailContainer>
-            <L.PwChangeInput
-              type="email"
-              name="email"
-              value={email}
-              onChange={handleInputChange}
-              placeholder="이메일을 입력해주세요"
-            />
-          </L.PwChangeEmailContainer>
+          <L.PwChangeInput
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleInputChange}
+            placeholder="이메일을 입력해주세요"
+          />
         </L.InputContainer>
         <L.PwChangeButton type="submit">본인확인</L.PwChangeButton>
-        {successMessage && (
-          <L.SuccessMessageContainer>
-            <L.SuccessMessage>{successMessage}</L.SuccessMessage>
-            <L.PwChangeButton onClick={handleBackToLogin}>로그인으로 돌아가기</L.PwChangeButton>
-          </L.SuccessMessageContainer>
-        )}
       </L.PwChangeWrap>
       {errorMessage && (
         <L.ModalOverlay>

@@ -44,10 +44,10 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const result = await unifiedLogin(email, password, navigate);
-      
+      await unifiedLogin(email, password, navigate);
     } catch (error) {
       console.error("Login component error:", error);
+      // 에러 처리
     }
   };
 
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
         <L.Container>
           <L.LoginWrap onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
             <L.LogoImg src={imgLogo} alt="logo image" />
-            <L.LogoSubText>로그인 후 오카운트의 더 다양한 기능을 만나보세요!</L.LogoSubText>
+            <L.LogoSubText>로그인 후 오카운트의 더다양한 기능을 만나보세요!</L.LogoSubText>
             <L.InputContainer>
               <L.LoginInput
                 ref={emailInputRef}
@@ -83,7 +83,8 @@ const Login: React.FC = () => {
               />
             </L.InputContainer>
             <L.ActionLinks>
-              <L.ActionButton type="button" onClick={() => navigate('/register')}>회원가입하기</L.ActionButton> |
+              <L.ActionButton type="button" onClick={() => navigate('/register')}>회원가입하기</L.ActionButton>
+              <L.Divider>|</L.Divider>
               <L.ActionButton type="button" onClick={() => navigate('/pwChange')}>비밀번호 찾기</L.ActionButton>
             </L.ActionLinks>
             <L.LoginButton type="submit">로그인</L.LoginButton>

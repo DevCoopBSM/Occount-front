@@ -6,11 +6,12 @@ export const Container = styled.div`
   align-items: center;
   height: 85vh;
   background-color: #ffffff;
+  padding: 0 20px;
 `;
 
 export const LogoImg = styled.img`
-  height: 100px;
-  margin-bottom: 50px;
+  height: 80px;
+  margin-bottom: 40px;
 `;
 
 export const PwChangeWrap = styled.form`
@@ -18,10 +19,11 @@ export const PwChangeWrap = styled.form`
   flex-direction: column;
   align-items: center;
   width: 80%;
+  max-width: 500px;
 `;
 
 export const InputContainer = styled.div`
-  width: 50%;
+  width: 100%;
   padding: 20px;
   margin-bottom: 20px;
 `;
@@ -30,52 +32,36 @@ export const PwChangeInput = styled.input`
   width: 100%;
   height: 60px;
   border: none;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   padding: 10px;
-  padding-left: 24px;
   border-radius: 4px;
   background: #F2F2F2;
-
   color: #808080;
-  font-size: 24px;
   font-style: normal;
   font-weight: 400;
-`;
-
-export const PwChangeEmailContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const VerifyButton = styled.button`
-  width: 20%;
-  height: 60px;
-  margin-left: 5px;
-  outline: 2px solid var(--Gray, #999);
-  background-color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  
-  color: #808080;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: clamp(16px, 3vw, 24px);
 `;
 
 export const PwChangeButton = styled.button`
-  width: 48%;
-  height: 80px;
+  width: 100%;
+  max-width: 400px;
+  height: clamp(50px, 8vw, 80px);
   background-color: #41434C;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-
-  color: #FFF;
-  font-size: 32px;
   font-style: normal;
   font-weight: 800;
-  line-height: 40px; /* 125% */
+  line-height: 40px;
+  font-size: clamp(20px, 4vw, 32px);
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    max-width: 80%;
+    height: clamp(40px, 6vw, 60px);
+    font-size: clamp(16px, 3vw, 24px);
+  }
 `;
 
 export const ModalOverlay = styled.div`
@@ -99,7 +85,6 @@ export const ModalContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
 `;
-
 export const SuccessMessageContainer = styled.div`
   display: flex;
   flex-direction: column;

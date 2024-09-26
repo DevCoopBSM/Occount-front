@@ -13,7 +13,7 @@ import AdminLoginPage from 'pages/Admin/LoginPage';
 import AdminMainPage from 'pages/Admin/MainPage';
 import { PaymentRedirectPage } from 'pages/Pg/PaymentRedirect';
 import { PaymentResultPage } from 'pages/Pg/PaymentResult';
-import PwChangeEX from 'pages/User/pwChangePage';
+import PwChangeEX from 'pages/User/pwChangePageEX';
 
 const Router = () => {
   return (
@@ -23,8 +23,8 @@ const Router = () => {
       <Route path="/payment-redirect" element={<PaymentRedirectPage />} />
       <Route path="/payment-result" element={<PaymentResultPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
       <Route path="/pwchange" element={<PwChange />} />
-      <Route path="/pwChange/:jwtToken" element={<PwChangeEX />} />
       <Route path="/register" element={<Register />} />
       <Route path="/userlog" element={<UserlogPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />

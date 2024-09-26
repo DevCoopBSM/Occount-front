@@ -6,19 +6,33 @@ export const Container = styled.div`
   align-items: center;
   height: 85vh;
   background-color: #ffffff;
+  padding: 0 20px;
 `;
 
 export const LogoImg = styled.img`
-  height: 100px;
-  margin-bottom: 50px;
+  height: 80px;  // 기존 100px에서 80%로 줄임
+  margin-bottom: 40px;
 `;
 
 export const LogoSubText = styled.p`
   color: #000;
-  font-size: 24px;
   font-style: normal;
   font-weight: 400;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+  font-size: clamp(14px, 2.5vw, 18px);  // 최대 글꼴 크기를 18px로 제한
+  line-height: 1.2;
+  max-height: 2.4em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  transition: font-size 0.3s ease;
+
+  @media (max-width: 768px) {
+    font-size: clamp(12px, 2vw, 16px);
+  }
 `;
 
 export const LoginWrap = styled.form`
@@ -26,10 +40,11 @@ export const LoginWrap = styled.form`
   flex-direction: column;
   align-items: center;
   width: 80%;
+  max-width: 500px;
 `;
 
 export const InputContainer = styled.div`
-  width: 50%;
+  width: 100%;
   padding: 20px;
   margin-bottom: 20px;
 `;
@@ -42,46 +57,65 @@ export const LoginInput = styled.input`
   padding: 10px;
   border-radius: 4px;
   background: #F2F2F2;
-
   color: #808080;
-  font-size: 24px;
   font-style: normal;
   font-weight: 400;
+  font-size: clamp(16px, 3vw, 24px);
 `;
 
 export const ActionLinks = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 20%;
-  height: 100px;
-  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
 `;
 
 export const ActionButton = styled.button`
-  width: 100%;
+  flex: 1;
   background: none;
   border: none;
   cursor: pointer;
   color: #0085FF;
-  font-size: 22px;
   font-style: normal;
   font-weight: 400;
+  font-size: clamp(16px, 3vw, 22px);
+  white-space: nowrap;
+  padding: 0 10px;
+  text-align: center;
+  transition: font-size 0.3s ease;
+
+  @media (max-width: 768px) {
+    font-size: clamp(14px, 2.5vw, 18px);
+  }
+`;
+
+export const Divider = styled.span`
+  color: #000000; // 검은색으로 변경
+  padding: 0 10px;
+  flex: 0 0 auto;
 `;
 
 export const LoginButton = styled.button`
-  width: 48%;
-  height: 80px;
+  width: 100%;
+  max-width: 400px;
+  height: clamp(50px, 8vw, 80px);
   background-color: #41434C;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-
-  color: #FFF;
-  font-size: 32px;
   font-style: normal;
   font-weight: 800;
-  line-height: 40px; /* 125% */
+  line-height: 40px;
+  font-size: clamp(20px, 4vw, 32px);
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    max-width: 80%;
+    height: clamp(40px, 6vw, 60px);
+    font-size: clamp(16px, 3vw, 24px);
+  }
 `;
 
 export const ModalOverlay = styled.div`
