@@ -54,24 +54,16 @@ const Main = () => {
       <_.Maintop>
         <_.TopBox>
           <_.MainTopInBox>
-            {isLoggedIn ? (
-              <>
-              <_.TopBoxTextWrapper>
+            <_.TopBoxContent>
               <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
-              <_.TopBoxText2>{formatPoint}원</_.TopBoxText2>
-            </_.TopBoxTextWrapper>
-            <_.ChargeButton onClick={handleOpenChargeModal}>
-              충전하기
-            </_.ChargeButton>
-            </>
-              
-            ) : (
-                <>
-                <_.TopBoxTextWrapper>
-                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
-                <_.TopBoxText2>로그인 후 조회 가능합니다</_.TopBoxText2>
-              </_.TopBoxTextWrapper>
-              </>
+              <_.TopBoxText2>
+                {isLoggedIn ? `${formatPoint}원` : "로그인 후 조회 가능합니다"}
+              </_.TopBoxText2>
+            </_.TopBoxContent>
+            {isLoggedIn && (
+              <_.ChargeButton onClick={handleOpenChargeModal}>
+                충전하기
+              </_.ChargeButton>
             )}
           </_.MainTopInBox>
         </_.TopBox>
@@ -84,37 +76,41 @@ const Main = () => {
       </_.Maintop>
 
       <_.Mainbottom>
-        <_.UseBox>
-          <_.UseBoxContent>
-            <_.UseBoxText>
-              How To Use?
-              <p>
-                아리페이를 더 똑똑하게
-                사용하는 법
-              </p>
-            </_.UseBoxText>
-            <_.How2UseWrapper>
-              <How2Use
-                width={'90%'}
-                height={'120px'}
-              />
-            </_.How2UseWrapper>
-          </_.UseBoxContent>
-        </_.UseBox>
+        <_.BoxContainer>
+          <_.UseBox>
+            <Link to="/howto" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <_.UseBoxContent>
+                <_.UseBoxText>
+                  How To Use?
+                  <p>
+                    아리페이를 더 똑똑하게
+                    사용하는 법
+                  </p>
+                </_.UseBoxText>
+                <_.How2UseWrapper>
+                  <How2Use
+                    width={'90%'}
+                    height={'120px'}
+                  />
+                </_.How2UseWrapper>
+              </_.UseBoxContent>
+            </Link>
+          </_.UseBox>
 
-        <_.AskBox>
-          <_.AskInTop>
-            <a
-              href="https://www.instagram.com/bsm_devcoop/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p style={{ fontSize: '24px', fontWeight: '400' }}>아리페이 사용 중 문제가 발생했다면?</p>
-              인스타로 문의하기
-            </a>
-          </_.AskInTop>
-          <_.CallLogoStyle />
-        </_.AskBox>
+          <_.AskBox>
+            <_.AskInTop>
+              <a
+                href="https://www.instagram.com/bsm_devcoop/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <p>아리페이 사용 중 문제가 발생했다면?</p>
+                <span>인스타로 문의하기</span>
+              </a>
+            </_.AskInTop>
+            <_.CallLogoStyle />
+          </_.AskBox>
+        </_.BoxContainer>
       </_.Mainbottom>
 
       <G.Footer>

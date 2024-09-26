@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { ReactComponent as CallLogo } from 'assets/CallLogo.svg';
 import { Link } from 'react-router-dom';
+import Modal from 'components/Modal';  // 프로젝트의 Modal 컴포넌트 경로에 맞게 수정해주세요
+
+const MOBILE_BREAKPOINT = '480px';
+const TABLET_BREAKPOINT = '768px';
 
 export const Maintop = styled.div`
   margin: 0 auto;
@@ -12,9 +16,9 @@ export const Mainbottom = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  width: 1000px;
-  height: 300px;
-  background: #e3e5e7;
+  width: 100%;
+  max-width: 1000px;
+  background: #fff;
 `;
 
 export const TopBox = styled.div`
@@ -109,73 +113,111 @@ export const UserlogLink = styled(Link)`
 export const MainTopInBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
-  font-size: 20px;
+  align-items: center;
   color: #fff;
-  p {
-    margin-top: 10px;
-    font-size: 50px;
-    font-weight: 600;
+  min-height: 150px;
+  padding: 30px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
   }
 `;
 
+export const TopBoxContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    align-items: center;
+  }
+`;
+
+export const TopBoxText = styled.p`
+  padding-top: 10px;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const TopBoxText2 = styled.p`
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 export const ChargeButton = styled.button`
-  font-size: 24px;
-  padding: 10px 10px;
-  margin-top: 20px;
+  font-size: clamp(20px, 2.5vw, 28px);
+  min-width: 140px;
+  padding: 14px 28px;
   background-color: rgb(240, 206, 0);
   border: none;
-  border-radius: 10px;
-  color: white;
+  border-radius: 50px;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 90px;
-  height: 90px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: rgb(250, 216, 10);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    margin-top: 20px;
+    padding: 12px 24px;
+  }
 `;
 
 export const ModalHeader = styled.h2`
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 18px;
+  margin-bottom: 10px;
 
-  @media (max-width: 480px) {
-    font-size: 20px;
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    font-size: 16px;
+  }
+`;
+
+export const ModalContent = styled.div`
+  padding: 15px;
+  font-size: 14px;
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    padding: 10px;
+    font-size: 12px;
   }
 `;
 
 export const ModalList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px 0;
+  text-align: left;
+  line-height: 1.6;
+  padding-left: 20px;
+  font-size: clamp(12px, 2vw, 16px);
+  margin-bottom: 20px;
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    font-size: clamp(10px, 2.5vw, 14px);
+  }
 `;
 
 export const ModalListItem = styled.li`
-  background-color: #f1f1f1;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  line-height: 1.5;
-
-  @media (max-width: 480px) {
-    font-size: 14px;
-    padding: 10px;
-  }
-`;
-
-export const HighlightText = styled.span`
-  color: red;
-  font-weight: bold;
-  font-size: 24px;
-  display: block;
-  text-align: center;
-  margin-bottom: 20px;
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-  }
+  margin-bottom: clamp(8px, 1.5vw, 10px);
 `;
 
 export const ModalInputWrapper = styled.div`
@@ -184,108 +226,154 @@ export const ModalInputWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-export const ModalInput = styled.input`
-  font-size: 24px;
-  padding: 8px;
-  width: 60%;
-  text-align: center;
-  -webkit-appearance: none;
-  margin: 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  & {
-    -moz-appearance: textfield;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-    width: 80%;
-  }
-`;
-
-export const InputWrapper = styled.div`
+export const InputGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0;
+  width: 100%;
+  max-width: 300px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+`;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
+export const ModalInput = styled.input`
+  font-size: clamp(18px, 2.5vw, 24px);
+  padding: 8px;
+  width: 60%;
+  text-align: center;
+  border: none;
+  -webkit-appearance: none;
+  margin: 0;
+
+  &:focus {
+    outline: none;
   }
 `;
 
 export const IncreaseButton = styled.button`
-  font-size: 24px;
+  font-size: clamp(18px, 2.5vw, 24px);
   padding: 8px 12px;
-  margin-left: 10px;
   cursor: pointer;
   background-color: #f0ce00;
   border: none;
   border-radius: 5px;
   color: white;
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-    margin: 10px 0 0 0;
-  }
+  margin-left: 5px;
 `;
 
 export const DecreaseButton = styled(IncreaseButton)`
-  margin-left: 10px;
-
-  @media (max-width: 480px) {
-    margin: 10px 0 0 0;
-  }
-`;
-
-export const ModalButtonWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
-`;
-
-export const ModalButton = styled.button`
-  font-size: 20px;
-  padding: 10px 20px;
-  margin: 0 10px;
-  width: 150px;
-  background-color: #f0ce00;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 5px 0;
-  }
-`;
-
-export const ModalFooterButton = styled(ModalButton)`
-  flex: 1;
-
-  @media (max-width: 480px) {
-    width: 100%;
-    margin: 5px 0;
-  }
+  margin-right: 5px;
+  margin-left: 0;
 `;
 
 export const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+`;
 
-  @media (max-width: 480px) {
+export const ModalFooterButton = styled.button`
+  font-size: clamp(14px, 2vw, 18px);
+  padding: 10px 20px;
+  width: 40%;
+  max-width: 200px;
+  background-color: #f0ce00;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #e0be00;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    font-size: clamp(12px, 2.5vw, 16px);
+    padding: 8px 16px;
+    width: 45%;
+  }
+`;
+
+export const BoxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const HighlightText = styled.p`
+  font-size: clamp(14px, 2.5vw, 20px);
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: rgba(240, 206, 0, 0.3);
+  border-radius: 5px;
+  word-break: keep-all;
+  line-height: 1.4;
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    font-size: clamp(12px, 3vw, 16px);
+    padding: 8px;
+  }
+
+  span {
+    color: red;
+  }
+`;
+
+export const SubList = styled.ul`
+  list-style-type: none;
+  padding-left: 20px;
+  margin-top: 10px;
+`;
+
+export const SubListItem = styled.li`
+  font-size: clamp(12px, 1.8vw, 14px);
+  margin-bottom: 5px;
+  
+  &:before {
+    content: "•";
+    color: #f0ce00;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+`;
+
+export const StyledModal = styled(Modal)`
+  .modal-content {
+    width: 90%;
+    max-width: none; // 최대 너비 제한 제거
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    @media (max-width: ${TABLET_BREAKPOINT}) {
+      width: 95%;
+      padding: 15px;
+    }
+
+    @media (max-width: ${MOBILE_BREAKPOINT}) {
+      width: 100%;
+      padding: 10px;
+      border-radius: 0; // 모바일에서는 전체 화면으로
+    }
   }
 `;

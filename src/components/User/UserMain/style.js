@@ -2,21 +2,20 @@ import styled from 'styled-components';
 import { ReactComponent as CallLogo } from 'assets/CallLogo.svg';
 import { Link } from 'react-router-dom';
 
+const MOBILE_BREAKPOINT = '480px';
+const TABLET_BREAKPOINT = '768px';
+
 export const Maintop = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: auto;
-  
+  max-width: 1000px;
   padding: 20px 0;
 
-  @media (max-width: 480px) {
-    padding: 10px 0;
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    padding: 15px 0;
   }
-  height: auto;
-  padding: 20px 0;
-  
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     padding: 10px 0;
   }
 `;
@@ -27,40 +26,18 @@ export const Mainbottom = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: 1000px;
-  height: auto;
-  width: 100%;
-  max-width: 1000px;
-  height: auto;
   background: #fff;
-  flex-wrap: wrap;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: center;
-  }
-  flex-wrap: wrap;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: center;
-  }
 `;
 
 export const TopBox = styled.div`
-  
   margin: 0 auto;
   padding: 20px;
   width: 100%;
   max-width: 970px;
-  height: auto;
-  padding: 20px;
-  width: 100%;
-  max-width: 970px;
-  height: auto;
   background: #41434c;
   border-radius: 50px 50px 0 0;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     width: 90%;
     padding: 15px;
     border-radius: 25px 25px 0 0;
@@ -71,34 +48,27 @@ export const BottomBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  justify-content: center;
-  align-items: center;
   margin: 0 auto;
   padding: 20px;
   width: 100%;
   max-width: 970px;
-  height: auto;
-  padding: 20px;
-  width: 100%;
-  max-width: 970px;
-  height: auto;
   background: #34343c;
   border-radius: 0 0 50px 50px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     width: 90%;
     padding: 15px;
     border-radius: 0 0 25px 25px;
-    flex-direction: column;
   }
 `;
 
 export const UseBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px 10px 15px 15px;
+  margin: 15px;
   padding: 20px;
-  width: 400px;
+  width: calc(50% - 30px);
+  min-width: 300px;
   height: 270px;
   background: #f0ce00;
   border-radius: 12px;
@@ -106,11 +76,15 @@ export const UseBox = styled.div`
   font-weight: 700;
   font-size: 40px;
 
-  @media (max-width: 480px) {
-    width: 90%;
-    margin: 10px 0;
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    width: calc(100% - 30px);
+    margin: 15px 0;
     font-size: 30px;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     height: auto;
+    min-height: 200px;
   }
 `;
 
@@ -138,16 +112,21 @@ export const How2UseWrapper = styled.div`
 export const AskBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px 10px 15px 10px;
-  width: 550px;
+  margin: 15px;
+  width: calc(50% - 30px);
+  min-width: 300px;
   height: 270px;
   background: #FFF4B2;
   border-radius: 12px;
 
-  @media (max-width: 480px) {
-    width: 90%;
-    margin: 10px 0;
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    width: calc(100% - 30px);
+    margin: 15px 0;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     height: auto;
+    min-height: 200px;
   }
 `;
 
@@ -156,27 +135,37 @@ export const AskInTop = styled.div`
   width: 100%;
   height: 150px;
   background-color: #FFF4B2;
-  background-color: #FFF4B2;
   border-radius: 12px;
 
   a {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 100%;
-    width: 100%;
-    height: 50px;
-    margin: 20px;
-    font-size: 30px;
-    font-weight: 600;
+    height: 100%;
+    padding: 20px;
+    text-decoration: none;
     color: #000;
   }
 
-  @media (max-width: 480px) {
-    a {
-      font-size: 20px;
-    }
-    p {
-      font-size: 18px !important;
-    }
+  p {
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  span {
+    font-size: clamp(24px, 3vw, 30px);
+    font-weight: 600;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    height: auto;
+    min-height: 120px;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    min-height: 100px;
   }
 `;
 
@@ -185,7 +174,7 @@ export const CallLogoStyle = styled(CallLogo)`
   height: 300px;
   border-radius: 12px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     width: 100%;
     height: auto;
     max-height: 150px;
@@ -202,8 +191,6 @@ export const UserlogLink = styled(Link)`
   border-radius: 10px;
   font-size: 24px; 
   font-weight: 400;
-  font-size: 24px; 
-  font-weight: 400;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -214,14 +201,9 @@ export const UserlogLink = styled(Link)`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 20px;
     padding: 12px 20px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-    padding: 30px;
   }
 `;
 
@@ -229,14 +211,18 @@ export const MainTopInBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 20px;
   color: #fff;
-  height: 150px; // 고정 높이 추가
+  min-height: 150px;
+  padding: 30px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  gap: 20px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     flex-direction: column;
     align-items: center;
-    height: auto;
+    padding: 20px;
+    text-align: center;
   }
 `;
 
@@ -245,7 +231,7 @@ export const TopBoxTextWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     align-items: center;
     margin-bottom: 20px;
   }
@@ -253,51 +239,58 @@ export const TopBoxTextWrapper = styled.div`
 
 export const TopBoxText = styled.p`
   padding-top: 10px;
-  font-size: 24px;
+  font-size: clamp(20px, 3vw, 32px);
   font-weight: 400;
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-    padding-top: 5px;
-  }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const TopBoxText2 = styled.p`
-  font-size: 40px;
+  font-size: clamp(32px, 6vw, 56px);
   font-weight: 600;
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-  }
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: center;
-
-    p {
-      font-size: 36px;
-      margin-top: 5px;
-    }
-  }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const ChargeButton = styled.button`
-  font-size: 28px;
-
-  width: 20%;
+  font-size: clamp(24px, 3vw, 36px);
   background-color: rgb(240, 206, 0);
   border: none;
-  border-radius: 15px;
-  color: white;
+  border-radius: 75px;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   text-align: center;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  padding: 0;
 
-  @media (max-width: 480px) {
-    font-size: 16px;
-    font-weight: 400;
-    width: 30%;
+  &:hover {
+    background-color: rgb(250, 216, 10);
+    transform: translateY(-3px);
+    box-shadow: 0 9px 21px rgba(0, 0, 0, 0.25);
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: clamp(20px, 2.5vw, 30px);
+    max-width: 250px;
+    aspect-ratio: 4 / 1;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    font-size: clamp(18px, 2vw, 24px);
+    max-width: 200px;
+    aspect-ratio: 5 / 1;
   }
 `;
 
@@ -305,7 +298,7 @@ export const ModalHeader = styled.h2`
   text-align: center;
   font-size: 24px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 20px;
   }
 `;
@@ -316,7 +309,7 @@ export const ModalList = styled.ul`
   padding-left: 20px;
   font-size: 16px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 14px;
     padding-left: 15px;
   }
@@ -325,7 +318,7 @@ export const ModalList = styled.ul`
 export const ModalListItem = styled.li`
   margin-bottom: 10px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     margin-bottom: 8px;
   }
 `;
@@ -336,7 +329,7 @@ export const ModalInputWrapper = styled.div`
   align-items: center;
   margin-bottom: 20px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     flex-direction: column;
   }
 `;
@@ -351,7 +344,7 @@ export const ModalInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 20px;
     width: 80%;
     margin: 10px 0;
@@ -363,7 +356,7 @@ export const InputWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     width: 100%;
     justify-content: space-between;
   }
@@ -379,7 +372,7 @@ export const IncreaseButton = styled.button`
   border-radius: 5px;
   color: white;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 20px;
     padding: 6px 10px;
   }
@@ -395,7 +388,7 @@ export const ModalButtonWrapper = styled.div`
   justify-content: center;
   margin-bottom: 20px;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     flex-direction: column;
     align-items: center;
   }
@@ -412,7 +405,7 @@ export const ModalButton = styled.button`
   color: white;
   cursor: pointer;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 18px;
     width: 80%;
     margin: 5px 0;
@@ -423,7 +416,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     flex-direction: column;
   }
 `;
@@ -437,9 +430,32 @@ export const ModalFooterButton = styled(ModalButton)`
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  @media (max-width: 480px) {
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 18px;
     width: 100%;
     margin-bottom: 10px;
+  }
+`;
+
+export const BoxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+export const TopBoxContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    align-items: center;
   }
 `;
