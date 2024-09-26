@@ -1,46 +1,73 @@
 import styled from 'styled-components';
 
 export const PointLogWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* 가운데 항목을 더 넓게 설정 */
   align-items: center;
-  margin-right: 5px;
-  margin-bottom: 10px;
-  padding: 10px 15px;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  background-color: ${(props) => props.backgroundColor || '#eff0f2'};
-  border: 1px solid ${(props) => props.borderColor || '#EFF0F2'};
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: ${props => props.backgroundColor || '#fff'};
   border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
   cursor: pointer;
+  width: 100%; /* 아이템의 너비를 100%로 설정하여 부모에 맞춤 */
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1.5fr 1fr;
+    padding: 8px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
 `;
 
 export const DateText = styled.span`
-  margin-left: 10px;
+  font-size: 14px;
+  color: #666;
   text-align: left;
-  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 export const AmountText = styled.span`
-  margin-right: 10px;
-  text-align: right;
   font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+export const ChargeTypeText = styled.span`
+  font-size: 14px;
+  color: #666;
+  text-align: right;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 export const DetailWrap = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 15px;
-  margin: 10px 0;
+  margin-top: -5px;
+  margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 `;
 
 export const DetailLabel = styled.div`
@@ -70,13 +97,6 @@ export const DetailSelect = styled.select`
   font-size: 14px;
 `;
 
-// 누락된 ChargeTypeText 정의 추가
-export const ChargeTypeText = styled.span`
-  font-size: 14px; // 글씨 크기를 약간 작게 설정
-  color: #666; // 회색 톤으로 설정
-  margin-left: 10px;
-`;
-
 export const ModalButton = styled.button`
   background-color: #f0ce00;
   color: white;
@@ -84,9 +104,9 @@ export const ModalButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  margin: 10px 0;
-  width: 100%;
-  max-width: 300px;
+  font-size: 16px;
+  margin-top: 10px;
+  
   &:hover {
     background-color: #d4b200;
   }
@@ -121,4 +141,11 @@ export const ModalFooter = styled.div`
   justify-content: space-between;
   padding: 20px;
   text-align: center;
+`;
+
+export const TypeText = styled.span`
+  font-size: 14px;
+  color: #666;
+  flex: 1;
+  text-align: right;
 `;

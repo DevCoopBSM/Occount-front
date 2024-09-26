@@ -97,14 +97,8 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
               style={{ background: getBackgroundColor(item, type, isOverWeek) }}
             >
               <_.DateText>{item.date.toLocaleDateString()}</_.DateText>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <_.AmountText>
-                  {`${item.inner_point.toLocaleString()}원 ${
-                    type === 1 ? '충전' : '사용'
-                  }`}
-                </_.AmountText>
-                <_.ChargeTypeText>{transactionType}</_.ChargeTypeText>
-              </div>
+              <_.AmountText>{`${item.inner_point.toLocaleString()}원`}</_.AmountText>
+              <_.ChargeTypeText>{transactionType}</_.ChargeTypeText>
             </_.PointLogWrap>
 
             {/* 아이템이 확장된 상태일 때만 상세 정보 표시 */}

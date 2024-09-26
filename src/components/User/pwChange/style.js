@@ -9,9 +9,10 @@ export const Container = styled.div`
   padding: 0 20px;
 `;
 
+
 export const LogoImg = styled.img`
-  height: 80px;
-  margin-bottom: 40px;
+  height: 64px; 
+  margin-bottom: 32px; 
 `;
 
 export const PwChangeWrap = styled.form`

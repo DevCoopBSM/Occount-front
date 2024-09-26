@@ -51,31 +51,31 @@ const Main = () => {
 
   return (
     <>
-      <_.Maintop>
-        <_.TopBox>
-          <_.MainTopInBox>
-            <_.TopBoxContent>
-              <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
-              <_.TopBoxText2>
-                {isLoggedIn ? `${formatPoint}원` : "로그인 후 조회 가능합니다"}
-              </_.TopBoxText2>
-            </_.TopBoxContent>
-            {isLoggedIn && (
-              <_.ChargeButton onClick={handleOpenChargeModal}>
-                충전하기
-              </_.ChargeButton>
-            )}
-          </_.MainTopInBox>
-        </_.TopBox>
+      <_.MainContent>
+        <_.Maintop>
+          <_.TopBox>
+            <_.MainTopInBox>
+              <_.TopBoxContent>
+                <_.TopBoxText>현재 사용 가능한 금액</_.TopBoxText>
+                <_.TopBoxText2>
+                  {isLoggedIn ? `${formatPoint}원` : "로그인 후 조회 가능합니다"}
+                </_.TopBoxText2>
+              </_.TopBoxContent>
+              {isLoggedIn && (
+                <_.ChargeButton onClick={handleOpenChargeModal}>
+                  충전하기
+                </_.ChargeButton>
+              )}
+            </_.MainTopInBox>
+          </_.TopBox>
 
-        <_.BottomBox>
-          <_.UserlogLink to="/userlog">
-            거래 내역 및 충전 환불
-          </_.UserlogLink>
-        </_.BottomBox>
-      </_.Maintop>
+          <_.BottomBox>
+            <_.UserlogLink to="/userlog">
+              거래 내역 및 충전 환불
+            </_.UserlogLink>
+          </_.BottomBox>
+        </_.Maintop>
 
-      <_.Mainbottom>
         <_.BoxContainer>
           <_.UseBox>
             <Link to="/howto" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -111,7 +111,7 @@ const Main = () => {
             <_.CallLogoStyle />
           </_.AskBox>
         </_.BoxContainer>
-      </_.Mainbottom>
+      </_.MainContent>
 
       <G.Footer>
         <G.FooterText>

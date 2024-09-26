@@ -9,14 +9,14 @@ export const Maintop = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: 1000px;
-  padding: 20px 0;
+  padding: 10px 0;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    padding: 15px 0;
+    padding: 8px 0;
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    padding: 10px 0;
+    padding: 5px 0;
   }
 `;
 
@@ -29,9 +29,16 @@ export const Mainbottom = styled.div`
   background: #fff;
 `;
 
+export const MainContent = styled.div`
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+`;
+
 export const TopBox = styled.div`
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
   width: 100%;
   max-width: 970px;
   background: #41434c;
@@ -39,7 +46,7 @@ export const TopBox = styled.div`
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     width: 90%;
-    padding: 15px;
+    padding: 10px;
     border-radius: 25px 25px 0 0;
   }
 `;
@@ -49,7 +56,7 @@ export const BottomBox = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  padding: 20px;
+  padding: 15px;
   width: 100%;
   max-width: 970px;
   background: #34343c;
@@ -57,17 +64,33 @@ export const BottomBox = styled.div`
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     width: 90%;
-    padding: 15px;
+    padding: 10px;
     border-radius: 0 0 25px 25px;
+  }
+`;
+
+export const BoxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 970px;
+  margin: 10px auto 0;
+  gap: 15px;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    flex-direction: column;
+    width: 90%;
+    gap: 10px;
   }
 `;
 
 export const UseBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px;
-  padding: 20px;
-  width: calc(50% - 30px);
+  margin: 0 0 10px 0;
+  padding: 15px;
+  width: calc(50% - 10px);
   min-width: 300px;
   height: 270px;
   background: #f0ce00;
@@ -77,14 +100,14 @@ export const UseBox = styled.div`
   font-size: 40px;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    width: calc(100% - 30px);
-    margin: 15px 0;
+    width: 100%;
+    margin: 10px 0;
     font-size: 30px;
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
     height: auto;
-    min-height: 200px;
+    min-height: 180px;
   }
 `;
 
@@ -93,6 +116,7 @@ export const UseBoxContent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  padding: 15px;
 `;
 
 export const UseBoxText = styled.div`
@@ -112,30 +136,32 @@ export const How2UseWrapper = styled.div`
 export const AskBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 15px;
-  width: calc(50% - 30px);
+  margin: 0 0 10px 0;
+  width: calc(50% - 10px);
   min-width: 300px;
   height: 270px;
   background: #FFF4B2;
   border-radius: 12px;
+  overflow: hidden;
+  position: relative;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    width: calc(100% - 30px);
-    margin: 15px 0;
+    width: 100%;
+    margin: 10px 0;
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
     height: auto;
-    min-height: 200px;
+    min-height: 180px;
   }
 `;
 
 export const AskInTop = styled.div`
   display: flex;
   width: 100%;
-  height: 150px;
+  flex: 1;
   background-color: #FFF4B2;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
 
   a {
     display: flex;
@@ -143,7 +169,7 @@ export const AskInTop = styled.div`
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 20px;
+    padding: 15px;
     text-decoration: none;
     color: #000;
   }
@@ -158,27 +184,21 @@ export const AskInTop = styled.div`
     font-size: clamp(24px, 3vw, 30px);
     font-weight: 600;
   }
+`;
 
-  @media (max-width: ${TABLET_BREAKPOINT}) {
-    height: auto;
-    min-height: 120px;
-  }
-
-  @media (max-width: ${MOBILE_BREAKPOINT}) {
-    min-height: 100px;
-  }
+export const CallLogoWrapper = styled.div`
+  width: 100%;
+  height: 120px;
+  background-color: #D2B48C;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
 `;
 
 export const CallLogoStyle = styled(CallLogo)`
-  width: 550px;
-  height: 300px;
-  border-radius: 12px;
-
-  @media (max-width: ${MOBILE_BREAKPOINT}) {
-    width: 100%;
-    height: auto;
-    max-height: 150px;
-  }
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
 `;
 
 export const UserlogLink = styled(Link)`
@@ -239,7 +259,7 @@ export const TopBoxTextWrapper = styled.div`
 
 export const TopBoxText = styled.p`
   padding-top: 10px;
-  font-size: clamp(20px, 3vw, 32px);
+  font-size: clamp(16px, 2.7vw, 28.8px);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -247,7 +267,7 @@ export const TopBoxText = styled.p`
 `;
 
 export const TopBoxText2 = styled.p`
-  font-size: clamp(32px, 6vw, 56px);
+  font-size: clamp(24px, 5.4vw, 50.4px);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -434,19 +454,6 @@ export const ModalFooterButton = styled(ModalButton)`
     font-size: 18px;
     width: 100%;
     margin-bottom: 10px;
-  }
-`;
-
-export const BoxContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1000px;
-
-  @media (max-width: ${TABLET_BREAKPOINT}) {
-    flex-direction: column;
-    align-items: center;
   }
 `;
 
