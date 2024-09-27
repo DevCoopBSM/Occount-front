@@ -49,3 +49,17 @@ export const ModalButton = styled(Button)`
   font-size: 20px;
   padding: 10px 20px;
 `;
+
+export const CloseButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;

@@ -124,6 +124,7 @@ export function PaymentCheckoutPage({
             <button onClick={() => setPayMethod('CARD')}>카드 결제</button>
             {/* <button onClick={() => setPayMethod('TRANSFER')}>계좌 이체</button>
             <button onClick={() => setPayMethod('VIRTUAL_ACCOUNT')}>가상 계좌</button> */}
+            <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
           </>
         ) : (
           <Modal
@@ -141,6 +142,7 @@ export function PaymentCheckoutPage({
             }}
           >
             {modalContent}
+            <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
           </Modal>
         )}
       </S.BoxSection>

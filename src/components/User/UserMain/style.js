@@ -134,6 +134,7 @@ export const How2UseWrapper = styled.div`
 `;
 
 export const AskBox = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   margin: 0 0 10px 0;
@@ -158,47 +159,39 @@ export const AskBox = styled.div`
 
 export const AskInTop = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   width: 100%;
-  flex: 1;
+  padding: 20px;
   background-color: #FFF4B2;
-  border-radius: 12px 12px 0 0;
-
-  a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 15px;
-    text-decoration: none;
-    color: #000;
-  }
 
   p {
-    font-size: clamp(18px, 2.5vw, 24px);
+    font-size: clamp(16px, 2.5vw, 24px);
     font-weight: 400;
     margin-bottom: 10px;
+    line-height: 1.2;
   }
 
   span {
-    font-size: clamp(24px, 3vw, 30px);
+    font-size: clamp(20px, 3vw, 30px);
     font-weight: 600;
   }
 `;
 
 export const CallLogoWrapper = styled.div`
   width: 100%;
-  height: 120px;
-  background-color: #D2B48C;
-  border-radius: 0 0 12px 12px;
-  overflow: hidden;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-color: transparent;
 `;
 
 export const CallLogoStyle = styled(CallLogo)`
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
+  object-fit: contain;
+  object-position: right bottom;
 `;
 
 export const UserlogLink = styled(Link)`

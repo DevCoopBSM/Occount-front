@@ -6,6 +6,7 @@ import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
 import { useNavigate } from 'react-router-dom';
+import InquiryModal from '../InqueryModal';
 
 const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
@@ -47,6 +48,20 @@ const Main = () => {
     } else {
       alert('충전 금액은 천 원 이상 입력해야 합니다.');
     }
+  };
+
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+
+  const handleOpenInquiryModal = () => {
+    if (isLoggedIn) {
+      setIsInquiryModalOpen(true);
+    } else {
+      alert('로그인 후 이용해 주세요.');
+    }
+  };
+
+  const handleCloseInquiryModal = () => {
+    setIsInquiryModalOpen(false);
   };
 
   return (
@@ -97,18 +112,14 @@ const Main = () => {
             </Link>
           </_.UseBox>
 
-          <_.AskBox>
+          <_.AskBox onClick={handleOpenInquiryModal}>
             <_.AskInTop>
-              <a
-                href="https://www.instagram.com/bsm_devcoop/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <p>아리페이 사용 중 문제가 발생했다면?</p>
-                <span>인스타로 문의하기</span>
-              </a>
+              <p>아리페이 사용 중 문제가 발생했다면?</p>
+              <span>문의하기</span>
             </_.AskInTop>
-            <_.CallLogoStyle />
+            <_.CallLogoWrapper>
+              <_.CallLogoStyle />
+            </_.CallLogoWrapper>
           </_.AskBox>
         </_.BoxContainer>
       </_.MainContent>
@@ -132,6 +143,12 @@ const Main = () => {
         user={user}
         increaseAmount={increaseAmount}
         decreaseAmount={decreaseAmount}
+      />
+
+      <InquiryModal
+        isOpen={isInquiryModalOpen}
+        onRequestClose={handleCloseInquiryModal}
+        user={user}
       />
     </>
   );
