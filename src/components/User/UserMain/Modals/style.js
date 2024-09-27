@@ -277,7 +277,8 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const ModalFooterButton = styled.button`
-  font-size: clamp(14px, 2vw, 18px);
+  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
+  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
   padding: 10px 20px;
   width: 40%;
   max-width: 200px;
@@ -294,7 +295,7 @@ export const ModalFooterButton = styled.button`
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    font-size: clamp(12px, 2.5vw, 16px);
+    font-size: 16px; /* 모바일에서 글꼴 크기를 16px로 설정 */
     padding: 8px 16px;
     width: 45%;
   }

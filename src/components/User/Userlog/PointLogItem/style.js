@@ -104,8 +104,10 @@ export const ModalButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
+  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
   margin-top: 10px;
+  width: 100%; /* 가로 길이를 100%로 설정하여 부모 요소에 맞춤 */
   
   &:hover {
     background-color: #d4b200;
@@ -119,6 +121,8 @@ export const ModalCloseButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
+  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
   margin: 10px 0;
   width: 100%;
   max-width: 300px;
