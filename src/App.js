@@ -3,7 +3,7 @@ import { LoadingProvider, useLoading } from './contexts/loadingContext';
 import { BrowserRouter } from 'react-router-dom';
 import { GlobalStyle } from './common/GlobalStyle';
 import { AuthProvider } from 'contexts/authContext';
-import MainRouter from './components/MainRouter';
+import MainRouter from './routers/MainRouter';
 import Loading from './common/Loading';
 import { setLoadingFunction } from './utils/Axios';
 

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const CompeleteWrap = styled.div`
   width: 100%;
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -20,132 +20,119 @@ export const ExChangeDetailWrap = styled.div`
 `;
 
 export const InfoText = styled.div`
-  font-size: 20px;
-  color: #333;
-  font-weight: 600;
+  font-size: 18px;
+  color: #495057;
 `;
 
 export const Exchange = styled.p`
-  font-size: 28px;
-  font-weight: 700;
-  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+  color: #343a40;
 `;
 
 export const UseLogWrap = styled.div`
-  margin-top: 20px;
-  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 `;
 
-export const PointContainer = styled.div`
+export const LogTitles = styled.div`
   display: flex;
-  justify-content: center;
-  width: 100%;
-  gap: 20px; // 1. 간격을 조금 늘려 사용 내역과 충전 내역 구분을 명확히 함
+  justify-content: space-between;
+  margin-bottom: 15px;
 `;
 
-export const LogColumn = styled.div`
-  width: 40%; // 2. 너비를 더 줄여 전체적인 가로 길이 감소
-  max-width: 350px; // 3. 최대 너비 설정
-  display: flex;
-  flex-direction: column;
+export const LogTitle = styled.div`
+  width: 48%;
+  padding: 10px;
+  background-color: #F0CE00;
+  color: white;
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+  font-weight: bold;
 `;
 
 export const LogContainer = styled.div`
   display: flex;
-  justify-content: center; /* 내역들을 가운데 정렬 */
-  gap: 50px; /* 사용 내역과 충전 내역 사이 간격 조정 */
-  margin-top: 20px;
+  justify-content: space-between;
+  gap: 20px;
 `;
 
-export const LogTitle = styled.h2`
-  font-size: 18px;
-  margin-bottom: 10px;
+export const LogColumn = styled.div`
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+
+export const LogContent = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+export const LogPage = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+export const LogSubTitle = styled.h3`
   text-align: center;
+  margin-bottom: 10px;
 `;
 
 export const Pagination = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
+  align-items: center;
+  padding: 20px 0;
+  background-color: #f8f9fa;
+`;
 
-  .pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-wrap: wrap;
-    justify-content: center;
+export const PageNumber = styled.button`
+  background-color: #F0CE00;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 
-    li {
-      margin: 2px;
-
-      a {
-        padding: 6px 10px;
-        border: 1px solid #f0ce00;
-        border-radius: 4px;
-        color: #f0ce00;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 14px;
-
-        &:hover {
-          background-color: #f0ce00;
-          color: white;
-        }
-      }
-
-      &.selected a {
-        background-color: #f0ce00;
-        color: white;
-      }
-
-      @media (max-width: 576px) {
-        a {
-          padding: 4px 8px;
-          font-size: 12px;
-        }
-      }
-    }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
+`;
 
-  @media (max-width: 576px) {
-    margin-top: 10px;
-  }
+export const PageIndicator = styled.span`
+  margin: 0 10px;
+  font-size: 16px;
+  color: #495057;
 `;
 
 export const PointLogWrap = styled.div`
   display: flex;
-  flex-direction: column;
-  padding: 10px;
-  margin-bottom: 8px;
-  background-color: ${props => props.backgroundColor || '#fff'};
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: ${props => props.type === 0 ? '#e7f5ff' : '#fff5f5'};
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  @media (max-width: 576px) {
-    padding: 8px;
-  }
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export const DateText = styled.span`
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
+  font-size: 14px;
+  color: #868e96;
 `;
 
 export const AmountText = styled.span`
-  font-size: 16px;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  color: ${props => props.type === 'charge' ? '#1c7ed6' : '#e03131'};
 `;
 
 export const ChargeTypeText = styled.span`
-  font-size: 12px;
-  color: #666;
+  font-size: 14px;
+  color: #495057;
 `;
 
 export const DetailWrap = styled.div`
@@ -192,3 +179,9 @@ export const ModalButton = styled.button`
   display: flex;
   justify-content: center;
 `;
+
+export const LogSection = styled.div`
+  width: 100%;
+`;
+
+// PointLogItem 컴포넌트의 스타일을 조정하여 사용 내역과 충전 내역의 배경색을 다르게 설정하세요

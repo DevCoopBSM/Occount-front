@@ -1,8 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import imgLogo from "assets/occLoginlogo.svg";
 import { useAuth } from "contexts/authContext";
-import * as G from "../../../common/GlobalStyle"
 import * as L from "./style";
 
 const Login: React.FC = () => {
@@ -14,19 +13,17 @@ const Login: React.FC = () => {
 
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  // 이메일 입력란에 포커스 설정
   useEffect(() => {
     emailInputRef.current?.focus();
   }, []);
 
-  // 에러 메시지 표시 후 3초 뒤에 자동으로 모달을 닫음
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
-        clearErrorMessage(); // 에러 메시지를 비우는 함수 호출
-      }, 3000); // 3초 후에 실행
+        clearErrorMessage();
+      }, 3000);
 
-      return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 클리어
+      return () => clearTimeout(timer);
     }
   }, [errorMessage, clearErrorMessage]);
 
@@ -40,23 +37,21 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       await unifiedLogin(email, password, navigate);
     } catch (error) {
-      console.error("Login component error:", error);
-      // 에러 처리
+      console.error('Login failed:', error);
+      alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
     }
-  };
+  }, [email, password, unifiedLogin, navigate]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault();
-      handleSubmit(e as unknown as FormEvent<HTMLFormElement>);
+      handleSubmit(e);
     }
-  };
+  }, [handleSubmit]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -88,31 +83,16 @@ const Login: React.FC = () => {
               <L.ActionButton type="button" onClick={() => navigate('/pwChange')}>비밀번호 찾기</L.ActionButton>
             </L.ActionLinks>
             <L.LoginButton type="submit">로그인</L.LoginButton>
-
           </L.LoginWrap>
           {errorMessage && (
             <L.ModalOverlay>
               <L.ModalContent>
                 {errorMessage}
               </L.ModalContent>
-              
             </L.ModalOverlay>
           )}
-          
         </L.Container>
       </div>
-      <footer className="bg-gray-200 py-4 text-center">
-      <G.Footer>
-            <G.FooterText>
-              상호: 부산소마고 사회적협동조합
-              대표: 김민경(이사장)
-              사업자 등록번호: 214-82-16238<br/>
-              주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
-              전화번호: 051-970-1709<br/>
-              INSTA | GITHUB
-            </G.FooterText>
-          </G.Footer>
-      </footer>
     </div>
   );
 };

@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as _ from './style';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
-import * as G from "../../../common/GlobalStyle"
-import ChargeModal from './Modals/ChargeModal';
-import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
-import { useNavigate } from 'react-router-dom';
-import InquiryModal from '../InquiryModal';
+import ChargeModal from './ChargeModal';
+import How2Use from 'assets/How2useBT.svg';
+import InquiryModal from './InquiryModal';
 
-const Main = () => {
+interface User {
+  point: number;
+  todayTotalCharge: number;
+}
+
+const Main: React.FC = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
-  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
-  const [chargeAmount, setChargeAmount] = useState(1000);
-  const [formatPoint, setFormatPoint] = useState('');
+  const [isChargeModalOpen, setIsChargeModalOpen] = useState<boolean>(false);
+  const [chargeAmount, setChargeAmount] = useState<number>(1000);
+  const [formatPoint, setFormatPoint] = useState<string>('');
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  const handleLogoClick = () => {
-    navigate('/');
-  };
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -25,44 +25,47 @@ const Main = () => {
     }
   }, [user]);
 
-  const handleOpenChargeModal = () => {
+  const handleOpenChargeModal = useCallback((): void => {
     setIsChargeModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseChargeModal = useCallback(() => {
+  const handleCloseChargeModal = useCallback((): void => {
     setIsChargeModalOpen(false);
     refetchUser();
   }, [refetchUser]);
 
-  const increaseAmount = () => {
-    if (chargeAmount + 1000 <= 50000 - (user?.todayTotalCharge || 0)) {
-      setChargeAmount(chargeAmount + 1000);
-    } else {
+  const increaseAmount = useCallback((): void => {
+    setChargeAmount(prevAmount => {
+      const newAmount = prevAmount + 1000;
+      if (newAmount <= 50000 - ((user as User)?.todayTotalCharge || 0)) {
+        return newAmount;
+      }
       alert('하루 충전 금액은 5만원을 넘을 수 없습니다.');
-    }
-  };
+      return prevAmount;
+    });
+  }, [user]);
 
-  const decreaseAmount = () => {
-    if (chargeAmount - 1000 >= 1000) {
-      setChargeAmount(chargeAmount - 1000);
-    } else {
+  const decreaseAmount = useCallback((): void => {
+    setChargeAmount(prevAmount => {
+      if (prevAmount - 1000 >= 1000) {
+        return prevAmount - 1000;
+      }
       alert('충전 금액은 천 원 이상 입력해야 합니다.');
-    }
-  };
+      return prevAmount;
+    });
+  }, []);
 
-  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
-
-  const handleOpenInquiryModal = () => {
+  const handleOpenInquiryModal = useCallback((): void => {
     if (isLoggedIn) {
       setIsInquiryModalOpen(true);
     } else {
       alert('로그인 후 이용해 주세요.');
     }
-  };
+  }, [isLoggedIn]);
 
-  const handleCloseInquiryModal = () => {
+  const handleCloseInquiryModal = useCallback((): void => {
     setIsInquiryModalOpen(false);
-  };
+  }, []);
 
   return (
     <>
@@ -85,9 +88,15 @@ const Main = () => {
           </_.TopBox>
 
           <_.BottomBox>
-            <_.UserlogLink to="/userlog">
-              거래 내역 및 충전 환불
-            </_.UserlogLink>
+            {isLoggedIn ? (
+              <_.UserlogLink to="/userlog">
+                거래 내역 및 충전 환불
+              </_.UserlogLink>
+            ) : (
+              <_.DisabledUserlogLink>
+                거래 내역 및 충전 환불
+              </_.DisabledUserlogLink>
+            )}
           </_.BottomBox>
         </_.Maintop>
 
@@ -103,10 +112,7 @@ const Main = () => {
                   </p>
                 </_.UseBoxText>
                 <_.How2UseWrapper>
-                  <How2Use
-                    width={'90%'}
-                    height={'120px'}
-                  />
+                  <img src={How2Use} alt="How to use" width="90%" height="120px" />
                 </_.How2UseWrapper>
               </_.UseBoxContent>
             </Link>
@@ -124,23 +130,12 @@ const Main = () => {
         </_.BoxContainer>
       </_.MainContent>
 
-      <G.Footer>
-        <G.FooterText>
-          상호: 부산소마고 사회적협동조합
-          대표: 김민경(이사장)
-          사업자 등록번호: 214-82-16238<br/>
-          주소: 부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관 공간-아리소리<br/>
-          전화번호: 051-970-1709<br/>
-          INSTA | GITHUB
-        </G.FooterText>
-      </G.Footer>
-
       <ChargeModal 
         isOpen={isChargeModalOpen} 
         onRequestClose={handleCloseChargeModal}
         chargeAmount={chargeAmount}
         setChargeAmount={setChargeAmount}
-        user={user}
+        user={user as User}
         increaseAmount={increaseAmount}
         decreaseAmount={decreaseAmount}
       />
@@ -148,7 +143,7 @@ const Main = () => {
       <InquiryModal
         isOpen={isInquiryModalOpen}
         onRequestClose={handleCloseInquiryModal}
-        user={user}
+        user={user as User}
       />
     </>
   );

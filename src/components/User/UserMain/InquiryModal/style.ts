@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+interface InquiryItemProps {
+  $hasAnswer?: boolean;
+}
+
+interface InquiryAnswerProps {
+  $hasAnswer?: boolean;
+}
+
 export const ErrorMessage = styled.div`
   color: red;
   margin-bottom: 10px;
@@ -127,11 +135,14 @@ export const CloseButton = styled.button`
 `;
 
 export const InquiriesContainer = styled.div`
-  padding: 20px;
+  overflow: hidden;
+  width: 100%;
+`;
 
-  @media (max-width: 600px) {
-    padding: 15px;
-  }
+export const InquiriesContent = styled.div`
+  display: flex;
+  transition: transform 0.3s ease-out;
+  width: 100%;
 `;
 
 export const InquiriesHeader = styled.h2`
@@ -150,12 +161,12 @@ export const NoInquiries = styled.p`
   }
 `;
 
-export const InquiryItem = styled.div`
+export const InquiryItem = styled.div<InquiryItemProps>`
   border: 1px solid #ddd;
   padding: 10px;
   margin-bottom: 10px;
   cursor: pointer;
-  background-color: ${props => (props.hasAnswer ? '#e0ffe0' : '#ffffff')};
+  background-color: ${props => (props.$hasAnswer ? '#e0ffe0' : '#ffffff')};
 
   @media (max-width: 600px) {
     padding: 8px;
@@ -165,8 +176,8 @@ export const InquiryItem = styled.div`
 export const InquiryTitle = styled.h3`
   margin: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 
   @media (max-width: 600px) {
     font-size: 18px;
@@ -176,7 +187,7 @@ export const InquiryTitle = styled.h3`
 export const InquiryCategory = styled.span`
   font-size: 12px;
   color: #999;
-  margin-left: 10px;
+  margin-top: 5px;
 `;
 
 export const InquiryContent = styled.p`
@@ -188,8 +199,8 @@ export const InquiryContent = styled.p`
   }
 `;
 
-export const InquiryAnswer = styled.div`
-  color: ${props => (props.hasAnswer ? '#000' : '#999')};
+export const InquiryAnswer = styled.div<InquiryAnswerProps>`
+  color: ${props => (props.$hasAnswer ? '#000' : '#999')};
   margin-top: 10px;
   padding: 10px;
   background-color: #f9f9f9;
@@ -217,16 +228,19 @@ export const Pagination = styled.div`
   }
 `;
 
-export const PageNumber = styled.span`
-  margin: 0 5px;
-  cursor: pointer;
+export const PageNumber = styled.span<{ disabled?: boolean }>`
+  margin: 0 10px;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  font-size: 14px;
+  color: ${props => props.disabled ? '#999' : '#666'};
+  padding: 5px 10px;
+  border: 1px solid ${props => props.disabled ? '#999' : '#f0ce00'};
+  border-radius: 4px;
+  transition: all 0.3s ease;
 
   &:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
+    background-color: ${props => props.disabled ? 'transparent' : '#f0ce00'};
+    color: ${props => props.disabled ? '#999' : 'white'};
   }
 `;
 
@@ -245,4 +259,55 @@ export const InquiryDate = styled.span`
   color: #999;
   display: block;
   margin-top: 5px;
+`;
+
+export const LoadingSpinner = styled.div`
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+`;
+
+export const NewInquiryButton = styled.button`
+  ${ButtonStyles}
+  background-color: #f0ce00;
+  color: #ffffff;
+
+  &:hover {
+    background-color: #e0be00;
+  }
+`;
+
+export const TransparentModalContent = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const PageIndicator = styled.span`
+  margin: 0 10px;
+  font-size: 14px;
+  color: #666;
+`;
+
+export const LogPage = styled.div`
+  flex: 0 0 100%;
+  width: 100%;
+`;
+
+export const LogColumn = styled.div`
+  width: 50%;
+  padding: 0 10px;
+`;
+
+export const LogTitle = styled.h2`
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
 `;

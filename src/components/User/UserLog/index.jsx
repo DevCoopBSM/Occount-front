@@ -1,25 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from 'contexts/authContext';
 import { axiosInstance } from 'utils/Axios';
-import ReactPaginate from 'react-paginate';
+import { useSwipeable } from 'react-swipeable';
 import PointLogItem from './PointLogItem';
-import * as _ from './style';
+import * as S from './style';
 
 export const UserLog = () => {
-  const { user, isLoggedIn } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(0);
   const [useLogData, setUseLogData] = useState([]);
   const [chargeLogData, setChargeLogData] = useState([]);
-  const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     fetchUserLog();
     updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
-    return () => window.removeEventListener("resize", updateItemsPerPage);
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
+
+  const updateItemsPerPage = () => {
+    const width = window.innerWidth;
+    if (width < 768) {
+      setItemsPerPage(5);
+    } else if (width < 1024) {
+      setItemsPerPage(8);
+    } else {
+      setItemsPerPage(10);
+    }
+  };
 
   const fetchUserLog = async () => {
     try {
@@ -37,72 +47,70 @@ export const UserLog = () => {
     }
   };
 
-  const updateItemsPerPage = () => {
-    const height = window.innerHeight;
-    const newItemsPerPage = Math.floor((height - 400) / 70);
-    setItemsPerPage(newItemsPerPage > 0 ? newItemsPerPage : 1);
+  const handlePageChange = (newPage) => {
+    const maxPage = Math.ceil(Math.max(useLogData.length, chargeLogData.length) / itemsPerPage) - 1;
+    if (newPage >= 0 && newPage <= maxPage) {
+      setCurrentPage(newPage);
+    }
   };
 
-  const handlePageClick = (data) => {
-    setCurrentPage(data.selected);
-  };
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handlePageChange(currentPage + 1),
+    onSwipedRight: () => handlePageChange(currentPage - 1),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
 
   const formatPoint = user ? user.point.toLocaleString() : "0";
 
-  const maxLength = Math.max(useLogData.length, chargeLogData.length);
-  const pageCount = Math.ceil(maxLength / itemsPerPage);
-
-  const paginatedUseLogData = useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-  const paginatedChargeLogData = chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
   return (
-    <_.CompeleteWrap>
-      <_.ExChangeDetailWrap>
-        <_.InfoText>남은금액</_.InfoText>
-        <_.Exchange>{formatPoint}원</_.Exchange>
-      </_.ExChangeDetailWrap>
-  
-      <_.UseLogWrap>
-        <_.PointContainer>
-          <_.LogColumn style={{ width: '100%' }}>
-            <_.LogTitle>사용 내역</_.LogTitle>
-            {paginatedUseLogData.map((item, index) => (
+    <S.CompeleteWrap>
+      <S.ExChangeDetailWrap>
+        <S.InfoText>남은금액</S.InfoText>
+        <S.Exchange>{formatPoint}원</S.Exchange>
+      </S.ExChangeDetailWrap>
+
+      <S.UseLogWrap {...handlers}>
+        <S.LogTitles>
+          <S.LogTitle>사용 내역</S.LogTitle>
+          <S.LogTitle>충전 내역</S.LogTitle>
+        </S.LogTitles>
+        <S.LogContainer>
+          <S.LogColumn>
+            {useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item, index) => (
               <PointLogItem 
-                key={`use-${item.payId || index}-${currentPage}`}
+                key={`use-${item.payId || index}`}
                 type={0}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
               />
             ))}
-          </_.LogColumn>
-          <_.LogColumn style={{ width: '100%' }}>
-            <_.LogTitle>충전 내역</_.LogTitle>
-            {paginatedChargeLogData.map((item, index) => (
+          </S.LogColumn>
+          <S.LogColumn>
+            {chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item, index) => (
               <PointLogItem 
-                key={`charge-${item.chargeId || index}-${currentPage}`}
+                key={`charge-${item.chargeId || index}`}
                 type={1}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
               />
             ))}
-          </_.LogColumn>
-        </_.PointContainer>
-        <_.Pagination>
-          <ReactPaginate
-            previousLabel={"이전페이지"}
-            nextLabel={"다음페이지"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            pageCount={pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            subContainerClassName={"pages pagination"}
-            activeClassName={"selected"}
-          />
-        </_.Pagination>
-      </_.UseLogWrap>
-    </_.CompeleteWrap>
+          </S.LogColumn>
+        </S.LogContainer>
+        <S.Pagination>
+          <S.PageNumber onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+            &lt; 이전
+          </S.PageNumber>
+          <S.PageIndicator>
+            {currentPage + 1} / {Math.ceil(Math.max(useLogData.length, chargeLogData.length) / itemsPerPage)}
+          </S.PageIndicator>
+          <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(Math.max(useLogData.length, chargeLogData.length) / itemsPerPage) - 1}>
+            다음 &gt;
+          </S.PageNumber>
+        </S.Pagination>
+      </S.UseLogWrap>
+    </S.CompeleteWrap>
   );
 };
+
+export default UserLog;
