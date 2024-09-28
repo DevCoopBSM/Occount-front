@@ -60,7 +60,7 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
   };
 
   const getTransactionType = () => {
-    if (type !== 1) return '사용';
+    if (type !== 1) return '포인트 사용';
     switch (itemType) {
       case '1': return '오프라인 충전';
       case '2': return '카드 충전';

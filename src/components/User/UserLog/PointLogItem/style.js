@@ -13,47 +13,45 @@ export const PointLogWrap = styled.div`
   cursor: pointer;
   width: 100%;
 
-  @media (max-width: 480px) {
+  @media (max-width: 620px) {
     flex-direction: column;
     align-items: center; // 중앙 정렬로 변경
   }
 `;
 
 export const DateText = styled.span`
-  font-size: 14px; // 5. 글꼴 크기 증가
+  font-size: clamp(14px, 2vw, 16px);
   color: #666;
   width: 30%;
-  text-align: left;
+  text-align: center; // 왼쪽 정렬에서 가운데 정렬로 변경
 
-  @media (max-width: 480px) {
+  @media (max-width: 620px) {
     width: 100%;
     margin-bottom: 5px;
-    text-align: center; // 중앙 정렬
   }
 `;
 
 export const AmountText = styled.span`
-  font-size: 16px; // 5. 글꼴 크기 증가
+  font-size: clamp(16px, 2.5vw, 20px);
   font-weight: 600;
   color: #000;
   width: 40%;
   text-align: center;
 
-  @media (max-width: 480px) {
+  @media (max-width: 620px) {
     width: 100%;
     margin-bottom: 5px;
   }
 `;
 
 export const ChargeTypeText = styled.span`
-  font-size: 12px; // 9. 폰트 크기 줄임
+  font-size: clamp(12px, 1.8vw, 14px);
   color: #666;
   width: 30%;
-  text-align: right;
+  text-align: center; // 오른쪽 정렬에서 가운데 정렬로 변경
 
-  @media (max-width: 480px) {
+  @media (max-width: 620px) {
     width: 100%;
-    text-align: center; // 중앙 정렬
   }
 `;
 

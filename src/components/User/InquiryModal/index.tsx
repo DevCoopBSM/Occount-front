@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'components/Modal';
 import axiosInstance from 'utils/Axios';
 import * as S from './style';
+import { AxiosError } from 'axios';  // 이 줄을 추가해주세요
 
 interface Inquiry {
   inquiryId: number;
@@ -80,9 +81,14 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose }) =
       setContent('');
       setIsInquiryFormOpen(false);
       onRequestClose();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('문의 제출 실패:', error);
-      alert('문의 제출에 실패했습니다. 다시 시도해주세요.');
+      if (error instanceof AxiosError && error.response) {
+        const errorMessage = error.response.data;
+        alert(`문의 제출 실패: ${errorMessage}`);
+      } else {
+        alert('문의 제출에 실패했습니다. 다시 시도해주세요.');
+      }
     } finally {
       setIsSubmitting(false);
     }
