@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'components/Modal';
 import * as S from './style';
 import axiosInstance from 'utils/Axios';
-import { useAuth } from 'context/authContext'; // authContext 가져오기
+import { useAuth } from 'contexts/authContext'; // authContext 가져오기
 
 const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
   const [modalOpen, setModalOpen] = useState(false);

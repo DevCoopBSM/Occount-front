@@ -2,7 +2,7 @@ import React from 'react';
 import * as H from 'common/PageWrapStyle';
 import { ReactComponent as AriPayLogo } from 'assets/AdminMainHeader.svg';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from 'context/authContext';
+import { useAuth } from 'contexts/authContext';
 import * as _ from './style';
 
 const getActiveMenu = (menuItems, openItems) => {

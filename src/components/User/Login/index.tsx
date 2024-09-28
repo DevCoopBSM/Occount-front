@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import imgLogo from "assets/occLoginlogo.svg";
-import { useAuth } from "context/authContext";
+import { useAuth } from "contexts/authContext";
 import * as G from "../../../common/GlobalStyle"
 import * as L from "./style";
 

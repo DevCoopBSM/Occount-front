@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactComponent as OccountLogo } from 'assets/HeadLogo.svg';
 import styled, { keyframes } from 'styled-components';
-import { useLoading } from 'context/loadingContext';
+import { useLoading } from 'contexts/loadingContext';
 
 const rotate = keyframes`
   from { transform: rotate(0deg); }

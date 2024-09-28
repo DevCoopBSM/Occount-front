@@ -8,7 +8,7 @@ import PrepairPage from 'pages/Admin/Preparing';
 import LoginPage from 'pages/User/LoginPage';
 import PwChange from 'pages/User/pwChangePage';
 import Register from 'pages/User/RegisterPage';
-import UserlogPage from 'pages/User/UserlogPage';
+import UserLogPage from 'pages/User/UserLogPage';
 import AdminLoginPage from 'pages/Admin/LoginPage';
 import AdminMainPage from 'pages/Admin/MainPage';
 import { PaymentRedirectPage } from 'pages/Pg/PaymentRedirect';
@@ -26,7 +26,7 @@ const Router = () => {
       <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
       <Route path="/pwchange" element={<PwChange />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/userlog" element={<UserlogPage />} />
+      <Route path="/userlog" element={<UserLogPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="/admin/*" element={<AdminMainPage />} />
       <Route path="/preparing" element={<PrepairPage />} />

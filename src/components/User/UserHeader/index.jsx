@@ -1,6 +1,6 @@
 import * as H from './style';
 import { ReactComponent as AriPayLogo } from 'assets/OccountLogo.svg';
-import { useAuth } from 'context/authContext';
+import { useAuth } from 'contexts/authContext';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

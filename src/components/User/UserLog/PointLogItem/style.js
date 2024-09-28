@@ -1,57 +1,59 @@
 import styled from 'styled-components';
 
 export const PointLogWrap = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr; /* 가운데 항목을 더 넓게 설정 */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  margin-bottom: 8px;
+  padding: 10px; // 4. 패딩을 조금 늘려 내용이 더 잘 보이게 함
+  margin-bottom: 10px;
   background-color: ${props => props.backgroundColor || '#fff'};
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 100%; /* 아이템의 너비를 100%로 설정하여 부모에 맞춤 */
+  width: 100%;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr 1.5fr 1fr;
-    padding: 8px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center; // 중앙 정렬로 변경
   }
 `;
 
 export const DateText = styled.span`
-  font-size: 14px;
+  font-size: 14px; // 5. 글꼴 크기 증가
   color: #666;
+  width: 30%;
   text-align: left;
 
-  @media (max-width: 768px) {
-    font-size: 12px;
+  @media (max-width: 480px) {
+    width: 100%;
+    margin-bottom: 5px;
+    text-align: center; // 중앙 정렬
   }
 `;
 
 export const AmountText = styled.span`
-  font-size: 16px;
+  font-size: 16px; // 5. 글꼴 크기 증가
   font-weight: 600;
   color: #000;
+  width: 40%;
   text-align: center;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
+  @media (max-width: 480px) {
+    width: 100%;
+    margin-bottom: 5px;
   }
 `;
 
 export const ChargeTypeText = styled.span`
-  font-size: 14px;
+  font-size: 12px; // 9. 폰트 크기 줄임
   color: #666;
+  width: 30%;
   text-align: right;
 
-  @media (max-width: 768px) {
-    font-size: 12px;
+  @media (max-width: 480px) {
+    width: 100%;
+    text-align: center; // 중앙 정렬
   }
 `;
 
@@ -67,16 +69,20 @@ export const DetailWrap = styled.div`
 export const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
 `;
 
 export const DetailLabel = styled.div`
   font-weight: bold;
   color: #333;
+  width: 40%;
 `;
 
 export const DetailValue = styled.div`
   color: #666;
+  width: 60%;
+  text-align: right;
 `;
 
 export const DetailInput = styled.input`
@@ -107,7 +113,7 @@ export const ModalButton = styled.button`
   font-size: 18px; /* 글꼴 크기를 18px로 증가 */
   font-weight: bold; /* 글꼴 두께를 bold로 설정 */
   margin-top: 10px;
-  width: 100%; /* 가로 길이를 100%로 설정하여 부모 요소에 맞춤 */
+  width: 100%; /* 가로 길이를 100%로 설정여 부모 요소에 맞춤 */
   
   &:hover {
     background-color: #d4b200;
@@ -150,6 +156,5 @@ export const ModalFooter = styled.div`
 export const TypeText = styled.span`
   font-size: 14px;
   color: #666;
-  flex: 1;
-  text-align: right;
 `;
+

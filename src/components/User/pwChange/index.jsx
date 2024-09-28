@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import imgLogo from "assets/occpwChangeLogo.svg";
-import { useAuth } from "context/authContext";
+import { useAuth } from "contexts/authContext";
 import * as L from "./style";
 
 function PwChange() {

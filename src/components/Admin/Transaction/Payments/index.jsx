@@ -6,7 +6,7 @@ import * as _ from "./style";
 import * as P from "common/PageWrapStyle";
 import { color } from "constants/color";
 import { useLocation } from "react-router-dom";
-import { useAuth } from "context/authContext"; // AuthContext에서 데이터를 가져옴
+import { useAuth } from "contexts/authContext"; // AuthContext에서 데이터를 가져옴
 import axiosInstance from "utils/Axios"; // axiosInstance 임포트
 
 const Payments = () => {

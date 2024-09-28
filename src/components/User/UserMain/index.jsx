@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as _ from './style';
 import { Link } from 'react-router-dom';
-import { useAuth } from 'context/authContext';
+import { useAuth } from 'contexts/authContext';
 import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
