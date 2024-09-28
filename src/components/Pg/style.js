@@ -19,47 +19,45 @@ export const BoxSection = styled.div`
   text-align: center;
 `;
 
-export const Button = styled.button`
+const ButtonStyles = `
   font-size: 20px; /* Increased font size */
   padding: 15px 20px; /* Increased padding */
   margin: 10px;
   width: 150px; /* Fixed width */
   height: 60px; /* Fixed height */
-  background-color: #007bff;
   border: none;
   border-radius: 10px; /* Increased border radius */
-  color: white;
   cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
-  }
+  transition: background-color 0.3s ease;
 `;
 
-export const ButtonSecondary = styled(Button)`
-  background-color: #6c757d;
+export const Button = styled.button`
+  ${ButtonStyles}
+  background-color: #f0ce00; /* 노란색 */
+  color: white;
   &:hover {
-    background-color: #5a6268;
+    background-color: #e0be00;
   }
-`;
-
-export const ModalButton = styled(Button)`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  font-size: 20px;
-  padding: 10px 20px;
 `;
 
 export const CloseButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  
+  ${ButtonStyles}
+  background-color: #f0f0f0; /* 연한 회색 */
+  color: #333;
   &:hover {
     background-color: #e0e0e0;
+  }
+`;
+
+export const ModalFooter = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-direction: row; /* 변경된 부분 */
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 10px;
   }
 `;

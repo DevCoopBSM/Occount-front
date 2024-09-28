@@ -21,6 +21,7 @@ function generatePaymentId(email) {
   // Payment ID 생성
   return `${sanitizedLocalPart}${timeString}`;
 }
+
 export function PaymentCheckoutPage({
   customerEmail,
   customerName,
@@ -121,9 +122,7 @@ export function PaymentCheckoutPage({
           <>
             <p>결제 수단을 선택해 주세요</p>
             <p> 현재는 카드 결제만 지원합니다.</p>
-            <button onClick={() => setPayMethod('CARD')}>카드 결제</button>
-            {/* <button onClick={() => setPayMethod('TRANSFER')}>계좌 이체</button>
-            <button onClick={() => setPayMethod('VIRTUAL_ACCOUNT')}>가상 계좌</button> */}
+            <S.Button onClick={() => setPayMethod('CARD')}>카드 결제</S.Button>
             <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
           </>
         ) : (
