@@ -3,31 +3,68 @@ import Modal from 'components/Modal';
 import axiosInstance from 'utils/Axios';
 import * as S from './style';
 
-const InquiryModal = ({ isOpen, onRequestClose, user }) => {
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [inquiries, setInquiries] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [inquiriesPerPage] = useState(5);
-  const [isInquiryFormOpen, setIsInquiryFormOpen] = useState(false);
-  const [expandedInquiries, setExpandedInquiries] = useState({});
+interface Inquiry {
+  inquiryId: number;
+  inquiryTitle: string;
+  inquiryContent: string;
+  inquiryType: string;
+  inquiryAnswer: string | null;
+  userEmail: string;
+  createdAt: [number, number, number, number, number];
+  answeredAt: [number, number, number, number, number] | null;
+}
+
+interface InquiryModalProps {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  user: any;
+}
+
+const getCategoryInKorean = (inquiryType: string): string => {
+  switch (inquiryType) {
+    case 'SERVICE_SUGGEST': return '서비스 건의';
+    case 'SERVICE_ERROR': return '서비스 장애';
+    case 'SERVICE_ETC': return '기타';
+    default: return inquiryType;
+  }
+};
+
+const formatDate = (dateArray: [number, number, number, number, number]): string => {
+  const [year, month, day, hour, minute] = dateArray;
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+};
+
+const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose }) => {
+  const [category, setCategory] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [inquiriesPerPage] = useState<number>(5);
+  const [isInquiryFormOpen, setIsInquiryFormOpen] = useState<boolean>(false);
+  const [expandedInquiries, setExpandedInquiries] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
         const response = await axiosInstance.get('v2/inquiry/user');
-        setInquiries(response.data);
+        if (response.data && Array.isArray(response.data.inquiryList)) {
+          setInquiries(response.data.inquiryList);
+        } else {
+          console.error('서버에서 받은 데이터 구조가 예상과 다릅니다:', response.data);
+          setInquiries([]);
+        }
       } catch (error) {
         console.error('문의 목록을 가져오는 데 실패했습니다:', error);
+        setInquiries([]);
       }
     };
 
     fetchInquiries();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!category || !title || !content) {
       alert('카테고리, 제목, 내용을 모두 입력해주세요.');
@@ -36,11 +73,7 @@ const InquiryModal = ({ isOpen, onRequestClose, user }) => {
 
     setIsSubmitting(true);
     try {
-      await axiosInstance.post('v2/inquiry/new', {
-        category, 
-        title,
-        content,
-      });
+      await axiosInstance.post('v2/inquiry/new', { category, title, content });
       alert('문의가 성공적으로 제출되었습니다.');
       setCategory('');
       setTitle('');
@@ -55,18 +88,15 @@ const InquiryModal = ({ isOpen, onRequestClose, user }) => {
     }
   };
 
-  const toggleInquiry = (inquiryId) => {
-    setExpandedInquiries((prev) => ({
-      ...prev,
-      [inquiryId]: !prev[inquiryId],
-    }));
+  const toggleInquiry = (inquiryId: number) => {
+    setExpandedInquiries(prev => ({ ...prev, [inquiryId]: !prev[inquiryId] }));
   };
 
   const indexOfLastInquiry = currentPage * inquiriesPerPage;
   const indexOfFirstInquiry = indexOfLastInquiry - inquiriesPerPage;
   const currentInquiries = inquiries.slice(indexOfFirstInquiry, indexOfLastInquiry);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <>
@@ -83,12 +113,21 @@ const InquiryModal = ({ isOpen, onRequestClose, user }) => {
                   onClick={() => toggleInquiry(inquiry.inquiryId)}
                   hasAnswer={!!inquiry.inquiryAnswer}
                 >
-                  <S.InquiryTitle>{inquiry.inquiryTitle}</S.InquiryTitle>
+                  <S.InquiryTitle>
+                    {inquiry.inquiryTitle}
+                    <S.InquiryCategory>{getCategoryInKorean(inquiry.inquiryType)}</S.InquiryCategory>
+                  </S.InquiryTitle>
+                  <S.InquiryDate>{formatDate(inquiry.createdAt)}</S.InquiryDate>
                   {expandedInquiries[inquiry.inquiryId] && (
                     <>
                       <S.InquiryContent>{inquiry.inquiryContent}</S.InquiryContent>
                       <S.InquiryAnswer hasAnswer={!!inquiry.inquiryAnswer}>
-                        {inquiry.inquiryAnswer ? inquiry.inquiryAnswer : '답변 대기 중'}
+                        {inquiry.inquiryAnswer ? (
+                          <>
+                            <div>{inquiry.inquiryAnswer}</div>
+                            <S.AnswerDate>답변 일시: {formatDate(inquiry.answeredAt!)}</S.AnswerDate>
+                          </>
+                        ) : '답변 대기 중'}
                       </S.InquiryAnswer>
                     </>
                   )}
@@ -116,7 +155,7 @@ const InquiryModal = ({ isOpen, onRequestClose, user }) => {
             <S.InquiryForm onSubmit={handleSubmit}>
               <S.InquirySelect
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
               >
                 <option value="">카테고리 선택</option>
                 <option value="SERVICE_SUGGEST">서비스 건의</option>
@@ -127,12 +166,12 @@ const InquiryModal = ({ isOpen, onRequestClose, user }) => {
                 type="text"
                 placeholder="제목"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
               />
               <S.InquiryTextarea
                 placeholder="내용"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
               />
               <S.ModalFooter>
                 <S.SubmitButton type="submit" disabled={isSubmitting}>

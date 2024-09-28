@@ -69,7 +69,7 @@ export const ModalFooter = styled.div`
   justify-content: center;
   gap: 15px;
   margin-top: 20px;
-  flex-direction: row; /* 변경된 부분 */
+  flex-direction: row;
 
   @media (max-width: 600px) {
     gap: 10px;
@@ -148,7 +148,7 @@ export const InquiryItem = styled.div`
   padding: 10px;
   margin-bottom: 10px;
   cursor: pointer;
-  background-color: ${props => (props.hasAnswer ? '#e0ffe0' : '#ffffff')}; /* 변경된 부분 */
+  background-color: ${props => (props.hasAnswer ? '#e0ffe0' : '#ffffff')};
 
   @media (max-width: 600px) {
     padding: 8px;
@@ -157,31 +157,47 @@ export const InquiryItem = styled.div`
 
 export const InquiryTitle = styled.h3`
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   @media (max-width: 600px) {
     font-size: 18px;
   }
 `;
 
+export const InquiryCategory = styled.span`
+  font-size: 12px;
+  color: #999;
+  margin-left: 10px;
+`;
+
 export const InquiryContent = styled.p`
   margin: 5px 0;
-  font-weight: bold; /* 변경된 부분 */
+  font-weight: bold;
 
   @media (max-width: 600px) {
     font-size: 14px;
   }
 `;
 
-export const InquiryAnswer = styled.p`
+export const InquiryAnswer = styled.div`
   color: ${props => (props.hasAnswer ? '#000' : '#999')};
-  margin-top: 10px; /* 변경된 부분 */
+  margin-top: 10px;
   padding: 10px;
-  background-color: #f9f9f9; /* 변경된 부분 */
-  border-radius: 6px; /* 변경된 부분 */
+  background-color: #f9f9f9;
+  border-radius: 6px;
 
   @media (max-width: 600px) {
     font-size: 14px;
   }
+`;
+
+export const AnswerDate = styled.span`
+  font-size: 12px;
+  color: #666;
+  display: block;
+  margin-top: 5px;
 `;
 
 export const Pagination = styled.div`
@@ -215,4 +231,11 @@ export const OpenInquiryFormButton = styled.button`
   &:hover {
     background-color: #e0be00;
   }
+`;
+
+export const InquiryDate = styled.span`
+  font-size: 12px;
+  color: #999;
+  display: block;
+  margin-top: 5px;
 `;
