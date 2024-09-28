@@ -6,7 +6,7 @@ import * as G from "../../../common/GlobalStyle"
 import ChargeModal from './Modals/ChargeModal';
 import { ReactComponent as How2Use } from 'assets/How2useBT.svg';
 import { useNavigate } from 'react-router-dom';
-import InquiryModal from '../InqueryModal';
+import InquiryModal from '../InquiryModal';
 
 const Main = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
