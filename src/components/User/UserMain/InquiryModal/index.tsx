@@ -135,6 +135,7 @@ const SuspenseInquiryList: React.FC = () => (
 const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, user }) => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const [isInquiryFormOpen, setIsInquiryFormOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
@@ -162,14 +163,16 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   const fetchInquiries = async () => {
     setIsLoading(true);
+    setError(null);
     try {
-      const response = await axiosInstance.suspense<{ inquiryList: Inquiry[] }>({ 
+      const response = await axiosInstance.suspense<{ inquiryList: Inquiry[] }>({
         url: 'v2/inquiry/user',
         method: 'GET'
       });
       setInquiries(response.inquiryList);
     } catch (error) {
       console.error('Failed to fetch inquiries:', error);
+      setError(error instanceof Error ? error : new Error('An unknown error occurred'));
     } finally {
       setIsLoading(false);
     }
@@ -238,6 +241,11 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
         </S.ModalContent>
       </Modal>
     );
+  }
+
+  if (error) {
+    onRequestClose();
+    return null;
   }
 
   return (
