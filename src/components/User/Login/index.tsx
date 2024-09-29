@@ -6,12 +6,18 @@ import * as L from "./style";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { unifiedLogin, errorMessage, clearErrorMessage } = useAuth();
+  const { unifiedLogin, errorMessage, clearErrorMessage, isLoggedIn } = useAuth();
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const emailInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     emailInputRef.current?.focus();
