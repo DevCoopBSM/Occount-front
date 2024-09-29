@@ -139,3 +139,48 @@ export const ModalContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
 `;
+
+export const ErrorMessage = styled.div`
+  position: fixed;
+  bottom: 30%; // 화면 하단에서 20px 위에 위치
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffcccc;
+  color: #ff0000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1002; // LoadingOverlay보다 위에 오도록 z-index 증가
+  font-size: clamp(14px, 2.5vw, 18px);
+  text-align: center;
+  max-width: 80%;
+  animation: fadeInUp 0.5s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  @keyframes fadeInUp {
+    from { 
+      opacity: 0; 
+      transform: translateX(-50%) translateY(20px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateX(-50%) translateY(0); 
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: clamp(12px, 2vw, 16px);
+  }
+`;
+
+export const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+`;

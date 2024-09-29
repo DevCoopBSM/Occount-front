@@ -54,33 +54,41 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axiosInstance.post('v2/auth/login', { userEmail: email, userPassword: password });
       
-      if (response.data.status === "REDIRECT") {
-        navigate(response.data.redirectUrl);
-        return;
+      if (response && response.data) {
+        if (!response.data.success) {
+          if (response.data.status === "REDIRECT") {
+            navigate(response.data.redirectUrl);
+            return;
+          }
+          throw new Error(response.data.message || '로그인에 실패했습니다.');
+        }
+
+        const { accessToken, userCode, userName, userEmail, userPoint, roles } = response.data;
+        const isAdmin = roles && roles.includes('ROLE_ADMIN');
+
+        if (admin && !isAdmin) {
+          throw new Error('권한이 없습니다.');
+        }
+
+        setAccessToken(accessToken);
+        dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
+        dispatch({ type: actionTypes.SET_USER, payload: { point: userPoint, name: userName, code: userCode, email: userEmail } });
+        navigate(admin ? '/admin' : '/');
+        dispatch({ type: actionTypes.CLEAR_ERROR });
+        return { email: userEmail, name: userName, code: userCode, point: userPoint };
+      } else {
+        throw new Error('서버 응답이 올바르지 않습니다.');
       }
-
-      const { accessToken, user, roles } = response.data;
-      const isAdmin = roles.includes('ROLE_ADMIN');
-
-      if (admin && !isAdmin) {
-        throw new Error('권한이 없습니다.');
-      }
-
-      setAccessToken(accessToken);
-      dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
-      await fetchUserInformation();
-      navigate(admin ? '/admin' : '/');
-      dispatch({ type: actionTypes.CLEAR_ERROR });
-      return { email, ...user };
     } catch (error) {
-      let errMsg = '내부 서버 오류';
-      if (error.message === '권한이 없습니다.') {
+      console.error('Login error:', error);
+      let errMsg = '로그인 중 오류가 발생했습니다.';
+      if (error.response && error.response.data && error.response.data.message) {
+        errMsg = error.response.data.message;
+      } else if (error.message) {
         errMsg = error.message;
-      } else if (error.response?.status === 401) {
-        errMsg = '아이디 또는 암호가 잘못되었습니다.';
       }
       dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 2000);
+      throw error;
     }
   }, []);
 

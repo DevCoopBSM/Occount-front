@@ -6,7 +6,8 @@ import * as L from "./style";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { unifiedLogin, errorMessage, clearErrorMessage, isLoggedIn } = useAuth();
+  const { unifiedLogin, isLoggedIn, errorMessage, setErrorMessage, clearErrorMessage } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -28,7 +29,6 @@ const Login: React.FC = () => {
       const timer = setTimeout(() => {
         clearErrorMessage();
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [errorMessage, clearErrorMessage]);
@@ -45,11 +45,14 @@ const Login: React.FC = () => {
 
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await unifiedLogin(email, password, navigate);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login failed:', error);
-      alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+      // 에러 메시지는 이미 authContext에서 처리되므로 여기서는 추가 처리가 필요 없습니다.
+    } finally {
+      setIsLoading(false);
     }
   }, [email, password, unifiedLogin, navigate]);
 
@@ -88,17 +91,14 @@ const Login: React.FC = () => {
               <L.Divider>|</L.Divider>
               <L.ActionButton type="button" onClick={() => navigate('/pwChange')}>비밀번호 찾기</L.ActionButton>
             </L.ActionLinks>
-            <L.LoginButton type="submit">로그인</L.LoginButton>
+            <L.LoginButton type="submit" disabled={isLoading}>
+              {isLoading ? '로그인 중...' : '로그인'}
+            </L.LoginButton>
           </L.LoginWrap>
-          {errorMessage && (
-            <L.ModalOverlay>
-              <L.ModalContent>
-                {errorMessage}
-              </L.ModalContent>
-            </L.ModalOverlay>
-          )}
         </L.Container>
       </div>
+      {isLoading && <L.LoadingOverlay />}
+      {errorMessage && <L.ErrorMessage>{errorMessage}</L.ErrorMessage>}
     </div>
   );
 };
