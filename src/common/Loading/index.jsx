@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ReactComponent as OccountLogo } from 'assets/HeadLogo.svg';
+import { ReactComponent as HappyOring } from 'assets/happyOring.svg';
+import { ReactComponent as JjinggeulOring } from 'assets/jjinggeulOring.svg';
+import { ReactComponent as UlmangOring } from 'assets/ulmangOring.svg';
 import styled, { keyframes, css } from 'styled-components';
 import { useLoading } from 'contexts/loadingContext';
 
@@ -43,7 +45,7 @@ const LogoContainer = styled.div`
   position: relative;
 `;
 
-const Logo = styled(OccountLogo)`
+const Logo = styled.div`
   width: 100%;
   height: 100%;
 `;
@@ -92,6 +94,7 @@ const Loading = () => {
   const [tears, setTears] = useState([]);
   const logoRef = useRef(null);
 
+  const is400Error = error && error.status && error.status >= 400 && error.status < 500;
   const is500Error = error && error.status && error.status >= 500 && error.status < 600;
 
   useEffect(() => {
@@ -170,13 +173,23 @@ const Loading = () => {
     }
   }, [showError, is500Error]);
 
+  const renderLogo = () => {
+    if (is500Error) {
+      return <UlmangOring />;
+    } else if (is400Error) {
+      return <JjinggeulOring />;
+    } else {
+      return <HappyOring />;
+    }
+  };
+
   if (!isLoading && !showError) return null;
 
   return (
     <LoadingWrapper>
       <LogoContainer>
         <LogoWrapper isError={showError} is500Error={is500Error} ref={logoRef}>
-          <Logo />
+          <Logo>{renderLogo()}</Logo>
         </LogoWrapper>
         {is500Error && (
           <TearsContainer>
