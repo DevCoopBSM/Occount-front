@@ -77,9 +77,9 @@ export const UserLog = () => {
         </S.LogTitles>
         <S.LogContainer>
           <S.LogColumn>
-            {useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item, index) => (
+            {useLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item) => (
               <PointLogItem 
-                key={`use-${item.payId || index}`}
+                key={`use-${item.payId}-${item.payDate.join('-')}`}
                 type={0}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
@@ -87,9 +87,9 @@ export const UserLog = () => {
             ))}
           </S.LogColumn>
           <S.LogColumn>
-            {chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item, index) => (
+            {chargeLogData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((item) => (
               <PointLogItem 
-                key={`charge-${item.chargeId || index}`}
+                key={`charge-${item.chargeId}-${item.chargeDate.join('-')}`}
                 type={1}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
