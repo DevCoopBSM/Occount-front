@@ -92,7 +92,7 @@ const Loading = () => {
   const [tears, setTears] = useState([]);
   const logoRef = useRef(null);
 
-  const is500Error = error && error.status >= 500 && error.status < 600;
+  const is500Error = error && error.status && error.status >= 500 && error.status < 600;
 
   useEffect(() => {
     if (error) {
@@ -194,9 +194,9 @@ const Loading = () => {
           </TearsContainer>
         )}
       </LogoContainer>
-      {showError && (
+      {showError && error && (
         <ErrorMessage is500Error={is500Error}>
-          {error.status} 에러 발생
+          {error.status ? `${error.status} 에러 발생` : '에러 발생'}
         </ErrorMessage>
       )}
     </LoadingWrapper>
