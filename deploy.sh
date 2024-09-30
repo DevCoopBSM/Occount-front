@@ -2,24 +2,25 @@
 set -e
 echo "Starting deployment script"
 
+# 서버 환경 경로 설정
+SERVER_BASE_DIR="/root/server/oring/O-ccount_front_v1"
+DOCKER_BASE_DIR="/usr/share/nginx/oring_occount_v1"
+
 # CI/CD 환경 확인
 if [ -n "$CI_PROJECT_DIR" ]; then
     echo "Running in CI/CD environment"
-    BASE_DIR="$CI_PROJECT_DIR"
-    DOCKER_BASE_DIR="/usr/share/nginx/oring_occount_v1"
+    BUILD_OUTPUT="$CI_PROJECT_DIR/build_output"
 else
     echo "Running in server environment"
-    BASE_DIR="/root/server/oring/O-ccount_front_v1"
-    DOCKER_BASE_DIR="/usr/share/nginx/oring_occount_v1"
+    BUILD_OUTPUT="$SERVER_BASE_DIR/build_output"
 fi
 
-BLUE_DIR="$BASE_DIR/build_blue"
-GREEN_DIR="$BASE_DIR/build_green"
-ACTIVE_LINK="$BASE_DIR/active"
-BUILD_OUTPUT="$BASE_DIR/build_output"
+BLUE_DIR="$SERVER_BASE_DIR/build_blue"
+GREEN_DIR="$SERVER_BASE_DIR/build_green"
+ACTIVE_LINK="$SERVER_BASE_DIR/active"
 
 echo "Current directory contents:"
-ls -la $BASE_DIR
+ls -la $SERVER_BASE_DIR
 
 # 현재 활성 버전 확인
 if [ -L "$ACTIVE_LINK" ] && [ "$(readlink $ACTIVE_LINK)" = "$DOCKER_BASE_DIR/build_blue" ]; then
@@ -57,12 +58,12 @@ fi
 echo "Updating symbolic link"
 if ! ln -sfn $DOCKER_NEW_BUILD_DIR $ACTIVE_LINK; then
     echo "Failed to update symbolic link. Error: $?"
-    ls -la $BASE_DIR
+    ls -la $SERVER_BASE_DIR
     exit 1
 fi
 
 echo "Deployment completed. New active version: $NEW_VERSION"
-ls -la $BASE_DIR
+ls -la $SERVER_BASE_DIR
 echo "Symbolic link created:"
 ls -l $ACTIVE_LINK
 echo "Symbolic link target:"
