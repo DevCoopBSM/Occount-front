@@ -9,8 +9,8 @@
 /coverage
 
 # production
-/build
-
+/build*
+active
 # misc
 .DS_Store
 .env.local

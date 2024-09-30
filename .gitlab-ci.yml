@@ -1,46 +1,33 @@
 stages:
-  - pull
   - build
   - deploy
 
-before_script:
-  - cd $DOCKER_COMPOSE_PATH
-
-pull:
-  stage: pull
-  script:
-    - cd $PROJECT_PATH
-    - git pull
-  tags:
-    - docker
+variables:
+  DOCKER_TLS_CERTDIR: ""
 
 build:
   stage: build
+  image: node:18
   script:
-    - docker-compose -f docker-compose.oring.yml up --build occount-front
-    - docker cp $(docker-compose -f docker-compose.oring.yml ps -q occount-front):/tmp/build_new /tmp/new_build
+    - yarn install
+    - CI=false yarn build
+    - mkdir -p build_output
+    - cp -r build/* build_output/
+  artifacts:
+    paths:
+      - build_output
+      - deploy.sh
   tags:
     - docker
+
 
 deploy:
   stage: deploy
   script:
-    - |
-      if [ ! -f $DEPLOY_SCRIPT_PATH/deploy.sh ]; then
-        cat << EOF > $DEPLOY_SCRIPT_PATH/deploy.sh
-        #!/bin/bash
-        set -e
-        ACTIVE_VERSION=\$(readlink /usr/share/nginx/oring_occount_v1)
-        NEW_VERSION=\${ACTIVE_VERSION/_blue/_green}
-        [ "\$NEW_VERSION" = "\$ACTIVE_VERSION" ] && NEW_VERSION=\${ACTIVE_VERSION/_green/_blue}
-        rm -rf /usr/share/nginx/\$NEW_VERSION
-        mv /tmp/new_build /usr/share/nginx/\$NEW_VERSION
-        ln -sfn /usr/share/nginx/\$NEW_VERSION /usr/share/nginx/oring_occount_v1
-        nginx -s reload
-        EOF
-        chmod +x $DEPLOY_SCRIPT_PATH/deploy.sh
-      fi
-      $DEPLOY_SCRIPT_PATH/deploy.sh
+    - pwd  # 현재 작업 디렉토리 확인
+    - ls -la  # 현재 디렉토리 내용 확인
+    - chmod +x deploy.sh
+    - sh deploy.sh
   only:
     - main
   tags:
