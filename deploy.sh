@@ -5,7 +5,7 @@ echo "Starting deployment script"
 # CI/CD 환경 확인
 if [ -n "$CI_PROJECT_DIR" ]; then
     echo "Running in CI/CD environment"
-    BASE_DIR="/root/server/oring/O-ccount_front_v1"
+    BASE_DIR="$CI_PROJECT_DIR"
     DOCKER_BASE_DIR="/usr/share/nginx/oring_occount_v1"
 else
     echo "Running in server environment"
@@ -42,9 +42,14 @@ echo "Copying new build to $NEW_BUILD_DIR"
 rm -rf $NEW_BUILD_DIR
 mkdir -p $NEW_BUILD_DIR
 
+echo "Contents of BUILD_OUTPUT directory:"
+ls -la $BUILD_OUTPUT
+
 if ! cp -r $BUILD_OUTPUT/* $NEW_BUILD_DIR/; then
     echo "Failed to copy new files. Error: $?"
+    echo "Contents of BUILD_OUTPUT directory:"
     ls -la $BUILD_OUTPUT
+    echo "Contents of NEW_BUILD_DIR:"
     ls -la $NEW_BUILD_DIR
     exit 1
 fi
@@ -62,3 +67,6 @@ echo "Symbolic link created:"
 ls -l $ACTIVE_LINK
 echo "Symbolic link target:"
 readlink $ACTIVE_LINK
+
+# 스크립트가 성공적으로 완료되었음을 명시적으로 표시
+exit 0
