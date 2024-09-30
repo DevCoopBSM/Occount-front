@@ -1,33 +1,46 @@
 stages:
   - pull
-#  - build
+  - build
   - deploy
 
 before_script:
-    - cd $DOCKER_COMPOSE_PATH
+  - cd $DOCKER_COMPOSE_PATH
 
 pull:
   stage: pull
   script:
-    - docker-compose -p oring -f docker-compose.oring.yml down occount-front
     - cd $PROJECT_PATH
     - git pull
   tags:
     - docker
 
-# build:
-#   stage: build
-#   script:
-#     - cd $DOCKER_COMPOSE_PATH
-#     - docker-compose -p oring -f docker-compose.oring.yml build --no-cache occount-front
-#   tags:
-#     - docker
+build:
+  stage: build
+  script:
+    - docker-compose -f docker-compose.oring.yml up --build occount-front
+    - docker cp $(docker-compose -f docker-compose.oring.yml ps -q occount-front):/tmp/build_new /tmp/new_build
+  tags:
+    - docker
 
 deploy:
   stage: deploy
   script:
-    - cd $DOCKER_COMPOSE_PATH
-    - docker-compose -p oring -f docker-compose.oring.yml up -d occount-front
+    - |
+      if [ ! -f $DEPLOY_SCRIPT_PATH/deploy.sh ]; then
+        cat << EOF > $DEPLOY_SCRIPT_PATH/deploy.sh
+        #!/bin/bash
+        set -e
+        ACTIVE_VERSION=\$(readlink /usr/share/nginx/oring_occount_v1)
+        NEW_VERSION=\${ACTIVE_VERSION/_blue/_green}
+        [ "\$NEW_VERSION" = "\$ACTIVE_VERSION" ] && NEW_VERSION=\${ACTIVE_VERSION/_green/_blue}
+        rm -rf /usr/share/nginx/\$NEW_VERSION
+        mv /tmp/new_build /usr/share/nginx/\$NEW_VERSION
+        ln -sfn /usr/share/nginx/\$NEW_VERSION /usr/share/nginx/oring_occount_v1
+        nginx -s reload
+        EOF
+        chmod +x $DEPLOY_SCRIPT_PATH/deploy.sh
+      fi
+      $DEPLOY_SCRIPT_PATH/deploy.sh
   only:
     - main
   tags:

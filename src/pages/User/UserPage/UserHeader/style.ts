@@ -1,7 +1,5 @@
 // style.js 파일에서
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-
+import styled, { css } from 'styled-components';
 export const PageHeader = styled.header`
   display: flex;
   justify-content: center; /* 수평 중앙 정렬 */

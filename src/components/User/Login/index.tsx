@@ -6,13 +6,18 @@ import * as L from "./style";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { unifiedLogin, isLoggedIn, errorMessage, setErrorMessage, clearErrorMessage } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const { unifiedLogin, isLoggedIn, errorMessage, setErrorMessage } = useAuth();
+  const [isErrorVisible, setIsErrorVisible] = useState<boolean>(false);
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    emailInputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -21,17 +26,22 @@ const Login: React.FC = () => {
   }, [isLoggedIn, navigate]);
 
   useEffect(() => {
-    emailInputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
     if (errorMessage) {
-      const timer = setTimeout(() => {
-        clearErrorMessage();
-      }, 3000);
-      return () => clearTimeout(timer);
+      setIsErrorVisible(true);
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+      errorTimeoutRef.current = setTimeout(() => {
+        setIsErrorVisible(false);
+      }, 2000); // 4초 동안 에러 메시지 표시
     }
-  }, [errorMessage, clearErrorMessage]);
+
+    return () => {
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, [errorMessage]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,20 +51,22 @@ const Login: React.FC = () => {
     } else if (name === "password") {
       setPassword(value);
     }
+    
+    if (isErrorVisible) {
+      setIsErrorVisible(false);
+    }
   };
 
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     try {
       await unifiedLogin(email, password, navigate);
     } catch (error: any) {
       console.error('Login failed:', error);
-      // 에러 메시지는 이미 authContext에서 처리되므로 여기서는 추가 처리가 필요 없습니다.
-    } finally {
-      setIsLoading(false);
+      const errMsg = error.response?.data?.message || error.message || '로그인에 실패했습니다.';
+      setErrorMessage(errMsg);
     }
-  }, [email, password, unifiedLogin, navigate]);
+  }, [email, password, unifiedLogin, navigate, setErrorMessage]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === "Enter") {
@@ -91,14 +103,17 @@ const Login: React.FC = () => {
               <L.Divider>|</L.Divider>
               <L.ActionButton type="button" onClick={() => navigate('/pwChange')}>비밀번호 찾기</L.ActionButton>
             </L.ActionLinks>
-            <L.LoginButton type="submit" disabled={isLoading}>
-              {isLoading ? '로그인 중...' : '로그인'}
+            <L.LoginButton type="submit">
+              로그인
             </L.LoginButton>
+            <L.ErrorMessageWrapper>
+              <L.ErrorMessage isVisible={isErrorVisible}>
+                {errorMessage}
+              </L.ErrorMessage>
+            </L.ErrorMessageWrapper>
           </L.LoginWrap>
         </L.Container>
       </div>
-      {isLoading && <L.LoadingOverlay />}
-      {errorMessage && <L.ErrorMessage>{errorMessage}</L.ErrorMessage>}
     </div>
   );
 };

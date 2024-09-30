@@ -19,7 +19,7 @@ const Header: React.FC = () => {
   };
 
   const handleLogoutClick = (): void => {
-    logout(false, navigate);
+    logout(navigate);
   };
 
   const handleSettingsClick = (): void => {

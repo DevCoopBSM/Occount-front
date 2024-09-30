@@ -19,11 +19,9 @@ const rotateAndShake = keyframes`
 `;
 
 const shake = keyframes`
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(2px, 2px); }
-  50% { transform: translate(0, 0); }
-  75% { transform: translate(-2px, 2px); }
-  100% { transform: translate(0, 0); }
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 0); }
+  20%, 40%, 60%, 80% { transform: translate(5px, 0); }
 `;
 
 const LoadingWrapper = styled.div`
@@ -67,10 +65,10 @@ const Tear = styled.div`
   border-radius: 50%;
 `;
 
-const ErrorMessage = styled.div`
+const Message = styled.div`
   margin-top: 20px;
   font-size: 18px;
-  color: ${({ is500Error }) => is500Error ? 'red' : 'orange'};
+  color: ${({ color }) => color};
   font-weight: bold;
 `;
 
@@ -78,35 +76,27 @@ const LogoWrapper = styled.div`
   position: relative;
   width: 100px;
   height: 100px;
-  ${({ isError, is500Error }) => {
+  animation: ${({ isError, is500Error }) => {
     if (isError) {
-      return is500Error
-        ? css`animation: ${rotateAndShake} 1s linear infinite;`
-        : css`animation: ${shake} 0.1s linear infinite;`;
+      return is500Error ? rotateAndShake : shake;
     }
-    return css`animation: ${rotate} 10s linear infinite;`;
-  }}
+    return rotate;
+  }} ${({ isError, is500Error }) => {
+    if (isError) {
+      return is500Error ? '2s' : '0.5s';
+    }
+    return '10s';
+  }} linear infinite;
 `;
 
 const Loading = () => {
-  const { isLoading, error, clearError } = useLoading();
-  const [showError, setShowError] = useState(false);
+  const { isLoading, error, shouldShowLoading } = useLoading();
+
   const [tears, setTears] = useState([]);
   const logoRef = useRef(null);
 
-  const is400Error = error && error.status && error.status >= 400 && error.status < 500;
-  const is500Error = error && error.status && error.status >= 500 && error.status < 600;
-
-  useEffect(() => {
-    if (error) {
-      setShowError(true);
-      const timer = setTimeout(() => {
-        setShowError(false);
-        clearError();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error, clearError]);
+  const is400Error = error && error.status >= 400 && error.status < 500;
+  const is500Error = error && error.status >= 500 && error.status < 600;
 
   const generateTear = useCallback(() => {
     if (!logoRef.current) return;
@@ -138,7 +128,7 @@ const Loading = () => {
   }, []);
 
   useEffect(() => {
-    if (showError && is500Error) {
+    if (is500Error) {
       const tearInterval = setInterval(() => {
         const newTear = generateTear();
         if (newTear) {
@@ -146,11 +136,13 @@ const Loading = () => {
         }
       }, 10);
       return () => clearInterval(tearInterval);
+    } else {
+      setTears([]); // 500 에러가 아닐 때 눈물 초기화
     }
-  }, [showError, is500Error, generateTear]);
+  }, [is500Error, generateTear]);
 
   useEffect(() => {
-    if (showError && is500Error) {
+    if (is500Error) {
       const animateTears = () => {
         setTears(prevTears => 
           prevTears.map(tear => ({
@@ -171,7 +163,7 @@ const Loading = () => {
       });
       return () => cancelAnimationFrame(tearAnimationFrame);
     }
-  }, [showError, is500Error]);
+  }, [is500Error]);
 
   const renderLogo = () => {
     if (is500Error) {
@@ -183,12 +175,12 @@ const Loading = () => {
     }
   };
 
-  if (!isLoading && !showError) return null;
+  if (!shouldShowLoading) return null;
 
   return (
     <LoadingWrapper>
       <LogoContainer>
-        <LogoWrapper isError={showError} is500Error={is500Error} ref={logoRef}>
+        <LogoWrapper isError={!!error} is500Error={is500Error} ref={logoRef}>
           <Logo>{renderLogo()}</Logo>
         </LogoWrapper>
         {is500Error && (
@@ -207,11 +199,12 @@ const Loading = () => {
           </TearsContainer>
         )}
       </LogoContainer>
-      {showError && error && (
-        <ErrorMessage is500Error={is500Error}>
+      {error && (
+        <Message color={is500Error ? 'red' : 'orange'}>
           {error.status ? `${error.status} 에러 발생` : '에러 발생'}
-        </ErrorMessage>
+        </Message>
       )}
+      {isLoading && !error && <Message color="black">로딩 중...</Message>}
     </LoadingWrapper>
   );
 };

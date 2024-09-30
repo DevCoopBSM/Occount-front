@@ -38,9 +38,23 @@ export const setErrorFunction = (setErrorFn: SetErrorFunction): void => {
 
 const pendingRequests: Promise<void>[] = [];
 
+let activeRequestCount = 0;
+
+const incrementActiveRequests = () => {
+  activeRequestCount++;
+  if (setGlobalLoading) setGlobalLoading(true);
+};
+
+const decrementActiveRequests = () => {
+  activeRequestCount--;
+  if (activeRequestCount === 0 && setGlobalLoading) {
+    setGlobalLoading(false);
+  }
+};
+
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    if (setGlobalLoading) setGlobalLoading(true);
+    incrementActiveRequests();
     const token = getAccessToken();
     if (token) {
       if (config.headers instanceof AxiosHeaders) {
@@ -55,26 +69,20 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    if (setGlobalLoading) setGlobalLoading(false);
+    decrementActiveRequests();
     return Promise.reject(error);
   }
 );
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (setGlobalLoading) setGlobalLoading(false);
+    decrementActiveRequests();
     if (setGlobalError) setGlobalError(null);
     return response;
   },
   async (error: AxiosError) => {
-    if (setGlobalError) setGlobalError(error.response);
-    
-    if (setGlobalLoading) {
-      setTimeout(() => {
-        setGlobalLoading(false);
-        if (setGlobalError) setGlobalError(null);
-      }, 3000);
-    }
+    decrementActiveRequests();
+    if (setGlobalError) setGlobalError(error);
 
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
@@ -84,7 +92,6 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
-        console.error('액세스 토큰이 만료되었습니다. 로그아웃을 수행합니다.');
         sessionStorage.clear();
         window.location.href = '/login';
       } catch (logoutError) {
@@ -97,20 +104,12 @@ axiosInstance.interceptors.response.use(
 );
 
 axiosInstance.suspense = async <T = any>(config: AxiosRequestConfig): Promise<T> => {
-  const promise = axiosInstance(config).then(response => response.data);
-  pendingRequests.push(promise as Promise<void>);
-  
+  incrementActiveRequests();
   try {
-    const data = await promise;
-    return data;
+    const response = await axiosInstance(config);
+    return response.data;
   } finally {
-    const index = pendingRequests.indexOf(promise as Promise<void>);
-    if (index > -1) {
-      pendingRequests.splice(index, 1);
-    }
-    if (pendingRequests.length === 0) {
-      if (setGlobalLoading) setGlobalLoading(false);
-    }
+    decrementActiveRequests();
   }
 };
 

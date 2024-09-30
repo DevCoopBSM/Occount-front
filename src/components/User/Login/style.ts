@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const LogoImg = styled.img`
-  height: 80px;  // 기존 100px에서 80%로 줄임
+  height: 80px;
   margin-bottom: 40px;
 `;
 
@@ -21,7 +21,7 @@ export const LogoSubText = styled.p`
   margin-bottom: 20px;
   text-align: center;
   width: 100%;
-  font-size: clamp(14px, 2.5vw, 18px);  // 최대 글꼴 크기를 18px로 제한
+  font-size: clamp(14px, 2.5vw, 18px);
   line-height: 1.2;
   max-height: 2.4em;
   overflow: hidden;
@@ -91,7 +91,7 @@ export const ActionButton = styled.button`
 `;
 
 export const Divider = styled.span`
-  color: #000000; // 검은색으로 변경
+  color: #000000;
   padding: 0 10px;
   flex: 0 0 auto;
 `;
@@ -140,36 +140,68 @@ export const ModalContent = styled.div`
   text-align: center;
 `;
 
-export const ErrorMessage = styled.div`
-  position: fixed;
-  bottom: 30%; // 화면 하단에서 20px 위에 위치
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffcccc;
-  color: #ff0000;
+const fadeInUp = keyframes`
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+`;
+
+const fadeOutDown = keyframes`
+  from { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+  to { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+`;
+
+export const ErrorMessageWrapper = styled.div`
+  position: absolute;
+  bottom: 35%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1002;
+`;
+
+interface ErrorMessageProps {
+  isVisible: boolean;
+}
+
+export const ErrorMessage = styled.div<ErrorMessageProps>`
+  background-color: #ff6b6b;
+  color: white;
   padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1002; // LoadingOverlay보다 위에 오도록 z-index 증가
-  font-size: clamp(14px, 2.5vw, 18px);
+  border-radius: 4px;
+  font-size: 16px;
   text-align: center;
-  max-width: 80%;
-  animation: fadeInUp 0.5s ease-in-out;
+  width: 80%;
+  max-width: 400px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-
-  @keyframes fadeInUp {
-    from { 
-      opacity: 0; 
-      transform: translateX(-50%) translateY(20px); 
-    }
-    to { 
-      opacity: 1; 
-      transform: translateX(-50%) translateY(0); 
-    }
+  
+  ${({ isVisible }) => isVisible
+    ? css`
+        animation: ${fadeInUp} 0.5s ease-in-out;
+        opacity: 1;
+        visibility: visible;
+      `
+    : css`
+        animation: ${fadeOutDown} 0.5s ease-in-out;
+        opacity: 0;
+        visibility: hidden;
+      `
   }
-
-  @media (max-width: 768px) {
-    font-size: clamp(12px, 2vw, 16px);
-  }
+  
+  transition: visibility 0.5s, opacity 0.5s;
 `;
 
 export const LoadingOverlay = styled.div`
