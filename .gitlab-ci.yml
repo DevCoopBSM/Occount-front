@@ -13,6 +13,8 @@ build:
     - CI=false yarn build
     - mkdir -p build_output
     - cp -r build/* build_output/
+    - echo "빌드 출력 내용:"
+    - ls -la build_output
   artifacts:
     paths:
       - build_output
@@ -20,12 +22,13 @@ build:
   tags:
     - docker
 
-
 deploy:
   stage: deploy
   script:
-    - pwd  # 현재 작업 디렉토리 확인
-    - ls -la  # 현재 디렉토리 내용 확인
+    - pwd
+    - ls -la
+    - echo "build_output 내용:"
+    - ls -la build_output
     - chmod +x deploy.sh
     - sh deploy.sh
   only:
