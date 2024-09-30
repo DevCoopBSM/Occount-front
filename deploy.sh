@@ -5,7 +5,7 @@ echo "Starting deployment script"
 # CI/CD 환경 확인
 if [ -n "$CI_PROJECT_DIR" ]; then
     echo "Running in CI/CD environment"
-    BASE_DIR="$CI_PROJECT_DIR"
+    BASE_DIR="/root/server/oring/O-ccount_front_v1"
     DOCKER_BASE_DIR="/usr/share/nginx/oring_occount_v1"
 else
     echo "Running in server environment"
@@ -61,4 +61,4 @@ ls -la $BASE_DIR
 echo "Symbolic link created:"
 ls -l $ACTIVE_LINK
 echo "Symbolic link target:"
-readlink -f $ACTIVE_LINK
+readlink $ACTIVE_LINK
