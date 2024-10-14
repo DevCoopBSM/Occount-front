@@ -37,23 +37,22 @@ fi
 
 echo "Current version: $CURRENT_VERSION"
 echo "New version will be: $NEW_VERSION"
+
+echo "Contents of BUILD_OUTPUT directory:"
+ls -laR $BUILD_OUTPUT
+
 echo "Copying new build to $NEW_BUILD_DIR"
 
 # 새 빌드 디렉토리 생성 또는 비우기
 rm -rf $NEW_BUILD_DIR
 mkdir -p $NEW_BUILD_DIR
 
-echo "Contents of BUILD_OUTPUT directory:"
-ls -la $BUILD_OUTPUT
+# 파일 복사
+echo "Copying files..."
+cp -r $BUILD_OUTPUT/* $NEW_BUILD_DIR/
 
-if ! cp -r $BUILD_OUTPUT/* $NEW_BUILD_DIR/; then
-    echo "Failed to copy new files. Error: $?"
-    echo "Contents of BUILD_OUTPUT directory:"
-    ls -la $BUILD_OUTPUT
-    echo "Contents of NEW_BUILD_DIR:"
-    ls -la $NEW_BUILD_DIR
-    exit 1
-fi
+echo "Contents of NEW_BUILD_DIR:"
+ls -laR $NEW_BUILD_DIR
 
 echo "Updating symbolic link"
 if ! ln -sfn $DOCKER_NEW_BUILD_DIR $ACTIVE_LINK; then

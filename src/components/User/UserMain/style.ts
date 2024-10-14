@@ -36,7 +36,15 @@ export const MainContent = styled.div`
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 30px;
+
+  ${mediaQuery(TABLET_BREAKPOINT)} {
+    padding: 0 20px;
+  }
+
+  ${mediaQuery(MOBILE_BREAKPOINT)} {
+    padding: 0 15px;
+  }
 `;
 
 export const TopBox = styled.div`
@@ -48,7 +56,7 @@ export const TopBox = styled.div`
   border-radius: 50px 50px 0 0;
 
   ${mediaQuery(TABLET_BREAKPOINT)} {
-    width: 90%;
+    width: 100%;
     padding: 10px;
     border-radius: 25px 25px 0 0;
   }
@@ -66,7 +74,7 @@ export const BottomBox = styled.div`
   border-radius: 0 0 50px 50px;
 
   ${mediaQuery(TABLET_BREAKPOINT)} {
-    width: 90%;
+    width: 100%;
     padding: 10px;
     border-radius: 0 0 25px 25px;
   }
@@ -74,17 +82,27 @@ export const BottomBox = styled.div`
 
 export const BoxContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   max-width: 970px;
   margin: 10px auto 0;
   gap: 15px;
 
+  @media (min-width: 769px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
   ${mediaQuery(TABLET_BREAKPOINT)} {
-    flex-direction: column;
-    width: 90%;
-    gap: 10px;
+    width: 100%;
+    margin: 10px auto 0;
+  }
+
+  ${mediaQuery(MOBILE_BREAKPOINT)} {
+    width: 100%;
+    margin: 10px auto 0;
+    align-items: center;
   }
 `;
 
@@ -93,24 +111,17 @@ export const UseBox = styled.div`
   flex-direction: column;
   margin: 0 0 10px 0;
   padding: 15px;
-  width: calc(50% - 10px);
-  min-width: 300px;
-  height: 270px;
+  width: 100%;
+  min-height: 200px;
   background: #f0ce00;
   border-radius: 12px;
   color: #fff;
   font-weight: 700;
-  font-size: 40px;
+  font-size: clamp(24px, 5vw, 40px);
 
-  ${mediaQuery(TABLET_BREAKPOINT)} {
-    width: 100%;
-    margin: 10px 0;
-    font-size: 30px;
-  }
-
-  ${mediaQuery(MOBILE_BREAKPOINT)} {
-    height: auto;
-    min-height: 180px;
+  @media (min-width: 769px) {
+    width: calc(50% - 10px);
+    min-height: 270px;
   }
 `;
 
@@ -141,22 +152,16 @@ export const AskBox = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 0 10px 0;
-  width: calc(50% - 10px);
-  min-width: 300px;
-  height: 270px;
+  width: 100%;
+  min-height: 200px;
   background: #FFF4B2;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
 
-  ${mediaQuery(TABLET_BREAKPOINT)} {
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  ${mediaQuery(MOBILE_BREAKPOINT)} {
-    height: auto;
-    min-height: 180px;
+  @media (min-width: 769px) {
+    width: calc(50% - 10px);
+    min-height: 270px;
   }
 `;
 
@@ -483,5 +488,26 @@ export const TopBoxContent = styled.div`
 
   ${mediaQuery(TABLET_BREAKPOINT)} {
     align-items: center;
+  }
+`;
+
+export const PersonCountBoxWrapper = styled.div`
+  width: 100%;
+  background-color: transparent; // 배경색 제거
+  padding: 0; // 패딩 제거
+  margin: 0; // 마진 제거
+`;
+
+export const PersonCountBox = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+
+  ${mediaQuery(TABLET_BREAKPOINT)} {
+    width: 100%;
+  }
+
+  ${mediaQuery(MOBILE_BREAKPOINT)} {
+    width: 100%;
   }
 `;

@@ -5,6 +5,7 @@ import { useAuth } from 'contexts/authContext';
 import ChargeModal from './ChargeModal';
 import How2Use from 'assets/How2useBT.svg';
 import InquiryModal from './InquiryModal';
+import PersonCountDisplay from './PersonCountDisplay'; // 이 줄을 추가하세요
 
 interface User {
   point: number;
@@ -100,6 +101,13 @@ const Main: React.FC = () => {
           </_.BottomBox>
         </_.Maintop>
 
+        {/* PersonCountDisplay 컴포넌트를 여기로 이동 */}
+        <_.PersonCountBoxWrapper>
+          <_.PersonCountBox>
+            <PersonCountDisplay />
+          </_.PersonCountBox>
+        </_.PersonCountBoxWrapper>
+
         <_.BoxContainer>
           <_.UseBox>
             <Link to="/howto" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -128,6 +136,7 @@ const Main: React.FC = () => {
             </_.CallLogoWrapper>
           </_.AskBox>
         </_.BoxContainer>
+
       </_.MainContent>
 
       <ChargeModal 
