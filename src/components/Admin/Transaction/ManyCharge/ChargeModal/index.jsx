@@ -41,7 +41,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
         return null;
       }
 
-      const response = await axiosInstance.post('v2/transaction/bulkcharge', {
+      const response = await axiosInstance.post('v2/transaction/charges', {
         userCodeList,
         chargedPoint: validAmount,
       });
@@ -64,18 +64,21 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
 
   const handleBulkChargeClick = async () => {
     try {
-      const results = await BulkCharge(selectedStudents, chargedPoint);
-      if (results && results.length > 0) {
-        const resultMessages = results.map(
+      const response = await BulkCharge(selectedStudents, chargedPoint);
+      if (response && response.chargesList && response.chargesList.length > 0) {
+        const resultMessages = response.chargesList.map(
           (result) =>
-            `학생 ${result.userCode}: 이전 포인트 ${result.beforePoint} -> 이후 포인트 ${result.afterPoint}`
+            `학생 ${result.userName} (${result.userCode}): 이전 포인트 ${result.beforePoint} -> 이후 포인트 ${result.afterPoint} (충전 포인트: ${result.chargedPoint})`
         ).join('\n');
         alert(`충전 결과:\n${resultMessages}`);
 
         // 충전이 성공적으로 완료되면 체크박스를 해제
         setSelectedStudents([]);
+      } else {
+        alert('충전 결과가 없습니다.');
       }
     } catch (error) {
+      console.error('충전 중 오류 발생:', error);
       alert('충전 중 오류가 발생했습니다.');
     }
     setModalOpen(false);

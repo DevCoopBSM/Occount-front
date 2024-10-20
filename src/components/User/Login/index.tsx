@@ -16,14 +16,12 @@ const Login: React.FC = () => {
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    emailInputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
     if (isLoggedIn) {
+      setIsErrorVisible(false);
+      setErrorMessage('');
       navigate('/');
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, setErrorMessage]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -33,7 +31,8 @@ const Login: React.FC = () => {
       }
       errorTimeoutRef.current = setTimeout(() => {
         setIsErrorVisible(false);
-      }, 2000); // 4초 동안 에러 메시지 표시
+        setErrorMessage('');
+      }, 2000);
     }
 
     return () => {
@@ -41,7 +40,7 @@ const Login: React.FC = () => {
         clearTimeout(errorTimeoutRef.current);
       }
     };
-  }, [errorMessage]);
+  }, [errorMessage, setErrorMessage]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,7 +79,7 @@ const Login: React.FC = () => {
         <L.Container>
           <L.LoginWrap onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
             <L.LogoImg src={imgLogo} alt="logo image" />
-            <L.LogoSubText>로그인 후 오카운트의 더다양한 기능을 만나보세요!</L.LogoSubText>
+            <L.LogoSubText>로그인 후 오카운트의 더 다양한 기능을 만나보세요!</L.LogoSubText>
             <L.InputContainer>
               <L.LoginInput
                 ref={emailInputRef}
