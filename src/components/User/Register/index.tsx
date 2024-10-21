@@ -2,20 +2,48 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
 import imgLogo from "assets/occregisterLogo.svg";
-import { useAuth } from "contexts/authContext";
+import axiosInstance from "utils/Axios";
 import * as R from "./style";
 
-// UserType 열거형 정의
-const UserType = {
-  STUDENT: 'STUDENT',
-  PARENT: 'PARENT',
-  TEACHER: 'TEACHER',
-  OTHER: 'OTHER'
-};
+enum UserType {
+  STUDENT = 'STUDENT',
+  PARENT = 'PARENT',
+  TEACHER = 'TEACHER',
+  OTHER = 'OTHER'
+}
 
-// 임시 본인인증 함수
-const verifyUser = async () => {
-  // 실제 구현에서는 이 부분에 본인인증 API 호출 로직이 들어갑니다.
+interface FormData {
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+  confirmPassword: string;
+  userAddress: string;
+  userPin: string;
+  confirmPin: string;
+  userCode: string;
+  addressDetail: string;
+}
+
+// 새로운 인터페이스 추가
+interface ErrorState extends Partial<FormData> {
+  userType?: string;
+  verification?: string;
+}
+
+interface UserInfo {
+  name: string;
+  birthDate: string;
+  phone: string;
+}
+
+// 파일 상단에 추가
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
+
+const verifyUser = async (): Promise<{ success: boolean; userName: string; userPhone: string; userBirthDate: string; userCiNumber: string }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -25,56 +53,49 @@ const verifyUser = async () => {
         userBirthDate: "1990-01-01",
         userCiNumber: "abcdefghijklmnop1234567890",
       });
-    }, 1000); // 1초 후에 결과 반환
+    }, 1000);
   });
 };
 
-// 비밀번호 각 조건 검사 함수들
-const isLengthValid = (password) => password.length >= 8;
-const hasLowerCase = (password) => /[a-z]/.test(password);
-const hasNumbers = (password) => /\d/.test(password);
-const hasSpecialChar = (password) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+const isLengthValid = (password: string): boolean => password.length >= 8;
+const hasLowerCase = (password: string): boolean => /[a-z]/.test(password);
+const hasNumbers = (password: string): boolean => /\d/.test(password);
+const hasSpecialChar = (password: string): boolean => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+const isPasswordValid = (password: string): boolean => 
+  isLengthValid(password) && hasLowerCase(password) && hasNumbers(password) && hasSpecialChar(password);
 
-// 전체 비밀번호 유효성 검사
-const isPasswordValid = (password) => {
-  return isLengthValid(password) && hasLowerCase(password) && hasNumbers(password) && hasSpecialChar(password);
-};
-
-// 영문 포함 여부를 확인하는 함수 추가
-const containsEnglish = (str) => /[a-zA-Z]/.test(str);
-
-// 이메일 유효성 검사 함수 수정
-const validateEmail = (email, userType) => {
+const validateEmail = (email: string, userType: UserType): string => {
   const [localPart] = email.split('@');
-  if (userType === UserType.TEACHER && !containsEnglish(localPart)) {
+  if (userType === UserType.TEACHER && !/[a-zA-Z]/.test(localPart)) {
     return "교사 계정이 아닙니다.";
   }
-  if (userType === UserType.STUDENT && containsEnglish(localPart)) {
+  if (userType === UserType.STUDENT && /[a-zA-Z]/.test(localPart)) {
     return "학생 계정이 아닙니다.";
   }
   return "";
 };
 
-function Register() {
+const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { register, errorMessage } = useAuth();
 
-  const [userType, setUserType] = useState(UserType.STUDENT);
-  const [formData, setFormData] = useState({
+  const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
+  const [formData, setFormData] = useState<FormData>({
     userName: "",
     userEmail: "",
     userPassword: "",
     confirmPassword: "",
     userAddress: "",
     userPin: "",
-    userCode: "", // 학생증 바코드
+    confirmPin: "",
+    userCode: "",
+    addressDetail: "",
   });
   const [isVerified, setIsVerified] = useState(false);
   const [addressDetail, setAddressDetail] = useState("");
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [step, setStep] = useState(1);
-  const [userInfo, setUserInfo] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [errors, setErrors] = useState<ErrorState>({});
   const [emailPrefix, setEmailPrefix] = useState('');
   const [passwordErrors, setPasswordErrors] = useState({
     length: false,
@@ -83,20 +104,26 @@ function Register() {
     specialChar: false
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [pinMatch, setPinMatch] = useState(true);
+  const [showConfirmPin, setShowConfirmPin] = useState(false);
+  const confirmPinSpring = useSpring({
+    height: showConfirmPin ? 80 : 0,
+    opacity: showConfirmPin ? 1 : 0,
+    overflow: 'hidden',
+  });
 
-  // 애니메이션 설정
   const fadeIn = useSpring({
     opacity: 1,
     from: { opacity: 0 },
     config: { duration: 500 }
   });
 
-  // 비밀번호 확인 필드 애니메이션을 위한 스프링
   const confirmPasswordSpring = useSpring({
     opacity: formData.userPassword ? 1 : 0,
     height: formData.userPassword ? 'auto' : 0,
     config: { tension: 300, friction: 20 }
   });
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -111,39 +138,30 @@ function Register() {
   }, []);
 
   useEffect(() => {
-  }, [passwordMatch, formData.confirmPassword]);
+    if (formData.userPin.length >= 4) {
+      setShowConfirmPin(true);
+    } else {
+      setShowConfirmPin(false);
+    }
+  }, [formData.userPin]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
     setFormData(prevState => {
-      const newState = {
-        ...prevState,
-        [name]: value
-      };
+      const newState = { ...prevState, [name]: value };
       
-      // 이메일 처리 로직
       if (name === 'userEmail') {
         if (userType === UserType.STUDENT || userType === UserType.TEACHER) {
           setEmailPrefix(value);
           const fullEmail = `${value}@bssm.hs.kr`;
           newState.userEmail = fullEmail;
           
-          // 이메일 유효성 검사 추가
           const emailError = validateEmail(fullEmail, userType);
-          setErrors(prevErrors => {
-            const newErrors = {
-              ...prevErrors,
-              userEmail: emailError
-            };
-            return newErrors;
-          });
-        } else {
-          newState.userEmail = value;
+          setErrors(prevErrors => ({ ...prevErrors, userEmail: emailError }));
         }
       }
       
-      // 비밀번호 관련 로직
       if (name === 'userPassword' || name === 'confirmPassword') {
         const password = name === 'userPassword' ? value : newState.userPassword;
         const confirmPassword = name === 'confirmPassword' ? value : newState.confirmPassword;
@@ -159,7 +177,13 @@ function Register() {
           });
         }
       }
-      
+
+      if (name === 'userPin' || name === 'confirmPin') {
+        const pin = name === 'userPin' ? value : newState.userPin;
+        const confirmPin = name === 'confirmPin' ? value : newState.confirmPin;
+        
+        setPinMatch(pin === confirmPin && pin !== '');
+      }
 
       return newState;
     });
@@ -172,7 +196,7 @@ function Register() {
         setIsVerified(true);
         setUserInfo({
           name: result.userName,
-          birthDate: result.userBirthDate, // 가정: API가 이 정보를 반환한다고 가정
+          birthDate: result.userBirthDate,
           phone: result.userPhone
         });
         alert("본인인증이 완료되었습니다.");
@@ -190,7 +214,7 @@ function Register() {
     }
     
     new window.daum.Postcode({
-      oncomplete: function(data) {
+      oncomplete: function(data: any) {
         setFormData(prevState => ({
           ...prevState,
           userAddress: data.roadAddress
@@ -200,11 +224,11 @@ function Register() {
     }).open();
   };
 
-  const handleAddressDetailChange = (e) => {
+  const handleAddressDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddressDetail(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isVerified) {
       alert("본인인증을 먼저 완료해주세요.");
@@ -218,26 +242,35 @@ function Register() {
       alert("PIN 번호는 4자리 이상이어야 합니다.");
       return;
     }
+    if (formData.userPin !== formData.confirmPin) {
+      alert("PIN 번호가 일치하지 않습니다.");
+      return;
+    }
     try {
-      const result = await register({
+      const response = await axiosInstance.post('/auth/register', {
         ...formData,
         userAddress: `${formData.userAddress} ${addressDetail}`.trim(),
-        userType, // UserType 열거형 값 전달
+        userType,
       });
-      if (result.success) {
+
+      if (response.status === 200) {
         alert("회원가입이 완료되었습니다.");
         navigate('/');
       } else {
-        alert(result.message);
+        alert(response.data.message || "회원가입 중 오류가 발생했습니다.");
       }
     } catch (error) {
       console.error("Register component error:", error);
-      alert('회원가입 중 오류가 발생했습니다.');
+      if (error.response) {
+        alert(error.response.data.message || '회원가입 중 오류가 발생했습니다.');
+      } else {
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  const validateStep = (currentStep) => {
-    const newErrors = {};
+  const validateStep = (currentStep: number): boolean => {
+    const newErrors: ErrorState = {};
     switch(currentStep) {
       case 1:
         if (!userType) {
@@ -260,7 +293,7 @@ function Register() {
         if (!formData.userPassword) {
           newErrors.userPassword = "비밀번호를 입력해주세요.";
         } else if (!isPasswordValid(formData.userPassword)) {
-          newErrors.userPassword = "비밀번호는 8자 이상이며, 소문자, 숫자, 특수문자를 모두 포함해야 합니다.";
+          newErrors.userPassword = "비밀번호는 8자 이상이며, 소문자, 숫자, 특수자를 모두 포함해야 합니다.";
         }
         if (formData.userPassword !== formData.confirmPassword) {
           newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
@@ -271,7 +304,10 @@ function Register() {
           newErrors.userAddress = "주소를 입력해주세요.";
         }
         if (!formData.userPin || formData.userPin.length < 4) {
-          newErrors.userPin = "PIN 번호는 4자리 이상이어 합니다.";
+          newErrors.userPin = "PIN 번호는 4자리 이상이어야 합니다.";
+        }
+        if (formData.userPin !== formData.confirmPin) {
+          newErrors.confirmPin = "PIN 번호가 일치하지 않습니다.";
         }
         if (userType === UserType.STUDENT && !formData.userCode) {
           newErrors.userCode = "학생증 바코드를 입력해주세요.";
@@ -293,6 +329,20 @@ function Register() {
   const prevStep = () => {
     if (step > 1) {
       setStep(prevStep => prevStep - 1);
+    }
+  };
+
+  const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const numericValue = value.replace(/\D/g, ''); // 숫자가 아닌 문자 제거
+    
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: numericValue
+    }));
+
+    if (name === 'userPin') {
+      setShowConfirmPin(numericValue.length >= 4);
     }
   };
 
@@ -318,7 +368,6 @@ function Register() {
               <R.ToggleButton 
                 active={userType === UserType.TEACHER}
                 onClick={() => setUserType(UserType.TEACHER)}
-                type="button"
               >
                 교사
               </R.ToggleButton>
@@ -420,7 +469,7 @@ function Register() {
                   required
                 />
               )}
-              <R.ErrorMessage isVisible={!!errors.userEmail}>{errors.userEmail}</R.ErrorMessage>
+              {errors.userEmail && <R.ErrorMessage isVisible={true}>{errors.userEmail}</R.ErrorMessage>}
             </R.InputContainer>
             <R.PasswordContainer>
               <R.InputContainer>
@@ -433,16 +482,16 @@ function Register() {
                   placeholder="8자 이상, 소문자, 숫자, 특수문자 포함"
                   required
                 />
-                <R.ErrorMessage isVisible={passwordErrors.length}>
+                <R.ErrorMessage isVisible={!!passwordErrors.length}>
                   비밀번호는 8자 이상이어야 합니다.
                 </R.ErrorMessage>
-                <R.ErrorMessage isVisible={passwordErrors.lowerCase}>
+                <R.ErrorMessage isVisible={!!passwordErrors.lowerCase}>
                   소문자를 포함해야 합니다.
                 </R.ErrorMessage>
-                <R.ErrorMessage isVisible={passwordErrors.number}>
+                <R.ErrorMessage isVisible={!!passwordErrors.number}>
                   숫자를 포함해야 합니다.
                 </R.ErrorMessage>
-                <R.ErrorMessage isVisible={passwordErrors.specialChar}>
+                <R.ErrorMessage isVisible={!!passwordErrors.specialChar}>
                   특수문자를 포함해야 합니다.
                 </R.ErrorMessage>
               </R.InputContainer>
@@ -495,11 +544,7 @@ function Register() {
                 readOnly
                 required
               />
-              {errors.userAddress && (
-                <R.ErrorMessage>
-                  {errors.userAddress}
-                </R.ErrorMessage>
-              )}
+              {errors.userAddress && <R.ErrorMessage isVisible={true}>{errors.userAddress}</R.ErrorMessage>}
             </R.InputContainer>
             <R.AddressSearchButton 
               type="button" 
@@ -509,60 +554,72 @@ function Register() {
               {isScriptLoaded ? "주소 검색" : "로딩 중..."}
             </R.AddressSearchButton>
             {formData.userAddress && (
-              <>
-                <R.InputContainer>
-                  <R.InputLabel>상세 주소</R.InputLabel>
-                  <R.RegisterInput
-                    type="text"
-                    name="addressDetail"
-                    value={addressDetail}
-                    onChange={handleAddressDetailChange}
-                    placeholder="상세 주소를 입력해주세요"
-                  />
-                  {errors.addressDetail && (
-                    <R.ErrorMessage>
-                      {errors.addressDetail}
-                    </R.ErrorMessage>
-                  )}
-                </R.InputContainer>
-              </>
+              <R.InputContainer>
+                <R.InputLabel>상세 주소</R.InputLabel>
+                <R.RegisterInput
+                  type="text"
+                  name="addressDetail"
+                  value={addressDetail}
+                  onChange={handleAddressDetailChange}
+                  placeholder="상세 주소를 입력해주세요"
+                />
+                {errors.addressDetail && <R.ErrorMessage isVisible={true}>{errors.addressDetail}</R.ErrorMessage>}
+              </R.InputContainer>
             )}
-            <R.InputContainer>
-              <R.InputLabel>PIN 번호 (4자리 이상)</R.InputLabel>
-              <R.RegisterInput
-                type="password"
-                name="userPin"
-                value={formData.userPin}
-                onChange={handleInputChange}
-                placeholder="4자리 이상의 PIN 번호를 입력해주세요"
-                minLength="4"
-                required
-              />
-              {errors.userPin && (
-                <R.ErrorMessage>
-                  {errors.userPin}
-                </R.ErrorMessage>
-              )}
-            </R.InputContainer>
-            {userType === UserType.STUDENT && (
-              <>
-                <R.InputContainer>
-                  <R.InputLabel>학생증 바코드</R.InputLabel>
-                  <R.RegisterInput
+            <R.PinContainer>
+              <R.PinInputWrapper>
+                <R.InputLabel>PIN 번호 (4자리 이상)</R.InputLabel>
+                <R.PinInput
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  name="userPin"
+                  value={formData.userPin}
+                  onChange={handlePinChange}
+                  placeholder="••••"
+                  minLength={4}
+                  maxLength={8}
+                  required
+                />
+              </R.PinInputWrapper>
+              <animated.div style={confirmPinSpring}>
+                <R.PinInputWrapper>
+                  <R.InputLabel>PIN 번호 확인</R.InputLabel>
+                  <R.PinInput
                     type="text"
-                    name="userCode"
-                    value={formData.userCode}
-                    onChange={handleInputChange}
-                    placeholder="학생증 바코드를 입력해주세요"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    name="confirmPin"
+                    value={formData.confirmPin}
+                    onChange={handlePinChange}
+                    placeholder="••••"
+                    minLength={4}
+                    maxLength={8}
                     required
                   />
-                  {errors.userCode && (
-                    <R.ErrorMessage>
-                      {errors.userCode}
-                    </R.ErrorMessage>
-                  )}
-                </R.InputContainer>
-              </>
+                </R.PinInputWrapper>
+              </animated.div>
+            </R.PinContainer>
+            {formData.confirmPin && (
+              pinMatch ? (
+                <R.SuccessMessage isVisible={true}>PIN 번호가 일치합니다.</R.SuccessMessage>
+              ) : (
+                <R.ErrorMessage isVisible={true}>PIN 번호가 일치하지 않습니다.</R.ErrorMessage>
+              )
+            )}
+            {userType === UserType.STUDENT && (
+              <R.InputContainer>
+                <R.InputLabel>학생증 바코드</R.InputLabel>
+                <R.RegisterInput
+                  type="text"
+                  name="userCode"
+                  value={formData.userCode}
+                  onChange={handleInputChange}
+                  placeholder="학생증 바코드를 입력해주세요"
+                  required
+                />
+                {errors.userCode && <R.ErrorMessage isVisible={true}>{errors.userCode}</R.ErrorMessage>}
+              </R.InputContainer>
             )}
             <R.ButtonContainer>
               <R.NavigationButton onClick={prevStep} isPrev>
@@ -585,15 +642,8 @@ function Register() {
       <R.ContentContainer>
         {renderStep()}
       </R.ContentContainer>
-      {errorMessage && (
-        <R.ModalOverlay>
-          <R.ModalContent>
-            {errorMessage}
-          </R.ModalContent>
-        </R.ModalOverlay>
-      )}
     </R.Container>
   );
-}
+};
 
 export default Register;

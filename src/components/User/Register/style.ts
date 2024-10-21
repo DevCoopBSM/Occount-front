@@ -1,6 +1,17 @@
 import styled from "styled-components";
 import { animated } from 'react-spring';
 
+// 인터페이스 정의
+interface ToggleButtonProps {
+  active: boolean;
+}
+
+interface NavigationButtonProps {
+  isPrev?: boolean;
+}
+
+
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,7 +54,7 @@ export const ToggleButtonContainer = styled.div`
   margin-bottom: 40px;
 `;
 
-export const ToggleButton = styled.button`
+export const ToggleButton = styled.button<ToggleButtonProps>`
   width: 32%;
   height: 80px;
   background-color: ${({ active }) => (active ? "#F49E15" : "transparent")};
@@ -71,7 +82,7 @@ export const ButtonContainer = styled.div`
   margin-top: 40px;
 `;
 
-export const NavigationButton = styled.button`
+export const NavigationButton = styled.button<NavigationButtonProps>`
   width: 48%;
   height: 60px;
   background-color: ${props => props.isPrev ? '#D9D9D9' : '#F49E15'};
@@ -153,7 +164,7 @@ export const InputContainer = styled.div`
 `;
 
 export const InputLabel = styled.label`
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   margin-bottom: 8px;
   align-self: flex-start;
@@ -162,21 +173,20 @@ export const InputLabel = styled.label`
 export const RegisterInput = styled.input`
   width: 100%;
   height: 60px;
-  border: 1px solid #E0E0E0;  // 테두리 추가
-  margin-bottom: 5px;
+  border: 1px solid #E0E0E0;
   padding: 10px;
   border-radius: 4px;
   background: #F2F2F2;
-  color: #808080;
+  color: #333;
   font-style: normal;
   font-weight: 400;
-  font-size: clamp(16px, 3vw, 24px);
-  transition: border-color 0.3s ease;  // 부드러운 테두리 색상 변화를 위한 트랜지션 추가
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #F49E15;  // 포커스 시 두리 색상 변경
-    box-shadow: 0 0 0 2px rgba(244, 158, 21, 0.2);  // 포커스 시 그림 효과 추가
+    border-color: #F49E15;
+    box-shadow: 0 0 0 2px rgba(244, 158, 21, 0.2);
   }
 
   &::placeholder {
@@ -187,7 +197,7 @@ export const RegisterInput = styled.input`
     background-color: #E0E0E0;
     color: #9E9E9E;
     cursor: not-allowed;
-    border-color: #BDBDBD;  // 비활성화 시 테두리 색상 변경
+    border-color: #BDBDBD;
   }
 `;
 
@@ -374,7 +384,7 @@ export const AnimatedContainer = styled(animated.div)`
 `;
 
 // 다른 스타일 컴포넌트들 사이에 추가
-export const ErrorMessage = styled.p`
+export const ErrorMessage = styled.p<{ isVisible: boolean }>`
   color: #f44336;
   font-size: 14px;
   margin-top: 5px;
@@ -388,9 +398,50 @@ export const PasswordContainer = styled.div`
   overflow: hidden;
 `;
 
-export const SuccessMessage = styled.p`
+export const SuccessMessage = styled.p<{ isVisible: boolean }>`
   color: #4CAF50;
   font-size: 14px;
   margin-top: 5px;
   display: ${props => props.isVisible ? 'block' : 'none'};
+`;
+
+export const PinContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+
+export const PinInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const PinInput = styled.input`
+  width: 100%;
+  height: 50px;
+  border: 1px solid #E0E0E0;
+  padding: 10px;
+  border-radius: 4px;
+  background: #F8F8F8;
+  color: #333;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  transition: border-color 0.3s ease;
+  text-align: center;
+  letter-spacing: 5px;
+
+  &:focus {
+    outline: none;
+    border-color: #F49E15;
+    box-shadow: 0 0 0 2px rgba(244, 158, 21, 0.2);
+  }
+
+  &::placeholder {
+    color: #BDBDBD;
+    letter-spacing: normal;
+  }
 `;
