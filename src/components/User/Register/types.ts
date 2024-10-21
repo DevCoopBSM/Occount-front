@@ -32,8 +32,14 @@ export interface RegisterRequest {
 export interface ErrorState extends Partial<FormData> {
     userType?: string;
     verification?: string;
+    userEmail?: string;
+    userPassword?: string;
     confirmPassword?: string;
+    userAddress?: string;
+    userPin?: string;
     confirmPin?: string;
+    userCode?: string;
+    privacyAgreement?: string;
 }
 
 export interface UserInfo {

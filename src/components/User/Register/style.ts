@@ -12,6 +12,10 @@ interface NavigationButtonProps {
 
 
 
+
+
+
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -444,4 +448,82 @@ export const PinInput = styled.input`
     color: #BDBDBD;
     letter-spacing: normal;
   }
+`;
+
+export const Checkbox = styled.input`
+  margin-right: 10px;
+`;
+
+export const PrivacyAgreementContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+`;
+
+export const PrivacyCheckbox = styled.input`
+  margin-right: 10px;
+`;
+
+export const PrivacyText = styled.label`
+  font-size: 14px;
+  color: #333;
+`;
+
+export const PrivacyContent = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  overflow-y: auto;
+  max-height: 250px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  p {
+    margin-bottom: 8px;
+  }
+
+  ol, ul {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  ul li {
+    list-style-type: disc;
+  }
+`;
+
+export const PrivacyNotice = styled.div`
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.4;
 `;

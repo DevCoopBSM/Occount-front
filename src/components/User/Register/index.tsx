@@ -73,6 +73,9 @@ const Register: React.FC = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [pinMatch, setPinMatch] = useState(true);
   const [showConfirmPin, setShowConfirmPin] = useState(false);
+  const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
+  const [showPrivacyAgreement, setShowPrivacyAgreement] = useState(false);
+
   const confirmPinSpring = useSpring({
     height: showConfirmPin ? 80 : 0,
     opacity: showConfirmPin ? 1 : 0,
@@ -201,6 +204,13 @@ const Register: React.FC = () => {
       alert("본인인증을 먼저 완료해주세요.");
       return;
     }
+    if (!isPrivacyAgreed) { // 개인정보 동의 체크
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        privacyAgreement: "개인정보 공개에 동의해야 합니다."
+      }));
+      return;
+    }
     if (formData.userPassword !== formData.confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
@@ -251,11 +261,16 @@ const Register: React.FC = () => {
         }
         break;
       case 2:
+        if (!isPrivacyAgreed) {
+          newErrors.privacyAgreement = "개인정보 수집 및 이용에 동의해주세요.";
+        }
+        break;
+      case 3:
         if (!isVerified) {
           newErrors.verification = "본인인증을 완료해주세요.";
         }
         break;
-      case 3:
+      case 4:
         if (userType === UserType.STUDENT || userType === UserType.TEACHER) {
           if (!emailPrefix) {
             newErrors.userEmail = "이메일 아이디를 입력해주세요.";
@@ -266,13 +281,13 @@ const Register: React.FC = () => {
         if (!formData.userPassword) {
           newErrors.userPassword = "비밀번호를 입력해주세요.";
         } else if (!isPasswordValid(formData.userPassword)) {
-          newErrors.userPassword = "비밀번호는 8자 이상이며, 소문자, 숫자, 특수자를 모두 포함해야 합니다.";
+          newErrors.userPassword = "비밀번호는 8자 이상이며, 소문자, 숫자, 특수문자를 모두 포함해야 합니다.";
         }
         if (formData.userPassword !== formData.confirmPassword) {
           newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
         }
         break;
-      case 4:
+      case 5:
         if (!formData.userAddress) {
           newErrors.userAddress = "주소를 입력해주세요.";
         }
@@ -358,6 +373,55 @@ const Register: React.FC = () => {
       case 2:
         return (
           <R.AnimatedContainer style={fadeIn}>
+            <R.StepTitle>개인정보 수집 및 이용 동의</R.StepTitle>
+            <R.PrivacyContent>
+              <h3>개인 정보 수집 및 이용 동의서</h3>
+              <p>DEVCOOP는 아래와 같은 사유로 귀하의 개인 정보를 수집합니다.</p>
+              
+              <h4>정보 수집 목적 및 품목</h4>
+              <ol>
+                <li><strong>회원 가입</strong>: 회원 관리를 위한 최소한의 정보
+                  <ul><li>이름, 생년월일, 이메일, 전화번호, 암호화된 개인인증 확인값(CI), 주소 등</li></ul>
+                </li>
+                <li><strong>서비스 이용 정보</strong>: 매점 운영 및 개인별 맞춤형 서비스 제공을 위한 정보
+                  <ul><li>충전, 결제 기록, 문의하기 등의 서비스 이용 정보</li></ul>
+                </li>
+                <li><strong>개인 결제수단 등록</strong>: 빌링키를 등록하여 정기결제를 진행하기 위한 정보
+                  <ul><li>빌링키 정보</li></ul>
+                </li>
+              </ol>
+              
+              <h4>보유 및 이용 기간</h4>
+              <p>수집일로부터 졸업 및 학적변동 등 조합원의 자격이 소실되는 시기까지(최대 3년)</p>
+            </R.PrivacyContent>
+
+            <R.PrivacyNotice>
+              <p>귀하는 본 개인 정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다.</p>
+              <p>필수 정보 수집 동의를 거부할 경우, O-ring의 주요 서비스 이용이 제한됩니다.</p>
+            </R.PrivacyNotice>
+
+            <R.PrivacyAgreementContainer>
+              <R.PrivacyCheckbox
+                type="checkbox"
+                checked={isPrivacyAgreed}
+                onChange={() => setIsPrivacyAgreed(!isPrivacyAgreed)}
+              />
+              <R.PrivacyText>위와 같은 개인정보의 수집 및 이용에 동의합니다.</R.PrivacyText>
+            </R.PrivacyAgreementContainer>
+            {errors.privacyAgreement && <R.ErrorMessage isVisible={true}>{errors.privacyAgreement}</R.ErrorMessage>}
+            <R.ButtonContainer>
+              <R.NavigationButton onClick={prevStep} isPrev>
+                이전
+              </R.NavigationButton>
+              <R.NavigationButton onClick={nextStep} disabled={!isPrivacyAgreed}>
+                다음
+              </R.NavigationButton>
+            </R.ButtonContainer>
+          </R.AnimatedContainer>
+        );
+      case 3:
+        return (
+          <R.AnimatedContainer style={fadeIn}>
             <R.StepTitle>본인 인증</R.StepTitle>
             {isVerified && userInfo ? (
               <>
@@ -414,7 +478,7 @@ const Register: React.FC = () => {
             </R.ButtonContainer>
           </R.AnimatedContainer>
         );
-      case 3:
+      case 4:
         return (
           <R.AnimatedContainer style={fadeIn}>
             <R.StepTitle>계정 정보 입력</R.StepTitle>
@@ -503,7 +567,7 @@ const Register: React.FC = () => {
             </R.ButtonContainer>
           </R.AnimatedContainer>
         );
-      case 4:
+      case 5:
         return (
           <R.AnimatedContainer style={fadeIn}>
             <R.StepTitle>추가 정보 입력</R.StepTitle>
@@ -543,7 +607,7 @@ const Register: React.FC = () => {
               <R.PinInputWrapper>
                 <R.InputLabel>PIN 번호 (4자리 이상)</R.InputLabel>
                 <R.PinInput
-                  type="text"
+                  type="password"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   name="userPin"
@@ -559,7 +623,7 @@ const Register: React.FC = () => {
                 <R.PinInputWrapper>
                   <R.InputLabel>PIN 번호 확인</R.InputLabel>
                   <R.PinInput
-                    type="text"
+                    type="password"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     name="confirmPin"
@@ -580,20 +644,6 @@ const Register: React.FC = () => {
                 <R.ErrorMessage isVisible={true}>PIN 번호가 일치하지 않습니다.</R.ErrorMessage>
               )
             )}
-            {userType === UserType.STUDENT && (
-              <R.InputContainer>
-                <R.InputLabel>학생증 바코드</R.InputLabel>
-                <R.RegisterInput
-                  type="text"
-                  name="userCode"
-                  value={formData.userCode}
-                  onChange={handleInputChange}
-                  placeholder="학생증 바코드를 입력해주세요"
-                  required
-                />
-                {errors.userCode && <R.ErrorMessage isVisible={true}>{errors.userCode}</R.ErrorMessage>}
-              </R.InputContainer>
-            )}
             <R.ButtonContainer>
               <R.NavigationButton onClick={prevStep} isPrev>
                 이전
@@ -613,7 +663,7 @@ const Register: React.FC = () => {
     <R.Container>
       <R.LogoImg src={imgLogo} alt="logo" />
       <R.ContentContainer>
-        {renderStep()}
+        {showPrivacyAgreement ? renderStep() : renderStep()}
       </R.ContentContainer>
     </R.Container>
   );
