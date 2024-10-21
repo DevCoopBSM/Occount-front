@@ -4,39 +4,8 @@ import { useSpring, animated } from 'react-spring';
 import imgLogo from "assets/occregisterLogo.svg";
 import axiosInstance from "utils/Axios";
 import * as R from "./style";
+import { UserType, FormData, ErrorState, UserInfo, RegisterRequest } from "./types";
 
-enum UserType {
-  STUDENT = 'STUDENT',
-  PARENT = 'PARENT',
-  TEACHER = 'TEACHER',
-  OTHER = 'OTHER'
-}
-
-interface FormData {
-  userName: string;
-  userEmail: string;
-  userPassword: string;
-  confirmPassword: string;
-  userAddress: string;
-  userPin: string;
-  confirmPin: string;
-  userCode: string;
-  addressDetail: string;
-}
-
-// 새로운 인터페이스 추가
-interface ErrorState extends Partial<FormData> {
-  userType?: string;
-  verification?: string;
-}
-
-interface UserInfo {
-  name: string;
-  birthDate: string;
-  phone: string;
-}
-
-// 파일 상단에 추가
 declare global {
   interface Window {
     daum: any;
@@ -83,10 +52,8 @@ const Register: React.FC = () => {
     userName: "",
     userEmail: "",
     userPassword: "",
-    confirmPassword: "",
     userAddress: "",
     userPin: "",
-    confirmPin: "",
     userCode: "",
     addressDetail: "",
   });
@@ -123,7 +90,6 @@ const Register: React.FC = () => {
     height: formData.userPassword ? 'auto' : 0,
     config: { tension: 300, friction: 20 }
   });
-
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -195,9 +161,10 @@ const Register: React.FC = () => {
       if (result.success) {
         setIsVerified(true);
         setUserInfo({
-          name: result.userName,
-          birthDate: result.userBirthDate,
-          phone: result.userPhone
+            userName: result.userName,
+            userBirthDate: result.userBirthDate,
+            userPhone: result.userPhone,
+            userCiNumber: result.userCiNumber
         });
         alert("본인인증이 완료되었습니다.");
       }
@@ -247,11 +214,17 @@ const Register: React.FC = () => {
       return;
     }
     try {
-      const response = await axiosInstance.post('/auth/register', {
+      const registerData: RegisterRequest = {
         ...formData,
         userAddress: `${formData.userAddress} ${addressDetail}`.trim(),
         userType,
-      });
+        userName: userInfo.userName,
+        userCiNumber: userInfo.userCiNumber,
+        userPhone: userInfo.userPhone,
+        userBirthDate: userInfo.userBirthDate
+      };
+
+      const response = await axiosInstance.post('/v2/auth/register', registerData);
 
       if (response.status === 200) {
         alert("회원가입이 완료되었습니다.");
@@ -334,7 +307,7 @@ const Register: React.FC = () => {
 
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const numericValue = value.replace(/\D/g, ''); // 숫자가 아닌 문자 제거
+    const numericValue = value.replace(/\D/g, '');
     
     setFormData(prevState => ({
       ...prevState,
@@ -392,7 +365,7 @@ const Register: React.FC = () => {
                   <R.InputLabel>이름</R.InputLabel>
                   <R.RegisterInput
                     type="text"
-                    value={userInfo.name}
+                    value={userInfo.userName}
                     disabled
                   />
                 </R.InputContainer>
@@ -400,7 +373,7 @@ const Register: React.FC = () => {
                   <R.InputLabel>생년월일</R.InputLabel>
                   <R.RegisterInput
                     type="text"
-                    value={userInfo.birthDate}
+                    value={userInfo.userBirthDate}
                     disabled
                   />
                 </R.InputContainer>
@@ -408,7 +381,7 @@ const Register: React.FC = () => {
                   <R.InputLabel>핸드폰 번호</R.InputLabel>
                   <R.RegisterInput
                     type="text"
-                    value={userInfo.phone}
+                    value={userInfo.userPhone}
                     disabled
                   />
                 </R.InputContainer>
