@@ -160,7 +160,7 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
         style={{ background: getBackgroundColor() }}
       >
         <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').slice(0, -1)}</_.DateText>
-        <_.AmountText>{`${inner_point.toLocaleString()}원`}</_.AmountText>
+        <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
         <_.ChargeTypeText>{getTransactionType()}</_.ChargeTypeText>
       </_.PointLogWrap>
 
@@ -176,7 +176,7 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
           </_.DetailRow>
           <_.DetailRow>
             <_.DetailLabel>금액:</_.DetailLabel>
-            <_.DetailValue>{inner_point.toLocaleString()}원</_.DetailValue>
+            <_.DetailValue>{inner_point?.toLocaleString() ?? 0}원</_.DetailValue>
           </_.DetailRow>
           {type === 1 && (
             <>

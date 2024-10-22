@@ -353,3 +353,10 @@ export const AddressSearchButton = styled(VerificationButton)`
   margin-bottom: 0;
   white-space: nowrap;
 `;
+
+export const WarningMessage = styled.p`
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+`;

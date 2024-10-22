@@ -64,6 +64,10 @@ const Update = () => {
     const [isAddressSearched, setIsAddressSearched] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
+    const [passwordWarning, setPasswordWarning] = useState('');
+    const [confirmPasswordWarning, setConfirmPasswordWarning] = useState('');
+    const [pinWarning, setPinWarning] = useState('');
+    const [confirmPinWarning, setConfirmPinWarning] = useState('');
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -239,6 +243,60 @@ const Update = () => {
         setAddressDetail(e.target.value);
     };
 
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setNewPassword(value);
+        if (value && !validatePassword(value)) {
+            setPasswordWarning('비밀번호는 8자 이상이며, 문자, 숫자, 특수문자를 포함해야 합니다.');
+        } else {
+            setPasswordWarning('');
+        }
+        if (confirmNewPassword && value !== confirmNewPassword) {
+            setConfirmPasswordWarning('비밀번호가 일치하지 않습니다.');
+        } else {
+            setConfirmPasswordWarning('');
+        }
+    };
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setConfirmNewPassword(value);
+        if (newPassword && value !== newPassword) {
+            setConfirmPasswordWarning('비밀번호가 일치하지 않습니다.');
+        } else {
+            setConfirmPasswordWarning('');
+        }
+    };
+
+    const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length <= 8) {
+            setNewPin(value);
+            if (value && !validatePin(value)) {
+                setPinWarning('PIN은 4자리 이상 8자리 이하의 숫자여야 합니다.');
+            } else {
+                setPinWarning('');
+            }
+            if (confirmNewPin && value !== confirmNewPin) {
+                setConfirmPinWarning('PIN이 일치하지 않습니다.');
+            } else {
+                setConfirmPinWarning('');
+            }
+        }
+    };
+
+    const handleConfirmPinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length <= 8) {
+            setConfirmNewPin(value);
+            if (newPin && value !== newPin) {
+                setConfirmPinWarning('PIN이 일치하지 않습니다.');
+            } else {
+                setConfirmPinWarning('');
+            }
+        }
+    };
+
     return (
         <S.Container>
             <S.ContentContainer>
@@ -252,6 +310,15 @@ const Update = () => {
                             type="text"
                             name="userName"
                             value={userInfo.userName}
+                            disabled
+                        />
+                    </S.InputContainer>
+                    <S.InputContainer>
+                        <S.InputLabel>생년월일</S.InputLabel>
+                        <S.RegisterInput
+                            type="text"
+                            name="userBirthDate"
+                            value={userInfo.userBirthDate}
                             disabled
                         />
                     </S.InputContainer>
@@ -342,18 +409,20 @@ const Update = () => {
                                         <S.RegisterInput
                                             type="password"
                                             value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            onChange={handlePasswordChange}
                                             placeholder="새 비밀번호"
                                         />
+                                        {passwordWarning && <S.WarningMessage>{passwordWarning}</S.WarningMessage>}
                                     </S.InputContainer>
                                     <S.InputContainer>
                                         <S.InputLabel>새 비밀번호 확인</S.InputLabel>
                                         <S.RegisterInput
                                             type="password"
                                             value={confirmNewPassword}
-                                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                            onChange={handleConfirmPasswordChange}
                                             placeholder="새 비밀번호 확인"
                                         />
+                                        {confirmPasswordWarning && <S.WarningMessage>{confirmPasswordWarning}</S.WarningMessage>}
                                     </S.InputContainer>
                                 </S.SecuritySection>
                             )}
@@ -373,33 +442,51 @@ const Update = () => {
                                         <S.InputLabel>새 PIN</S.InputLabel>
                                         <S.RegisterInput
                                             type="password"
+                                            inputMode="numeric"
+                                            maxLength={8}
                                             value={newPin}
-                                            onChange={(e) => setNewPin(e.target.value)}
+                                            onChange={(e) => {
+                                                const value = e.target.value.replace(/[^0-9]/g, '');
+                                                if (value.length <= 8) {
+                                                    setNewPin(value);
+                                                }
+                                            }}
+                                            onKeyPress={(e) => {
+                                                if (!/[0-9]/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             placeholder="새 PIN (4-8자리)"
                                         />
+                                        {pinWarning && <S.WarningMessage>{pinWarning}</S.WarningMessage>}
                                     </S.InputContainer>
                                     <S.InputContainer>
                                         <S.InputLabel>새 PIN 확인</S.InputLabel>
                                         <S.RegisterInput
                                             type="password"
+                                            inputMode="numeric"
+                                            maxLength={8}
                                             value={confirmNewPin}
-                                            onChange={(e) => setConfirmNewPin(e.target.value)}
+                                            onChange={(e) => {
+                                                const value = e.target.value.replace(/[^0-9]/g, '');
+                                                if (value.length <= 8) {
+                                                    setConfirmNewPin(value);
+                                                }
+                                            }}
+                                            onKeyPress={(e) => {
+                                                if (!/[0-9]/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             placeholder="새 PIN 확인"
                                         />
+                                        {confirmPinWarning && <S.WarningMessage>{confirmPinWarning}</S.WarningMessage>}
                                     </S.InputContainer>
                                 </S.SecuritySection>
                             )}
                         </>
                     )}
-                    <S.InputContainer>
-                        <S.InputLabel>생년월일</S.InputLabel>
-                        <S.RegisterInput
-                            type="text"
-                            name="userBirthDate"
-                            value={userInfo.userBirthDate}
-                            disabled
-                        />
-                    </S.InputContainer>
+
                     <S.InputContainer>
                         <S.InputLabel>회원 유형</S.InputLabel>
                         <S.RegisterInput
