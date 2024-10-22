@@ -60,7 +60,7 @@ const Update = () => {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await axiosInstance.get('/account/info');
+                const response = await axiosInstance.get('/v2/account/info');
                 setUserInfo(response.data);
             } catch (error) {
                 setErrorMessage('사용자 정보를 불러오는 데 실패했습니다.');
@@ -79,7 +79,7 @@ const Update = () => {
 
     const handleVerify = async () => {
         try {
-            const response = await axiosInstance.post('/account/verify', {
+            const response = await axiosInstance.post('/v2/account/verify', {
                 userPassword: currentPassword,
             });
             if (response.data.verified) {
@@ -132,7 +132,7 @@ const Update = () => {
         }
         
         try {
-            const response = await axiosInstance.put('/account/update', {
+            const response = await axiosInstance.put('/v2/account/update', {
                 ...userInfo,
                 newPassword: isPasswordChangeMode ? newPassword : undefined,
                 newPin: isPinChangeMode ? newPin : undefined,
@@ -151,12 +151,12 @@ const Update = () => {
 
     const handleInvestment = async () => {
         try {
-            const response = await axiosInstance.post('/account/invest', {
+            const response = await axiosInstance.post('/v2/account/invest', {
                 amount: investmentAmount
             });
             alert(response.data.message);
             // 사용자 정보 새로고침
-            const updatedUserInfo = await axiosInstance.get('/account/info');
+            const updatedUserInfo = await axiosInstance.get('/v2/account/info');
             setUserInfo(updatedUserInfo.data);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
