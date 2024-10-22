@@ -56,6 +56,7 @@ const Update = () => {
     const [investmentAmount, setInvestmentAmount] = useState(10000); // 최소 출자금으로 초기화
     const [isPasswordChangeMode, setIsPasswordChangeMode] = useState(false);
     const [isPinChangeMode, setIsPinChangeMode] = useState(false);
+    const [verificationToken, setVerificationToken] = useState('');
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -82,8 +83,9 @@ const Update = () => {
             const response = await axiosInstance.post('/v2/account/verify', {
                 userPassword: currentPassword,
             });
-            if (response.data.verified) {
+            if (response.data.success) {
                 setIsVerified(true);
+                setVerificationToken(response.data.token);
                 setErrorMessage('');
             } else {
                 setErrorMessage('비밀번호가 일치하지 않습니다.');
@@ -132,14 +134,31 @@ const Update = () => {
         }
         
         try {
-            const response = await axiosInstance.put('/v2/account/update', {
-                ...userInfo,
-                newPassword: isPasswordChangeMode ? newPassword : undefined,
-                newPin: isPinChangeMode ? newPin : undefined,
-            });
+            const updateData: any = { ...userInfo };
+            
+            if (isPasswordChangeMode) {
+                if (!verificationToken) {
+                    setErrorMessage('비밀번호 변경을 위해 먼저 인증을 완료해주세요.');
+                    return;
+                }
+                updateData.newPassword = newPassword;
+                updateData.verificationToken = verificationToken;
+            }
+            
+            if (isPinChangeMode) {
+                if (!verificationToken) {
+                    setErrorMessage('PIN 변경을 위해 먼저 인증을 완료해주세요.');
+                    return;
+                }
+                updateData.newPin = newPin;
+                updateData.verificationToken = verificationToken;
+            }
+            
+            const response = await axiosInstance.put('/v2/account/update', updateData);
             alert(response.data.message);
             setIsPasswordChangeMode(false);
             setIsPinChangeMode(false);
+            setVerificationToken('');
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setErrorMessage(error.response.data.message || '회원정보 수정 중 오류가 발생했습니다.');
