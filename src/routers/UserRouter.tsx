@@ -7,6 +7,7 @@ import Login from 'components/User/Login';
 import PwChange from 'components/User/pwChange';
 import PwChangeEX from 'components/User/pwChangeEX';
 import Register from 'components/User/Register';
+import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
 
 const UserRoutes: React.FC = () => {
@@ -18,6 +19,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
         <Route path="/pwchange" element={<PwChange />} />
+        <Route path="/update" element={<Update />} />
         <Route path="/register" element={<Register />} />
         <Route path="/userlog" element={<UserLog />} />
         <Route path="*" element={<Navigate to="/404" />} />

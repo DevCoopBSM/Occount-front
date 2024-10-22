@@ -26,12 +26,9 @@ const Header: React.FC = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
-  const handlePasswordChangeClick = (): void => {
-    navigate('/pwChange');
-  };
 
   const handleUserInfoChangeClick = (): void => {
-    navigate('/userInfoChange');
+    navigate('/update');
   };
 
   useEffect(() => {
@@ -64,7 +61,6 @@ const Header: React.FC = () => {
             {dropdownVisible && (
               <H.DropdownMenu>
                 <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
-                <H.DropdownItem onClick={handlePasswordChangeClick}>비밀번호 변경</H.DropdownItem>
                 <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
               </H.DropdownMenu>
             )}

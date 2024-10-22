@@ -465,7 +465,7 @@ const Register: React.FC = () => {
                 disabled={isVerified}
                 style={{backgroundColor: isVerified ? '#D9D9D9' : '#F49E15', color: isVerified ? '#333' : 'white'}}
               >
-                {isVerified ? "본인인증 완료" : "본인인증"}
+                {isVerified ? "본인��증 완료" : "본인인증"}
               </R.Button>
             )}
             <R.ButtonContainer>
