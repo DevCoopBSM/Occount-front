@@ -7,6 +7,7 @@ interface User {
   name: string;
   code: string;
   email: string;
+  phone: string;
   todayTotalCharge?: number;
 }
 
@@ -93,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(response.data.message || '로그인에 실패했습니다.');
       }
 
-      const { accessToken, userCode, userName, userEmail, userPoint, roles } = response.data;
+      const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } = response.data;
       const isAdmin = roles?.includes('ROLE_ADMIN');
 
       if (admin && !isAdmin) {
@@ -102,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setAccessToken(accessToken);
       dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
-      const userInfo: User = { point: userPoint, name: userName, code: userCode, email: userEmail };
+      const userInfo: User = { point: userPoint, name: userName, code: userCode, email: userEmail, phone: userPhone };
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       navigate(admin ? '/admin' : '/');
       dispatch({ type: actionTypes.CLEAR_ERROR });
@@ -123,6 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: response.data.userName,
         code: response.data.userCode,
         email: response.data.userEmail,
+        phone: response.data.userPhone,
         todayTotalCharge: response.data.userTotalCharge,
       };
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });

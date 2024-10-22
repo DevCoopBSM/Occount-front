@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as _ from './style';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
 import ChargeModal from './ChargeModal';
 import How2Use from 'assets/How2useBT.svg';
@@ -10,6 +10,9 @@ import PersonCountDisplay from './PersonCountDisplay'; // 이 줄을 추가하�
 interface User {
   point: number;
   todayTotalCharge: number;
+  email: string;
+  name: string;
+  phone?: string;
 }
 
 const Main: React.FC = () => {
@@ -18,7 +21,6 @@ const Main: React.FC = () => {
   const [chargeAmount, setChargeAmount] = useState<number>(1000);
   const [formatPoint, setFormatPoint] = useState<string>('');
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && user.point !== undefined) {

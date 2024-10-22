@@ -277,8 +277,8 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const ModalFooterButton = styled.button`
-  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
-  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
+  font-size: 18px;
+  font-weight: bold;
   padding: 10px 20px;
   width: 40%;
   max-width: 200px;
@@ -295,7 +295,7 @@ export const ModalFooterButton = styled.button`
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    font-size: 16px; /* 모바일에서 글꼴 크기를 16px로 설정 */
+    font-size: 16px;
     padding: 8px 16px;
     width: 45%;
   }
@@ -359,7 +359,7 @@ export const SubListItem = styled.li`
 export const StyledModal = styled(Modal)`
   .modal-content {
     width: 90%;
-    max-width: none; // 최대 너비 제한 제거
+    max-width: none;
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
@@ -374,7 +374,7 @@ export const StyledModal = styled(Modal)`
     @media (max-width: ${MOBILE_BREAKPOINT}) {
       width: 100%;
       padding: 10px;
-      border-radius: 0; // 모바일에서는 전체 화면으로
+      border-radius: 0;
     }
   }
 `;

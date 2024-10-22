@@ -2,7 +2,24 @@ import React, { useState } from 'react';
 import * as _ from './style';
 import { PaymentCheckoutPage } from 'components/Pg/PaymentCheckout';
 
-const InvestmentModal = ({
+interface User {
+  email: string;
+  name: string;
+  phone?: string;
+}
+
+interface InvestmentModalProps {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  investmentAmount: number;
+  setInvestmentAmount: (amount: number) => void;
+  user: User | null;
+  increaseAmount: () => void;
+  decreaseAmount: () => void;
+  maxInvestmentAmount: number;
+}
+
+const InvestmentModal: React.FC<InvestmentModalProps> = ({
   isOpen,
   onRequestClose,
   investmentAmount,
@@ -10,12 +27,12 @@ const InvestmentModal = ({
   user,
   increaseAmount,
   decreaseAmount,
+  maxInvestmentAmount,
 }) => {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
   const minInvestmentAmount = 10000; // 최소 출자금 금액
-  const maxInvestmentAmount = 1000000; // 최대 출자금 금액 (예시)
 
-  const handleInvestmentClick = () => {
+  const handleInvestmentClick = (): void => {
     if (!user) {
       alert('로그인 후 이용해 주세요.');
       return;
@@ -32,7 +49,7 @@ const InvestmentModal = ({
     }
   };
 
-  const handleClosePaymentModal = () => {
+  const handleClosePaymentModal = (): void => {
     setIsPaymentModalOpen(false);
     onRequestClose();
   };
@@ -68,7 +85,7 @@ const InvestmentModal = ({
               <_.ModalInput
                 type="number"
                 value={investmentAmount}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = parseInt(e.target.value, 10);
                   if (!isNaN(value) && value >= minInvestmentAmount && value <= maxInvestmentAmount) {
                     setInvestmentAmount(value);
@@ -92,13 +109,16 @@ const InvestmentModal = ({
         isOpen={isPaymentModalOpen}
         onRequestClose={handleClosePaymentModal}
       >
-        <PaymentCheckoutPage
-          customerEmail={user?.email}
-          customerName={user?.name}
-          rechargeAmount={investmentAmount}
-          onRequestClose={handleClosePaymentModal}
-          isInvestment={true}
-        />
+        {user && (
+          <PaymentCheckoutPage
+            customerEmail={user.email}
+            customerName={user.name}
+            customerPhone={user.phone || ''}
+            rechargeAmount={investmentAmount}
+            onRequestClose={handleClosePaymentModal}
+            paymentType="investment"
+          />
+        )}
       </_.StyledModal>
     </>
   );

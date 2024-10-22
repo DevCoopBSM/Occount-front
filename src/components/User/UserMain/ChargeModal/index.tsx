@@ -2,19 +2,36 @@ import React, { useState } from 'react';
 import * as _ from './style';
 import { PaymentCheckoutPage } from 'components/Pg/PaymentCheckout';
 
-const ChargeModal = ({
+interface User {
+  email: string;
+  name: string;
+  phone?: string;
+  todayTotalCharge?: number;
+}
+
+interface ChargeModalProps {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  chargeAmount: number;
+  setChargeAmount: (amount: number) => void;
+  increaseAmount: () => void;
+  decreaseAmount: () => void;
+  user: User | null;
+}
+
+const ChargeModal: React.FC<ChargeModalProps> = ({
   isOpen,
   onRequestClose,
   chargeAmount,
   setChargeAmount,
-  user,
   increaseAmount,
   decreaseAmount,
+  user,
 }) => {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const maxChargeAmount = 50000 - (user?.todayTotalCharge || 0);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
+  const maxChargeAmount: number = 50000 - (user?.todayTotalCharge || 0);
 
-  const handleChargeClick = () => {
+  const handleChargeClick = (): void => {
     if (!user) {
       alert('로그인 후 이용해 주세요.');
       return;
@@ -31,7 +48,7 @@ const ChargeModal = ({
     }
   };
 
-  const handleClosePaymentModal = () => {
+  const handleClosePaymentModal = (): void => {
     setIsPaymentModalOpen(false);
     onRequestClose();
   };
@@ -71,7 +88,7 @@ const ChargeModal = ({
               <_.ModalInput
                 type="number"
                 value={chargeAmount}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = parseInt(e.target.value, 10);
                   if (!isNaN(value) && value >= 0 && value <= maxChargeAmount) {
                     setChargeAmount(value);
@@ -95,12 +112,16 @@ const ChargeModal = ({
         isOpen={isPaymentModalOpen}
         onRequestClose={handleClosePaymentModal}
       >
-        <PaymentCheckoutPage
-          customerEmail={user?.email}
-          customerName={user?.name}
-          rechargeAmount={chargeAmount}
-          onRequestClose={handleClosePaymentModal}
-        />
+        {user && (
+          <PaymentCheckoutPage
+            customerEmail={user.email}
+            customerName={user.name}
+            customerPhone={user.phone || ''}
+            rechargeAmount={chargeAmount}
+            onRequestClose={handleClosePaymentModal}
+            paymentType="aripay"
+          />
+        )}
       </_.StyledModal>
     </>
   );

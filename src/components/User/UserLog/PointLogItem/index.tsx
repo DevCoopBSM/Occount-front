@@ -4,12 +4,42 @@ import { useAuth } from 'contexts/authContext';
 import RefundFormModal from './RefundFormModal';
 import { handleRefundRequest } from './refundService';
 
-const PointLogItem = ({ type, data, fetchUserLog }) => {
+// LogItem 인터페이스를 수정하여 payId를 포함시킵니다.
+interface LogItem {
+  chargeId: number;
+  payId?: number;  // payId를 선택적 속성으로 추가
+  type: string;
+  date: string;
+  inner_point: string;
+  chargeDate?: number[];
+  payDate?: number[];
+  chargedPoint?: number;
+  payedPoint?: number;
+  chargeType?: string;
+  payType?: string;
+  refundState?: boolean;
+}
+
+// RefundAccount 인터페이스를 refundService.ts와 일치하도록 수정
+export interface RefundAccount {
+  bank: string;
+  accountNumber: string;  // number를 accountNumber로 변경
+  holderName: string;
+  holderPhoneNumber?: string;  // 선택적 속성으로 변경
+}
+
+interface PointLogItemProps {
+  type: number;
+  data: LogItem[];
+  fetchUserLog: (type: string) => Promise<void>;
+}
+
+const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [refundAccount, setRefundAccount] = useState({
+  const [refundAccount, setRefundAccount] = useState<RefundAccount>({
     bank: '',
+    accountNumber: '',
     holderName: '',
-    number: '',
     holderPhoneNumber: '',
   });
   const [showRefundForm, setShowRefundForm] = useState(false);
@@ -30,13 +60,13 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
     setShowRefundForm(false);
     setRefundAccount({
       bank: '',
+      accountNumber: '',
       holderName: '',
-      number: '',
       holderPhoneNumber: '',
     });
   };
 
-  const formatDate = (dateArray) => {
+  const formatDate = (dateArray: number[] | undefined): Date => {
     if (Array.isArray(dateArray) && dateArray.length === 6) {
       return new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
     }
@@ -72,22 +102,46 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
   const getRefundStatus = () => {
     if (item.refundState) return '환불 완료';
     if (isOverWeek) return '1주일 초과';
-    if (itemType >= 2) {
-      return itemType === 3 ? '환불 신청 시 계좌 정보가 필요합니다.' : '환불가능';
+    if (itemType && parseInt(itemType) >= 2) {
+      return itemType === '3' ? '환불 신청 시 계좌 정보가 필요합니다.' : '환불가능';
     }
     return '오프라인 충전된 내역';
   };
 
+  // refetchUser를 Promise<void>로 변환하는 함수
+  const refetchUserAndIgnoreResult = async () => {
+    await refetchUser();
+  };
+
   const renderRefundButton = () => {
-    if (itemType >= 2 && !item.refundState && !isOverWeek) {
+    if (itemType && parseInt(itemType) >= 2 && !item.refundState && !isOverWeek) {
       return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <_.ModalButton
             onClick={() => {
-              if (itemType === 3) {
+              if (itemType === '3') {
                 setShowRefundForm(true);
               } else {
-                handleRefundRequest(item, refundAccount, type, fetchUserLog, refetchUser, closeModal);
+                const refundItem: LogItem = {
+                  ...item,
+                  type: itemType || '',
+                  date: date.toISOString(),
+                  inner_point: inner_point.toString(),
+                  chargeId: item.chargeId || 0,
+                };
+                const refundAccountForRequest: RefundAccount = {
+                  bank: refundAccount.bank,
+                  accountNumber: refundAccount.accountNumber,  // number를 accountNumber로 매핑
+                  holderName: refundAccount.holderName,
+                };
+                handleRefundRequest(
+                  refundItem,
+                  refundAccountForRequest,
+                  type.toString(),
+                  fetchUserLog,
+                  refetchUserAndIgnoreResult,
+                  closeModal
+                );
               }
             }}
           >
@@ -141,7 +195,28 @@ const PointLogItem = ({ type, data, fetchUserLog }) => {
           closeModal={closeModal}
           refundAccount={refundAccount}
           setRefundAccount={setRefundAccount}
-          handleRefundRequest={() => handleRefundRequest(item, refundAccount, type, fetchUserLog, refetchUser, closeModal)}
+          handleRefundRequest={() => {
+            const refundItem: LogItem = {
+              ...item,
+              type: itemType || '',
+              date: date.toISOString(),
+              inner_point: inner_point.toString(),
+              chargeId: item.chargeId || 0,
+            };
+            const refundAccountForRequest: RefundAccount = {
+              bank: refundAccount.bank,
+              accountNumber: refundAccount.accountNumber,
+              holderName: refundAccount.holderName,
+            };
+            handleRefundRequest(
+              refundItem,
+              refundAccountForRequest,
+              type.toString(),
+              fetchUserLog,
+              refetchUserAndIgnoreResult,
+              closeModal
+            );
+          }}
         />
       )}
     </div>

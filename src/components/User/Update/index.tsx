@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as S from './style';
 import InvestmentModal from '../../Pg/InvestmentModal';
 import { FaMoneyBillWave } from 'react-icons/fa';  // 아이콘 import
+import { useAuth } from '../../../contexts/authContext';  // useAuth 훅 import
 
 enum UserType {
     TEACHER = "교사",
@@ -33,6 +34,7 @@ interface UserInfo {
 }
 
 const Update = () => {
+    const { user, refetchUser } = useAuth();  // useAuth 훅 사용
     const [userInfo, setUserInfo] = useState<UserInfo>({
         userName: '',
         userEmail: '',
@@ -56,18 +58,35 @@ const Update = () => {
     const [investmentAmount, setInvestmentAmount] = useState(10000); // 최소 출자금으로 초기화
     const [isPasswordChangeMode, setIsPasswordChangeMode] = useState(false);
     const [isPinChangeMode, setIsPinChangeMode] = useState(false);
-    const [verificationToken, setVerificationToken] = useState('');
+    const [temporaryToken, setTemporaryToken] = useState('');
+    const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const [addressDetail, setAddressDetail] = useState("");
+    const [isAddressSearched, setIsAddressSearched] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
                 const response = await axiosInstance.get('/v2/account/info');
                 setUserInfo(response.data);
-            } catch (error) {
+            } catch {
                 setErrorMessage('사용자 정보를 불러오는 데 실패했습니다.');
             }
         };
         fetchUserInfo();
+    }, []);
+
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = `https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js`;
+        script.async = true;
+        script.onload = () => setIsScriptLoaded(true);
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,12 +104,19 @@ const Update = () => {
             });
             if (response.data.success) {
                 setIsVerified(true);
-                setVerificationToken(response.data.token);
+                setTemporaryToken(response.data.token);
                 setErrorMessage('');
+                setSuccessMessage('인증에 성공했습니다. 이제 비밀번호와 PIN을 변경할 수 있습니다.');
+                setIsSuccessMessageVisible(true);
+                // 3초 후에 성공 메시지를 숨깁니다.
+                setTimeout(() => {
+                    setIsSuccessMessageVisible(false);
+                    setSuccessMessage('');
+                }, 3000);
             } else {
                 setErrorMessage('비밀번호가 일치하지 않습니다.');
             }
-        } catch (error) {
+        } catch {
             setErrorMessage('인증 과정에서 오류가 발생했습니다.');
         }
     };
@@ -101,64 +127,64 @@ const Update = () => {
     };
 
     const validatePin = (pin: string) => {
-        return /^\d{6}$/.test(pin);
+        return /^\d{4,8}$/.test(pin);
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!isVerified) {
-            setErrorMessage('먼저 인증을 완료해주세요.');
-            return;
-        }
-        
-        if (isPasswordChangeMode) {
-            if (!validatePassword(newPassword)) {
-                setErrorMessage('새 비밀번호는 8자 이상이며, 문자, 숫자, 특수문자를 포함해야 합니다.');
-                return;
-            }
-            if (newPassword !== confirmNewPassword) {
-                setErrorMessage('새 비밀번호가 일치하지 않습니다.');
-                return;
-            }
-        }
-        
-        if (isPinChangeMode) {
-            if (!validatePin(newPin)) {
-                setErrorMessage('PIN은 6자리 숫자여야 합니다.');
-                return;
-            }
-            if (newPin !== confirmNewPin) {
-                setErrorMessage('새 PIN이 일치하지 않습니다.');
-                return;
-            }
-        }
         
         try {
             const updateData: any = { ...userInfo };
             
+            // 주소와 상세주소 합치기
+            if (addressDetail) {
+                updateData.userAddress = `${userInfo.userAddress} ${addressDetail}`.trim();
+            }
+            
             if (isPasswordChangeMode) {
-                if (!verificationToken) {
-                    setErrorMessage('비밀번호 변경을 위해 먼저 인증을 완료해주세요.');
+                if (!isVerified) {
+                    setErrorMessage('비밀번호 변경을 위해서는 인증이 필요합니다.');
+                    return;
+                }
+                if (!validatePassword(newPassword)) {
+                    setErrorMessage('새 비밀번호는 8자 이상이며, 문자, 숫자, 특수문자를 포함해야 합니다.');
+                    return;
+                }
+                if (newPassword !== confirmNewPassword) {
+                    setErrorMessage('새 비밀번호가 일치하지 않습니다.');
                     return;
                 }
                 updateData.newPassword = newPassword;
-                updateData.verificationToken = verificationToken;
+                updateData.temporaryToken = temporaryToken;
             }
             
             if (isPinChangeMode) {
-                if (!verificationToken) {
-                    setErrorMessage('PIN 변경을 위해 먼저 인증을 완료해주세요.');
+                if (!isVerified) {
+                    setErrorMessage('PIN 변경을 위해서는 인증이 필요합니다.');
+                    return;
+                }
+                if (!validatePin(newPin)) {
+                    setErrorMessage('PIN은 4자리 이상 8자리 이하의 숫자여야 합니다.');
+                    return;
+                }
+                if (newPin !== confirmNewPin) {
+                    setErrorMessage('새 PIN이 일치하지 않습니다.');
                     return;
                 }
                 updateData.newPin = newPin;
-                updateData.verificationToken = verificationToken;
+                updateData.temporaryToken = temporaryToken;
             }
             
-            const response = await axiosInstance.put('/v2/account/update', updateData);
-            alert(response.data.message);
+            await axiosInstance.put('/v2/account/update', updateData);
+            // 성공 메시지 표시
+            alert('회원정보가 성공적으로 수정되었습니다.');
             setIsPasswordChangeMode(false);
             setIsPinChangeMode(false);
-            setVerificationToken('');
+            setTemporaryToken('');
+            // 사용자 정보 업데이트
+            const updatedUserInfo = await axiosInstance.get('/v2/account/info');
+            setUserInfo(updatedUserInfo.data);
+            setAddressDetail(""); // 상세주소 초기화
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setErrorMessage(error.response.data.message || '회원정보 수정 중 오류가 발생했습니다.');
@@ -168,35 +194,49 @@ const Update = () => {
         }
     };
 
-    const handleInvestment = async () => {
-        try {
-            const response = await axiosInstance.post('/v2/account/invest', {
-                amount: investmentAmount
-            });
-            alert(response.data.message);
-            // 사용자 정보 새로고침
-            const updatedUserInfo = await axiosInstance.get('/v2/account/info');
-            setUserInfo(updatedUserInfo.data);
-        } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                setErrorMessage(error.response.data.message || '출자금 납부 중 오류가 발생했습니다.');
-            } else {
-                setErrorMessage('출자금 납부 중 오류가 발생했습니다.');
-            }
-        }
+    const handleOpenInvestmentModal = () => {
+        setIsInvestmentModalOpen(true);
+    };
+
+    const handleCloseInvestmentModal = () => {
         setIsInvestmentModalOpen(false);
+        refetchUser();  // 모달이 닫힐 때 사용자 정보 새로고침
     };
 
     const increaseAmount = () => {
-        setInvestmentAmount(prev => Math.min(prev + 10000, 50000));
+        setInvestmentAmount(prev => {
+            const newAmount = prev + 10000;
+            const remainingLimit = 50000 - (user?.todayTotalCharge || 0);
+            return Math.min(newAmount, remainingLimit, 50000);
+        });
     };
 
     const decreaseAmount = () => {
         setInvestmentAmount(prev => Math.max(prev - 10000, 10000));
     };
 
-    const handleCloseInvestmentModal = () => {
-        setIsInvestmentModalOpen(false);
+    const maxInvestmentAmount = 50000 - (user?.todayTotalCharge || 0);
+
+    const openAddressSearch = () => {
+        if (!isScriptLoaded) {
+            alert("주소 검색 서비스를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.");
+            return;
+        }
+        
+        new window.daum.Postcode({
+            oncomplete: function(data: any) {
+                setUserInfo(prevState => ({
+                    ...prevState,
+                    userAddress: data.roadAddress
+                }));
+                setAddressDetail("");
+                setIsAddressSearched(true);
+            }
+        }).open();
+    };
+
+    const handleAddressDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAddressDetail(e.target.value);
     };
 
     return (
@@ -204,6 +244,7 @@ const Update = () => {
             <S.ContentContainer>
                 <S.StepTitle>회원 정보 수정</S.StepTitle>
                 {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
+                <S.SuccessMessage isVisible={isSuccessMessageVisible}>{successMessage}</S.SuccessMessage>
                 <form onSubmit={handleSubmit}>
                     <S.InputContainer>
                         <S.InputLabel>이름</S.InputLabel>
@@ -235,33 +276,54 @@ const Update = () => {
                     </S.InputContainer>
                     <S.InputContainer>
                         <S.InputLabel>주소</S.InputLabel>
-                        <S.RegisterInput
-                            type="text"
-                            name="userAddress"
-                            value={userInfo.userAddress}
-                            onChange={handleChange}
-                        />
+                        <S.AddressInputContainer>
+                            <S.AddressInput
+                                type="text"
+                                name="userAddress"
+                                value={userInfo.userAddress}
+                                placeholder="주소를 검색해주세요"
+                                readOnly
+                                required
+                            />
+                            <S.AddressSearchButton 
+                                type="button" 
+                                onClick={openAddressSearch} 
+                                disabled={!isScriptLoaded}
+                            >
+                                주소 검색
+                            </S.AddressSearchButton>
+                        </S.AddressInputContainer>
                     </S.InputContainer>
+                    {isAddressSearched && (
+                        <S.InputContainer>
+                            <S.InputLabel>상세 주소</S.InputLabel>
+                            <S.RegisterInput
+                                type="text"
+                                name="addressDetail"
+                                value={addressDetail}
+                                onChange={handleAddressDetailChange}
+                                placeholder="상세 주소를 입력해주세요"
+                            />
+                        </S.InputContainer>
+                    )}
 
                     {!isVerified && (
-                        <>
-                            <S.InfoMessage>암호와 핀번호를 변경하기 위해서는 인증해야 합니다</S.InfoMessage>
-                            <S.AuthContainer>
-                                <S.InputContainer>
-                                    <S.InputLabel>현재 비밀번호</S.InputLabel>
-                                    <S.RegisterInput
-                                        type="password"
-                                        value={currentPassword}
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
-                                        placeholder="현재 비밀번호"
-                                    />
-                                </S.InputContainer>
-                                <S.VerificationButton onClick={handleVerify} type="button">
-                                    인증하기
-                                </S.VerificationButton>
-                            </S.AuthContainer>
-                        </>
+                        <S.AuthContainer>
+                            <S.InputContainer>
+                                <S.InputLabel>현재 비밀번호</S.InputLabel>
+                                <S.RegisterInput
+                                    type="password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    placeholder="현재 비밀번호"
+                                />
+                            </S.InputContainer>
+                            <S.VerificationButton onClick={handleVerify} type="button">
+                                인증하기
+                            </S.VerificationButton>
+                        </S.AuthContainer>
                     )}
+                    
                     {isVerified && (
                         <>
                             <S.CheckboxContainer>
@@ -313,7 +375,7 @@ const Update = () => {
                                             type="password"
                                             value={newPin}
                                             onChange={(e) => setNewPin(e.target.value)}
-                                            placeholder="새 PIN (6자리)"
+                                            placeholder="새 PIN (4-8자리)"
                                         />
                                     </S.InputContainer>
                                     <S.InputContainer>
@@ -343,12 +405,12 @@ const Update = () => {
                         <S.RegisterInput
                             type="text"
                             name="userType"
-                            value={userInfo.userType}
+                            value={UserType[userInfo.userType] || userInfo.userType}
                             disabled
                         />
                     </S.InputContainer>
                     <S.InputContainer>
-                        <S.InputLabel>역할</S.InputLabel>
+                        <S.InputLabel>권한</S.InputLabel>
                         <S.RegisterInput
                             type="text"
                             name="role"
@@ -365,7 +427,11 @@ const Update = () => {
                                 value={`${userInfo.investmentAmount}원`}
                                 disabled
                             />
-                            <S.InvestmentButton type="button" onClick={handleInvestment}>
+                            <S.InvestmentButton 
+                                type="button" 
+                                onClick={handleOpenInvestmentModal}
+                                disabled={maxInvestmentAmount <= 0}
+                            >
                                 <FaMoneyBillWave />
                                 출자금 납부
                             </S.InvestmentButton>
@@ -381,9 +447,14 @@ const Update = () => {
                 onRequestClose={handleCloseInvestmentModal}
                 investmentAmount={investmentAmount}
                 setInvestmentAmount={setInvestmentAmount}
-                user={userInfo}
+                user={user ? {
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone || ''
+                } : null}
                 increaseAmount={increaseAmount}
                 decreaseAmount={decreaseAmount}
+                maxInvestmentAmount={maxInvestmentAmount}
             />
         </S.Container>
     );

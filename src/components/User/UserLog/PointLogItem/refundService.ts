@@ -1,8 +1,37 @@
+import { AxiosError } from 'axios';
 import { axiosInstance } from "utils/Axios";
 
-export const handleRefundRequest = async (item, refundAccount, type, fetchUserLog, refetchUser, closeModal) => {
-  // 온라인 충전 여부를 type을 통해 확인 (2: 카드 결제, 3: 계좌 결제)
-  if (item?.type >= 2) {
+interface LogItem {
+  type: string;
+  date: string;
+  inner_point: string;
+  chargeId?: number;
+  payId?: number;
+}
+
+interface RefundAccount {
+  bank: string;
+  accountNumber: string;
+  holderName: string;
+}
+
+interface RefundResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export const handleRefundRequest = async (
+  item: LogItem,
+  refundAccount: RefundAccount | null,
+  type: string,
+  fetchUserLog: (type: string) => Promise<void>,
+  refetchUser: () => Promise<void>,
+  closeModal: () => void
+): Promise<void> => {
+  const itemType = parseInt(item.type, 10);
+
+  if (itemType >= 2) {
     const chargeDate = new Date(item.date);
     const currentDate = new Date();
     const timeDiff = Math.abs(currentDate.getTime() - chargeDate.getTime());
@@ -16,25 +45,28 @@ export const handleRefundRequest = async (item, refundAccount, type, fetchUserLo
     const confirmed = window.confirm(
       `일시: ${new Date(item.date).toLocaleString()} \n금액: ${parseInt(item.inner_point).toLocaleString()}원 \n\n환불을 신청하시겠습니까?`
     );
+
     if (confirmed) {
       try {
-        const requestData = { chargeId: item.chargeId };
-        if (item.type === 3) {
-          // 계좌 결제의 경우 추가 계좌 정보 포함
+        const requestData: { chargeId: number; refundAccount?: RefundAccount } = { chargeId: item.chargeId };
+        if (itemType === 3 && refundAccount) {
           requestData.refundAccount = refundAccount;
         }
-        const response = await axiosInstance.post("v2/pg/refund", requestData);
+
+        const response = await axiosInstance.post<RefundResponse>("v2/pg/refund", requestData);
+        
         if (response.data.success) {
           alert(`환불 신청이 완료되었습니다: ${response.data.message}`);
-          await fetchUserLog(type); // 환불이 완료된 후 유저 로그를 다시 불러옵니다
-          await refetchUser(); // 유저 정보를 다시 불러옵니다
-          closeModal(); // 모달 닫기
+          await fetchUserLog(type);
+          await refetchUser();
+          closeModal();
         } else {
           alert(`환불에 실패하였습니다. 다시 시도해주세요. 에러: ${response.data.error}`);
         }
       } catch (error) {
         console.error(error);
-        const errorMessage = error.response?.data?.error || error.message;
+        const axiosError = error as AxiosError<RefundResponse>;
+        const errorMessage = axiosError.response?.data?.error || axiosError.message;
         alert(`환불에 실패하였습니다. 다시 시도해주세요. 에러: ${errorMessage}`);
       }
     }

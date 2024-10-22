@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
-export const PointLogWrap = styled.div`
+interface PointLogWrapProps {
+  backgroundColor?: string;
+}
+
+export const PointLogWrap = styled.div<PointLogWrapProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px; // 4. 패딩을 조금 늘려 내용이 더 잘 보이게 함
+  padding: 10px;
   margin-bottom: 10px;
   background-color: ${props => props.backgroundColor || '#fff'};
   border-radius: 8px;
@@ -15,7 +19,7 @@ export const PointLogWrap = styled.div`
 
   @media (max-width: 620px) {
     flex-direction: column;
-    align-items: center; // 중앙 정렬로 변경
+    align-items: center;
   }
 `;
 
@@ -23,7 +27,7 @@ export const DateText = styled.span`
   font-size: clamp(14px, 2vw, 16px);
   color: #666;
   width: 30%;
-  text-align: center; // 왼쪽 정렬에서 가운데 정렬로 변경
+  text-align: center;
 
   @media (max-width: 620px) {
     width: 100%;
@@ -48,7 +52,7 @@ export const ChargeTypeText = styled.span`
   font-size: clamp(12px, 1.8vw, 14px);
   color: #666;
   width: 30%;
-  text-align: center; // 오른쪽 정렬에서 가운데 정렬로 변경
+  text-align: center;
 
   @media (max-width: 620px) {
     width: 100%;
@@ -108,10 +112,10 @@ export const ModalButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
-  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
+  font-size: 18px;
+  font-weight: bold;
   margin-top: 10px;
-  width: 100%; /* 가로 길이를 100%로 설정여 부모 요소에 맞춤 */
+  width: 100%;
   
   &:hover {
     background-color: #d4b200;
@@ -125,8 +129,8 @@ export const ModalCloseButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 18px; /* 글꼴 크기를 18px로 증가 */
-  font-weight: bold; /* 글꼴 두께를 bold로 설정 */
+  font-size: 18px;
+  font-weight: bold;
   margin: 10px 0;
   width: 100%;
   max-width: 300px;
@@ -155,4 +159,3 @@ export const TypeText = styled.span`
   font-size: 14px;
   color: #666;
 `;
-

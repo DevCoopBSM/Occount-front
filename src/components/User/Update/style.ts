@@ -45,6 +45,13 @@ export const InputContainer = styled.div`
   margin-bottom: 20px;
 `;
 
+export const AddressInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
 export const InputLabel = styled.label`
   font-size: 16px;
   color: #333;
@@ -143,9 +150,12 @@ export const ErrorMessage = styled.p`
 `;
 
 export const SuccessMessage = styled.p<{ isVisible: boolean }>`
-  color: #4CAF50;
-  font-size: 14px;
-  margin-top: 5px;
+  color: green;
+  background-color: #e6ffe6;
+  border: 1px solid #b3ffb3;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
   display: ${props => props.isVisible ? 'block' : 'none'};
 `;
 
@@ -227,7 +237,7 @@ export const InvestmentButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 18px;
-  font-weight: bold;
+  font-weight bold;
   transition: all 0.3s ease;
   white-space: nowrap; // 텍스트가 줄바꿈되지 않도록 설정
 
@@ -331,4 +341,15 @@ export const ModalButton = styled.button`
 export const ModalActionButton = styled(PrimaryButton)`
   width: 100%;
   margin-top: 20px;
+`;
+
+export const AddressInput = styled(RegisterInput)`
+  flex: 1;
+  margin-right: 10px;
+  width: auto; // RegisterInput의 width: 100%를 덮어쓰기 위해
+`;
+
+export const AddressSearchButton = styled(VerificationButton)`
+  margin-bottom: 0;
+  white-space: nowrap;
 `;

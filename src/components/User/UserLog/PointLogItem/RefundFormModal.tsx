@@ -2,9 +2,23 @@ import React from 'react';
 import * as _ from "./style";
 import Modal from 'components/Modal';
 import { Bankenum } from './bank';
+import { RefundAccount } from './index';  // index.tsx에서 RefundAccount 인터페이스를 가져옵니다
 
+interface RefundFormModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+  refundAccount: RefundAccount;
+  setRefundAccount: React.Dispatch<React.SetStateAction<RefundAccount>>;
+  handleRefundRequest: () => void;
+}
 
-const RefundFormModal = ({ isOpen, closeModal, refundAccount, setRefundAccount, handleRefundRequest }) => {
+const RefundFormModal: React.FC<RefundFormModalProps> = ({ 
+  isOpen, 
+  closeModal, 
+  refundAccount, 
+  setRefundAccount, 
+  handleRefundRequest 
+}) => {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModal}>
       <_.ModalHeader>환불 계좌 정보 입력</_.ModalHeader>
@@ -13,7 +27,8 @@ const RefundFormModal = ({ isOpen, closeModal, refundAccount, setRefundAccount, 
           <_.DetailLabel>은행:</_.DetailLabel>
           <_.DetailSelect
             value={refundAccount.bank}
-            onChange={(e) => setRefundAccount({ ...refundAccount, bank: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+              setRefundAccount({ ...refundAccount, bank: e.target.value })}
           >
             <option value="">은행 선택</option>
             {Object.entries(Bankenum).map(([value, label]) => (
@@ -28,15 +43,17 @@ const RefundFormModal = ({ isOpen, closeModal, refundAccount, setRefundAccount, 
           <_.DetailInput
             type="text"
             value={refundAccount.holderName}
-            onChange={(e) => setRefundAccount({ ...refundAccount, holderName: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+              setRefundAccount({ ...refundAccount, holderName: e.target.value })}
           />
         </_.DetailRow>
         <_.DetailRow>
           <_.DetailLabel>계좌번호:</_.DetailLabel>
           <_.DetailInput
             type="text"
-            value={refundAccount.number}
-            onChange={(e) => setRefundAccount({ ...refundAccount, number: e.target.value })}
+            value={refundAccount.accountNumber}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+              setRefundAccount({ ...refundAccount, accountNumber: e.target.value })}
           />
         </_.DetailRow>
         <_.DetailRow>
@@ -44,7 +61,8 @@ const RefundFormModal = ({ isOpen, closeModal, refundAccount, setRefundAccount, 
           <_.DetailInput
             type="text"
             value={refundAccount.holderPhoneNumber}
-            onChange={(e) => setRefundAccount({ ...refundAccount, holderPhoneNumber: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+              setRefundAccount({ ...refundAccount, holderPhoneNumber: e.target.value })}
           />
         </_.DetailRow>
         <_.ModalFooter>
