@@ -62,12 +62,16 @@ export const TopBox = styled.div`
   }
 `;
 
-export const BottomBox = styled.div`
+interface BottomBoxProps {
+  isLoggedIn: boolean;
+}
+
+export const BottomBox = styled.div<BottomBoxProps>`
   display: flex;
-  justify-content: center;
+  justify-content: center; // 중앙 정렬로 변경
   align-items: center;
   margin: 0 auto;
-  padding: 15px;
+  padding: 15px 20px;
   width: 100%;
   max-width: 970px;
   background: #34343c;
@@ -75,8 +79,12 @@ export const BottomBox = styled.div`
 
   ${mediaQuery(TABLET_BREAKPOINT)} {
     width: 100%;
-    padding: 10px;
+    padding: 12px 15px;
     border-radius: 0 0 25px 25px;
+  }
+
+  ${mediaQuery(MOBILE_BREAKPOINT)} {
+    padding: 10px;
   }
 `;
 
@@ -205,19 +213,23 @@ export const CallLogoStyle = styled.img.attrs({
   object-position: right bottom;
 `;
 
-export const UserlogLink = styled(Link)`
+const SharedButtonStyles = `
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px 25px;
+  padding: 12px 20px;
   color: #fff;
   text-align: center;
   border-radius: 10px;
-  font-size: 24px; 
+  font-size: clamp(15px, 3.5vw, 22px);
   font-weight: 400;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  height: 55px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -225,30 +237,32 @@ export const UserlogLink = styled(Link)`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  ${mediaQuery(MOBILE_BREAKPOINT)} {
-    font-size: 20px;
-    padding: 12px 20px;
+  @media (max-width: 768px) {
+    font-size: clamp(14px, 3vw, 18px);
+    padding: 10px 15px;
+    height: 45px;
   }
 `;
 
-export const DisabledUserlogLink = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 25px;
-  color: #888;
-  text-align: center;
-  border-radius: 10px;
-  font-size: 24px; 
-  font-weight: 400;
-  text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: not-allowed;
+export const UserlogLink = styled(Link)`
+  ${SharedButtonStyles}
+  width: 45%;
+  margin-right: 20px; // 오른쪽 마진 추가
+`;
 
-  ${mediaQuery(MOBILE_BREAKPOINT)} {
-    font-size: 20px;
-    padding: 12px 20px;
-  }
+export const BarcodeButton = styled.button`
+  ${SharedButtonStyles}
+  width: 25%;
+  margin-left: 20px;
+  border: none;
+  cursor: pointer;
+`;
+
+export const DisabledUserlogLink = styled.span`
+  ${SharedButtonStyles}
+  width: 48%; // UserlogLink와 동일한 너비
+  cursor: not-allowed;
+  opacity: 0.6;
 `;
 
 export const MainTopInBox = styled.div`
@@ -511,3 +525,59 @@ export const PersonCountBox = styled.div`
     width: 100%;
   }
 `;
+
+// 모달 관련 스타일 추가
+export const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const BarcodeWrapper = styled.div`
+  margin: 20px 0;
+`;
+
+export const CloseButton = styled.button`
+  padding: 10px 20px;
+  background-color: #f0ce00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e0be00;
+  }
+`;
+
+// react-modal의 스타일을 오버라이드하기 위한 스타일
+export const modalStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
+    position: 'relative',
+    top: 'auto',
+    left: 'auto',
+    right: 'auto',
+    bottom: 'auto',
+    border: 'none',
+    background: 'white',
+    overflow: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    borderRadius: '4px',
+    outline: 'none',
+    padding: '20px',
+    maxWidth: '90%',
+    maxHeight: '90%',
+  },
+};
+

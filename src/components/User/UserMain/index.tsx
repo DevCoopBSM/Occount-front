@@ -5,7 +5,8 @@ import { useAuth } from 'contexts/authContext';
 import ChargeModal from './ChargeModal';
 import How2Use from 'assets/How2useBT.svg';
 import InquiryModal from './InquiryModal';
-import PersonCountDisplay from './PersonCountDisplay'; // 이 줄을 추가하세요
+import PersonCountDisplay from './PersonCountDisplay';
+import BarcodeModal from './BarcodeModal';
 
 interface User {
   point: number;
@@ -21,6 +22,8 @@ const Main: React.FC = () => {
   const [chargeAmount, setChargeAmount] = useState<number>(1000);
   const [formatPoint, setFormatPoint] = useState<string>('');
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
+  const [showBarcode, setShowBarcode] = useState<boolean>(false);
+  const [isBarcodeModalOpen, setIsBarcodeModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -70,6 +73,18 @@ const Main: React.FC = () => {
     setIsInquiryModalOpen(false);
   }, []);
 
+  const toggleBarcode = useCallback(() => {
+    setShowBarcode(prev => !prev);
+  }, []);
+
+  const handleOpenBarcodeModal = useCallback((): void => {
+    setIsBarcodeModalOpen(true);
+  }, []);
+
+  const handleCloseBarcodeModal = useCallback((): void => {
+    setIsBarcodeModalOpen(false);
+  }, []);
+
   return (
     <>
       <_.MainContent>
@@ -90,14 +105,19 @@ const Main: React.FC = () => {
             </_.MainTopInBox>
           </_.TopBox>
 
-          <_.BottomBox>
+          <_.BottomBox isLoggedIn={isLoggedIn}>
             {isLoggedIn ? (
-              <_.UserlogLink to="/userlog">
-                거래 내역 및 충전 환불
-              </_.UserlogLink>
+              <>
+                <_.UserlogLink to="/userlog">
+                  거래내역 및 환불
+                </_.UserlogLink>
+                <_.BarcodeButton onClick={handleOpenBarcodeModal}>
+                  바코드
+                </_.BarcodeButton>
+              </>
             ) : (
               <_.DisabledUserlogLink>
-                거래 내역 및 충전 환불
+                거래내역 및 환불
               </_.DisabledUserlogLink>
             )}
           </_.BottomBox>
@@ -138,7 +158,6 @@ const Main: React.FC = () => {
             </_.CallLogoWrapper>
           </_.AskBox>
         </_.BoxContainer>
-
       </_.MainContent>
 
       <ChargeModal 
@@ -155,6 +174,12 @@ const Main: React.FC = () => {
         isOpen={isInquiryModalOpen}
         onRequestClose={handleCloseInquiryModal}
         user={user as User}
+      />
+
+      <BarcodeModal
+        isOpen={isBarcodeModalOpen}
+        onRequestClose={handleCloseBarcodeModal}
+        userCode={user?.code || ''}
       />
     </>
   );
