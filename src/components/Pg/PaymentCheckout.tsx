@@ -172,17 +172,17 @@ export function PaymentCheckoutPage({
           <>
             <p>결제 수단을 선택해 주세요</p>
             <p>현재는 카드 결제만 지원합니다.</p>
-            <S.PrivacyAgreement>
-              <input
-                type="checkbox"
-                id="privacyAgreement"
-                checked={privacyAgreed}
-                onChange={(e) => setPrivacyAgreed(e.target.checked)}
-              />
-              <label htmlFor="privacyAgreement">
-                개인정보 제3자 제공에 동의합니다. (필수)
-              </label>
-            </S.PrivacyAgreement>
+            <S.PrivacyNotice>
+              <p>
+                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.
+                위의 내용의 동의여부를 결재진행 시작시 확인하며
+                이에 동의히지 않을 시 결제서비스를 이용하실 수 없습니다.
+              </p>
+              <p>
+                제공 정보: 이름, 전화번호, 결제정보<br/>
+                보유 기간: 전자상거래법에 따른 보관 기간 (5년)
+              </p>
+            </S.PrivacyNotice>
             <S.Button 
               onClick={handlePaymentStart}
               disabled={!privacyAgreed}

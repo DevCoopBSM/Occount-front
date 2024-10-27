@@ -78,3 +78,25 @@ export const PrivacyAgreement = styled.div`
     color: #333;
   }
 `;
+
+export const PrivacyNotice = styled.div`
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #495057;
+
+  p {
+    margin: 8px 0;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
