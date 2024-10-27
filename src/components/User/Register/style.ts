@@ -456,74 +456,145 @@ export const Checkbox = styled.input`
 
 export const PrivacyAgreementContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+`;
+
+export const PrivacyCheckboxWrapper = styled.div`
+  display: flex;
   align-items: center;
-  margin-top: 15px;
+  gap: 12px;
 `;
 
 export const PrivacyCheckbox = styled.input`
-  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #F49E15;
 `;
 
-export const PrivacyText = styled.label`
-  font-size: 14px;
+export const PrivacyLabel = styled.label`
+  font-size: 15px;
   color: #333;
+  cursor: pointer;
+  user-select: none;
 `;
 
-export const PrivacyContent = styled.div`
-  width: 100%;
-  max-width: 600px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+`;
+
+export const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
+  flex: 1;
+  padding: 14px 0;
+  border: none;
   border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-  overflow-y: auto;
-  max-height: 250px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-  h3 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #1a1a1a;
+  background-color: ${props => props.variant === 'primary' ? '#F49E15' : '#E0E0E0'};
+  color: ${props => props.variant === 'primary' ? 'white' : '#333'};
+
+  &:hover {
+    opacity: 0.9;
   }
 
-  h4 {
-    font-size: 15px;
-    font-weight: bold;
-    margin-top: 12px;
-    margin-bottom: 6px;
-    color: #333;
-  }
-
-  p {
-    margin-bottom: 8px;
-  }
-
-  ol, ul {
-    margin-left: 20px;
-    margin-bottom: 10px;
-  }
-
-  li {
-    margin-bottom: 5px;
-  }
-
-  ul li {
-    list-style-type: disc;
+  &:disabled {
+    background-color: #E0E0E0;
+    color: #999;
+    cursor: not-allowed;
   }
 `;
 
 export const PrivacyNotice = styled.div`
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  font-size: 13px;
-  color: #495057;
-  line-height: 1.4;
+  margin: 20px 0;
+  padding: 15px 20px;
+  background: #fff7e6;
+  border-radius: 6px;
+  border-left: 4px solid #f49e15;
+
+  p {
+    font-size: 13px;
+    color: #666;
+    margin: 5px 0;
+    line-height: 1.5;
+
+    &:before {
+      content: "•";
+      margin-right: 8px;
+      color: #f49e15;
+    }
+  }
+`;
+
+export const PrivacyContent = styled.div`
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.6;
+
+  /* 스크롤바 스타일링 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  /* 테이블 스타일링 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  /* 제목 스타일링 */
+  h3 {
+    color: #333;
+    margin: 24px 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  /* 문단 스타일링 */
+  p {
+    margin: 12px 0;
+    color: #666;
+  }
 `;

@@ -62,7 +62,6 @@ const Register: React.FC = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [step, setStep] = useState(1);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const [errors, setErrors] = useState<ErrorState>({});
   const [emailPrefix, setEmailPrefix] = useState('');
   const [passwordErrors, setPasswordErrors] = useState({
     length: false,
@@ -73,8 +72,9 @@ const Register: React.FC = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [pinMatch, setPinMatch] = useState(true);
   const [showConfirmPin, setShowConfirmPin] = useState(false);
-  const [isPrivacyAgreed, setIsPrivacyAgreed] = useState(false);
-  const [showPrivacyAgreement, setShowPrivacyAgreement] = useState(false);
+  const [isPrivacyCollectionAgreed, setIsPrivacyCollectionAgreed] = useState(false);
+  const [isPrivacyThirdPartyAgreed, setIsPrivacyThirdPartyAgreed] = useState(false);
+  const [errors, setErrors] = useState<ErrorState>({});
 
   const confirmPinSpring = useSpring({
     height: showConfirmPin ? 80 : 0,
@@ -204,10 +204,10 @@ const Register: React.FC = () => {
       alert("본인인증을 먼저 완료해주세요.");
       return;
     }
-    if (!isPrivacyAgreed) { // 개인정보 동의 체크
+    if (!isPrivacyCollectionAgreed || !isPrivacyThirdPartyAgreed) {
       setErrors(prevErrors => ({
         ...prevErrors,
-        privacyAgreement: "개인정보 공개에 동의해야 합니다."
+        privacyAgreement: "모든 필수 약관에 동의해주세요"
       }));
       return;
     }
@@ -261,8 +261,11 @@ const Register: React.FC = () => {
         }
         break;
       case 2:
-        if (!isPrivacyAgreed) {
+        if (!isPrivacyCollectionAgreed) {
           newErrors.privacyAgreement = "개인정보 수집 및 이용에 동의해주세요.";
+        }
+        if (!isPrivacyThirdPartyAgreed) {
+          newErrors.privacyThirdParty = "개인정보 제3자 제공에 동의해주세요.";
         }
         break;
       case 3:
@@ -375,48 +378,184 @@ const Register: React.FC = () => {
           <R.AnimatedContainer style={fadeIn}>
             <R.StepTitle>개인정보 수집 및 이용 동의</R.StepTitle>
             <R.PrivacyContent>
-              <h3>개인 정보 수집 및 이용 동의서</h3>
-              <p>DEVCOOP는 아래와 같은 사유로 귀하의 개인 정보를 수집합니다.</p>
-              
-              <h4>정보 수집 목적 및 품목</h4>
-              <ol>
-                <li><strong>회원 가입</strong>: 회원 관리를 위한 최소한의 정보
-                  <ul><li>이름, 생년월일, 이메일, 전화번호, 암호화된 개인인증 확인값(CI), 주소 등</li></ul>
-                </li>
-                <li><strong>서비스 이용 정보</strong>: 매점 운영 및 개인별 맞춤형 서비스 제공을 위한 정보
-                  <ul><li>충전, 결제 기록, 문의하기 등의 서비스 이용 정보</li></ul>
-                </li>
-                <li><strong>개인 결제수단 등록</strong>: 빌링키를 등록하여 정기결제를 진행하기 위한 정보
-                  <ul><li>빌링키 정보</li></ul>
-                </li>
-              </ol>
-              
-              <h4>보유 및 이용 기간</h4>
-              <p>수집일로부터 졸업 및 학적변동 등 조합원의 자격이 소실되는 시기까지(최대 3년)</p>
+              {/* 1. 처리하는 개인정보 항목 추가 */}
+              <h3>1. 개인정보의 처리 목적 및 항목</h3>
+              <table>
+                <tr>
+                  <th>구분</th>
+                  <th>처리 목적</th>
+                  <th>처리 항목</th>
+                </tr>
+                <tr>
+                  <td>필수항목</td>
+                  <td>
+                    - 회원 가입 및 관리<br/>
+                    - 매점 서비스 제공<br/>
+                    - 본인 확인 및 인증<br/>
+                    - 결제 서비스 제공
+                  </td>
+                  <td>
+                    - 이름, 생년월일, 이메일<br/>
+                    - 전화번호, 주소<br/>
+                    - CI(연계정보)<br/>
+                    - 학생의 경우: 학생증 바코드
+                  </td>
+                </tr>
+                <tr>
+                  <td>본인인증 시</td>
+                  <td>- 본인 확인 및 인증</td>
+                  <td>
+                    - 이름, 생년월일, 성별<br/>
+                    - 내/외국인 정보<br/>
+                    - 휴대폰 번호<br/>
+                    - CI/DI 정보
+                  </td>
+                </tr>
+              </table>
+
+              {/* 2. 보유기간 및 파기 */}
+              <h3>2. 개인정보의 보유기간 및 파기</h3>
+              <table>
+                <tr>
+                  <th>보유 기간</th>
+                  <td>
+                    회원 탈퇴 시 또는 조합원 자격 소실 시점으로부터 1년
+                  </td>
+                </tr>
+                <tr>
+                  <th>법령에 따른<br/>보관 의무</th>
+                  <td>
+                    - 전자상거래법: 거래기록 5년<br/>
+                    - 통신비밀보호법: 로그기록 3개월
+                  </td>
+                </tr>
+                <tr>
+                  <th>파기 방법</th>
+                  <td>
+                    - 전자적 파일: 복구 불가능한 방법으로 영구 삭제<br/>
+                    - 기타 기록물: 파 또는 소각
+                  </td>
+                </tr>
+              </table>
+
+              {/* 3. 제3자 제공 */}
+              <h3>3. 개인정보 제3자 제공</h3>
+              <table>
+                <tr>
+                  <th>제공받는 자</th>
+                  <td>스마트로(주)</td>
+                </tr>
+                <tr>
+                  <th>제공 목적</th>
+                  <td>전자결제서비스 제공 및 결제도용 방지</td>
+                </tr>
+                <tr>
+                  <th>제공 항목</th>
+                  <td>이름, 전화번호, 결제정보</td>
+                </tr>
+                <tr>
+                  <th>보유 기간</th>
+                  <td>전자상거래법에 따른 보관 기간</td>
+                </tr>
+              </table>
+
+              {/* 4. 처리위탁 */}
+              <h3>4. 개인정보 처리위탁</h3>
+              <table>
+                <tr>
+                  <th>수탁자</th>
+                  <th>위탁 업무 내용</th>
+                </tr>
+                <tr>
+                  <td>KG이니시스(주)</td>
+                  <td>
+                    - 본인확인(간편인증) 서비스<br/>
+                    - 수집 항목: 이름, 생년월일, 성별, 내/외국인 정보, 휴대폰 번호, CI/DI 정보
+                  </td>
+                </tr>
+                <tr>
+                  <td>스마트로(주)</td>
+                  <td>결제처리 서비스</td>
+                </tr>
+              </table>
+
+              {/* 5. 이용자 권리 */}
+              <h3>5. 정보주체의 권리·의무 및 행사방법</h3>
+              <p>
+                이용자는 다음과 같은 권리를 행사할 수 있습니다:<br/>
+                - 개인정보 열람, 정정·삭제, 처리정지 요구<br/>
+                - 개인정보 처리에 대한 동의 철회<br/>
+                ※ 권리 행사는 홈페이지 내 설정 메뉴 또는 개인정보 보호책임자에게 서면, 전화 또는 이메일로 연락하여 요청하실 수 있습니다.
+              </p>
+
+              {/* 6. 안전성 확보 조치 */}
+              <h3>6. 개인정보의 안전성 확보 조치</h3>
+              <p>
+                회사는 개인정보보호법 제29조에 따라 다음과 같은 안전성 확보 조치를 취하고 있습니다:<br/>
+                - 개인정보 암호화: 비밀번호 등 중요정보는 암호화하여 보관<br/>
+                - 해킹 등에 대비한 기술적 대책: 암호화 통신 사용, 접근통제 시스템 설치<br/>
+                - 접근권한 관리: 개인정보처리시스템에 대한 접근권한 차등부여<br/>
+                - 개인정보 취급자 최소화 및 교육 실시
+              </p>
+
+              {/* 7. 개인정보 보호책임자 */}
+              <h3>7. 개인정보 보호책임자</h3>
+              <table>
+                <tr>
+                  <th>이사장</th>
+                  <td>김민경</td>
+                </tr>
+                <tr>
+                  <th>연락처</th>
+                  <td>이메일: wonching76@naver.com</td>
+                </tr>
+              </table>
             </R.PrivacyContent>
 
             <R.PrivacyNotice>
-              <p>귀하는 본 개인 정보 수집 및 이용에 대해 동의를 거부할 권리가 있습니다.</p>
-              <p>필수 정보 수집 동의를 거부할 경우, O-ring의 주요 서비스 이용이 제한됩니다.</p>
+              <p>위 개인정보 수집·이용 및 제3자 제공에 대한 동의를 거부할 권리가 있습니다.</p>
+              <p>다만, 동의를 거부할 경우 회원가입 및 O-ring 서비스 이용이 불가능합니다.</p>
             </R.PrivacyNotice>
 
+            {/* 분리된 동의 체크박스 */}
             <R.PrivacyAgreementContainer>
-              <R.PrivacyCheckbox
-                type="checkbox"
-                checked={isPrivacyAgreed}
-                onChange={() => setIsPrivacyAgreed(!isPrivacyAgreed)}
-              />
-              <R.PrivacyText>위와 같은 개인정보의 수집 및 이용에 동의합니다.</R.PrivacyText>
+              <R.PrivacyCheckboxWrapper>
+                <R.PrivacyCheckbox
+                  type="checkbox"
+                  id="privacyCollectionAgreement"
+                  checked={isPrivacyCollectionAgreed}
+                  onChange={() => setIsPrivacyCollectionAgreed(!isPrivacyCollectionAgreed)}
+                />
+                <R.PrivacyLabel htmlFor="privacyCollectionAgreement">
+                  개인정보 수집 및 이용에 동의합니다. (필수)
+                </R.PrivacyLabel>
+              </R.PrivacyCheckboxWrapper>
+              
+              <R.PrivacyCheckboxWrapper>
+                <R.PrivacyCheckbox
+                  type="checkbox"
+                  id="privacyThirdPartyAgreement"
+                  checked={isPrivacyThirdPartyAgreed}
+                  onChange={() => setIsPrivacyThirdPartyAgreed(!isPrivacyThirdPartyAgreed)}
+                />
+                <R.PrivacyLabel htmlFor="privacyThirdPartyAgreement">
+                  개인정보 제3자 제공에 동의합니다. (필수)
+                </R.PrivacyLabel>
+              </R.PrivacyCheckboxWrapper>
             </R.PrivacyAgreementContainer>
             {errors.privacyAgreement && <R.ErrorMessage isVisible={true}>{errors.privacyAgreement}</R.ErrorMessage>}
-            <R.ButtonContainer>
-              <R.NavigationButton onClick={prevStep} isPrev>
+            <R.ButtonGroup>
+              <R.StyledButton onClick={prevStep} variant="secondary">
                 이전
-              </R.NavigationButton>
-              <R.NavigationButton onClick={nextStep} disabled={!isPrivacyAgreed}>
+              </R.StyledButton>
+              <R.StyledButton 
+                onClick={nextStep}
+                variant="primary"
+                disabled={!isPrivacyAgreed}
+              >
                 다음
-              </R.NavigationButton>
-            </R.ButtonContainer>
+              </R.StyledButton>
+            </R.ButtonGroup>
           </R.AnimatedContainer>
         );
       case 3:
@@ -465,7 +604,7 @@ const Register: React.FC = () => {
                 disabled={isVerified}
                 style={{backgroundColor: isVerified ? '#D9D9D9' : '#F49E15', color: isVerified ? '#333' : 'white'}}
               >
-                {isVerified ? "본인��증 완료" : "본인인증"}
+                {isVerified ? "본인인증 완료" : "본인인증"}
               </R.Button>
             )}
             <R.ButtonContainer>
@@ -659,11 +798,13 @@ const Register: React.FC = () => {
     }
   };
 
+  const isPrivacyAgreed = isPrivacyCollectionAgreed && isPrivacyThirdPartyAgreed;
+
   return (
     <R.Container>
       <R.LogoImg src={imgLogo} alt="logo" />
       <R.ContentContainer>
-        {showPrivacyAgreement ? renderStep() : renderStep()}
+        {renderStep()}
       </R.ContentContainer>
     </R.Container>
   );

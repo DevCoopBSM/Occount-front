@@ -31,7 +31,6 @@ export interface RegisterRequest {
 
 export interface ErrorState extends Partial<FormData> {
     userType?: string;
-    verification?: string;
     userEmail?: string;
     userPassword?: string;
     confirmPassword?: string;
@@ -39,7 +38,10 @@ export interface ErrorState extends Partial<FormData> {
     userPin?: string;
     confirmPin?: string;
     userCode?: string;
+    verification?: string;
     privacyAgreement?: string;
+    privacyThirdParty?: string;
+    addressDetail?: string;
 }
 
 export interface UserInfo {

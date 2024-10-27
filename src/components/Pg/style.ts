@@ -61,3 +61,20 @@ export const ModalFooter = styled.div`
     gap: 10px;
   }
 `;
+
+export const PrivacyAgreement = styled.div`
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  label {
+    font-size: 14px;
+    color: #333;
+  }
+`;

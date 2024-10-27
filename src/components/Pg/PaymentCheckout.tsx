@@ -64,6 +64,7 @@ export function PaymentCheckoutPage({
 }: PaymentCheckoutPageProps) {
   const [payMethod, setPayMethod] = useState<string | null>(null);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const navigate = useNavigate();
 
   const requestPay = useCallback(() => {
@@ -155,6 +156,14 @@ export function PaymentCheckoutPage({
     }
   }, [payMethod, requestPay]);
 
+  const handlePaymentStart = () => {
+    if (!privacyAgreed) {
+      alert('개인정보 제3자 제공에 동의해주세요.');
+      return;
+    }
+    setPayMethod('CARD');
+  };
+
   return (
     <S.Wrapper>
       <S.BoxSection>
@@ -162,8 +171,24 @@ export function PaymentCheckoutPage({
         {!payMethod ? (
           <>
             <p>결제 수단을 선택해 주세요</p>
-            <p> 현재는 카드 결제만 지원합니다.</p>
-            <S.Button onClick={() => setPayMethod('CARD')}>카드 결제</S.Button>
+            <p>현재는 카드 결제만 지원합니다.</p>
+            <S.PrivacyAgreement>
+              <input
+                type="checkbox"
+                id="privacyAgreement"
+                checked={privacyAgreed}
+                onChange={(e) => setPrivacyAgreed(e.target.checked)}
+              />
+              <label htmlFor="privacyAgreement">
+                개인정보 제3자 제공에 동의합니다. (필수)
+              </label>
+            </S.PrivacyAgreement>
+            <S.Button 
+              onClick={handlePaymentStart}
+              disabled={!privacyAgreed}
+            >
+              카드 결제
+            </S.Button>
             <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
           </>
         ) : (
