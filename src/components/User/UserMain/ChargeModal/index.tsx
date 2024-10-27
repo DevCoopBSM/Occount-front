@@ -55,7 +55,15 @@ const ChargeModal: React.FC<ChargeModalProps> = ({
 
   return (
     <>
-      <_.StyledModal isOpen={isOpen} onRequestClose={onRequestClose}>
+      <_.StyledModal 
+        isOpen={isOpen} 
+        onRequestClose={onRequestClose}
+        style={{
+          maxWidth: "500px",
+          padding: "24px",
+          borderRadius: "16px",
+        }}
+      >
         <_.ModalHeader>충전하기</_.ModalHeader>
         <_.ModalContent>
           <_.HighlightText>
@@ -111,6 +119,12 @@ const ChargeModal: React.FC<ChargeModalProps> = ({
       <_.StyledModal
         isOpen={isPaymentModalOpen}
         onRequestClose={handleClosePaymentModal}
+        style={{
+          maxWidth: "400px",
+          padding: "24px",
+          borderRadius: "16px",
+          mobileFullScreen: true, // 모바일에서 전체화면으로 표시
+        }}
       >
         {user && (
           <PaymentCheckoutPage

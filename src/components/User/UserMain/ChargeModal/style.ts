@@ -356,25 +356,22 @@ export const SubListItem = styled.li`
   }
 `;
 
-export const StyledModal = styled(Modal)`
-  .modal-content {
-    width: 90%;
-    max-width: none; // 최대 너비 제한 제거
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    
-    @media (max-width: ${TABLET_BREAKPOINT}) {
-      width: 95%;
-      padding: 15px;
-    }
-
-    @media (max-width: ${MOBILE_BREAKPOINT}) {
-      width: 100%;
-      padding: 10px;
-      border-radius: 0; // 모바일에서는 전체 화면으로
-    }
+export const StyledModal = styled(Modal).attrs((props) => ({
+  style: {
+    width: "90%",
+    backgroundColor: "#fff",
+    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
+    ...props.style, // 외부에서 전달된 style props로 덮어쓰기
+  }
+}))`
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    ${props => props.style?.mobileFullScreen && `
+      .modal-content {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        border-radius: 0;
+      }
+    `}
   }
 `;

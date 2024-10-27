@@ -64,14 +64,15 @@ export function PaymentCheckoutPage({
 }: PaymentCheckoutPageProps) {
   const [payMethod, setPayMethod] = useState<string | null>(null);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
-  const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const navigate = useNavigate();
 
   const requestPay = useCallback(() => {
     if (!PortOne) {
       console.error('PortOne SDK가 로드되지 않았습니다.');
       setModalContent(
-        <p>결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.</p>
+        <S.LoadingText>
+          결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.
+        </S.LoadingText>
       );
       return;
     }
@@ -109,12 +110,13 @@ export function PaymentCheckoutPage({
       };
     }
 
-    setModalContent(<p>결제 요청을 진행 중입니다...</p>);
+    setModalContent(
+      <S.LoadingText>결제 요청을 진행 중입니다...</S.LoadingText>
+    );
 
     PortOne.requestPayment(paymentOptions as any)
       .then((response: PortOne.PaymentResponse) => {
-        console.log('결제 요청 응답', response);
-        if (!response.code) {  // code가 없으면 성공
+        if (!response.code) {
           console.log('Navigate to success:', {
             status: 'success',
             paymentId: response.paymentId,
@@ -134,18 +136,21 @@ export function PaymentCheckoutPage({
             },
           });
         } else {
-          console.log('Payment failed:', {
-            status: 'failure',
-            code: response.code,
-            message: response.message,
-          });
-          setModalContent(<p>결제에 실패했습니다: {response.message}</p>);
+          setModalContent(
+            <S.LoadingText>
+              결제에 실패했습니다: {response.message}
+            </S.LoadingText>
+          );
           setTimeout(() => onRequestClose(), 3000);
         }
       })
       .catch((error) => {
         console.error('결제 요청 실패', error);
-        setModalContent(<p>결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</p>);
+        setModalContent(
+          <S.LoadingText>
+            결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.
+          </S.LoadingText>
+        );
         setTimeout(() => onRequestClose(), 3000);
       });
   }, [customerEmail, customerName, customerPhone, rechargeAmount, payMethod, navigate, onRequestClose, paymentType]);
@@ -157,56 +162,60 @@ export function PaymentCheckoutPage({
   }, [payMethod, requestPay]);
 
   const handlePaymentStart = () => {
-    if (!privacyAgreed) {
-      alert('개인정보 제3자 제공에 동의해주세요.');
-      return;
-    }
     setPayMethod('CARD');
   };
 
   return (
     <S.Wrapper>
       <S.BoxSection>
-        <h1>{paymentType === 'aripay' ? '아리페이 충전' : '출자금 납부'}</h1>
         {!payMethod ? (
-          <>
-            <p>결제 수단을 선택해 주세요</p>
-            <p>현재는 카드 결제만 지원합니다.</p>
-            <S.PrivacyNotice>
-              <p>
+          <S.PaymentModal>
+            <S.Title>
+              {paymentType === 'aripay' ? '아리페이 충전' : '출자금 납부'}
+            </S.Title>
+            <S.SubTitle>결제 수단을 선택해 주세요</S.SubTitle>
+            <S.Description>현재는 카드 결제만 지원합니다.</S.Description>
+            
+            <S.NoticeBox>
+              <S.NoticeText>
                 결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.
-                위의 내용의 동의여부를 결재진행 시작시 확인하며
-                이에 동의히지 않을 시 결제서비스를 이용하실 수 없습니다.
-              </p>
-              <p>
-                제공 정보: 이름, 전화번호, 결제정보<br/>
-                보유 기간: 전자상거래법에 따른 보관 기간 (5년)
-              </p>
-            </S.PrivacyNotice>
-            <S.Button 
-              onClick={handlePaymentStart}
-              disabled={!privacyAgreed}
-            >
-              카드 결제
-            </S.Button>
-            <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
-          </>
+                결제 진행시 동의 여부를 물어보며 
+                이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
+              </S.NoticeText>
+              <S.InfoTable>
+                <S.InfoRow>
+                  <S.InfoLabel>제공 정보</S.InfoLabel>
+                  <S.InfoValue>이름, 전화번호, 결제정보, 이메일</S.InfoValue>
+                </S.InfoRow>
+                <S.InfoRow>
+                  <S.InfoLabel>보유 기간</S.InfoLabel>
+                  <S.InfoValue>전자상거래법에 따른 보관 기간 (5년)</S.InfoValue>
+                </S.InfoRow>
+              </S.InfoTable>
+            </S.NoticeBox>
+
+            <S.ButtonGroup>
+              <S.PaymentButton onClick={handlePaymentStart}>
+                카드 결제
+              </S.PaymentButton>
+              <S.CancelButton onClick={onRequestClose}>
+                닫기
+              </S.CancelButton>
+            </S.ButtonGroup>
+          </S.PaymentModal>
         ) : (
           <Modal
             isOpen={true}
             onRequestClose={onRequestClose}
-          >
-            <div style={{
+            style={{
+              backgroundColor: '#fff',  // 배경색을 하얀색으로
+              padding: '24px',
+              borderRadius: '16px',
               width: '90%',
-              maxWidth: '600px',
-              margin: '0 auto',
-              overflow: 'auto',
-              maxHeight: '90vh',
-              position: 'relative',
-            }}>
-              {modalContent}
-              <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
-            </div>
+              maxWidth: '300px'
+            }}
+          >
+            {modalContent}
           </Modal>
         )}
       </S.BoxSection>

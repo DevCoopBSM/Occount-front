@@ -5,6 +5,17 @@ export enum UserType {
     OTHER = 'OTHER'
 }
 
+// 스텝 관련 타입 추가
+export const STEPS = {
+    USER_TYPE: 1,
+    PRIVACY: 2,
+    VERIFICATION: 3,
+    ACCOUNT: 4,
+    ADDITIONAL_INFO: 5,
+} as const;
+
+export type StepType = typeof STEPS[keyof typeof STEPS];
+
 export interface FormData {
     userName: string;
     userEmail: string;
@@ -30,6 +41,7 @@ export interface RegisterRequest {
 }
 
 export interface ErrorState extends Partial<FormData> {
+    [key: string]: string;  
     userType?: string;
     userEmail?: string;
     userPassword?: string;

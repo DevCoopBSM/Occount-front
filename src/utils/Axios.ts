@@ -87,7 +87,9 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
 
-      if (originalRequest.url === 'v2/auth/login') {
+      // 로그인과 비밀번호 확인 요청은 401 에러가 발생해도 로그아웃 처리하지 않음
+      if (originalRequest.url === 'v2/auth/login' || 
+          originalRequest.url === 'v2/account/verify') {
         return Promise.reject(error);
       }
 

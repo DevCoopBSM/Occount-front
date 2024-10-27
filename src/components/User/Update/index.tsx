@@ -1,37 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../utils/Axios';
+import axiosInstance from 'utils/Axios';
 import axios from 'axios';
 import * as S from './style';
-import InvestmentModal from '../../Pg/InvestmentModal';
+import InvestmentModal from 'components/Pg/InvestmentModal';
 import { FaMoneyBillWave } from 'react-icons/fa';  // 아이콘 import
-import { useAuth } from '../../../contexts/authContext';  // useAuth 훅 import
-
-enum UserType {
-    TEACHER = "교사",
-    STUDENT = "학생",
-    PARENT = "학부모"
-}
-
-enum Role {
-    ROLE_DEACTIVATED = "비활성",
-    ROLE_USER = "일반 사용자",
-    ROLE_MEMBER = "조합원",
-    ROLE_COOP = "매점부",
-    ROLE_ADMIN = "관리자"
-}
-
-interface UserInfo {
-    userName: string;
-    userEmail: string;
-    userPassword: string;
-    userAddress: string;
-    userPin: string;
-    userType: UserType;
-    role: Role;
-    userPhone: string;
-    userBirthDate: string;
-    investmentAmount: number;
-}
+import { useAuth } from 'contexts/authContext';  // useAuth 훅 import
+import { UserType, Role, UserInfo } from './types';
 
 const Update = () => {
     const { user, refetchUser } = useAuth();  // useAuth 훅 사용
@@ -303,6 +277,9 @@ const Update = () => {
                 <S.StepTitle>회원 정보 수정</S.StepTitle>
                 {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
                 <S.SuccessMessage isVisible={isSuccessMessageVisible}>{successMessage}</S.SuccessMessage>
+                
+
+                
                 <form onSubmit={handleSubmit}>
                     <S.InputContainer>
                         <S.InputLabel>이름</S.InputLabel>
@@ -373,7 +350,10 @@ const Update = () => {
                             />
                         </S.InputContainer>
                     )}
-
+                {/* 인증 설명 추가 */}
+                <S.InfoMessage>
+                    ⚠️ 보안을 위해 비밀번호/PIN 변경 및 전화번호 수정은 현재 비밀번호 인증이 필요합니다.
+                </S.InfoMessage>
                     {!isVerified && (
                         <S.AuthContainer>
                             <S.InputContainer>
