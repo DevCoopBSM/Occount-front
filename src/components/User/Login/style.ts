@@ -216,3 +216,27 @@ export const LoadingOverlay = styled.div`
   align-items: center;
   z-index: 1001;
 `;
+
+export const RememberMeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+`;
+
+export const RememberMeCheckbox = styled.input`
+  margin-right: 10px;
+  cursor: pointer;
+`;
+
+export const RememberMeLabel = styled.label`
+  font-size: clamp(14px, 2.5vw, 16px);
+  color: #808080;
+  cursor: pointer;
+  user-select: none;
+
+  @media (max-width: 768px) {
+    font-size: clamp(12px, 2vw, 14px);
+  }
+`;

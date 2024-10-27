@@ -30,37 +30,51 @@ export const InputContainer = styled.div`
 
 export const PwChangeInput = styled.input`
   width: 100%;
-  height: 60px;
-  border: none;
-  margin-bottom: 10px;
+  height: 50px;
+  border: 1px solid #E0E0E0;
+  margin-bottom: 5px;
   padding: 10px;
   border-radius: 4px;
-  background: #F2F2F2;
-  color: #808080;
+  background: #FFFFFF;
+  color: #333333;
   font-style: normal;
   font-weight: 400;
-  font-size: clamp(16px, 3vw, 24px);
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #41434C;
+    box-shadow: 0 0 0 2px rgba(65, 67, 76, 0.2);
+  }
 `;
 
 export const PwChangeButton = styled.button`
   width: 100%;
   max-width: 400px;
-  height: clamp(50px, 8vw, 80px);
+  height: 50px;
   background-color: #41434C;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
   font-style: normal;
-  font-weight: 800;
-  line-height: 40px;
-  font-size: clamp(20px, 4vw, 32px);
+  font-weight: 600;
+  font-size: 18px;
   transition: all 0.3s ease;
 
+  &:hover {
+    background-color: #2E303A;
+  }
+
+  &:disabled {
+    background-color: #CCCCCC;
+    cursor: not-allowed;
+  }
+
   @media (max-width: 768px) {
-    max-width: 80%;
-    height: clamp(40px, 6vw, 60px);
-    font-size: clamp(16px, 3vw, 24px);
+    max-width: 100%;
+    font-size: 16px;
   }
 `;
 
@@ -97,4 +111,18 @@ export const SuccessMessage = styled.div`
   font-size: 24px;
   font-weight: 400;
   color: #4CAF50; /* 성공 메시지 색상 */
+`;
+
+export const ErrorMessage = styled.p`
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+`;
+
+export const InputWrapper = styled.div`
+  width: 100%;
+  margin-bottom: 20px;
 `;

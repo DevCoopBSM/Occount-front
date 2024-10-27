@@ -11,9 +11,18 @@ const Login: React.FC = () => {
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [rememberEmail, setRememberEmail] = useState<boolean>(false);
 
   const emailInputRef = useRef<HTMLInputElement>(null);
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('savedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberEmail(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -43,12 +52,14 @@ const Login: React.FC = () => {
   }, [errorMessage, setErrorMessage]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     if (name === "email") {
       setEmail(value);
     } else if (name === "password") {
       setPassword(value);
+    } else if (name === "rememberEmail") {
+      setRememberEmail(checked);
     }
     
     if (isErrorVisible) {
@@ -60,12 +71,17 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await unifiedLogin(email, password, navigate);
+      if (rememberEmail) {
+        localStorage.setItem('savedEmail', email);
+      } else {
+        localStorage.removeItem('savedEmail');
+      }
     } catch (error: any) {
       console.error('Login failed:', error);
       const errMsg = error.response?.data?.message || error.message || '로그인에 실패했습니다.';
       setErrorMessage(errMsg);
     }
-  }, [email, password, unifiedLogin, navigate, setErrorMessage]);
+  }, [email, password, rememberEmail, unifiedLogin, navigate, setErrorMessage]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === "Enter") {
@@ -96,6 +112,15 @@ const Login: React.FC = () => {
                 onChange={handleInputChange}
                 placeholder=" 비밀번호를 입력해주세요"
               />
+              <L.RememberMeContainer>
+                <L.RememberMeCheckbox
+                  type="checkbox"
+                  name="rememberEmail"
+                  checked={rememberEmail}
+                  onChange={handleInputChange}
+                />
+                <L.RememberMeLabel>아이디 저장</L.RememberMeLabel>
+              </L.RememberMeContainer>
             </L.InputContainer>
             <L.ActionLinks>
               <L.ActionButton type="button" onClick={() => navigate('/register')}>회원가입하기</L.ActionButton>
