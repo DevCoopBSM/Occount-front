@@ -32,7 +32,7 @@ export const ModalOverlay = styled.div<ModalOverlayProps>`
 `;
 
 export const ModalContent = styled.div<ModalContentProps>`
-  background-color: ${props => props.$style.backgroundColor || 'transparent'};
+  background-color: ${props => props.$style.backgroundColor || '#ffffff'};
   padding: ${props => props.$style.padding || '0'};
   border-radius: ${props => props.$style.borderRadius || '0'};
   overflow-y: auto;
