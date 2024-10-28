@@ -37,6 +37,8 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({
           <Title>조합원 가입 안내</Title>
           <Content>
             정식 조합원으로 가입하시면 더 많은 혜택을 받으실 수 있습니다.
+            학교행사로 지급되는 아리페이를 더욱 편하게 사용가능하고
+            총회 때 참가자격이 주어지고 다양한 상품을 제공받습니다!!
             출자금 납부(최소 만원)를 통해 정식 조합원이 되어주세요!<br />
             <strong>출자금은 졸업 및 탈퇴 시 환급 및 기부를 결정할 수 있습니다.</strong>
           </Content>

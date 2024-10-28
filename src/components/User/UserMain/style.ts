@@ -312,6 +312,7 @@ export const TopBoxText2 = styled.p`
   text-overflow: ellipsis;
 `;
 
+// 충전 버튼 스타일 추가
 export const ChargeButton = styled.button`
   font-size: clamp(24px, 3vw, 36px);
   background-color: rgb(240, 206, 0);
@@ -349,6 +350,19 @@ export const ChargeButton = styled.button`
     font-size: clamp(18px, 2vw, 24px);
     max-width: 200px;
     aspect-ratio: 5 / 1;
+  }
+`;
+
+// 비활성화된 충전 버튼 스타일 추가
+export const DisabledChargeButton = styled(ChargeButton)`
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: none;
+    box-shadow: none;
   }
 `;
 

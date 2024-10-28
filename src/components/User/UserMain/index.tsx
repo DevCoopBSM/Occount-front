@@ -95,10 +95,15 @@ const Main: React.FC = () => {
                   {isLoggedIn ? `${formatPoint}원` : "로그인 후 조회 가능합니다"}
                 </_.TopBoxText2>
               </_.TopBoxContent>
-              {isLoggedIn && (
+              {isLoggedIn && isUserMember() && ( // 조합원인 경우에만 충전 버튼 활성화
                 <_.ChargeButton onClick={handleOpenChargeModal}>
                   충전하기
                 </_.ChargeButton>
+              )}
+              {isLoggedIn && !isUserMember() && ( // 조합원이 아닌 경우 비활성화된 버튼 표시
+                <_.DisabledChargeButton onClick={() => alert('정식 조합원만 이용 가능한 기능입니다.')}>
+                  충전하기
+                </_.DisabledChargeButton>
               )}
             </_.MainTopInBox>
           </_.TopBox>
