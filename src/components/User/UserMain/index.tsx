@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import * as _ from './style';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
@@ -8,7 +8,7 @@ import InquiryModal from './InquiryModal';
 import PersonCountDisplay from './PersonCountDisplay';
 import BarcodeModal from './BarcodeModal';
 import InvestmentModal from './InvestmentModal';
-import NoticeList from './Notice/NoticeList'; // 공지사항 목록 컴포넌트 임포트
+import NoticeList from './Notice/NoticeList';
 
 interface User {
   point: number;
@@ -16,24 +16,23 @@ interface User {
   email: string;
   name: string;
   phone?: string;
-  role?: string;  // role 추가
-  code: string;   // barcode에 필요한 code도 추가
+  role?: string;
+  code: string;
 }
 
 const Main: React.FC = () => {
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState<boolean>(false);
-  const [chargeAmount, setChargeAmount] = useState<number>(1000);
   const [formatPoint, setFormatPoint] = useState<string>('');
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
   const [isBarcodeModalOpen, setIsBarcodeModalOpen] = useState<boolean>(false);
   const [showInvestmentModal, setShowInvestmentModal] = useState<boolean>(false);
 
-  const memberRoles = ['ROLE_MEMBER', 'ROLE_COOP', 'ROLE_ADMIN'];
+  const memberRoles = useMemo(() => ['ROLE_MEMBER', 'ROLE_COOP', 'ROLE_ADMIN'], []);
 
-  const isUserMember = (): boolean => {
+  const isUserMember = useCallback((): boolean => {
     return isLoggedIn && user?.role && memberRoles.includes(user.role);
-  };
+  }, [isLoggedIn, user, memberRoles]);
 
   useEffect(() => {
     if (user && user.point !== undefined) {
@@ -50,27 +49,6 @@ const Main: React.FC = () => {
     refetchUser();
   }, [refetchUser]);
 
-  const increaseAmount = useCallback((): void => {
-    setChargeAmount(prevAmount => {
-      const newAmount = prevAmount + 1000;
-      if (newAmount <= 50000 - ((user as User)?.todayTotalPayment || 0)) {
-        return newAmount;
-      }
-      alert('하루 충전 금액은 5만원을 넘을 수 없습니다.');
-      return prevAmount;
-    });
-  }, [user]);
-
-  const decreaseAmount = useCallback((): void => {
-    setChargeAmount(prevAmount => {
-      if (prevAmount - 1000 >= 1000) {
-        return prevAmount - 1000;
-      }
-      alert('충전 금액은 천 원 이상 입력해야 합니다.');
-      return prevAmount;
-    });
-  }, []);
-
   const handleOpenInquiryModal = useCallback((): void => {
     if (isLoggedIn) {
       setIsInquiryModalOpen(true);
@@ -85,11 +63,11 @@ const Main: React.FC = () => {
 
   const handleOpenBarcodeModal = useCallback((): void => {
     if (!isUserMember()) {
-      setShowInvestmentModal(true); // 조합원이 아닐 경우 가입 권유 모달 열기
+      setShowInvestmentModal(true);
       return;
     }
     setIsBarcodeModalOpen(true);
-  }, [isUserMember]); // isUserMember 추가
+  }, [isUserMember]);
 
   const handleCloseBarcodeModal = useCallback((): void => {
     setIsBarcodeModalOpen(false);
@@ -97,16 +75,12 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn && user?.role && !isUserMember()) {
-      setShowInvestmentModal(true); // 조합원이 아닐 경우 모달 열기
+      setShowInvestmentModal(true);
     }
-  }, [isLoggedIn, user, isUserMember]); // isUserMember 추가
+  }, [isLoggedIn, user, isUserMember]);
 
   const handleCloseInvestmentModal = useCallback(() => {
     setShowInvestmentModal(false);
-  }, []);
-
-  const handleMoveToMyPage = useCallback(() => {
-    window.location.href = '/update';
   }, []);
 
   return (
@@ -153,13 +127,11 @@ const Main: React.FC = () => {
           </_.BottomBox>
         </_.Maintop>
 
-        {/* PersonCountDisplay 컴포넌트를 여기로 이동 */}
         <_.PersonCountBoxWrapper>
           <_.PersonCountBox>
             <PersonCountDisplay />
           </_.PersonCountBox>
         </_.PersonCountBoxWrapper>
-        {/* 공지사항 목록 표시 */}
         <NoticeList />
         <_.BoxContainer>
           <_.UseBox>
@@ -189,20 +161,14 @@ const Main: React.FC = () => {
             </_.CallLogoWrapper>
           </_.AskBox>
         </_.BoxContainer>
-
-
       </_.MainContent>
 
       <PaymentModal 
         type="charge"
         isOpen={isChargeModalOpen} 
         onRequestClose={handleCloseChargeModal}
-        amount={chargeAmount}
-        setAmount={setChargeAmount}
         user={user as User}
         maxAmount={50000}
-        increaseAmount={increaseAmount}
-        decreaseAmount={decreaseAmount}
       />
 
       <InquiryModal
@@ -221,8 +187,6 @@ const Main: React.FC = () => {
         isOpen={showInvestmentModal}
         onRequestClose={handleCloseInvestmentModal}
         user={user as User}
-        amount={10000} // 기본 출자금액
-        setAmount={setChargeAmount} // 금액 설정 함수
       />
     </>
   );

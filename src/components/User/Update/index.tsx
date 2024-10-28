@@ -94,8 +94,6 @@ const Update = () => {
                 type="investment"
                 isOpen={status.isInvestmentModalOpen}
                 onRequestClose={handlers.handleCloseInvestmentModal}
-                amount={formData.investmentAmount}
-                setAmount={setters.setInvestmentAmount}
                 user={{
                     email: formData.userInfo.userEmail,
                     name: formData.userInfo.userName,
@@ -103,8 +101,6 @@ const Update = () => {
                     todayTotalPayment: formData.userInfo.todayTotalPayment || 0
                 }}
                 maxAmount={formData.maxInvestmentAmount}
-                increaseAmount={handlers.increaseAmount}
-                decreaseAmount={handlers.decreaseAmount}
             />
         </S.Container>
     );

@@ -12,10 +12,6 @@ interface User {
 interface PaymentModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-  amount: number;
-  setAmount: (amount: number) => void;
-  increaseAmount: () => void;
-  decreaseAmount: () => void;
   user: User | null;
   type: 'charge' | 'investment';
   maxAmount: number;
@@ -24,18 +20,15 @@ interface PaymentModalProps {
 const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
   onRequestClose,
-  amount,
-  setAmount,
-  increaseAmount,
-  decreaseAmount,
   user,
   type,
   maxAmount,
 }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
+  const [amount, setAmount] = useState<number>(type === 'charge' ? 1000 : 10000); // 초기 금액 설정
   const minAmount = type === 'charge' ? 1000 : 10000;
   const step = type === 'charge' ? 1000 : 10000;
-  
+
   // 하루 최대 결제 가능 금액 계산
   const dailyMaxAmount = 50000 - (user?.todayTotalPayment || 0);
   // 실제 최대 결제 가능 금액 (maxAmount와 dailyMaxAmount 중 작은 값)
@@ -55,7 +48,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     if (amount < minAmount) {
       alert(`${type === 'charge' ? '충전' : '출자금'}은 ${minAmount.toLocaleString()}원 이상이어야 합니다.`);
     } else if (amount % step !== 0) {
-      alert(`${type === 'charge' ? '충전 금액' : '출자금'}은 ${(step/1000)}천 원 단위로 입력해야 합니다.`);
+      alert(`${type === 'charge' ? '충전 금액' : '출자금'}은 ${type === 'charge' ? '천 원' : '만 원'} 단위로 입력해야 합니다.`);
     } else if (amount > actualMaxAmount) {
       if (dailyMaxAmount <= 0) {
         alert('오늘 더 이상 결제할 수 없습니다. 하루 최대 결제 한도는 5만원입니다.');
@@ -65,6 +58,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     } else {
       setIsPaymentModalOpen(true);
     }
+  };
+
+  const increaseAmount = () => {
+    setAmount(prevAmount => Math.min(prevAmount + step, actualMaxAmount));
+  };
+
+  const decreaseAmount = () => {
+    setAmount(prevAmount => Math.max(prevAmount - step, minAmount));
   };
 
   const getModalContent = () => {
@@ -103,8 +104,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   return (
     <>
-      <_.StyledModal 
-        isOpen={isOpen} 
+      <_.StyledModal
+        isOpen={isOpen}
         onRequestClose={onRequestClose}
         style={{
           maxWidth: "500px",
@@ -141,7 +142,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 value={amount}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = parseInt(e.target.value, 10);
-                  if (!isNaN(value) && value >= minAmount && value <= actualMaxAmount) { // minAmount와 actualMaxAmount 체크
+                  if (!isNaN(value) && value >= minAmount && value <= actualMaxAmount) {
                     setAmount(value);
                   }
                 }}

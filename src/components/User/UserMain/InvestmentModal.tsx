@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import PaymentModal from 'components/Pg/PaymentModal'; // PaymentModal 임포트
+import PaymentModal from 'components/Pg/PaymentModal';
 
 interface InvestmentModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   user: { email: string; name: string; phone?: string } | null;
-  amount: number; // 추가
-  setAmount: (amount: number) => void; // 추가
 }
 
-const InvestmentModal: React.FC<InvestmentModalProps> = ({ 
-  isOpen, 
+const InvestmentModal: React.FC<InvestmentModalProps> = ({
+  isOpen,
   onRequestClose,
-  user,
-  amount,
-  setAmount
+  user
 }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -32,15 +28,7 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({
     onRequestClose(); // 모달 닫기
   };
 
-  const increaseAmount = () => {
-    setAmount(Math.min(amount + 10000, 50000)); // 올바른 값 전달
-  };
-
-  const decreaseAmount = () => {
-    setAmount(Math.max(amount - 10000, 10000)); // 올바른 값 전달
-  };
-
-  if (!isOpen) return null; // 모달이 열리지 않도록
+  if (!isOpen) return null;
 
   return (
     <>
@@ -59,21 +47,20 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({
         </ModalContent>
       </ModalOverlay>
 
-      <PaymentModal 
-        type="investment"
-        isOpen={isPaymentModalOpen}
-        onRequestClose={handleClosePaymentModal}
-        amount={amount}
-        setAmount={setAmount}
-        user={user}
-        maxAmount={50000}
-        increaseAmount={increaseAmount}
-        decreaseAmount={decreaseAmount}
-      />
+      {isPaymentModalOpen && (
+        <PaymentModal
+          type="investment"
+          isOpen={isPaymentModalOpen}
+          onRequestClose={handleClosePaymentModal}
+          user={user}
+          maxAmount={50000}
+        />
+      )}
     </>
   );
 };
 
+// 스타일 정의
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
