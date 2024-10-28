@@ -6,8 +6,8 @@ import { VerificationSection } from './components/VerificationSection';
 import { AddressSection } from './components/AddressSection';
 import { SecuritySection } from './components/SecuritySection';
 import { InvestmentSection } from './components/InvestmentSection';
-import { UserTypeSection } from './components/UserTypeSection';  // 새로 분리
-import InvestmentModal from 'components/Pg/InvestmentModal';
+import { UserTypeSection } from './components/UserTypeSection';
+import PaymentModal from 'components/Pg/PaymentModal';  // InvestmentModal 대신 PaymentModal import
 
 const Update = () => {
     const {
@@ -90,19 +90,21 @@ const Update = () => {
             </S.ContentContainer>
 
             {/* 출자금 모달 */}
-            <InvestmentModal
+            <PaymentModal
+                type="investment"
                 isOpen={status.isInvestmentModalOpen}
                 onRequestClose={handlers.handleCloseInvestmentModal}
-                investmentAmount={formData.investmentAmount}
-                setInvestmentAmount={setters.setInvestmentAmount}
+                amount={formData.investmentAmount}
+                setAmount={setters.setInvestmentAmount}
                 user={{
                     email: formData.userInfo.userEmail,
                     name: formData.userInfo.userName,
-                    phone: formData.userInfo.userPhone
+                    phone: formData.userInfo.userPhone,
+                    todayTotalPayment: formData.userInfo.todayTotalPayment || 0
                 }}
+                maxAmount={formData.maxInvestmentAmount}
                 increaseAmount={handlers.increaseAmount}
                 decreaseAmount={handlers.decreaseAmount}
-                maxInvestmentAmount={formData.maxInvestmentAmount}
             />
         </S.Container>
     );

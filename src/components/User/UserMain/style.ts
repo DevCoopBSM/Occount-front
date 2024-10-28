@@ -581,3 +581,25 @@ export const modalStyles = {
   },
 };
 
+export const DisabledBarcodeButton = styled.button`
+  ${SharedButtonStyles}
+  width: 25%;
+  margin-left: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: none;
+    box-shadow: none;
+  }
+`;
+
+export const NoticeSection = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+`;

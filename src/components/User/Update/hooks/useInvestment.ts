@@ -7,7 +7,7 @@ export const useInvestment = (): InvestmentState => {
     const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
     const [investmentAmount, setInvestmentAmount] = useState(10000);
 
-    const maxInvestmentAmount = 50000 - (user?.todayTotalCharge || 0);
+    const maxInvestmentAmount = 50000 - (user?.todayTotalPayment || 0);
 
     const increaseAmount = () => {
         setInvestmentAmount(prev => {

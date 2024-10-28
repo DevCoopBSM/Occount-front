@@ -27,6 +27,7 @@ export interface UserInfo {
     userPhone: string;
     userBirthDate: string;
     investmentAmount: number;
+    todayTotalPayment?: number;  // 추가: 오늘의 총 결제액 (선택적 필드)
 }
 
 // 폼 관련 인터페이스

@@ -8,7 +8,9 @@ interface User {
   code: string;
   email: string;
   phone: string;
-  todayTotalCharge?: number;
+  todayTotalPayment?: number;
+  role?: string;  // 역할 추가
+  isFullMember?: boolean;  // 정식 조합원 여부 추가
 }
 
 interface AuthState {
@@ -95,15 +97,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } = response.data;
-      const isAdmin = roles?.includes('ROLE_ADMIN');
+      console.log('Login response roles:', roles); // 디버깅용 로그 추가
 
+      const isAdmin = roles === 'ROLE_ADMIN';
       if (admin && !isAdmin) {
         throw new Error('권한이 없습니다.');
       }
 
       setAccessToken(accessToken);
       dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
-      const userInfo: User = { point: userPoint, name: userName, code: userCode, email: userEmail, phone: userPhone };
+      const userInfo: User = { 
+        point: userPoint, 
+        name: userName, 
+        code: userCode, 
+        email: userEmail, 
+        phone: userPhone,
+        role: roles  // roles 문자열을 그대로 저장
+      };
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       navigate(admin ? '/admin' : '/');
       dispatch({ type: actionTypes.CLEAR_ERROR });
@@ -119,14 +129,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserInformation = useCallback(async (): Promise<User | null> => {
     try {
       const response = await axiosInstance.get('v2/account/userinfo');
+      
       const userInfo: User = {
         point: response.data.userPoint,
         name: response.data.userName,
         code: response.data.userCode,
         email: response.data.userEmail,
         phone: response.data.userPhone,
-        todayTotalCharge: response.data.userTotalCharge,
+        todayTotalPayment: response.data.todayTotalPayment,
+        role: response.data.roles  // roles 필드 추가
       };
+      
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       return userInfo;
     } catch (error) {
