@@ -141,7 +141,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 value={amount}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = parseInt(e.target.value, 10);
-                  if (!isNaN(value) && value >= 0 && value <= actualMaxAmount) {
+                  if (!isNaN(value) && value >= minAmount && value <= actualMaxAmount) { // minAmount와 actualMaxAmount 체크
                     setAmount(value);
                   }
                 }}

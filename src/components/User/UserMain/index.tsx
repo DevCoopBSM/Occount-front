@@ -85,7 +85,7 @@ const Main: React.FC = () => {
 
   const handleOpenBarcodeModal = useCallback((): void => {
     if (!isUserMember()) {
-      alert('정식 조합원만 이용 가능한 기능입니다.');
+      setShowInvestmentModal(true); // 조합원이 아닐 경우 가입 권유 모달 열기
       return;
     }
     setIsBarcodeModalOpen(true);
@@ -97,7 +97,7 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn && user?.role && !isUserMember()) {
-      setShowInvestmentModal(true);
+      setShowInvestmentModal(true); // 조합원이 아닐 경우 모달 열기
     }
   }, [isLoggedIn, user, isUserMember]); // isUserMember 추가
 

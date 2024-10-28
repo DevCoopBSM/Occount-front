@@ -29,7 +29,7 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({
 
   const handleClosePaymentModal = () => {
     setIsPaymentModalOpen(false);
-    onRequestClose();
+    onRequestClose(); // 모달 닫기
   };
 
   const increaseAmount = () => {
@@ -40,7 +40,7 @@ const InvestmentModal: React.FC<InvestmentModalProps> = ({
     setAmount(Math.max(amount - 10000, 10000)); // 올바른 값 전달
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) return null; // 모달이 열리지 않도록
 
   return (
     <>
