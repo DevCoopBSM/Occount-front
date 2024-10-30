@@ -7,7 +7,6 @@ import {
   hasSpecialChar,
   validateEmail, 
   validatePassword, 
-  isPasswordValid
 } from '../utils/validation';
 
 interface PasswordValidationState {
@@ -58,10 +57,10 @@ export const useRegisterForm = () => {
     
     if (name === 'userPassword') {
       setPasswordErrors(() => ({
-        length: !isLengthValid(value),
-        lowerCase: !hasLowerCase(value),
-        number: !hasNumbers(value),
-        specialChar: !hasSpecialChar(value)
+        length: isLengthValid(value),
+        lowerCase: hasLowerCase(value),
+        number: hasNumbers(value),
+        specialChar: hasSpecialChar(value)
       }));
     }
   };
