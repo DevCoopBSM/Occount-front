@@ -13,10 +13,10 @@ export const hasNumbers = (password: string): boolean => /\d/.test(password);
 export const hasSpecialChar = (password: string): boolean => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
 
 export const validatePassword = (password: string): PasswordValidation => ({
-  length: isLengthValid(password),
-  lowerCase: hasLowerCase(password),
-  number: hasNumbers(password),
-  specialChar: hasSpecialChar(password)
+  length: !isLengthValid(password),
+  lowerCase: !hasLowerCase(password),
+  number: !hasNumbers(password),
+  specialChar: !hasSpecialChar(password)
 });
 
 export const isPasswordValid = (password: string): boolean => 
