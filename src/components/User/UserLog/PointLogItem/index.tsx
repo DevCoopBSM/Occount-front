@@ -18,6 +18,7 @@ interface LogItem {
   chargeType?: string;
   payType?: string;
   refundState?: boolean;
+  reason?: string;  // reason 필드 추가
 }
 
 // RefundAccount 인터페이스를 refundService.ts와 일치하도록 수정
@@ -104,6 +105,9 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
     if (isOverWeek) return '1주일 초과';
     if (itemType && parseInt(itemType) >= 2) {
       return itemType === '3' ? '환불 신청 시 계좌 정보가 필요합니다.' : '환불가능';
+    }
+    if (itemType === '1' && item.reason) {
+      return `${item.reason}`;
     }
     return '오프라인 충전된 내역';
   };

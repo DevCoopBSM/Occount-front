@@ -50,7 +50,7 @@ export const LoadingProvider = ({ children }) => {
           error: null,
           shouldShowLoading: false,
         }));
-      }, 3000);
+      }, 1000 );
     }
   }, []);
 
