@@ -1,15 +1,7 @@
-FROM node:18
-
+# Build stage
+FROM node:18-alpine as build
 WORKDIR /app
-
-COPY package.json .
-COPY yarn.lock .
-
-RUN yarn
-
+COPY package*.json ./
+RUN yarn install
 COPY . .
-
-
-EXPOSE 7000
-
-CMD ["yarn", "start"]
+RUN yarn dev
