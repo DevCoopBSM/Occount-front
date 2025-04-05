@@ -1,5 +1,6 @@
 import { UserInfo } from '../types';
 import * as PortOne from "@portone/browser-sdk/v2";
+import axiosInstance from 'utils/Axios';
 
 export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => {
   try {
@@ -17,16 +18,10 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
 
     console.log(response)
     // 백엔드로 포스트 하는 과정으로 대체할것
-    const verificationResult = await fetch("http://localhost:8080/api/v2/verify/identity", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identityVerificationId,
-      }),
-    });
-
-    const data:UserInfo & { success: boolean } = await verificationResult.json();
-
+    const { data } = await axiosInstance.post<UserInfo & { success: boolean }>(
+      "/v2/verify/identity",
+      { identityVerificationId }
+    );
     return { ...data, success: true };
   } catch (error) {
     alert(error instanceof Error ? error.message : "인증에 실패했습니다");
