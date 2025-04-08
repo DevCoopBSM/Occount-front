@@ -6,9 +6,9 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
   try {
     const identityVerificationId = `identity-verification-${crypto.randomUUID()}`;
     const response = await PortOne.requestIdentityVerification({
-      storeId: "store-bac037ce-3bdb-4f38-acee-d91419f3e882",
+      storeId: process.env.REACT_APP_STORE_ID,
       identityVerificationId,
-      channelKey: "channel-key-2205f8cc-70e7-4a88-b0f2-e2f1f21baa36",
+      channelKey: process.env.REACT_APP_CHANNEL_KEY_AUTH,
     });
 
     if (response.code !== undefined) {

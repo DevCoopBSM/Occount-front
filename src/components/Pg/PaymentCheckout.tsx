@@ -5,7 +5,7 @@ import * as S from './style';
 import * as PortOne from '@portone/browser-sdk/v2';
 
 const storeId = process.env.REACT_APP_STORE_ID;
-const channelKey = process.env.REACT_APP_CHANNEL_KEY;
+const channelKey = process.env.REACT_APP_CHANNEL_KEY_PAY;
 
 // 독립적인 인터페이스 정의
 interface CustomerInfo {
