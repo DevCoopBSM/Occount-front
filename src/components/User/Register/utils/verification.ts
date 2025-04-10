@@ -9,6 +9,7 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
       storeId: process.env.REACT_APP_STORE_ID,
       identityVerificationId,
       channelKey: process.env.REACT_APP_CHANNEL_KEY_AUTH,
+      redirectUrl: 'https://occount.bsm-aripay.kr/identity-verification-redirect'
     });
 
     if (response.code !== undefined) {
