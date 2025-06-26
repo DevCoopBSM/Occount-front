@@ -102,10 +102,10 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                         <S.RegisterInput
                             type="password"
                             inputMode="numeric"
-                            maxLength={8}
+                            maxLength={6}
                             value={pinForm.newPin}
                             onChange={handlePinChange}
-                            placeholder="새 PIN (4-8자리)"
+                            placeholder="새 PIN (4-6자리)"
                         />
                         {pinWarnings.pin && (
                             <S.WarningMessage>{pinWarnings.pin}</S.WarningMessage>
@@ -116,7 +116,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                         <S.RegisterInput
                             type="password"
                             inputMode="numeric"
-                            maxLength={8}
+                            maxLength={6}
                             value={pinForm.confirmNewPin}
                             onChange={handleConfirmPinChange}
                             placeholder="새 PIN 확인"

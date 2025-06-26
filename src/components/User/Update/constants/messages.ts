@@ -15,7 +15,7 @@ export const UPDATE_MESSAGES = {
     VALIDATION: {
       PASSWORD: '새 비밀번호는 8자 이상이며, 문자, 숫자, 특수문자를 포함해야 합니다.',
       PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
-      PIN: 'PIN은 4자리 이상 8자리 이하의 숫자여야 합니다.',
+      PIN: 'PIN은 4-6자리의 숫자여야 합니다.',
       PIN_MISMATCH: 'PIN이 일치하지 않습니다.',
     },
     INFO: {

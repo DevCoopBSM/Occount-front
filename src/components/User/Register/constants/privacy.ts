@@ -142,6 +142,6 @@ export const PRIVACY_SECTIONS = {
     PASSWORD_NUMBER: "숫자를 포함해야 합니다.",
     PASSWORD_SPECIAL: "특수문자를 포함해야 합니다.",
     PASSWORD_MISMATCH: "비밀번호가 일치하지 않습니다.",
-    PIN_LENGTH: "PIN 번호는 4자리 이상이어야 합니다.",
+    PIN_LENGTH: "PIN 번호는 4-6자리여야 합니다.",
     PIN_MISMATCH: "PIN 번호가 일치하지 않습니다.",
   } as const;

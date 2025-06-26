@@ -92,7 +92,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
 
       <R.PinContainer>
         <R.PinInputWrapper>
-          <R.InputLabel>PIN 번호 (4자리 이상)</R.InputLabel>
+          <R.InputLabel>PIN 번호 (4-6자리)</R.InputLabel>
           <R.PinInput
             type="password"
             inputMode="numeric"
@@ -102,7 +102,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
             onChange={onPinChange}
             placeholder="••••"
             minLength={4}
-            maxLength={8}
+            maxLength={6}
             required
           />
         </R.PinInputWrapper>
@@ -119,7 +119,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
               onChange={onPinChange}
               placeholder="••••"
               minLength={4}
-              maxLength={8}
+              maxLength={6}
               required
             />
           </R.PinInputWrapper>

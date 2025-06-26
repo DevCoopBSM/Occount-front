@@ -15,7 +15,7 @@ export const usePinUpdate = () => {
 
     const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
-        if (value.length <= 8) {
+        if (value.length <= 6) {
             setPinForm(prev => ({ ...prev, newPin: value }));
             
             if (value && !VALIDATION_PATTERNS.PIN.test(value)) {
@@ -31,7 +31,7 @@ export const usePinUpdate = () => {
 
     const handleConfirmPinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
-        if (value.length <= 8) {
+        if (value.length <= 6) {
             setPinForm(prev => ({ ...prev, confirmNewPin: value }));
             
             if (value !== pinForm.newPin) {
