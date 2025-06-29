@@ -15,7 +15,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
     if (selectedStudents.length) {
       console.log('Fetching info for selectedStudents:', selectedStudents);
       axiosInstance
-        .get('v2/account/studentlist')
+        .get('v2/account/student/list')
         .then((response) => {
           if (response.data && Array.isArray(response.data.studentList)) {
             const matchedStudents = response.data.studentList.filter((student) =>

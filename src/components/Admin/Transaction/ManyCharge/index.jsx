@@ -46,7 +46,7 @@ const ManyCharge = () => {
 
   useEffect(() => {
     axiosInstance
-      .get('v2/account/studentlist')
+      .get('v2/account/student/list')
       .then((response) => {
         if (response.data && Array.isArray(response.data.studentList)) {
           const validStudents = response.data.studentList.filter(
