@@ -48,7 +48,7 @@ export const useUpdateForm = (): UpdateFormReturn => {
                 updateData.temporaryToken = verification.temporaryToken;
             }
             
-            await axiosInstance.put('/v2/account/update', updateData);
+            await axiosInstance.put('/v2/account/user/update', updateData);
             
             setSuccessMessage(UPDATE_MESSAGES.UPDATE.SUCCESS);
             setIsSuccessMessageVisible(true);
