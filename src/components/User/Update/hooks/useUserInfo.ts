@@ -20,7 +20,7 @@ export const useUserInfo = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await axiosInstance.get('/v2/account/info');
+            const response = await axiosInstance.get('/v2/account/user/info');
             setUserInfo(response.data);
             setError('');
         } catch {
