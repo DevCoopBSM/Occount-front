@@ -46,7 +46,7 @@ const Update = () => {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await axiosInstance.get('/v2/account/info');
+                const response = await axiosInstance.get('/v2/account/user/info');
                 setUserInfo(response.data);
             } catch {
                 setErrorMessage('사용자 정보를 불러오는 데 실패했습니다.');
@@ -153,14 +153,14 @@ const Update = () => {
                 updateData.temporaryToken = temporaryToken;
             }
             
-            await axiosInstance.put('/v2/account/update', updateData);
+            await axiosInstance.put('/v2/account/user/update', updateData);
             // 성공 메시지 표시
             alert('회원정보가 성공적으로 수정되었습니다.');
             setIsPasswordChangeMode(false);
             setIsPinChangeMode(false);
             setTemporaryToken('');
             // 사용자 정보 업데이트
-            const updatedUserInfo = await axiosInstance.get('/v2/account/info');
+            const updatedUserInfo = await axiosInstance.get('/v2/account/user/info');
             setUserInfo(updatedUserInfo.data);
             setAddressDetail(""); // 상세주소 초기화
         } catch (error) {

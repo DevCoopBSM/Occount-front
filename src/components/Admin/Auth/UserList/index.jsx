@@ -16,7 +16,7 @@ export default function UserList() {
 
   const fetchData = () => {
     axiosInstance
-      .get(`v2/account/userlist`)
+      .get(`v2/account/user/list`)
       .then((response) => {
         // response.data.userList에서 userList 배열을 가져옵니다.
         const userList = response.data.userList;
