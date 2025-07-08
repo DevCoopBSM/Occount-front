@@ -128,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserInformation = useCallback(async (): Promise<User | null> => {
     try {
-      const response = await axiosInstance.get('v2/account/userinfo');
+      const response = await axiosInstance.get('v2/account/user/info');
       
       const userInfo: User = {
         point: response.data.userPoint,
