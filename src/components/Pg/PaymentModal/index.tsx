@@ -36,7 +36,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const handleClosePaymentModal = (): void => {
     setIsPaymentModalOpen(false);
-    onRequestClose();
+    // 결제 모달만 닫고 충전하기 모달은 닫지 않음
   };
 
   const handlePaymentClick = (): void => {
@@ -56,6 +56,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         alert(`현재 결제 가능한 최대 금액은 ${actualMaxAmount.toLocaleString()}원입니다.`);
       }
     } else {
+      // 기존 모달을 닫고 결제 확인 모달 열기
+      onRequestClose();
       setIsPaymentModalOpen(true);
     }
   };
@@ -107,24 +109,33 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       <_.StyledModal
         isOpen={isOpen}
         onRequestClose={onRequestClose}
-        style={{
-          maxWidth: "500px",
-          padding: "24px",
-          borderRadius: "16px",
-        }}
       >
-        <_.ModalHeader>{getModalContent().title}</_.ModalHeader>
+        <_.CloseButton onClick={onRequestClose} aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </_.CloseButton>
+        
+        <_.ModalHeader>{type === 'charge' ? '아리페이 충전하기' : '출자금 납부'}</_.ModalHeader>
+        
         <_.ModalContent>
           <_.HighlightText>
+            <_.InfoIcon>
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#F49E15" strokeWidth="1.5" />
+                <path d="M12 8V12M12 16H12.01" stroke="#F49E15" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </_.InfoIcon>
             <span>{getModalContent().highlightText}</span>
           </_.HighlightText>
+          
           <_.ModalList>
             {getModalContent().listItems.map((item, index) => (
               typeof item === 'string' ? (
                 <_.ModalListItem key={index}>{item}</_.ModalListItem>
               ) : (
-                <_.ModalListItem key={index}>
-                  {item.main}
+                <_.ModalListItem key={index} className="has-sub-items">
+                  <div>{item.main}</div>
                   <_.SubList>
                     {item.sub.map((subItem, subIndex) => (
                       <_.SubListItem key={subIndex}>{subItem}</_.SubListItem>
@@ -134,9 +145,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               )
             ))}
           </_.ModalList>
+          
           <_.ModalInputWrapper>
             <_.InputGroup>
-              <_.DecreaseButton onClick={decreaseAmount}>-</_.DecreaseButton>
+              <_.DecreaseButton onClick={decreaseAmount} aria-label="금액 감소">
+                <svg viewBox="0 0 24 24" fill="#111111">
+                  <path d="M5 12H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </_.DecreaseButton>
               <_.ModalInput
                 type="number"
                 value={amount}
@@ -150,39 +166,35 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 max={actualMaxAmount}
                 step={step}
               />
-              <_.IncreaseButton onClick={increaseAmount}>+</_.IncreaseButton>
+              <_.IncreaseButton onClick={increaseAmount} aria-label="금액 증가">
+                <svg viewBox="0 0 24 24" fill="#111111">
+                  <path d="M12 5V19M5 12H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </_.IncreaseButton>
             </_.InputGroup>
           </_.ModalInputWrapper>
         </_.ModalContent>
+        
         <_.ButtonWrapper>
-          <_.ModalFooterButton onClick={handlePaymentClick}>
+          <_.CancelButton onClick={onRequestClose}>
+            취소
+          </_.CancelButton>
+          <_.ConfirmButton onClick={handlePaymentClick}>
             {type === 'charge' ? '결제진행' : '출자금 납부'}
-          </_.ModalFooterButton>
-          <_.ModalFooterButton onClick={onRequestClose}>닫기</_.ModalFooterButton>
+          </_.ConfirmButton>
         </_.ButtonWrapper>
       </_.StyledModal>
 
-      <_.StyledModal
-        isOpen={isPaymentModalOpen}
-        onRequestClose={handleClosePaymentModal}
-        style={{
-          maxWidth: "400px",
-          padding: "24px",
-          borderRadius: "16px",
-          mobileFullScreen: true,
-        }}
-      >
-        {user && (
-          <PaymentCheckoutPage
-            customerEmail={user.email}
-            customerName={user.name}
-            customerPhone={user.phone || ''}
-            rechargeAmount={amount}
-            onRequestClose={handleClosePaymentModal}
-            paymentType={type === 'charge' ? 'aripay' : 'investment'}
-          />
-        )}
-      </_.StyledModal>
+      {isPaymentModalOpen && user && (
+        <PaymentCheckoutPage
+          customerEmail={user.email}
+          customerName={user.name}
+          customerPhone={user.phone || ''}
+          rechargeAmount={amount}
+          onRequestClose={handleClosePaymentModal}
+          paymentType={type === 'charge' ? 'aripay' : 'investment'}
+        />
+      )}
     </>
   );
 };

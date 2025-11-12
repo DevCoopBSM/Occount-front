@@ -170,17 +170,30 @@ export function PaymentCheckoutPage({
       <S.BoxSection>
         {!payMethod ? (
           <S.PaymentModal>
-            <S.Title>
-              {paymentType === 'aripay' ? '아리페이 충전' : '출자금 납부'}
-            </S.Title>
-            <S.SubTitle>결제 수단을 선택해 주세요</S.SubTitle>
-            <S.Description>현재는 카드 결제만 지원합니다.</S.Description>
+            <S.CloseButton onClick={onRequestClose} aria-label="닫기">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </S.CloseButton>
+            
+            <S.Title>아리페이 충전하기</S.Title>
+            
+            <S.HighlightBox>
+              <S.InfoIcon>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="#F49E15" strokeWidth="1.5" />
+                  <path d="M12 8V12M12 16H12.01" stroke="#F49E15" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </S.InfoIcon>
+              <S.HighlightText>
+                결제수단을 선택해주세요. ( 현재는 카드 결제만 지원합니다.)
+              </S.HighlightText>
+            </S.HighlightBox>
             
             <S.NoticeBox>
               <S.NoticeText>
-                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.
-                결제 진행시 동의 여부를 물어보며 
-                이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
+                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.<br />
+                결제 진행시 동의 여부를 물어보며 이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
               </S.NoticeText>
               <S.InfoTable>
                 <S.InfoRow>
@@ -195,12 +208,12 @@ export function PaymentCheckoutPage({
             </S.NoticeBox>
 
             <S.ButtonGroup>
-              <S.PaymentButton onClick={handlePaymentStart}>
-                카드 결제
-              </S.PaymentButton>
               <S.CancelButton onClick={onRequestClose}>
-                닫기
+                취소
               </S.CancelButton>
+              <S.PaymentButton onClick={handlePaymentStart}>
+                결제진행
+              </S.PaymentButton>
             </S.ButtonGroup>
           </S.PaymentModal>
         ) : (
@@ -208,7 +221,7 @@ export function PaymentCheckoutPage({
             isOpen={true}
             onRequestClose={onRequestClose}
             style={{
-              backgroundColor: '#fff',  // 배경색을 하얀색으로
+              backgroundColor: '#fff',
               padding: '24px',
               borderRadius: '16px',
               width: '90%',
