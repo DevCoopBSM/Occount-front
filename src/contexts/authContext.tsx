@@ -33,10 +33,40 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// 개발 모드 체크 (환경 변수 또는 localStorage로 제어)
+const isDevMode = () => {
+  const devMode = process.env.NODE_ENV === 'development' && 
+         (localStorage.getItem('DEV_MODE') === 'true' || 
+          process.env.REACT_APP_DEV_MODE === 'true');
+  
+  // 디버깅용 로그
+  if (devMode) {
+    console.log('✅ 개발 모드 활성화:', {
+      NODE_ENV: process.env.NODE_ENV,
+      REACT_APP_DEV_MODE: process.env.REACT_APP_DEV_MODE,
+      localStorage_DEV_MODE: localStorage.getItem('DEV_MODE')
+    });
+  }
+  
+  return devMode;
+};
+
+// 개발 모드용 Mock 사용자 데이터
+const getMockUser = (): User => ({
+  point: 100000,
+  name: '개발자',
+  code: 'DEV001',
+  email: 'dev@example.com',
+  phone: '010-1234-5678',
+  todayTotalPayment: 0,
+  role: 'ROLE_MEMBER', // 조합원 역할로 설정하여 충전 기능 활성화
+  isFullMember: true,
+});
+
 const initialState: AuthState = {
-  isLoggedIn: !!getAccessToken(),
+  isLoggedIn: isDevMode() || !!getAccessToken(),
   isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'),
-  user: null,
+  user: isDevMode() ? getMockUser() : null,
   errorMessage: '',
 };
 
@@ -84,6 +114,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
+  // 컴포넌트 마운트 시 개발 모드 초기화
+  useEffect(() => {
+    const devMode = isDevMode();
+    console.log('AuthProvider 마운트 - 개발 모드:', devMode);
+    
+    if (devMode) {
+      console.log('발 모드 활성화 - Mock 사용자 설정 중');
+      const mockUser = getMockUser();
+      console.log('Mock 사용자:', mockUser);
+      
+      // 개발 모드일 때 로그인 상태 강제 설정
+      dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin: false });
+      // 개발 모드일 때 mock 사용자 설정
+      dispatch({ type: actionTypes.SET_USER, payload: mockUser });
+      
+      console.log('개발 모드 초기화 완료');
+    }
+  }, []);
+
   const unifiedLogin = useCallback(async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
     try {
       const response = await axiosInstance.post('v2/auth/login', { userEmail: email, userPassword: password });
@@ -127,6 +176,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const fetchUserInformation = useCallback(async (): Promise<User | null> => {
+    // 개발 모드일 때는 mock 사용자 반환
+    if (isDevMode()) {
+      const mockUser = getMockUser();
+      dispatch({ type: actionTypes.SET_USER, payload: mockUser });
+      return mockUser;
+    }
+
     try {
       const response = await axiosInstance.get('v2/account/user/info');
       
@@ -196,7 +252,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    if (state.isLoggedIn) {
+    // 개발 모드가 아닐 때만 사용자 정보 가져오기
+    if (!isDevMode() && state.isLoggedIn) {
       fetchUserInformation();
     }
   }, [state.isLoggedIn, fetchUserInformation]);
