@@ -8,54 +8,62 @@ export const PointLogWrap = styled.div<PointLogWrapProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: ${props => props.backgroundColor || '#fff'};
+  padding: 15px 25px;
+  background-color: ${props => props.backgroundColor || '#ffffff'};
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   cursor: pointer;
   width: 100%;
+  height: 100px;
+  box-sizing: border-box;
 
   @media (max-width: 620px) {
     flex-direction: column;
     align-items: center;
+    height: auto;
   }
 `;
 
+export const LeftSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+`;
+
 export const DateText = styled.span`
-  font-size: clamp(14px, 2vw, 16px);
-  color: #666;
-  width: 30%;
-  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: #666666;
+  font-weight: 400;
+  line-height: normal;
 
   @media (max-width: 620px) {
-    width: 100%;
     margin-bottom: 5px;
   }
 `;
 
 export const AmountText = styled.span`
-  font-size: clamp(16px, 2.5vw, 20px);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 24px;
   font-weight: 600;
-  color: #000;
-  width: 40%;
-  text-align: center;
+  color: #111111;
+  line-height: normal;
 
   @media (max-width: 620px) {
-    width: 100%;
     margin-bottom: 5px;
   }
 `;
 
 export const ChargeTypeText = styled.span`
-  font-size: clamp(12px, 1.8vw, 14px);
-  color: #666;
-  width: 30%;
-  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 18px;
+  color: #666666;
+  font-weight: 400;
+  line-height: normal;
 
   @media (max-width: 620px) {
-    width: 100%;
   }
 `;
 

@@ -84,10 +84,7 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
   const isOverWeek = dayDiff > 7;
 
   const getBackgroundColor = () => {
-    if (item.refundState) return '#ffcccc';
-    if (itemType === '1' && type === 1) return '#fffacd';
-    if (isOverWeek && type === 1) return '#fffacd';
-    return type === 0 ? '#d4f4dd' : '#E6EBFF';
+    return '#ffffff';
   };
 
   const getTransactionType = () => {
@@ -163,8 +160,10 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
         onClick={handleItemClick}
         style={{ background: getBackgroundColor() }}
       >
-        <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').slice(0, -1)}</_.DateText>
-        <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
+        <_.LeftSection>
+          <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace(/\./g, '')}</_.DateText>
+          <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
+        </_.LeftSection>
         <_.ChargeTypeText>{getTransactionType()}</_.ChargeTypeText>
       </_.PointLogWrap>
 

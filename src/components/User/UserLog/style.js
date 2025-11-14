@@ -2,10 +2,84 @@ import styled from "styled-components";
 
 export const CompeleteWrap = styled.div`
   width: 100%;
-  max-width: 800px;
+  max-width: 1560px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 34px 180px 85px;
   box-sizing: border-box;
+`;
+
+export const PageTitle = styled.h1`
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 25px;
+  line-height: 1.4;
+`;
+
+export const TabContainerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  width: 100%;
+`;
+
+export const TabContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  width: 350px;
+  align-items: center;
+`;
+
+export const TabButton = styled.button`
+  flex: 1;
+  padding: 5px 10px;
+  border-radius: 0;
+  height: 31px;
+  background: transparent;
+  border: none;
+  border-bottom: ${props => props.active ? '2px solid #fcc800' : 'none'};
+  font-family: 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: ${props => props.active ? '400' : '400'};
+  color: #111111;
+  line-height: 21px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    opacity: ${props => props.active ? '1' : '0.7'};
+  }
+`;
+
+export const TabNavigationContainer = styled.div`
+  display: flex;
+  gap: 0;
+  align-items: center;
+`;
+
+export const TabNavigationArrow = styled.button`
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.3s ease;
+
+  svg path {
+    fill: #CCCCCC;
+    transition: fill 0.3s ease;
+  }
+
+  &:hover svg path {
+    fill: #111111;
+  }
 `;
 
 export const ExChangeDetailWrap = styled.div`
@@ -31,9 +105,7 @@ export const Exchange = styled.p`
 `;
 
 export const UseLogWrap = styled.div`
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
 `;
 
 export const LogTitles = styled.div`
@@ -54,15 +126,15 @@ export const LogTitle = styled.div`
 
 export const LogContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
+  width: 100%;
 `;
 
 export const LogColumn = styled.div`
-  width: 48%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 `;
 
 export const LogContent = styled.div`
@@ -106,32 +178,6 @@ export const PageNumber = styled.button`
 export const PageIndicator = styled.span`
   margin: 0 10px;
   font-size: 16px;
-  color: #495057;
-`;
-
-export const PointLogWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background-color: ${props => props.type === 0 ? '#e7f5ff' : '#fff5f5'};
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-export const DateText = styled.span`
-  font-size: 14px;
-  color: #868e96;
-`;
-
-export const AmountText = styled.span`
-  font-size: 18px;
-  font-weight: bold;
-  color: ${props => props.type === 'charge' ? '#1c7ed6' : '#e03131'};
-`;
-
-export const ChargeTypeText = styled.span`
-  font-size: 14px;
   color: #495057;
 `;
 
