@@ -119,9 +119,6 @@ export const ProductCard = styled.div`
   background: white;
   border: 1px solid #CCCCCC;
   border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 
@@ -130,28 +127,32 @@ export const ProductCard = styled.div`
   }
 `;
 
-export const ProductInfo = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 30px 20px;
-  z-index: 1;
-`;
-
 export const Badge = styled.div<{ type: 'new' | 'hot' }>`
+  position: absolute;
+  left: 20px;
+  top: 60px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 8px;
+  padding: 2px 5px;
   border-radius: 8px;
   background: ${props => props.type === 'new' ? '#FCC800' : '#F49E15'};
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 400;
   color: ${props => props.type === 'new' ? '#111111' : '#FFFFFF'};
-  width: fit-content;
-  margin-bottom: 10px;
+  z-index: 2;
+`;
+
+export const ProductInfo = styled.div`
+  position: absolute;
+  bottom: 30px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+  max-width: 273px;
 `;
 
 export const ProductTitle = styled.h3`
@@ -160,26 +161,30 @@ export const ProductTitle = styled.h3`
   font-weight: 600;
   color: #111111;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 400px;
+  line-height: normal;
 `;
 
-export const ProductPrice = styled.p`
+export const ProductPrice = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 400;
   color: #666666;
   margin: 0;
+  line-height: normal;
 `;
 
 export const ProductImagePlaceholder = styled.div`
+  position: absolute;
+  right: -0.5px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 300px;
   height: 190px;
-  background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
-  flex-shrink: 0;
-  margin-right: -0.5px;
+  background: linear-gradient(270deg, #D9D9D9 0%, rgba(115, 115, 115, 0.00) 100%);
+  z-index: 1;
 `;
 
 export const LoadingMessage = styled.div`
