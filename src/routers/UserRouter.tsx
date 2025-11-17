@@ -9,6 +9,7 @@ import PwChangeEX from 'components/User/pwChangeEX';
 import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
+import ItemList from 'components/User/ItemList';
 
 const UserRoutes: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const UserRoutes: React.FC = () => {
         <Route path="/update" element={<Update />} />
         <Route path="/register" element={<Register />} />
         <Route path="/userlog" element={<UserLog />} />
+        <Route path="/item-list" element={<ItemList />} />
         <Route path="*" element={<Navigate to="/404" />} />
       </Routes>
     </UserPage>
