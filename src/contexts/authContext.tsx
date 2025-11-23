@@ -33,22 +33,9 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// 개발 모드 체크 (환경 변수 또는 localStorage로 제어)
+// 개발 모드 체크 (환경 변수로만 제어)
 const isDevMode = () => {
-  const devMode = process.env.NODE_ENV === 'development' && 
-         (localStorage.getItem('DEV_MODE') === 'true' || 
-          process.env.REACT_APP_DEV_MODE === 'true');
-  
-  // 디버깅용 로그
-  if (devMode) {
-    console.log('✅ 개발 모드 활성화:', {
-      NODE_ENV: process.env.NODE_ENV,
-      REACT_APP_DEV_MODE: process.env.REACT_APP_DEV_MODE,
-      localStorage_DEV_MODE: localStorage.getItem('DEV_MODE')
-    });
-  }
-  
-  return devMode;
+  return process.env.NODE_ENV === 'development' && process.env.REACT_APP_DEV_MODE === 'true';
 };
 
 // 개발 모드용 Mock 사용자 데이터
@@ -116,20 +103,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
-    const devMode = isDevMode();
-    console.log('AuthProvider 마운트 - 개발 모드:', devMode);
-    
-    if (devMode) {
-      console.log('발 모드 활성화 - Mock 사용자 설정 중');
+    if (isDevMode()) {
       const mockUser = getMockUser();
-      console.log('Mock 사용자:', mockUser);
-      
       // 개발 모드일 때 로그인 상태 강제 설정
       dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin: false });
-      // 개발 모드일 때 mock 사용자 설정
       dispatch({ type: actionTypes.SET_USER, payload: mockUser });
-      
-      console.log('개발 모드 초기화 완료');
     }
   }, []);
 
@@ -146,7 +124,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } = response.data;
-      console.log('Login response roles:', roles); // 디버깅용 로그 추가
 
       const isAdmin = roles === 'ROLE_ADMIN';
       if (admin && !isAdmin) {

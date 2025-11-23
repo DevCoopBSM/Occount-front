@@ -11,6 +11,8 @@ import DocumentIcon from 'assets/Document.svg';
 import WayIcon from 'assets/Way.svg';
 import QIcon from 'assets/Q.svg';
 import OringInqSmile from 'assets/Oring_inq_smile.svg';
+import { fetchNotices, Notice as ApiNotice } from './Notice/notices';
+import { mockAnnouncements, mockNotices, mockProducts, NoticeItem, Product } from './mockData';
 
 interface User {
   point: number;
@@ -22,34 +24,9 @@ interface User {
   code: string;
 }
 
-// 임시 공지사항 데이터
-const mockNotices = [
-  { id: 1, title: '2025 오카운트 UI 변경', date: '2025.07.12' },
-  { id: 2, title: '2025 오카운트 UI 변경', date: '2025.07.12' },
-  { id: 3, title: '2025 오카운트 UI 변경', date: '2025.07.12' },
-  { id: 4, title: '2025 오카운트 UI 변경', date: '2025.07.12' },
-  { id: 5, title: '2025 오카운트 UI 변경', date: '2025.07.12' },
-];
+const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === 'true';
 
-const mockAnnouncements = [
-  { id: 1, title: '들어온 상품 안내', date: '2025.07.12' },
-  { id: 2, title: '들어온 상품 안내', date: '2025.07.12' },
-  { id: 3, title: '들어온 상품 안내', date: '2025.07.12' },
-  { id: 4, title: '들어온 상품 안내', date: '2025.07.12' },
-  { id: 5, title: '들어온 상품 안내', date: '2025.07.12' },
-];
-
-// 임시 상품 데이터
-const mockProducts = [
-  { id: 1, title: 'title', price: '원', badge: 'new' as const },
-  { id: 2, title: 'title', price: '원', badge: null },
-  { id: 3, title: 'title', price: '원', badge: null },
-  { id: 4, title: 'title', price: '원', badge: 'hot' as const },
-  { id: 5, title: 'title', price: '원', badge: null },
-  { id: 6, title: 'title', price: '원', badge: 'hot' as const },
-];
-
-const Main: React.FC = () => {
+function Main() {
   const navigate = useNavigate();
   const { isLoggedIn, user, refetchUser } = useAuth();
   const [isChargeModalOpen, setIsChargeModalOpen] = useState<boolean>(false);
@@ -58,7 +35,9 @@ const Main: React.FC = () => {
   const [isBarcodeModalOpen, setIsBarcodeModalOpen] = useState<boolean>(false);
   const [showInvestmentModal, setShowInvestmentModal] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체보기');
-  const [currentPage] = useState<number>(0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [eventNotices, setEventNotices] = useState<NoticeItem[]>([]);
+  const [announcementNotices, setAnnouncementNotices] = useState<NoticeItem[]>([]);
 
   const memberRoles = useMemo(() => ['ROLE_MEMBER', 'ROLE_COOP', 'ROLE_ADMIN'], []);
 
@@ -101,6 +80,42 @@ const Main: React.FC = () => {
     setIsBarcodeModalOpen(false);
   }, []);
 
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  useEffect(() => {
+    if (USE_MOCK_DATA) {
+      setProducts(mockProducts);
+      setEventNotices(mockNotices.filter(notice => notice.importance === 'HIGH'));
+      setAnnouncementNotices(mockAnnouncements);
+      return;
+    }
+
+    const loadNotices = async () => {
+      try {
+        const notices = await fetchNotices();
+        const mapped = notices.map<NoticeItem>((notice: ApiNotice) => ({
+          id: notice.id,
+          title: notice.title,
+          date: formatDate(notice.createdAt),
+          importance: notice.importance,
+        }));
+
+        setEventNotices(mapped.filter(notice => notice.importance === 'HIGH'));
+        setAnnouncementNotices(mapped.filter(notice => notice.importance !== 'HIGH'));
+      } catch (error) {
+        setEventNotices([]);
+        setAnnouncementNotices([]);
+      }
+    };
+
+    loadNotices();
+  }, []);
+
   useEffect(() => {
     if (isLoggedIn && user?.role && !isUserMember()) {
       setShowInvestmentModal(true);
@@ -112,6 +127,19 @@ const Main: React.FC = () => {
   }, []);
 
   const categories = ['전체보기', '과자', '아이스크림', '음료', '냉동식품', '빵류', '식품', '잡화'];
+
+  const filteredProducts = useMemo(() => {
+    if (selectedCategory === '전체보기') return products;
+    return products.filter(product => product.category === selectedCategory);
+  }, [products, selectedCategory]);
+
+  const productRows = useMemo(() => {
+    const rows: Product[][] = [];
+    for (let i = 0; i < filteredProducts.length; i += 2) {
+      rows.push(filteredProducts.slice(i, i + 2));
+    }
+    return rows;
+  }, [filteredProducts]);
 
   return (
     <>
@@ -195,12 +223,16 @@ const Main: React.FC = () => {
               </_.ViewMoreButton>
             </_.NoticeSectionTitle>
             <_.NoticeList>
-              {mockNotices.map(notice => (
-                <_.NoticeItem key={notice.id}>
-                  <span className="title">{notice.title}</span>
-                  <span className="date">{notice.date}</span>
-                </_.NoticeItem>
-              ))}
+              {eventNotices.length ? (
+                eventNotices.map(notice => (
+                  <_.NoticeItem key={notice.id}>
+                    <span className="title">{notice.title}</span>
+                    <span className="date">{notice.date}</span>
+                  </_.NoticeItem>
+                ))
+              ) : (
+                <_.EmptyMessage>진행 중인 이벤트가 없습니다.</_.EmptyMessage>
+              )}
             </_.NoticeList>
           </_.NoticeSection>
 
@@ -216,12 +248,16 @@ const Main: React.FC = () => {
               </_.ViewMoreButton>
             </_.NoticeSectionTitle>
             <_.NoticeList>
-              {mockAnnouncements.map(announcement => (
-                <_.NoticeItem key={announcement.id}>
-                  <span className="title">{announcement.title}</span>
-                  <span className="date">{announcement.date}</span>
-                </_.NoticeItem>
-              ))}
+              {announcementNotices.length ? (
+                announcementNotices.map(announcement => (
+                  <_.NoticeItem key={announcement.id}>
+                    <span className="title">{announcement.title}</span>
+                    <span className="date">{announcement.date}</span>
+                  </_.NoticeItem>
+                ))
+              ) : (
+                <_.EmptyMessage>등록된 공지사항이 없습니다.</_.EmptyMessage>
+              )}
             </_.NoticeList>
           </_.NoticeSection>
         </_.EventNoticeContainer>
@@ -255,72 +291,38 @@ const Main: React.FC = () => {
 
           {/* 상품 카드 그리드 */}
           <_.ProductCardsGrid>
-            <_.ProductCardRow>
-              {mockProducts.slice(0, 2).map(product => (
-                <_.ProductCard key={product.id}>
-                  {product.badge && (
-                    <_.ProductBadge type={product.badge}>
-                      {product.badge === 'new' ? 'NEW' : 'HOT'}
-                    </_.ProductBadge>
-                  )}
-                  <_.ProductImage />
-                  <_.ProductInfo>
-                    <h3>{product.title}</h3>
-                    <div className="price">
-                      <span>cost</span>
-                      <span>원</span>
-                    </div>
-                  </_.ProductInfo>
-                </_.ProductCard>
-              ))}
-            </_.ProductCardRow>
-
-            <_.ProductCardRow>
-              {mockProducts.slice(2, 4).map(product => (
-                <_.ProductCard key={product.id}>
-                  {product.badge && (
-                    <_.ProductBadge type={product.badge}>
-                      {product.badge === 'new' ? 'NEW' : 'HOT'}
-                    </_.ProductBadge>
-                  )}
-                  <_.ProductImage />
-                  <_.ProductInfo>
-                    <h3>{product.title}</h3>
-                    <div className="price">
-                      <span>cost</span>
-                      <span>원</span>
-                    </div>
-                  </_.ProductInfo>
-                </_.ProductCard>
-              ))}
-            </_.ProductCardRow>
-
-            <_.ProductCardRow>
-              {mockProducts.slice(4, 6).map(product => (
-                <_.ProductCard key={product.id}>
-                  {product.badge && (
-                    <_.ProductBadge type={product.badge}>
-                      {product.badge === 'new' ? 'NEW' : 'HOT'}
-                    </_.ProductBadge>
-                  )}
-                  <_.ProductImage />
-                  <_.ProductInfo>
-                    <h3>{product.title}</h3>
-                    <div className="price">
-                      <span>cost</span>
-                      <span>원</span>
-                    </div>
-                  </_.ProductInfo>
-                </_.ProductCard>
-              ))}
-            </_.ProductCardRow>
+            {productRows.length ? (
+              productRows.map((row, rowIndex) => (
+                <_.ProductCardRow key={rowIndex}>
+                  {row.map(product => (
+                    <_.ProductCard key={product.id}>
+                      {product.badge && (
+                        <_.ProductBadge type={product.badge}>
+                          {product.badge === 'new' ? 'NEW' : 'HOT'}
+                        </_.ProductBadge>
+                      )}
+                      <_.ProductImage />
+                      <_.ProductInfo>
+                        <h3>{product.title}</h3>
+                        <div className="price">
+                          <span>{product.price !== undefined ? product.price.toLocaleString() : '가격 정보 없음'}</span>
+                          {product.price !== undefined && <span>원</span>}
+                        </div>
+                      </_.ProductInfo>
+                    </_.ProductCard>
+                  ))}
+                </_.ProductCardRow>
+              ))
+            ) : (
+              <_.EmptyMessage>표시할 상품이 없습니다.</_.EmptyMessage>
+            )}
           </_.ProductCardsGrid>
 
           {/* 스크롤바 */}
           <_.ScrollBar>
-            <_.ScrollDot active={currentPage === 0} />
-            <_.ScrollDot active={currentPage === 1} />
-            <_.ScrollDot active={currentPage === 2} />
+            {Array.from({ length: Math.max(productRows.length, 1) }).map((_, index) => (
+              <_.ScrollDot key={index} active={index === 0} />
+            ))}
           </_.ScrollBar>
         </_.ProductDisplaySection>
       </_.MainContent>
