@@ -3,39 +3,9 @@ import * as _ from './style';
 import { useAuth } from 'contexts/authContext';
 import RefundFormModal from './RefundFormModal';
 import { handleRefundRequest } from './refundService';
+import { LogItem, PointLogItemProps, RefundAccount } from './types';
 
-// LogItem 인터페이스를 수정하여 payId를 포함시킵니다.
-interface LogItem {
-  chargeId: number;
-  payId?: number;  // payId를 선택적 속성으로 추가
-  type: string;
-  date: string;
-  inner_point: string;
-  chargeDate?: number[];
-  payDate?: number[];
-  chargedPoint?: number;
-  payedPoint?: number;
-  chargeType?: string;
-  payType?: string;
-  refundState?: boolean;
-  reason?: string;  // reason 필드 추가
-}
-
-// RefundAccount 인터페이스를 refundService.ts와 일치하도록 수정
-export interface RefundAccount {
-  bank: string;
-  accountNumber: string;  // number를 accountNumber로 변경
-  holderName: string;
-  holderPhoneNumber?: string;  // 선택적 속성으로 변경
-}
-
-interface PointLogItemProps {
-  type: number;
-  data: LogItem[];
-  fetchUserLog: (type: string) => Promise<void>;
-}
-
-const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog }) => {
+function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [refundAccount, setRefundAccount] = useState<RefundAccount>({
     bank: '',
@@ -224,6 +194,6 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
       )}
     </div>
   );
-};
+}
 
 export default PointLogItem;

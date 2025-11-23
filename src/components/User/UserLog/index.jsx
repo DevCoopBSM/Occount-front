@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Icon from 'components/Icon';
 import { axiosInstance } from 'utils/Axios';
 import { useSwipeable } from 'react-swipeable';
 import PointLogItem from './PointLogItem';
 import * as S from './style';
 
-export const UserLog = () => {
+function UserLog() {
   const [currentPage, setCurrentPage] = useState(0);
   const [useLogData, setUseLogData] = useState([]);
   const [chargeLogData, setChargeLogData] = useState([]);
@@ -31,21 +32,36 @@ export const UserLog = () => {
     }
   };
 
+  const getLogDate = (item) => {
+    const dateArray = item.payDate || item.chargeDate;
+    if (Array.isArray(dateArray) && dateArray.length === 6) {
+      const [year, month, day, hour, minute, second] = dateArray;
+      return new Date(year, month - 1, day, hour, minute, second);
+    }
+    return new Date(0);
+  };
+
+  const addLogMeta = (item, logType) => ({
+    ...item,
+    logType,
+    logDate: getLogDate(item),
+  });
+
   // 모든 로그를 합치고 날짜순으로 정렬
   const getAllLogs = () => {
-    const useLogs = useLogData.map(item => ({ ...item, logType: 'usage' }));
-    const chargeLogs = chargeLogData.map(item => ({ ...item, logType: 'charge' }));
+    const useLogs = useLogData.map(item => addLogMeta(item, 'usage'));
+    const chargeLogs = chargeLogData.map(item => addLogMeta(item, 'charge'));
     const allLogs = [...useLogs, ...chargeLogs];
-    return allLogs.sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt));
+    return allLogs.sort((a, b) => b.logDate - a.logDate);
   };
 
   // 현재 탭에 따라 표시할 데이터 결정
   const getDisplayData = () => {
     switch (activeTab) {
       case 'usage':
-        return useLogData.map(item => ({ ...item, logType: 'usage' }));
+        return useLogData.map(item => addLogMeta(item, 'usage'));
       case 'charge':
-        return chargeLogData.map(item => ({ ...item, logType: 'charge' }));
+        return chargeLogData.map(item => addLogMeta(item, 'charge'));
       case 'all':
       default:
         return getAllLogs();
@@ -106,16 +122,14 @@ export const UserLog = () => {
           </S.TabButton>
         </S.TabContainer>
         
-        <S.TabNavigationContainer>
+          <S.TabNavigationContainer>
           <S.TabNavigationArrow onClick={() => {
             const tabs = ['all', 'usage', 'charge'];
             const currentIndex = tabs.indexOf(activeTab);
             const prevIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
             handleTabChange(tabs[prevIndex]);
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-              <path fillRule="evenodd" clipRule="evenodd" d="M18.3839 8.49112C18.872 8.97927 18.872 9.77074 18.3839 10.2589L13.6427 15L18.3839 19.7411C18.872 20.2292 18.872 21.0207 18.3839 21.5089C17.8958 21.997 17.1042 21.997 16.6161 21.5089L10.9911 15.8839C10.7567 15.6494 10.625 15.3315 10.625 15C10.625 14.6684 10.7567 14.3505 10.9911 14.1161L16.6161 8.49111C17.1042 8.00296 17.8958 8.00296 18.3839 8.49112Z" fill="#CCCCCC"/>
-            </svg>
+            <Icon name="chevronLeft" size={30} color="#CCCCCC" />
           </S.TabNavigationArrow>
           <S.TabNavigationArrow onClick={() => {
             const tabs = ['all', 'usage', 'charge'];
@@ -123,9 +137,7 @@ export const UserLog = () => {
             const nextIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
             handleTabChange(tabs[nextIndex]);
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-              <path fillRule="evenodd" clipRule="evenodd" d="M11.6161 8.49112C11.128 8.97927 11.128 9.77074 11.6161 10.2589L16.3573 15L11.6161 19.7411C11.128 20.2292 11.128 21.0207 11.6161 21.5089C12.1042 21.997 12.8958 21.997 13.3839 21.5089L19.0089 15.8839C19.2433 15.6494 19.375 15.3315 19.375 15C19.375 14.6684 19.2433 14.3505 19.0089 14.1161L13.3839 8.49111C12.8958 8.00296 12.1042 8.00296 11.6161 8.49112Z" fill="#CCCCCC"/>
-            </svg>
+            <Icon name="chevronRight" size={30} color="#CCCCCC" />
           </S.TabNavigationArrow>
         </S.TabNavigationContainer>
       </S.TabContainerWrapper>
@@ -135,7 +147,7 @@ export const UserLog = () => {
           <S.LogColumn>
             {leftColumnData.map((item, index) => (
               <PointLogItem 
-                key={item.logType === 'usage' ? `use-${item.payId}-${item.timestamp}` : `charge-${item.chargeId}-${item.timestamp}`}
+                key={item.logType === 'usage' ? `use-${item.payId ?? index}` : `charge-${item.chargeId ?? index}`}
                 type={item.logType === 'usage' ? 0 : 1}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
@@ -145,7 +157,7 @@ export const UserLog = () => {
           <S.LogColumn>
             {rightColumnData.map((item, index) => (
               <PointLogItem 
-                key={item.logType === 'usage' ? `use-${item.payId}-${item.timestamp}` : `charge-${item.chargeId}-${item.timestamp}`}
+                key={item.logType === 'usage' ? `use-${item.payId ?? index}` : `charge-${item.chargeId ?? index}`}
                 type={item.logType === 'usage' ? 0 : 1}
                 data={[item]}
                 fetchUserLog={fetchUserLog}
@@ -156,6 +168,6 @@ export const UserLog = () => {
       </S.UseLogWrap>
     </S.CompeleteWrap>
   );
-};
+}
 
 export default UserLog;
