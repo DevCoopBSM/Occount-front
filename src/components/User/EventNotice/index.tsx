@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Icon from 'components/Icon';
 import * as S from './style';
 
 interface EventBanner {
@@ -8,7 +9,7 @@ interface EventBanner {
   description?: string;
 }
 
-const EventNotice: React.FC = () => {
+function EventNotice() {
   const [currentPage, setCurrentPage] = useState(0);
 
   // 이벤트 배너 데이터 (실제로는 API에서 가져올 수 있습니다)
@@ -40,14 +41,14 @@ const EventNotice: React.FC = () => {
               disabled={currentPage === 0}
               aria-label="이전"
             >
-              ‹
+              <Icon name="chevronLeft" size={20} color="#111111" />
             </S.NavButton>
             <S.NavButton 
               onClick={handleNext} 
               disabled={currentPage >= Math.ceil(eventBanners.length / 4) - 1}
               aria-label="다음"
             >
-              ›
+              <Icon name="chevronRight" size={20} color="#111111" />
             </S.NavButton>
           </S.NavigationButtons>
         </S.TitleWrapper>
@@ -62,7 +63,6 @@ const EventNotice: React.FC = () => {
       </S.Content>
     </S.EventNoticeContainer>
   );
-};
+}
 
 export default EventNotice;
-
