@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Icon from 'components/Icon';
 import * as _ from './style';
 import { PaymentCheckoutPage } from '../PaymentCheckout';
 
@@ -111,9 +112,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         onRequestClose={onRequestClose}
       >
         <_.CloseButton onClick={onRequestClose} aria-label="닫기">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <Icon name="close" />
         </_.CloseButton>
         
         <_.ModalHeader>{type === 'charge' ? '아리페이 충전하기' : '출자금 납부'}</_.ModalHeader>
@@ -121,10 +120,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         <_.ModalContent>
           <_.HighlightText>
             <_.InfoIcon>
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="9" stroke="#F49E15" strokeWidth="1.5" />
-                <path d="M12 8V12M12 16H12.01" stroke="#F49E15" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
+              <Icon name="info" color="#F49E15" />
             </_.InfoIcon>
             <span>{getModalContent().highlightText}</span>
           </_.HighlightText>
@@ -149,9 +145,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           <_.ModalInputWrapper>
             <_.InputGroup>
               <_.DecreaseButton onClick={decreaseAmount} aria-label="금액 감소">
-                <svg viewBox="0 0 24 24" fill="#111111">
-                  <path d="M5 12H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-                </svg>
+                <Icon name="minus" size={16} color="#111111" />
               </_.DecreaseButton>
               <_.ModalInput
                 type="number"
@@ -167,9 +161,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 step={step}
               />
               <_.IncreaseButton onClick={increaseAmount} aria-label="금액 증가">
-                <svg viewBox="0 0 24 24" fill="#111111">
-                  <path d="M12 5V19M5 12H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-                </svg>
+                <Icon name="plus" size={16} color="#111111" />
               </_.IncreaseButton>
             </_.InputGroup>
           </_.ModalInputWrapper>

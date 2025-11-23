@@ -61,8 +61,6 @@ export const CloseButton = styled.button`
   svg {
     width: 100%;
     height: 100%;
-    stroke: #111111;
-    stroke-width: 2;
   }
 `;
 
@@ -96,12 +94,11 @@ export const InfoIcon = styled.div`
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+  color: #F49E15;
   
   svg {
     width: 100%;
     height: 100%;
-    stroke: #F49E15;
-    stroke-width: 1.5;
   }
 `;
 

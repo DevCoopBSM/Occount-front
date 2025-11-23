@@ -1,57 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Modal from 'components/Modal';
+import Icon from 'components/Icon';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import * as PortOne from '@portone/browser-sdk/v2';
+import { PaymentCheckoutPageProps, PaymentRequestOptions, PaymentType } from './PaymentCheckout.types';
 
 const storeId = process.env.REACT_APP_STORE_ID;
 const channelKey = process.env.REACT_APP_CHANNEL_KEY_PAY;
 
-// 독립적인 인터페이스 정의
-interface CustomerInfo {
-  phoneNumber: string;
-  fullName: string;
-  customerId: string;
-  email: string;
-}
-
-interface PaymentRequestOptions {
-  storeId: string;
-  paymentId: string;
-  orderName: string;
-  totalAmount: number;
-  currency: string;
-  channelKey: string;
-  payMethod: string;
-  customer: CustomerInfo;
-  windowType: {
-    pc: string;
-    mobile: string;
-  };
-  redirectUrl: string;
-  virtualAccount?: {
-    accountExpiry: {
-      validHours: number;
-    };
-  };
-}
-
-function generatePaymentId(email: string, paymentType: 'aripay' | 'investment'): string {
+function generatePaymentId(email: string, paymentType: PaymentType): string {
   const prefix = paymentType === 'aripay' ? 'A' : 'I';
   const localPart = email.split('@')[0];
   const sanitizedLocalPart = localPart.replace(/[^a-zA-Z0-9]/g, '');
   const now = new Date();
   const timeString = now.toISOString().replace(/[-:.T]/g, '');
   return `${prefix}${sanitizedLocalPart}${timeString}`;
-}
-
-interface PaymentCheckoutPageProps {
-  customerEmail: string;
-  customerName: string;
-  customerPhone?: string;
-  rechargeAmount: number;
-  onRequestClose: () => void;
-  paymentType: 'aripay' | 'investment';
 }
 
 export function PaymentCheckoutPage({
@@ -171,19 +135,14 @@ export function PaymentCheckoutPage({
         {!payMethod ? (
           <S.PaymentModal>
             <S.CloseButton onClick={onRequestClose} aria-label="닫기">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
+              <Icon name="close" />
             </S.CloseButton>
             
             <S.Title>아리페이 충전하기</S.Title>
             
             <S.HighlightBox>
               <S.InfoIcon>
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="9" stroke="#F49E15" strokeWidth="1.5" />
-                  <path d="M12 8V12M12 16H12.01" stroke="#F49E15" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
+                <Icon name="info" color="#F49E15" />
               </S.InfoIcon>
               <S.HighlightText>
                 결제수단을 선택해주세요. ( 현재는 카드 결제만 지원합니다.)
