@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import imgLogo from "assets/DevCoopL.svg";
 import { useAuth } from "contexts/authContext";
 import * as L from "./style";
 import { PageTitle } from "./style";
 
 function AdminLogin() {
-  const navigate = useNavigate(); // <-- 추가
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
-    unifiedLogin, 
+    unifiedLogin,
     errorMessage
   } = useAuth();
 
@@ -56,7 +57,7 @@ function AdminLogin() {
         />
         <L.LoginButton>로그인</L.LoginButton>
       </L.LoginWrap>
-      {errorMessage && (
+      {errorMessage && location.pathname.includes('admin') && (
         <L.ModalOverlay>
           <L.ModalContent>
             {errorMessage}
