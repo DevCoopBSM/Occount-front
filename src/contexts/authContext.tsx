@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { NavigateFunction } from 'react-router-dom';
-import { axiosInstance, setAccessToken, getAccessToken, setErrorFunction } from 'utils/Axios';
+import axios from 'axios';
+import { axiosInstance, setAccessToken, getAccessToken } from 'utils/Axios';
 
 interface User {
   point: number;
@@ -107,13 +108,6 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  useEffect(() => {
-    setErrorFunction((error: any) => {
-      const errMsg = error?.response?.data?.message || error?.message || '알 수 없는 오류가 발생했습니다.';
-      dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
-    });
-  }, []);
-
   // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
     const devMode = isDevMode();
@@ -135,8 +129,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const unifiedLogin = useCallback(async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
     try {
-      const response = await axiosInstance.post('v2/auth/login', { userEmail: email, userPassword: password });
-      
+      // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const loginAxios = axios.create({
+        baseURL: axiosInstance.defaults.baseURL,
+        headers: axiosInstance.defaults.headers,
+      });
+
+      const response = await loginAxios.post('v2/auth/login', {
+        userEmail: email,
+        userPassword: password,
+      });
+
       if (!response.data.success) {
         if (response.data.status === "REDIRECT") {
           navigate(response.data.redirectUrl);
@@ -215,23 +218,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const registerStudent = useCallback(async (userName: string, userEmail: string, userPassword: string) => {
-    try {
-      const response = await axiosInstance.post('v2/auth/register', { userName, userEmail, userPassword });
-      return { success: true, message: response.data.message || '회원가입에 성공했습니다.' };
-    } catch (error: any) {
-      console.error('Student registration error:', error);
-      const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
-      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
-      return { success: false, message: errorMessage };
-    }
-  }, []);
+  const registerStudent = useCallback(
+    async (userName: string, userEmail: string, userPassword: string) => {
+      try {
+        const response = await axiosInstance.post('v2/auth/register', {
+          userName,
+          userEmail,
+          userPassword,
+        });
+        return {
+          success: true,
+          message: response.data.message || '회원가입에 성공했습니다.',
+        };
+      } catch (error: any) {
+        console.error('Student registration error:', error);
+        const errorMessage =
+          error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
+        dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+        setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+        return { success: false, message: errorMessage };
+      }
+    },
+    []
+  );
 
   const requestEmailVerification = useCallback(async (email: string, name: string) => {
     try {
-      const response = await axiosInstance.post('v2/verify/send', { userEmail: email, userName: name });
-      return { success: true, message: response.data.message || '이메일 인증 요청이 성공했습니다.' };
+      // 비밀번호 재설정 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const pwResetAxios = axios.create({
+        baseURL: axiosInstance.defaults.baseURL,
+        headers: axiosInstance.defaults.headers,
+      });
+
+      const response = await pwResetAxios.post('v2/verify/send', {
+        userEmail: email,
+        userName: name,
+      });
+      return {
+        success: true,
+        message: response.data.message || '이메일 인증 요청이 성공했습니다.',
+      };
     } catch (error: any) {
       console.error('Email verification request failed:', error);
       return { success: false, message: error.response?.data?.message || '이메일 인증 요청에 실패했습니다.' };
@@ -240,7 +266,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const changePassword = useCallback(async (jwtToken: string, newPassword: string) => {
     try {
-      const response = await axiosInstance.post(`v2/auth/pwChange/${jwtToken}`, { newPassword });
+      // 비밀번호 변경 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const pwChangeAxios = axios.create({
+        baseURL: axiosInstance.defaults.baseURL,
+        headers: axiosInstance.defaults.headers,
+      });
+
+      const response = await pwChangeAxios.post(
+        `v2/auth/pwChange/${jwtToken}`,
+        { newPassword }
+      );
       return { success: true, message: response.data.message || '비밀번호가 성공적으로 변경되었습니다.' };
     } catch (error: any) {
       console.error('Password change error:', error);
