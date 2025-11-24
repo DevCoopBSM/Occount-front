@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import UserHeader from 'pages/User/UserPage/UserHeader';
-import Footer from 'pages/User/UserPage/Footer';
+import Footer from 'components/Footer';
 import * as P from 'common/PageWrapStyle';
 
 interface UserLayoutProps {
   children: ReactNode;
 }
 
-const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
+function UserLayout({ children }: UserLayoutProps) {
   return (
     <P.PageWrap>
       <P.PageContainer>
@@ -17,6 +17,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       </P.PageContainer>
     </P.PageWrap>
   );
-};
+}
 
 export default UserLayout;

@@ -365,6 +365,17 @@ export const NoticeList = styled.div`
   gap: 2px;
 `;
 
+export const EmptyMessage = styled.div`
+  padding: 12px 10px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  color: #666666;
+
+  ${mediaQuery(TABLET_BREAKPOINT)} {
+    font-size: 15px;
+  }
+`;
+
 export const NoticeItem = styled.div`
   display: flex;
   justify-content: space-between;
