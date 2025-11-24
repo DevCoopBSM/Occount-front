@@ -46,23 +46,19 @@ const getAccentColor = (type: string) => {
 
 export const ToastOverlay = styled.div`
   position: fixed;
-  top: 40px;
+  top: 80px;
   right: 0;
   z-index: 9999;
   pointer-events: none;
   display: flex;
   justify-content: flex-end;
 
-  ${mediaQuery('1200px')} {
-    top: 30px;
-  }
-
   ${mediaQuery('768px')} {
-    top: 24px;
+    top: 70px;
   }
 
   ${mediaQuery('480px')} {
-    top: 20px;
+    top: 60px;
   }
 `;
 
@@ -70,7 +66,7 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   display: flex;
   align-items: flex-start;
   width: auto;
-  max-width: 90vw;
+  max-width: min(600px, 90vw);
   background: white;
   border: 2px solid #dddddd;
   border-radius: 0;
@@ -79,12 +75,8 @@ export const ToastContainer = styled.div<ToastContainerProps>`
     ease-in-out;
   pointer-events: auto;
 
-  ${mediaQuery('1200px')} {
-    max-width: 600px;
-  }
-
   ${mediaQuery('768px')} {
-    max-width: 500px;
+    max-width: min(500px, 92vw);
   }
 
   ${mediaQuery('480px')} {
@@ -93,13 +85,13 @@ export const ToastContainer = styled.div<ToastContainerProps>`
 `;
 
 export const AccentBar = styled.div<{ $type: string }>`
-  width: 30px;
+  width: clamp(20px, 2.08vw, 40px);
   background: ${(props) => getAccentColor(props.$type)};
   flex-shrink: 0;
   align-self: stretch;
 
   ${mediaQuery('480px')} {
-    width: 24px;
+    width: 20px;
   }
 `;
 
@@ -108,78 +100,68 @@ export const ContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
+  padding: clamp(12px, 1.46vw, 28px) clamp(16px, 1.67vw, 32px);
+  gap: clamp(12px, 8.44vw, 162px);
   background: white;
-
-  ${mediaQuery('768px')} {
-    padding: 14px 20px;
-  }
+  min-width: 0;
 
   ${mediaQuery('480px')} {
     padding: 12px 16px;
+    gap: 12px;
   }
 `;
 
 export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: clamp(3px, 0.4vw, 5px);
   color: #111111;
   flex: 1;
+  min-width: 0;
 `;
 
 export const TitleContainer = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
   font-family: 'Pretendard', sans-serif;
   font-weight: 800;
-  font-size: 24px;
-  line-height: 32px;
-
-  ${mediaQuery('768px')} {
-    font-size: 20px;
-    line-height: 28px;
-  }
+  font-size: clamp(16px, 1.67vw, 32px);
+  line-height: 1.3;
+  white-space: nowrap;
 
   ${mediaQuery('480px')} {
-    font-size: 18px;
-    line-height: 24px;
-    gap: 4px;
+    font-size: 16px;
   }
 `;
 
 export const ExclamationMark = styled.span`
   color: inherit;
+  flex-shrink: 0;
 `;
 
 export const Title = styled.span`
   color: inherit;
+  word-break: keep-all;
 `;
 
 export const Message = styled.p`
   font-family: 'Pretendard', sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: clamp(13px, 1.25vw, 24px);
+  line-height: 1.4;
   color: #111111;
   margin: 0;
   white-space: nowrap;
 
-  ${mediaQuery('768px')} {
-    font-size: 14px;
-    line-height: 20px;
-  }
-
   ${mediaQuery('480px')} {
     font-size: 13px;
-    line-height: 18px;
   }
 `;
 
 export const CloseButton = styled.button`
-  width: 36px;
-  height: 36px;
+  width: clamp(28px, 2.5vw, 48px);
+  height: clamp(28px, 2.5vw, 48px);
   background: none;
   border: none;
   cursor: pointer;
@@ -187,24 +169,15 @@ export const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     opacity: 0.7;
   }
 
   svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  ${mediaQuery('768px')} {
-    width: 32px;
-    height: 32px;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
+    width: clamp(18px, 2.08vw, 40px);
+    height: clamp(18px, 2.08vw, 40px);
   }
 
   ${mediaQuery('480px')} {

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ToastProps } from './types';
+import Icon from '../../components/Icon';
 import * as S from './style';
 
 const Toast: React.FC<ToastProps> = ({
@@ -48,15 +49,7 @@ const Toast: React.FC<ToastProps> = ({
             <S.Message>{message}</S.Message>
           </S.TextContainer>
           <S.CloseButton onClick={onClose}>
-            <svg viewBox="0 0 24 24" fill="none">
-              <path
-                d="M18 6L6 18M6 6l12 12"
-                stroke="#111111"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Icon name="close" color="#111111" size={36} />
           </S.CloseButton>
         </S.ContentWrapper>
       </S.ToastContainer>
