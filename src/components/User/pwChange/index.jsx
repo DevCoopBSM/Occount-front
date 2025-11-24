@@ -62,7 +62,7 @@ function PwChange() {
     return (
       <L.Container>
         <L.SuccessContainer>
-          <L.LogoWraping>
+          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
           </L.LogoWraping>
           <L.SuccessMessage>
@@ -83,7 +83,7 @@ function PwChange() {
     <L.Container>
       <L.LogoAndForm>
         <L.LogoContainer>
-          <L.LogoWraping>
+          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
           </L.LogoWraping>
           <L.LogoSubText>비밀번호 찾기</L.LogoSubText>

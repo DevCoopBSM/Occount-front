@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import imgLogo from "assets/occLoginlogo.svg";
+import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from "common/Toast";
 import * as L from "./style";
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
       <L.LoginWrap onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
         <L.LogoAndForm>
           <L.LogoContainer>
-            <L.LogoWraping>
+            <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
               <L.LogoImg src={imgLogo} alt="logo" />
             </L.LogoWraping>
             <L.LogoSubText>

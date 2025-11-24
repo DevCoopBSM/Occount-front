@@ -106,7 +106,7 @@ function PwChangeEX(): JSX.Element {
     <L.Container>
       <L.LogoAndForm>
         <L.LogoContainer>
-          <L.LogoWraping>
+          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
           </L.LogoWraping>
           <L.Title>비밀번호 재설정</L.Title>
