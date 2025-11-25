@@ -9,6 +9,7 @@ import PwChangeEX from 'components/User/pwChangeEX';
 import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
+import EventNotice from 'components/User/EventNotice';
 
 const UserRoutes: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const UserRoutes: React.FC = () => {
       <Routes>
         <Route path="/" element={<UserMain />} />
         <Route path="/howto" element={<HowTo />} />
+        <Route path="/event" element={<EventNotice />} />
         <Route path="/login" element={<Login />} />
         <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
         <Route path="/pwchange" element={<PwChange />} />
