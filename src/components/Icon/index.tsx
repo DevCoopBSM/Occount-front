@@ -59,6 +59,29 @@ const iconConfigs: Record<IconName, IconConfig> = {
       />
     ),
   },
+const iconPaths: Record<IconName, (strokeWidth: number, color: string) => React.ReactNode> = {
+  close: (strokeWidth, color) => (
+    <>
+      <path d="M6 6L18 18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <path d="M18 6L6 18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </>
+  ),
+  info: (strokeWidth, color) => (
+    <>
+      <circle cx="12" cy="12" r="9" stroke={color} strokeWidth={strokeWidth} />
+      <path d="M12 8V12" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <path d="M12 16H12.01" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </>
+  ),
+  minus: (strokeWidth, color) => (
+    <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+  ),
+  plus: (strokeWidth, color) => (
+    <>
+      <path d="M12 5V19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </>
+  ),
 };
 
 const Icon: React.FC<IconProps> = ({
@@ -81,6 +104,7 @@ const Icon: React.FC<IconProps> = ({
       {...props}
     >
       {config.render(resolvedStrokeWidth, color)}
+      {iconPaths[name](resolvedStrokeWidth, color)}
     </svg>
   );
 };
