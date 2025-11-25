@@ -1,15 +1,6 @@
 import React from 'react';
 
-type IconName =
-  | 'close'
-  | 'info'
-  | 'minus'
-  | 'plus'
-  | 'menu'
-  | 'settings'
-  | 'chevronLeft'
-  | 'chevronRight';
-type IconName = 'close' | 'info' | 'minus' | 'plus';
+type IconName = 'close' | 'info' | 'minus' | 'plus' | 'menu' | 'settings';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconName;
@@ -42,7 +33,9 @@ const iconConfigs: Record<IconName, IconConfig> = {
     ),
   },
   minus: {
-    render: (strokeWidth, color) => <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />,
+    render: (strokeWidth, color) => (
+      <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    ),
   },
   plus: {
     render: (strokeWidth, color) => (

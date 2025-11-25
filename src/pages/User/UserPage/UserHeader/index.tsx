@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as H from './style';
-import AriPayLogo from 'assets/OccountLogo.svg';
+import OccountLogo from 'assets/occount-logo.svg';
+import Icon from 'components/Icon';
 import { useAuth } from 'contexts/authContext';
 import { useNavigate } from 'react-router-dom';
 
-const Header: React.FC = () => {
+function Header() {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -25,7 +26,6 @@ const Header: React.FC = () => {
   const handleSettingsClick = (): void => {
     setDropdownVisible(!dropdownVisible);
   };
-
 
   const handleUserInfoChangeClick = (): void => {
     navigate('/update');
@@ -49,28 +49,39 @@ const Header: React.FC = () => {
       <H.HeaderInBox>
         <H.LogoWrapper onClick={handleLogoClick}>
           <img 
-            src={AriPayLogo} 
-            alt="AriPay Logo" 
-            width="130px" 
-            height="100px"
+            src={OccountLogo} 
+            alt="Occount Logo"
           />
         </H.LogoWrapper>
-        {isLoggedIn ? (
+        
+        <H.RightSection>
+          <H.MenuButton>
+            <Icon name="menu" strokeWidth={1.5} />
+            <span>메뉴</span>
+          </H.MenuButton>
+          
           <H.SettingsContainer ref={dropdownRef}>
-            <H.SettingsButton onClick={handleSettingsClick}>설정</H.SettingsButton>
+            <H.SettingsButton onClick={handleSettingsClick}>
+              <Icon name="settings" size={30} />
+              <span>설정</span>
+            </H.SettingsButton>
             {dropdownVisible && (
               <H.DropdownMenu>
-                <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
-                <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
+                {isLoggedIn ? (
+                  <>
+                    <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
+                    <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
+                  </>
+                ) : (
+                  <H.DropdownItem onClick={handleLoginClick}>로그인</H.DropdownItem>
+                )}
               </H.DropdownMenu>
             )}
           </H.SettingsContainer>
-        ) : (
-          <H.LogOutBtn onClick={handleLoginClick}>로그인</H.LogOutBtn>
-        )}
+        </H.RightSection>
       </H.HeaderInBox>
     </H.PageHeader>
   );
-};
+}
 
 export default Header;

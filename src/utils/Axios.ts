@@ -43,88 +43,6 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
       userPhone: '010-1234-5678',
       roles: 'ROLE_MEMBER'
     };
-  } else if (url.includes('v2/transaction/paylog')) {
-    // 사용 내역 mock 데이터
-    mockData = {
-      payLogList: [
-        {
-          payId: 1,
-          payType: '1',
-          payDate: [2024, 11, 14, 10, 30, 0],
-          payedPoint: 3500,
-          refundState: false
-        },
-        {
-          payId: 2,
-          payType: '1',
-          payDate: [2024, 11, 13, 15, 20, 0],
-          payedPoint: 5000,
-          refundState: false
-        },
-        {
-          payId: 3,
-          payType: '1',
-          payDate: [2024, 11, 12, 12, 15, 0],
-          payedPoint: 2500,
-          refundState: false
-        },
-        {
-          payId: 4,
-          payType: '1',
-          payDate: [2024, 11, 11, 14, 45, 0],
-          payedPoint: 4000,
-          refundState: false
-        },
-        {
-          payId: 5,
-          payType: '1',
-          payDate: [2024, 11, 10, 11, 30, 0],
-          payedPoint: 3000,
-          refundState: false
-        }
-      ]
-    };
-  } else if (url.includes('v2/transaction/chargelog')) {
-    // 충전 내역 mock 데이터
-    mockData = {
-      chargeLogList: [
-        {
-          chargeId: 1,
-          chargeType: '2', // 카드 충전
-          chargeDate: [2024, 11, 14, 9, 0, 0],
-          chargedPoint: 10000,
-          refundState: false
-        },
-        {
-          chargeId: 2,
-          chargeType: '2',
-          chargeDate: [2024, 11, 12, 10, 30, 0],
-          chargedPoint: 20000,
-          refundState: false
-        },
-        {
-          chargeId: 3,
-          chargeType: '1', // 오프라인 충전
-          chargeDate: [2024, 11, 10, 14, 0, 0],
-          chargedPoint: 15000,
-          refundState: false
-        },
-        {
-          chargeId: 4,
-          chargeType: '2',
-          chargeDate: [2024, 11, 8, 16, 20, 0],
-          chargedPoint: 30000,
-          refundState: false
-        },
-        {
-          chargeId: 5,
-          chargeType: '2',
-          chargeDate: [2024, 11, 5, 11, 10, 0],
-          chargedPoint: 25000,
-          refundState: false
-        }
-      ]
-    };
   }
   
   return {
@@ -151,7 +69,7 @@ export const axiosInstance: AxiosInstanceWithSuspense = axios.create({
   },
   // 개발 모드일 때 adapter를 오버라이드하여 실제 네트워크 요청 차단
   adapter: isDevMode() ? (config: any) => {
-    console.log('🚫 개발 모드: 네트워크 요청 완전 차단', config.method?.toUpperCase(), config.url);
+    console.log('개발 모드: 네트워크 요청 완전 차단', config.method?.toUpperCase(), config.url);
     return Promise.resolve(createMockResponse(config));
   } : undefined,
 }) as AxiosInstanceWithSuspense;
@@ -186,7 +104,7 @@ const decrementActiveRequests = () => {
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 개발 모드일 때는 adapter에서 처리하므로 로딩 관리 안 함
+    // 개발 모드일 때는 adapter에서 처리하므로 여기서는 로딩만 관리
     if (!isDevMode()) {
       incrementActiveRequests();
     }
