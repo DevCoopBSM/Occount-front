@@ -1,57 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Modal from 'components/Modal';
+import Icon from 'components/Icon';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import * as PortOne from '@portone/browser-sdk/v2';
+import { PaymentCheckoutPageProps, PaymentRequestOptions, PaymentType } from './PaymentCheckout.types';
 
 const storeId = process.env.REACT_APP_STORE_ID;
 const channelKey = process.env.REACT_APP_CHANNEL_KEY_PAY;
 
-// 독립적인 인터페이스 정의
-interface CustomerInfo {
-  phoneNumber: string;
-  fullName: string;
-  customerId: string;
-  email: string;
-}
-
-interface PaymentRequestOptions {
-  storeId: string;
-  paymentId: string;
-  orderName: string;
-  totalAmount: number;
-  currency: string;
-  channelKey: string;
-  payMethod: string;
-  customer: CustomerInfo;
-  windowType: {
-    pc: string;
-    mobile: string;
-  };
-  redirectUrl: string;
-  virtualAccount?: {
-    accountExpiry: {
-      validHours: number;
-    };
-  };
-}
-
-function generatePaymentId(email: string, paymentType: 'aripay' | 'investment'): string {
+function generatePaymentId(email: string, paymentType: PaymentType): string {
   const prefix = paymentType === 'aripay' ? 'A' : 'I';
   const localPart = email.split('@')[0];
   const sanitizedLocalPart = localPart.replace(/[^a-zA-Z0-9]/g, '');
   const now = new Date();
   const timeString = now.toISOString().replace(/[-:.T]/g, '');
   return `${prefix}${sanitizedLocalPart}${timeString}`;
-}
-
-interface PaymentCheckoutPageProps {
-  customerEmail: string;
-  customerName: string;
-  customerPhone?: string;
-  rechargeAmount: number;
-  onRequestClose: () => void;
-  paymentType: 'aripay' | 'investment';
 }
 
 export function PaymentCheckoutPage({
@@ -170,17 +134,25 @@ export function PaymentCheckoutPage({
       <S.BoxSection>
         {!payMethod ? (
           <S.PaymentModal>
-            <S.Title>
-              {paymentType === 'aripay' ? '아리페이 충전' : '출자금 납부'}
-            </S.Title>
-            <S.SubTitle>결제 수단을 선택해 주세요</S.SubTitle>
-            <S.Description>현재는 카드 결제만 지원합니다.</S.Description>
+            <S.CloseButton onClick={onRequestClose} aria-label="닫기">
+              <Icon name="close" />
+            </S.CloseButton>
+            
+            <S.Title>아리페이 충전하기</S.Title>
+            
+            <S.HighlightBox>
+              <S.InfoIcon>
+                <Icon name="info" color="#F49E15" />
+              </S.InfoIcon>
+              <S.HighlightText>
+                결제수단을 선택해주세요. ( 현재는 카드 결제만 지원합니다.)
+              </S.HighlightText>
+            </S.HighlightBox>
             
             <S.NoticeBox>
               <S.NoticeText>
-                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.
-                결제 진행시 동의 여부를 물어보며 
-                이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
+                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.<br />
+                결제 진행시 동의 여부를 물어보며 이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
               </S.NoticeText>
               <S.InfoTable>
                 <S.InfoRow>
@@ -195,12 +167,12 @@ export function PaymentCheckoutPage({
             </S.NoticeBox>
 
             <S.ButtonGroup>
-              <S.PaymentButton onClick={handlePaymentStart}>
-                카드 결제
-              </S.PaymentButton>
               <S.CancelButton onClick={onRequestClose}>
-                닫기
+                취소
               </S.CancelButton>
+              <S.PaymentButton onClick={handlePaymentStart}>
+                결제진행
+              </S.PaymentButton>
             </S.ButtonGroup>
           </S.PaymentModal>
         ) : (
@@ -208,7 +180,7 @@ export function PaymentCheckoutPage({
             isOpen={true}
             onRequestClose={onRequestClose}
             style={{
-              backgroundColor: '#fff',  // 배경색을 하얀색으로
+              backgroundColor: '#fff',
               padding: '24px',
               borderRadius: '16px',
               width: '90%',
