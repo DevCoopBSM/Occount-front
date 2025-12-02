@@ -66,7 +66,7 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   display: flex;
   align-items: flex-start;
   width: auto;
-  max-width: min(600px, 90vw);
+  max-width: 90vw;
   background: white;
   border: 2px solid #dddddd;
   border-radius: 0;
@@ -76,7 +76,7 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   pointer-events: auto;
 
   ${mediaQuery('768px')} {
-    max-width: min(500px, 92vw);
+    max-width: 92vw;
   }
 
   ${mediaQuery('480px')} {
@@ -153,9 +153,12 @@ export const Message = styled.p`
   color: #111111;
   margin: 0;
   white-space: nowrap;
+  overflow: visible;
 
   ${mediaQuery('480px')} {
     font-size: 13px;
+    white-space: normal;
+    word-break: keep-all;
   }
 `;
 
