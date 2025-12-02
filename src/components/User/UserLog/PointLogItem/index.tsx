@@ -3,39 +3,9 @@ import * as _ from './style';
 import { useAuth } from 'contexts/authContext';
 import RefundFormModal from './RefundFormModal';
 import { handleRefundRequest } from './refundService';
+import { LogItem, PointLogItemProps, RefundAccount } from './types';
 
-// LogItem 인터페이스를 수정하여 payId를 포함시킵니다.
-interface LogItem {
-  chargeId: number;
-  payId?: number;  // payId를 선택적 속성으로 추가
-  type: string;
-  date: string;
-  inner_point: string;
-  chargeDate?: number[];
-  payDate?: number[];
-  chargedPoint?: number;
-  payedPoint?: number;
-  chargeType?: string;
-  payType?: string;
-  refundState?: boolean;
-  reason?: string;  // reason 필드 추가
-}
-
-// RefundAccount 인터페이스를 refundService.ts와 일치하도록 수정
-export interface RefundAccount {
-  bank: string;
-  accountNumber: string;  // number를 accountNumber로 변경
-  holderName: string;
-  holderPhoneNumber?: string;  // 선택적 속성으로 변경
-}
-
-interface PointLogItemProps {
-  type: number;
-  data: LogItem[];
-  fetchUserLog: (type: string) => Promise<void>;
-}
-
-const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog }) => {
+function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [refundAccount, setRefundAccount] = useState<RefundAccount>({
     bank: '',
@@ -84,10 +54,7 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
   const isOverWeek = dayDiff > 7;
 
   const getBackgroundColor = () => {
-    if (item.refundState) return '#ffcccc';
-    if (itemType === '1' && type === 1) return '#fffacd';
-    if (isOverWeek && type === 1) return '#fffacd';
-    return type === 0 ? '#d4f4dd' : '#E6EBFF';
+    return '#ffffff';
   };
 
   const getTransactionType = () => {
@@ -163,8 +130,10 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
         onClick={handleItemClick}
         style={{ background: getBackgroundColor() }}
       >
-        <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').slice(0, -1)}</_.DateText>
-        <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
+        <_.LeftSection>
+          <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace(/\./g, '')}</_.DateText>
+          <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
+        </_.LeftSection>
         <_.ChargeTypeText>{getTransactionType()}</_.ChargeTypeText>
       </_.PointLogWrap>
 
@@ -225,6 +194,6 @@ const PointLogItem: React.FC<PointLogItemProps> = ({ type, data, fetchUserLog })
       )}
     </div>
   );
-};
+}
 
 export default PointLogItem;
