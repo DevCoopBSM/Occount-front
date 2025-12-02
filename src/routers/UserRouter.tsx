@@ -12,19 +12,20 @@ import UserLog from 'components/User/UserLog';
 
 const UserRoutes: React.FC = () => {
   return (
-    <UserPage>
-      <Routes>
-        <Route path="/" element={<UserMain />} />
-        <Route path="/howto" element={<HowTo />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
-        <Route path="/pwchange" element={<PwChange />} />
-        <Route path="/update" element={<Update />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/userlog" element={<UserLog />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
+      <Route path="/pwchange" element={<PwChange />} />
+
+      <Route path="/" element={<UserPage />}>
+        <Route index element={<UserMain />} />
+        <Route path="howto" element={<HowTo />} />
+        <Route path="update" element={<Update />} />
+        <Route path="userlog" element={<UserLog />} />
         <Route path="*" element={<Navigate to="/404" />} />
-      </Routes>
-    </UserPage>
+      </Route>
+    </Routes>
   );
 };
 
