@@ -18,17 +18,13 @@ const UserRoutes: React.FC = () => {
       <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
       <Route path="/pwchange" element={<PwChange />} />
 
-      <Route path="/*" element={
-        <UserPage>
-          <Routes>
-            <Route path="/" element={<UserMain />} />
-            <Route path="/howto" element={<HowTo />} />
-            <Route path="/update" element={<Update />} />
-            <Route path="/userlog" element={<UserLog />} />
-            <Route path="*" element={<Navigate to="/404" />} />
-          </Routes>
-        </UserPage>
-      } />
+      <Route path="/" element={<UserPage />}>
+        <Route index element={<UserMain />} />
+        <Route path="howto" element={<HowTo />} />
+        <Route path="update" element={<Update />} />
+        <Route path="userlog" element={<UserLog />} />
+        <Route path="*" element={<Navigate to="/404" />} />
+      </Route>
     </Routes>
   );
 };
