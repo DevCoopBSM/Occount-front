@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastProps } from './types';
 import Icon from '../../components/Icon';
 import * as S from './style';
+
+const ANIMATION_DURATION = 300;
 
 const Toast: React.FC<ToastProps> = ({
   isVisible,
@@ -11,6 +13,19 @@ const Toast: React.FC<ToastProps> = ({
   duration = 3000,
   onClose,
 }) => {
+  const [shouldRender, setShouldRender] = useState(isVisible);
+
+  useEffect(() => {
+    if (isVisible) {
+      setShouldRender(true);
+    } else if (shouldRender) {
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+      }, ANIMATION_DURATION);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, shouldRender]);
+
   useEffect(() => {
     if (isVisible && duration > 0) {
       const timer = setTimeout(() => {
@@ -24,7 +39,7 @@ const Toast: React.FC<ToastProps> = ({
   const getTitle = (type: string) => {
     switch (type) {
       case 'error':
-        return '로그인 오류';
+        return '오류';
       case 'success':
         return '성공';
       case 'warning':
@@ -35,7 +50,7 @@ const Toast: React.FC<ToastProps> = ({
     }
   };
 
-  if (!isVisible) return null;
+  if (!shouldRender) return null;
 
   return (
     <S.ToastOverlay>
