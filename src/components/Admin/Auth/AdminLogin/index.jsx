@@ -57,7 +57,7 @@ function AdminLogin() {
         />
         <L.LoginButton>로그인</L.LoginButton>
       </L.LoginWrap>
-      {errorMessage && location.pathname.includes('admin') && (
+      {errorMessage && location.pathname === '/admin/login' && (
         <L.ModalOverlay>
           <L.ModalContent>
             {errorMessage}
