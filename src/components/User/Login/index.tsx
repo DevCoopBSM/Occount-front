@@ -65,19 +65,19 @@ const Login: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleCloseToast = () => {
+  const handleCloseToast = useCallback(() => {
     setShowToast(false);
     setErrorMessage('');
-  };
+  }, [setShowToast, setErrorMessage]);
 
   return (
     <L.Container>
       <L.LoginWrap onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
         <L.LogoAndForm>
           <L.LogoContainer>
-            <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
               <L.LogoImg src={imgLogo} alt="logo" />
-            </L.LogoWraping>
+            </L.LogoWrapping>
             <L.LogoSubText>
               로그인 후 오카운트의 더 다양한 기능을 만나보세요!
             </L.LogoSubText>
@@ -152,6 +152,7 @@ const Login: React.FC = () => {
         isVisible={showToast}
         message="아이디 혹은 비밀번호를 다시 확인해 주세요!"
         type="error"
+        title="로그인 오류"
         onClose={handleCloseToast}
       />
     </L.Container>

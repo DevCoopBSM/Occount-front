@@ -27,6 +27,10 @@ function PwChangeEX(): JSX.Element {
   const [toastType, setToastType] = useState<"success" | "error">("error");
   const [toastTitle, setToastTitle] = useState<string>("");
 
+  const handleCloseToast = React.useCallback(() => {
+    setShowToast(false);
+  }, []);
+
   const isPasswordValid = (password: string): string => {
     if (password.length < 8) return "비밀번호는 8자 이상이어야 합니다.";
     if (!/[a-z]/.test(password)) return "비밀번호는 소문자를 포함해야 합니다.";
@@ -95,7 +99,7 @@ function PwChangeEX(): JSX.Element {
         );
       } else {
         setToastMessage(
-          "비밀번호가 맞는지, 이전과 같진 않은지 다시 확인해주세요."
+          "알 수 없는 오류가 발생했습니다. 다시 시도해주시기 바랍니다 "
         );
       }
       setShowToast(true);
@@ -106,9 +110,9 @@ function PwChangeEX(): JSX.Element {
     <L.Container>
       <L.LogoAndForm>
         <L.LogoContainer>
-          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
-          </L.LogoWraping>
+          </L.LogoWrapping>
           <L.Title>비밀번호 재설정</L.Title>
         </L.LogoContainer>
 
@@ -159,7 +163,7 @@ function PwChangeEX(): JSX.Element {
         type={toastType}
         title={toastTitle}
         duration={3000}
-        onClose={() => setShowToast(false)}
+        onClose={handleCloseToast}
       />
     </L.Container>
   );

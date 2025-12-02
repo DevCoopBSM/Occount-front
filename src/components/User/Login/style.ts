@@ -25,9 +25,9 @@ export const LogoContainer = styled.div`
   gap: clamp(6px, 0.31vw, 6px);
 `;
 
-export const LogoWraping = styled.div`
-  width: clamp(150px, 18.23vw, 350px);
-  height: clamp(40px, 4.17vw, 80px);
+export const LogoWrapping = styled.div`
+  width: clamp(150px, 20.94vw, 402px);
+  height: clamp(40px, 4.17vw, 113px);
   display: flex;
   align-items: center;
   justify-content: center;

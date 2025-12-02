@@ -18,6 +18,10 @@ function PwChange() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [userName, setUserName] = useState("");
 
+  const handleCloseToast = React.useCallback(() => {
+    setShowToast(false);
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "email") {
@@ -26,7 +30,6 @@ function PwChange() {
       setName(value);
     }
 
-    // 입력 시 토스트 숨기기
     if (showToast) {
       setShowToast(false);
     }
@@ -62,11 +65,11 @@ function PwChange() {
     return (
       <L.Container>
         <L.SuccessContainer>
-          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
-          </L.LogoWraping>
+          </L.LogoWrapping>
           <L.SuccessMessage>
-            {userName} 님의 메일/전화번호로 재설정 링크가 전달되었어요!
+            {userName} 님의 이메일로 재설정 링크가 전달되었어요!
           </L.SuccessMessage>
           <L.SuccessSubMessage>
             로그인 후에 OCCOUNT의 서비스를 이용해보세요
@@ -83,9 +86,9 @@ function PwChange() {
     <L.Container>
       <L.LogoAndForm>
         <L.LogoContainer>
-          <L.LogoWraping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src={imgLogo} alt="logo" />
-          </L.LogoWraping>
+          </L.LogoWrapping>
           <L.LogoSubText>비밀번호 찾기</L.LogoSubText>
         </L.LogoContainer>
 
@@ -119,7 +122,8 @@ function PwChange() {
         message={toastMessage}
         title={toastTitle}
         type={toastType}
-        onClose={() => setShowToast(false)}
+        onClose={handleCloseToast}
+        duration={3000}
       />
     </L.Container>
   );
