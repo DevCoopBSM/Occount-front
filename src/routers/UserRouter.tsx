@@ -10,23 +10,25 @@ import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
 import EventNotice from 'components/User/EventNotice';
+import PrivateRoute from 'common/PrivateRoute';
 
 const UserRoutes: React.FC = () => {
   return (
-    <UserPage>
-      <Routes>
-        <Route path="/" element={<UserMain />} />
-        <Route path="/howto" element={<HowTo />} />
-        <Route path="/event" element={<EventNotice />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
-        <Route path="/pwchange" element={<PwChange />} />
-        <Route path="/update" element={<Update />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/userlog" element={<UserLog />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
+      <Route path="/pwchange" element={<PwChange />} />
+
+      <Route path="/" element={<UserPage />}>
+        <Route index element={<UserMain />} />
+        <Route path="howto" element={<HowTo />} />
+        <Route path="event" element={<EventNotice />} />
+        <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />
+        <Route path="userlog" element={<PrivateRoute><UserLog /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/404" />} />
-      </Routes>
-    </UserPage>
+      </Route>
+    </Routes>
   );
 };
 

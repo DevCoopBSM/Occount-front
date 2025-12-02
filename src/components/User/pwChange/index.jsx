@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import imgLogo from "assets/occpwChangeLogo.svg";
+import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
+import Toast from 'common/Toast';
 import * as L from "./style";
 
 function PwChange() {
   const navigate = useNavigate();
-  const { 
-    requestEmailVerification,
-    errorMessage,
-  } = useAuth();
+  const { requestEmailVerification } = useAuth();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastType, setToastType] = useState('error');
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastTitle, setToastTitle] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  const handleCloseToast = React.useCallback(() => {
+    setShowToast(false);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +29,10 @@ function PwChange() {
     } else if (name === "name") {
       setName(value);
     }
+
+    if (showToast) {
+      setShowToast(false);
+    }
   };
   
   const handleSubmit = async (e) => {
@@ -28,46 +40,91 @@ function PwChange() {
     try {
       const result = await requestEmailVerification(email, name);
       if (result.success) {
-        alert(`${name} 님의 이메일로 비밀번호 재설정 링크가 전송되었습니다.`);
-        navigate("/");
+        setUserName(name);
+        setToastType('success');
+        setToastTitle('비밀번호 재설정 링크 발송');
+        setToastMessage(`${name} 님의 메일로 재설정 링크가 발송되었어요.`);
+        setShowToast(true);
+        setShowSuccess(true);
       } else {
-        alert(result.message);
+        setToastType('error');
+        setToastTitle('일치하는 정보 없음');
+        setToastMessage('계정이 존재하는지 다시 확인해 주세요.');
+        setShowToast(true);
       }
     } catch (error) {
-      console.error("PwChange component error:", error);
-      alert('비밀번호 재설정 요청 중 오류가 발생했습니다.');
+      console.error('PwChange component error:', error);
+      setToastType('error');
+      setToastTitle('일치하는 정보 없음');
+      setToastMessage('계정이 존재하는지 다시 확인해 주세요.');
+      setShowToast(true);
     }
   };
 
+  if (showSuccess) {
+    return (
+      <L.Container>
+        <L.SuccessContainer>
+          <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <L.LogoImg src={imgLogo} alt="logo" />
+          </L.LogoWrapping>
+          <L.SuccessMessage>
+            {userName} 님의 이메일로 재설정 링크가 전달되었어요!
+          </L.SuccessMessage>
+          <L.SuccessSubMessage>
+            로그인 후에 OCCOUNT의 서비스를 이용해보세요
+          </L.SuccessSubMessage>
+          <L.LoginButton onClick={() => navigate('/login')}>
+            로그인하러가기
+          </L.LoginButton>
+        </L.SuccessContainer>
+      </L.Container>
+    );
+  }
+
   return (
     <L.Container>
-      <L.PwChangeWrap onSubmit={handleSubmit}>
-        <L.LogoImg src={imgLogo} alt="logo image" />
-        <L.InputContainer>
-          <L.PwChangeInput
-            type="text"
-            name="name"
-            value={name}
-            onChange={handleInputChange}
-            placeholder="이름을 입력해주세요"
-          />
-          <L.PwChangeInput
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleInputChange}
-            placeholder="이메일을 입력해주세요"
-          />
-        </L.InputContainer>
-        <L.PwChangeButton type="submit">본인확인</L.PwChangeButton>
-      </L.PwChangeWrap>
-      {errorMessage && (
-        <L.ModalOverlay>
-          <L.ModalContent>
-            {errorMessage}
-          </L.ModalContent>
-        </L.ModalOverlay>
-      )}
+      <L.LogoAndForm>
+        <L.LogoContainer>
+          <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <L.LogoImg src={imgLogo} alt="logo" />
+          </L.LogoWrapping>
+          <L.LogoSubText>비밀번호 찾기</L.LogoSubText>
+        </L.LogoContainer>
+
+        <L.PwChangeWrap onSubmit={handleSubmit}>
+          <L.FormContainer>
+            <L.InputContainer>
+              <L.PwChangeInput
+                type="text"
+                name="name"
+                value={name}
+                onChange={handleInputChange}
+                placeholder="이름을 입력해주세요"
+                required
+              />
+              <L.PwChangeInput
+                type="email"
+                name="email"
+                value={email}
+                onChange={handleInputChange}
+                placeholder="이메일을 입력해주세요"
+                required
+              />
+            </L.InputContainer>
+            <L.PwChangeButton type="submit">본인확인</L.PwChangeButton>
+          </L.FormContainer>
+        </L.PwChangeWrap>
+      </L.LogoAndForm>
+
+      <Toast
+        isVisible={showToast}
+        message={toastMessage}
+        title={toastTitle}
+        type={toastType}
+        onClose={handleCloseToast}
+        duration={3000}
+      />
     </L.Container>
   );
 }
