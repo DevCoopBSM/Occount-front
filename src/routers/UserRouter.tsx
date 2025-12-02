@@ -9,6 +9,7 @@ import PwChangeEX from 'components/User/pwChangeEX';
 import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
+import PrivateRoute from 'common/PrivateRoute';
 
 const UserRoutes: React.FC = () => {
   return (
@@ -21,8 +22,8 @@ const UserRoutes: React.FC = () => {
       <Route path="/" element={<UserPage />}>
         <Route index element={<UserMain />} />
         <Route path="howto" element={<HowTo />} />
-        <Route path="update" element={<Update />} />
-        <Route path="userlog" element={<UserLog />} />
+        <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />
+        <Route path="userlog" element={<PrivateRoute><UserLog /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/404" />} />
       </Route>
     </Routes>
