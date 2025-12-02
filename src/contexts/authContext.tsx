@@ -51,6 +51,14 @@ const getMockUser = (): User => ({
   isFullMember: true,
 });
 
+// 글로벌 인터셉터를 우회하는 별도의 Axios 인스턴스 생성
+const createBypassAxios = () => {
+  return axios.create({
+    baseURL: axiosInstance.defaults.baseURL,
+    headers: axiosInstance.defaults.headers,
+  });
+};
+
 const initialState: AuthState = {
   isLoggedIn: isDevMode() || !!getAccessToken(),
   isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'),
@@ -108,10 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const unifiedLogin = useCallback(async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
     try {
       // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
-      const loginAxios = axios.create({
-        baseURL: axiosInstance.defaults.baseURL,
-        headers: axiosInstance.defaults.headers,
-      });
+      const loginAxios = createBypassAxios();
 
       const response = await loginAxios.post('v2/auth/login', {
         userEmail: email,
@@ -222,10 +227,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const requestEmailVerification = useCallback(async (email: string, name: string) => {
     try {
       // 비밀번호 재설정 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
-      const pwResetAxios = axios.create({
-        baseURL: axiosInstance.defaults.baseURL,
-        headers: axiosInstance.defaults.headers,
-      });
+      const pwResetAxios = createBypassAxios();
 
       const response = await pwResetAxios.post('v2/verify/send', {
         userEmail: email,
@@ -244,10 +246,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const changePassword = useCallback(async (jwtToken: string, newPassword: string) => {
     try {
       // 비밀번호 변경 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
-      const pwChangeAxios = axios.create({
-        baseURL: axiosInstance.defaults.baseURL,
-        headers: axiosInstance.defaults.headers,
-      });
+      const pwChangeAxios = createBypassAxios();
 
       const response = await pwChangeAxios.post(
         `v2/auth/pwChange/${jwtToken}`,
