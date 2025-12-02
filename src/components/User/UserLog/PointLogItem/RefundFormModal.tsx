@@ -2,7 +2,7 @@ import React from 'react';
 import * as _ from "./style";
 import Modal from 'components/Modal';
 import { Bankenum } from './bank';
-import { RefundAccount } from './index';  // index.tsx에서 RefundAccount 인터페이스를 가져옵니다
+import { RefundAccount } from './types';
 
 interface RefundFormModalProps {
   isOpen: boolean;
