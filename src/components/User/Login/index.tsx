@@ -1,30 +1,55 @@
 import React, { useState, useCallback, useRef, useEffect, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from "common/Toast";
 import * as L from "./style";
 
+interface LocationState {
+  from?: string;
+  message?: string;
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState | null;
+  
   const { unifiedLogin, isLoggedIn, errorMessage, setErrorMessage } = useAuth();
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<'error' | 'info'>('error');
+  const [toastTitle, setToastTitle] = useState<string>('로그인 오류');
 
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (locationState?.message) {
+      setToastMessage(locationState.message);
+      setToastType('info');
+      setToastTitle('알림');
+      setShowToast(true);
+      window.history.replaceState({}, document.title);
+    }
+  }, [locationState]);
+
+  useEffect(() => {
     if (isLoggedIn) {
       setErrorMessage('');
-      navigate('/');
+      const redirectTo = locationState?.from || '/';
+      navigate(redirectTo);
     }
-  }, [isLoggedIn, navigate, setErrorMessage]);
+  }, [isLoggedIn, navigate, setErrorMessage, locationState]);
 
   useEffect(() => {
     if (errorMessage) {
+      setToastMessage(errorMessage);
+      setToastType('error');
+      setToastTitle('로그인 오류');
       setShowToast(true);
       setErrorMessage('');
     }
@@ -150,9 +175,9 @@ const Login: React.FC = () => {
       </L.LoginWrap>
       <Toast
         isVisible={showToast}
-        message="아이디 혹은 비밀번호를 다시 확인해 주세요!"
-        type="error"
-        title="로그인 오류"
+        message={toastMessage || "아이디 혹은 비밀번호를 다시 확인해 주세요!"}
+        type={toastType}
+        title={toastTitle}
         onClose={handleCloseToast}
       />
     </L.Container>
