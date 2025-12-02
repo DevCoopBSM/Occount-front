@@ -132,7 +132,7 @@ export const SuccessMessage = styled.p`
   font-weight: 400;
   text-align: center;
   margin: 0;
-  line-height: auto;
+  line-height: normal;
 `;
 
 export const SuccessSubMessage = styled.p`
