@@ -47,6 +47,11 @@ export const CloseButton = styled.button`
     background-color: #f5f5f5;
   }
 
+  &:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+
   @media (max-width: 768px) {
     width: 28px;
     height: 28px;
@@ -169,6 +174,11 @@ export const CloseFooterButton = styled.button`
   &:active {
     background-color: #dddddd;
     transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
   }
 
   @media (max-width: 768px) {
