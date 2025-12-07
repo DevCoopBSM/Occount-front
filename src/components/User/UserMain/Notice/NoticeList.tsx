@@ -41,11 +41,11 @@ const NoticeList: React.FC = () => {
       <HeaderContainer>
         <Title>변경/공지사항</Title>
         <NavigationContainer>
-          <NavigationButton aria-label="이전">
-            <Icon name="chevronLeft" size={40} color="#666666" />
+          <NavigationButton aria-label="이전" disabled>
+            <Icon name="chevronLeft" size={40} color="#cccccc" />
           </NavigationButton>
-          <NavigationButton aria-label="다음">
-            <Icon name="chevronRight" size={40} color="#666666" />
+          <NavigationButton aria-label="다음" disabled>
+            <Icon name="chevronRight" size={40} color="#cccccc" />
           </NavigationButton>
         </NavigationContainer>
       </HeaderContainer>
@@ -140,11 +140,15 @@ const NavigationButton = styled.button`
   width: clamp(24px, 1.56vw, 30px); // 30px / 1920px = 1.56%
   height: clamp(24px, 1.56vw, 30px);
 
-  &:hover {
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:not(:disabled):hover {
     opacity: 0.7;
   }
 `;
-
 
 const NoticeContainer = styled.div`
   display: flex;
