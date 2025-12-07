@@ -43,6 +43,33 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
       userPhone: '010-1234-5678',
       roles: 'ROLE_MEMBER'
     };
+  } else if (url.includes('v2/notices')) {
+    mockData = [
+      {
+        id: 1,
+        title: '들어온 상품 안내',
+        content: '새로운 상품이 입고되었습니다.',
+        createdAt: [2025, 7, 12, 14, 30, 0],
+        importance: 'HIGH',
+        expirationDate: null
+      },
+      {
+        id: 2,
+        title: '매점 운영 시간 변경 안내',
+        content: '매점 운영 시간이 변경되었습니다.',
+        createdAt: [2025, 7, 10, 9, 0, 0],
+        importance: 'MEDIUM',
+        expirationDate: null
+      },
+      {
+        id: 3,
+        title: '시스템 점검 안내',
+        content: '시스템 점검으로 인한 서비스 중단 안내입니다.',
+        createdAt: [2025, 7, 8, 16, 45, 0],
+        importance: 'LOW',
+        expirationDate: null
+      }
+    ];
   }
   
   return {
@@ -63,7 +90,7 @@ export const getAccessToken = (): string | null => {
 };
 
 export const axiosInstance: AxiosInstanceWithSuspense = axios.create({
-  baseURL: `${currentProtocol}//${currentDomain}/api`,
+  baseURL: process.env.REACT_APP_API_URL || `${currentProtocol}//${currentDomain}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
