@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components'; // styled-components 임포트
-import { fetchNotices, Notice } from './notices'; // Axios를 통해 공지사항 가져오는 함수 임포트
-import DOMPurify from 'dompurify'; // DOMPurify 임포트
+import styled from 'styled-components';
+import { fetchNotices, Notice } from './notices';
+import NoticeDetailModal from './NoticeDetailModal';
+import Icon from 'components/Icon';
 
 const NoticeList: React.FC = () => {
-  const [notices, setNotices] = useState<Notice[]>([]); // 공지사항 상태
-  const [expandedNoticeId, setExpandedNoticeId] = useState<number | null>(null); // 확장된 공지사항 ID 상태
-  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
-  const [error, setError] = useState<string | null>(null); // 오류 상태
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const loadNotices = async () => {
@@ -24,109 +26,197 @@ const NoticeList: React.FC = () => {
     loadNotices();
   }, []);
 
-  const handleNoticeClick = (id: number) => {
-    setExpandedNoticeId(expandedNoticeId === id ? null : id); // 클릭한 공지사항을 확장/축소
+  const handleNoticeClick = (notice: Notice) => {
+    setSelectedNotice(notice);
+    setIsModalOpen(true);
   };
 
-  if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>{error}</p>;
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedNotice(null);
+  };
 
   return (
     <NoticeWrapper>
-      <h2>공지사항</h2>
+      <HeaderContainer>
+        <Title>변경/공지사항</Title>
+        <NavigationContainer>
+          <NavigationButton aria-label="이전">
+            <Icon name="chevronLeft" size={40} color="#666666" />
+          </NavigationButton>
+          <NavigationButton aria-label="다음">
+            <Icon name="chevronRight" size={40} color="#666666" />
+          </NavigationButton>
+        </NavigationContainer>
+      </HeaderContainer>
+
       <NoticeContainer>
-        {notices.map((notice) => (
-          <NoticeItem key={notice.id} importance={notice.importance} onClick={() => handleNoticeClick(notice.id)}>
-            <TitleContainer>
-              <Title>{notice.title.toUpperCase()}</Title> {/* 제목을 대문자로 변환 */}
-              <DateLabel>
-                {new Date(notice.createdAt).toLocaleDateString()} {/* 날짜 형식 변경 */}
-              </DateLabel>
-            </TitleContainer>
-            <NoticeContent expanded={expandedNoticeId === notice.id}>
-              <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(notice.content) }} /> {/* HTML 태그를 안전하게 렌더링 */}
-            </NoticeContent>
-          </NoticeItem>
-        ))}
+        {loading ? (
+          <LoadingMessage>로딩 중...</LoadingMessage>
+        ) : error ? (
+          <ErrorMessage>{error}</ErrorMessage>
+        ) : notices.length > 0 ? (
+          notices.map((notice) => (
+            <NoticeItem key={notice.id} onClick={() => handleNoticeClick(notice)}>
+              <NoticeItemHeader>
+                <NoticeTitle>{notice.title}</NoticeTitle>
+                <NoticeDate>
+                  {new Date(notice.createdAt).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  }).replace(/\. /g, '.').replace('.', '')}
+                </NoticeDate>
+              </NoticeItemHeader>
+            </NoticeItem>
+          ))
+        ) : (
+          <EmptyMessage>등록된 공지사항이 없습니다.</EmptyMessage>
+        )}
       </NoticeContainer>
+
+      <NoticeDetailModal
+        isOpen={isModalOpen}
+        onRequestClose={handleModalClose}
+        notice={selectedNotice}
+      />
     </NoticeWrapper>
   );
 };
 
 // 스타일 컴포넌트
 const NoticeWrapper = styled.div`
-  border: 2px solid #f0ce00;
-  border-radius: 10px;
-  padding: 20px;
-  background-color: #fff;
-  margin: 20px auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 100%; /* 전체 너비 사용 */
-  max-width: 1200px; /* 최대 너비 제한 */
-`;
+  position: absolute;
+  left: clamp(20px, 29.69vw, 570px); // 570px / 1920px = 29.69%
+  top: clamp(60px, 4.69vw, 90px); // 90px / 1920px = 4.69%
+  width: clamp(300px, 40.63vw, 780px); // 780px / 1920px = 40.63%
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 0.52vw, 10px); // 10px / 1920px = 0.52%
 
-const NoticeContainer = styled.div`
-  margin: 0 auto; /* 가운데 정렬 */
-`;
-
-const NoticeItem = styled.div<{ importance: string }>`
-  cursor: pointer;
-  margin: 5px auto; /* 항목 간 여백 줄임 */
-  padding: 8px 15px; /* 상하 패딩 줄이고, 좌우 패딩 유지 */
-  border-radius: 5px;
-  transition: transform 0.2s;
-  background-color: ${({ importance }) => {
-    switch (importance) {
-      case 'HIGH':
-        return '#ffcccc';
-      case 'MEDIUM':
-        return '#fff3cd';
-      case 'LOW':
-        return '#d4edda';
-      default:
-        return '#fff';
-    }
-  }};
-
-  &:hover {
-    transform: scale(1.01);
+  @media (max-width: 768px) {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    padding: 0 20px;
+    margin-top: 20px;
   }
 `;
 
-const TitleContainer = styled.div`
+const HeaderContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0; /* 상하 패딩 줄임 */
+  flex-direction: column;
+  gap: clamp(5px, 0.52vw, 10px);
+  width: 100%;
 `;
 
-const Title = styled.span`
-  color: black;
-  font-size: clamp(14px, 1.5vw, 18px); /* 반응형 글꼴 크기 */
-  font-weight: bold;
-`;
-
-const DateLabel = styled.span`
-  color: #666; /* 날짜 색상 변경 */
-  font-size: clamp(12px, 1.2vw, 16px); /* 반응형 글꼴 크기 */
-`;
-
-const NoticeContent = styled.div<{ expanded: boolean }>`
-  padding: ${({ expanded }) => (expanded ? '8px' : '0')};
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-top: 5px;
-  height: auto; /* 자동 높이 설정 */
-  max-height: ${({ expanded }) => (expanded ? 'fit-content' : '0')}; /* 내용에 맞게 자동 조절 */
-  overflow: hidden; /* 스크롤 제거 */
-  transition: all 0.2s ease-in-out;
-  opacity: ${({ expanded }) => (expanded ? 1 : 0)};
+const Title = styled.h1`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: clamp(24px, 1.67vw, 32px); // 32px / 1920px = 1.67%
+  color: #111111;
+  text-align: center;
+  margin: 0;
+  padding: clamp(5px, 0.52vw, 10px);
   line-height: 1.4;
-  font-size: 14px;
-  color: #333;
-  white-space: pre-wrap; /* 줄바꿈 유지 */
-  word-break: break-word; /* 긴 단어 줄바꿈 */
+`;
+
+const NavigationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0;
+  padding: clamp(5px, 0.52vw, 10px);
+`;
+
+const NavigationButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(24px, 1.56vw, 30px); // 30px / 1920px = 1.56%
+  height: clamp(24px, 1.56vw, 30px);
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+
+const NoticeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.1vw, 2px); // 2px / 1920px = 0.1%
+  width: 100%;
+  padding: clamp(5px, 0.52vw, 10px);
+`;
+
+const NoticeItem = styled.div`
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const NoticeItemHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(5px, 0.52vw, 10px);
+  width: 100%;
+`;
+
+const NoticeTitle = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: clamp(14px, 0.94vw, 18px); // 18px / 1920px = 0.94%
+  color: #111111;
+  margin: 0;
+  line-height: normal;
+  flex: 1;
+  text-align: left;
+`;
+
+const NoticeDate = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: clamp(14px, 0.94vw, 18px); // 18px / 1920px = 0.94%
+  color: #666666;
+  margin: 0;
+  line-height: normal;
+  text-align: right;
+  flex-shrink: 0;
+`;
+
+
+const LoadingMessage = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(14px, 0.94vw, 18px);
+  color: #666666;
+  text-align: center;
+  margin: 20px 0;
+`;
+
+const ErrorMessage = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(14px, 0.94vw, 18px);
+  color: #ff6666;
+  text-align: center;
+  margin: 20px 0;
+`;
+
+const EmptyMessage = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(14px, 0.94vw, 18px);
+  color: #666666;
+  text-align: center;
+  margin: 20px 0;
 `;
 
 export default NoticeList;
