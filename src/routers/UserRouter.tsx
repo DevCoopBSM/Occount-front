@@ -10,6 +10,7 @@ import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
 import EventNotice from 'components/User/EventNotice';
+import NoticePage from 'pages/User/NoticePage';
 import PrivateRoute from 'common/PrivateRoute';
 
 const UserRoutes: React.FC = () => {
@@ -24,6 +25,7 @@ const UserRoutes: React.FC = () => {
         <Route index element={<UserMain />} />
         <Route path="howto" element={<HowTo />} />
         <Route path="event" element={<EventNotice />} />
+        <Route path="notice" element={<NoticePage />} />
         <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />
         <Route path="userlog" element={<PrivateRoute><UserLog /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/404" />} />
