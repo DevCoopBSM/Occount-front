@@ -122,6 +122,7 @@ function Main() {
         setEventNotices(mapped.filter(notice => notice.importance === 'HIGH'));
         setAnnouncementNotices(mapped.filter(notice => notice.importance !== 'HIGH'));
       } catch (error) {
+        console.error('공지사항 로딩 에러:', error)
         setEventNotices([]);
         setAnnouncementNotices([]);
       }
