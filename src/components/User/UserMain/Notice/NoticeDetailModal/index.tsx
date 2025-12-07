@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'components/Modal';
 import { Notice } from '../notices';
+import DOMPurify from 'dompurify';
 import * as S from './style';
 
 interface NoticeDetailModalProps {
@@ -52,7 +53,7 @@ const NoticeDetailModal: React.FC<NoticeDetailModalProps> = ({
 
           <S.NoticeContentText
             dangerouslySetInnerHTML={{
-              __html: notice.content.replace(/\n/g, '<br/>')
+              __html: DOMPurify.sanitize(notice.content.replace(/\n/g, '<br/>'))
             }}
           />
         </S.ModalContent>
