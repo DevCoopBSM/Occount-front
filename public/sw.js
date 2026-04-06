@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
       })
       .catch((error) => {
         console.error('기본 캐싱 실패:', error);
-        return Promise.resolve();
+        throw error; // 에러를 전파하여 install 실패 처리
       })
       .then(() => self.skipWaiting()),
   );
