@@ -15,9 +15,6 @@ root.render(
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('오카운트 SW 등록 성공:', registration.scope);
-      })
       .catch((error) => {
         console.error('SW 등록 실패:', error);
       });

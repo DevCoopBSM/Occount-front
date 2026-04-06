@@ -11,12 +11,13 @@ const InstallPrompt = () => {
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setShowInstallBanner(true);
+      if (!wasDismissedRecently()) {
+        setShowInstallBanner(true);
+      }
     };
 
     // PWA 설치 완료 이벤트 리스너
     const handleAppInstalled = () => {
-      console.log('오카운트 PWA 설치됨');
       setIsInstalled(true);
       setShowInstallBanner(false);
       setDeferredPrompt(null);
@@ -48,13 +49,7 @@ const InstallPrompt = () => {
     if (deferredPrompt) {
       try {
         deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-
-        if (outcome === 'accepted') {
-          console.log('사용자가 PWA 설치 승인');
-        } else {
-          console.log('사용자가 PWA 설치 거부');
-        }
+        await deferredPrompt.userChoice;
 
         setDeferredPrompt(null);
         setShowInstallBanner(false);

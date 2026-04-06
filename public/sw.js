@@ -17,9 +17,9 @@ self.addEventListener('install', (event) => {
       .catch((error) => {
         console.error('기본 캐싱 실패:', error);
         return Promise.resolve();
-      }),
+      })
+      .then(() => self.skipWaiting()),
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -101,7 +101,16 @@ async function handleApiRequest(request) {
       return response;
     })
     .catch(() => {
-      return cachedResponse;
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return new Response(
+        JSON.stringify({ error: 'Network connection required' }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
     });
 
   return cachedResponse || networkPromise;
@@ -131,17 +140,13 @@ async function handleStaticRequest(request) {
     return cachedResponse;
   }
 
-  try {
-    const networkResponse = await fetch(request);
+  const networkResponse = await fetch(request);
 
-    if (networkResponse.status === 200) {
-      cache.put(request, networkResponse.clone());
-    }
-
-    return networkResponse;
-  } catch (error) {
-    throw error;
+  if (networkResponse.status === 200) {
+    cache.put(request, networkResponse.clone());
   }
+
+  return networkResponse;
 }
 
 self.addEventListener('push', (event) => {
