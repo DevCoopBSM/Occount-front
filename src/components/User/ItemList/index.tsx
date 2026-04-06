@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import * as S from './style';
+import { ContentContainer } from 'common/ContentContainer';
 import axiosInstance from 'utils/Axios';
 
 interface Item {
@@ -29,6 +30,7 @@ const ItemList: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('전체보기');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const filterItems = useCallback(() => {
     let filtered = items;
@@ -59,11 +61,13 @@ const ItemList: React.FC = () => {
   const fetchItems = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await axiosInstance.get('v2/item/');
-      
+
       if (response.status === 204 || !response.data.itemList || response.data.itemList.length === 0) {
-        // API 데이터가 없으면 목 데이터 사용
-          alert("반환된 상품이 없습니다.");
+        // API returned no items - empty state will be shown in UI
+        setItems([]);
+        setFilteredItems([]);
       } else {
         const remappedData: Item[] = response.data.itemList.map((item: any) => ({
           itemId: item.itemId,
@@ -79,6 +83,7 @@ const ItemList: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching items:', error);
+      setError('상품 목록을 불러오는 중 오류가 발생했습니다. 다시 시도해 주세요.');
     } finally {
       setLoading(false);
     }
@@ -93,7 +98,7 @@ const ItemList: React.FC = () => {
   };
 
   return (
-    <S.Container>
+    <ContentContainer>
       <S.Title>매점상품 보기</S.Title>
       
       <S.FilterSection>
@@ -132,6 +137,8 @@ const ItemList: React.FC = () => {
 
       {loading ? (
         <S.LoadingMessage>로딩 중...</S.LoadingMessage>
+      ) : error ? (
+        <S.EmptyMessage>{error}</S.EmptyMessage>
       ) : filteredItems.length === 0 ? (
         <S.EmptyMessage>상품이 없습니다.</S.EmptyMessage>
       ) : (
@@ -154,7 +161,7 @@ const ItemList: React.FC = () => {
           ))}
         </S.ProductGrid>
       )}
-    </S.Container>
+    </ContentContainer>
   );
 };
 

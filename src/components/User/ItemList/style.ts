@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  width: 100%;
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 34px 20px 100px;
-  min-height: calc(100vh - 200px);
-`;
 
 export const Title = styled.h1`
   font-family: 'Pretendard', sans-serif;
