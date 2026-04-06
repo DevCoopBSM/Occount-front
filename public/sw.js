@@ -4,7 +4,6 @@ const CACHE_NAME = 'occount-v1.0.0';
 
 const PRECACHE_URLS = ['/', '/manifest.json'];
 
-
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
@@ -64,13 +63,15 @@ async function handleFetch(request) {
   return handleStaticRequest(request);
 }
 
-// 캐시 허용 API 엔드포인트 (공개 데이터만)
-const SAFE_TO_CACHE_APIS = ['notices', 'items'];
+// 캐시 허용 API 엔드포인트 (공개 데이터만) - 정확한 경로 매칭
+const SAFE_TO_CACHE_APIS = ['/api/v3/notices', '/api/v3/items'];
 
 function isSafeToCache(url) {
   const pathname = new URL(url).pathname;
-  // 안전한 공개 API만 캐시 허용
-  return SAFE_TO_CACHE_APIS.some((pattern) => pathname.includes(pattern));
+  // 정확한 경로 매칭으로 보안 강화 (부분 문자열 매칭 방지)
+  return SAFE_TO_CACHE_APIS.some(
+    (pattern) => pathname === pattern || pathname.startsWith(pattern + '/'),
+  );
 }
 
 async function handleApiRequest(request) {
@@ -101,15 +102,12 @@ async function handleApiRequest(request) {
       return response;
     })
     .catch(() => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return new Response(
-        JSON.stringify({ error: 'Network connection required' }),
-        {
+      return (
+        cachedResponse ||
+        new Response(JSON.stringify({ error: 'Network connection required' }), {
           status: 503,
           headers: { 'Content-Type': 'application/json' },
-        },
+        })
       );
     });
 
@@ -125,6 +123,12 @@ async function handlePageRequest(request) {
 
     if (cachedResponse) {
       return cachedResponse;
+    }
+
+    // SPA 라우팅을 위해 루트 페이지로 폴백 (클라이언트 사이드 라우팅이 처리)
+    const rootPage = await cache.match('/');
+    if (rootPage) {
+      return rootPage;
     }
 
     // 브라우저 기본 오프라인 화면 사용
