@@ -1,26 +1,23 @@
 /* eslint-disable no-restricted-globals */
 
 const CACHE_NAME = 'occount-v1.0.0';
-const OFFLINE_URL = '/offline.html';
 
-const PRECACHE_URLS = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  OFFLINE_URL
-];
+const PRECACHE_URLS = ['/', '/manifest.json'];
+
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(PRECACHE_URLS.map(url => new Request(url, { cache: 'reload' })));
+        return cache.addAll(
+          PRECACHE_URLS.map((url) => new Request(url, { cache: 'reload' })),
+        );
       })
       .catch((error) => {
-        console.error('캐싱 실패:', error);
+        console.error('기본 캐싱 실패:', error);
         return Promise.resolve();
-      })
+      }),
   );
   self.skipWaiting();
 });
@@ -35,11 +32,11 @@ self.addEventListener('activate', (event) => {
               return caches.delete(cacheName);
             }
             return Promise.resolve();
-          })
+          }),
         );
       }),
-      self.clients.claim()
-    ])
+      self.clients.claim(),
+    ]),
   );
 });
 
@@ -50,9 +47,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(
-    handleFetch(request)
-  );
+  event.respondWith(handleFetch(request));
 });
 
 async function handleFetch(request) {
@@ -69,7 +64,32 @@ async function handleFetch(request) {
   return handleStaticRequest(request);
 }
 
+// 캐시 허용 API 엔드포인트 (공개 데이터만)
+const SAFE_TO_CACHE_APIS = ['notices', 'items'];
+
+function isSafeToCache(url) {
+  const pathname = new URL(url).pathname;
+  // 안전한 공개 API만 캐시 허용
+  return SAFE_TO_CACHE_APIS.some((pattern) => pathname.includes(pattern));
+}
+
 async function handleApiRequest(request) {
+  // 사용자 개인정보가 포함된 API는 캐시하지 않음 (보안)
+  if (!isSafeToCache(request.url)) {
+    try {
+      return await fetch(request);
+    } catch (error) {
+      return new Response(
+        JSON.stringify({ error: 'Network connection required' }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+  }
+
+  // 안전한 공개 데이터만 캐시 처리
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
 
@@ -98,7 +118,8 @@ async function handlePageRequest(request) {
       return cachedResponse;
     }
 
-    return cache.match(OFFLINE_URL);
+    // 브라우저 기본 오프라인 화면 사용
+    throw error;
   }
 }
 
@@ -130,17 +151,13 @@ self.addEventListener('push', (event) => {
     badge: '/icon-192.png',
     vibrate: [200, 100, 200],
     tag: 'occount-notification',
-    renotify: true
+    renotify: true,
   };
 
-  event.waitUntil(
-    self.registration.showNotification('오카운트', options)
-  );
+  event.waitUntil(self.registration.showNotification('오카운트', options));
 });
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(
-    self.clients.openWindow('/')
-  );
+  event.waitUntil(self.clients.openWindow('/'));
 });
