@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { NavigateFunction } from 'react-router-dom';
-import { axiosInstance, setAccessToken, getAccessToken, setErrorFunction } from 'utils/Axios';
+import axios from 'axios';
+import { axiosInstance, setAccessToken, getAccessToken } from 'utils/Axios';
 
 interface User {
   point: number;
@@ -33,10 +34,35 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// 개발 모드 체크 (환경 변수로만 제어)
+const isDevMode = () => {
+  return process.env.NODE_ENV === 'development' && process.env.REACT_APP_DEV_MODE === 'true';
+};
+
+// 개발 모드용 Mock 사용자 데이터
+const getMockUser = (): User => ({
+  point: 100000,
+  name: '개발자',
+  code: 'DEV001',
+  email: 'dev@example.com',
+  phone: '010-1234-5678',
+  todayTotalPayment: 0,
+  role: 'ROLE_MEMBER', // 조합원 역할로 설정하여 충전 기능 활성화
+  isFullMember: true,
+});
+
+// 글로벌 인터셉터를 우회하는 별도의 Axios 인스턴스 생성
+const createBypassAxios = () => {
+  return axios.create({
+    baseURL: axiosInstance.defaults.baseURL,
+    headers: axiosInstance.defaults.headers,
+  });
+};
+
 const initialState: AuthState = {
-  isLoggedIn: !!getAccessToken(),
+  isLoggedIn: isDevMode() || !!getAccessToken(),
   isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'),
-  user: null,
+  user: isDevMode() ? getMockUser() : null,
   errorMessage: '',
 };
 
@@ -77,17 +103,26 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
-    setErrorFunction((error: any) => {
-      const errMsg = error?.response?.data?.message || error?.message || '알 수 없는 오류가 발생했습니다.';
-      dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
-    });
+    if (isDevMode()) {
+      const mockUser = getMockUser();
+      // 개발 모드일 때 로그인 상태 강제 설정
+      dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin: false });
+      dispatch({ type: actionTypes.SET_USER, payload: mockUser });
+    }
   }, []);
 
   const unifiedLogin = useCallback(async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
     try {
-      const response = await axiosInstance.post('v2/auth/login', { userEmail: email, userPassword: password });
-      
+      // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const loginAxios = createBypassAxios();
+
+      const response = await loginAxios.post('v2/auth/login', {
+        userEmail: email,
+        userPassword: password,
+      });
+
       if (!response.data.success) {
         if (response.data.status === "REDIRECT") {
           navigate(response.data.redirectUrl);
@@ -97,7 +132,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } = response.data;
-      console.log('Login response roles:', roles); // 디버깅용 로그 추가
 
       const isAdmin = roles === 'ROLE_ADMIN';
       if (admin && !isAdmin) {
@@ -127,6 +161,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const fetchUserInformation = useCallback(async (): Promise<User | null> => {
+    // 개발 모드일 때는 mock 사용자 반환
+    if (isDevMode()) {
+      const mockUser = getMockUser();
+      dispatch({ type: actionTypes.SET_USER, payload: mockUser });
+      return mockUser;
+    }
+
     try {
       const response = await axiosInstance.get('v2/account/user/info');
       
@@ -159,23 +200,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const registerStudent = useCallback(async (userName: string, userEmail: string, userPassword: string) => {
-    try {
-      const response = await axiosInstance.post('v2/auth/register', { userName, userEmail, userPassword });
-      return { success: true, message: response.data.message || '회원가입에 성공했습니다.' };
-    } catch (error: any) {
-      console.error('Student registration error:', error);
-      const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
-      dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
-      setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
-      return { success: false, message: errorMessage };
-    }
-  }, []);
+  const registerStudent = useCallback(
+    async (userName: string, userEmail: string, userPassword: string) => {
+      try {
+        const response = await axiosInstance.post('v2/auth/register', {
+          userName,
+          userEmail,
+          userPassword,
+        });
+        return {
+          success: true,
+          message: response.data.message || '회원가입에 성공했습니다.',
+        };
+      } catch (error: any) {
+        console.error('Student registration error:', error);
+        const errorMessage =
+          error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
+        dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
+        setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
+        return { success: false, message: errorMessage };
+      }
+    },
+    []
+  );
 
   const requestEmailVerification = useCallback(async (email: string, name: string) => {
     try {
-      const response = await axiosInstance.post('v2/verify/send', { userEmail: email, userName: name });
-      return { success: true, message: response.data.message || '이메일 인증 요청이 성공했습니다.' };
+      // 비밀번호 재설정 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const pwResetAxios = createBypassAxios();
+
+      const response = await pwResetAxios.post('v2/verify/send', {
+        userEmail: email,
+        userName: name,
+      });
+      return {
+        success: true,
+        message: response.data.message || '이메일 인증 요청이 성공했습니다.',
+      };
     } catch (error: any) {
       console.error('Email verification request failed:', error);
       return { success: false, message: error.response?.data?.message || '이메일 인증 요청에 실패했습니다.' };
@@ -184,7 +245,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const changePassword = useCallback(async (jwtToken: string, newPassword: string) => {
     try {
-      const response = await axiosInstance.post(`v2/auth/pwChange/${jwtToken}`, { newPassword });
+      // 비밀번호 변경 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+      const pwChangeAxios = createBypassAxios();
+
+      const response = await pwChangeAxios.post(
+        `v2/auth/pwChange/${jwtToken}`,
+        { newPassword }
+      );
       return { success: true, message: response.data.message || '비밀번호가 성공적으로 변경되었습니다.' };
     } catch (error: any) {
       console.error('Password change error:', error);
@@ -196,7 +263,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    if (state.isLoggedIn) {
+    // 개발 모드가 아닐 때만 사용자 정보 가져오기
+    if (!isDevMode() && state.isLoggedIn) {
       fetchUserInformation();
     }
   }, [state.isLoggedIn, fetchUserInformation]);

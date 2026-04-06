@@ -1,19 +1,6 @@
 import { AxiosError } from 'axios';
 import { axiosInstance } from "utils/Axios";
-
-interface LogItem {
-  type: string;
-  date: string;
-  inner_point: string;
-  chargeId?: number;
-  payId?: number;
-}
-
-interface RefundAccount {
-  bank: string;
-  accountNumber: string;
-  holderName: string;
-}
+import { LogItem, RefundAccount } from './types';
 
 interface RefundResponse {
   success: boolean;
