@@ -12,7 +12,7 @@ import { useVerification } from './hooks/useVerification';
 import { useAddress } from './hooks/useAddress';
 import { useRegisterStep } from './hooks/useRegisterStep';
 import { STEPS } from './constants/steps';
-import { UserType, RegisterRequest } from "./types";
+import { UserType } from "./types";
 import * as R from "./style";
 
 const Register: React.FC = () => {
@@ -61,19 +61,15 @@ const Register: React.FC = () => {
     }
 
     try {
-      const registerData: RegisterRequest = {
-        ...formData,
-        userAddress: `${formData.userAddress} ${addressDetail}`.trim(),
-        userType,
-        userName: userInfo.userName,
+      const response = await axiosInstance.post('auth/register', {
         userCiNumber: userInfo.userCiNumber,
+        userName: userInfo.userName,
         userPhone: userInfo.userPhone,
-        userBirthDate: userInfo.userBirthDate
-      };
+        userEmail: formData.userEmail,
+        password: formData.userPassword
+      });
 
-      const response = await axiosInstance.post('/v2/auth/register', registerData);
-
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         alert("회원가입이 완료되었습니다.");
         navigate('/');
       }

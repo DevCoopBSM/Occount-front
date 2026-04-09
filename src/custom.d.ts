@@ -1,3 +1,6 @@
+// Axios 타입 확장
+import { AxiosRequestConfig } from 'axios';
+
 declare module '*.svg' {
     import React = require('react');
     export const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -15,9 +18,6 @@ declare module 'lib';
 declare module 'pages';
 declare module 'recoil';
 declare module 'utils';
-
-// Axios 타입 확장
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 declare module 'axios' {
   interface AxiosInstance {

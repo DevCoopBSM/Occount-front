@@ -118,10 +118,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
       const loginAxios = createBypassAxios();
 
-      const response = await loginAxios.post('v2/auth/login', {
-        userEmail: email,
-        userPassword: password,
+      const response = await loginAxios.post('auth/login', {
+        email: email,
+        password: password,
       });
+
+      if ((response.status === 200 || response.status === 201) && (!response.data || Object.keys(response.data).length === 0)) {
+        const authHeader = response.headers['authorization'] || response.headers['Authorization'];
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.substring(7);
+          setAccessToken(token);
+
+          // TODO: 사용자 정보 API 구현 후 실제 역할 검증 필요
+          const userInfo: User = {
+            point: 0,
+            name: email.split('@')[0] || '사용자',
+            code: email.split('@')[0] || 'USER',
+            email: email,
+            phone: '',
+            role: 'ROLE_USER' // TODO: JWT 또는 API에서 실제 역할 가져오기
+          };
+
+          dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin: false });
+          dispatch({ type: actionTypes.SET_USER, payload: userInfo });
+          navigate(admin ? '/admin' : '/');
+          dispatch({ type: actionTypes.CLEAR_ERROR });
+          return userInfo;
+        } else {
+          throw new Error('서버에서 인증 토큰을 반환하지 않았습니다.');
+        }
+      }
 
       if (!response.data.success) {
         if (response.data.status === "REDIRECT") {
@@ -203,7 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const registerStudent = useCallback(
     async (userName: string, userEmail: string, userPassword: string) => {
       try {
-        const response = await axiosInstance.post('v2/auth/register', {
+        const response = await axiosInstance.post('auth/register', {
           userName,
           userEmail,
           userPassword,
@@ -265,7 +291,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // 개발 모드가 아닐 때만 사용자 정보 가져오기
     if (!isDevMode() && state.isLoggedIn) {
-      fetchUserInformation();
+      fetchUserInformation().catch(() => {
+        // 에러 무시 - 로그인 상태는 유지
+      });
     }
   }, [state.isLoggedIn, fetchUserInformation]);
 
