@@ -129,13 +129,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const token = authHeader.substring(7);
           setAccessToken(token);
 
+          // TODO: 사용자 정보 API 구현 후 실제 역할 검증 필요
           const userInfo: User = {
             point: 0,
             name: email.split('@')[0] || '사용자',
             code: email.split('@')[0] || 'USER',
             email: email,
             phone: '',
-            role: 'ROLE_USER'
+            role: 'ROLE_USER' // TODO: JWT 또는 API에서 실제 역할 가져오기
           };
 
           dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin: false });
