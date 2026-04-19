@@ -7,6 +7,7 @@ import InquiryModal from './InquiryModal';
 import BarcodeModal from './BarcodeModal';
 import InvestmentModal from './InvestmentModal';
 import Toast from 'common/Toast';
+import Icon from 'components/Icon';
 import MoneyIcon from 'assets/Money.svg';
 import DocumentIcon from 'assets/Document.svg';
 import WayIcon from 'assets/Way.svg';
@@ -232,9 +233,7 @@ function Main() {
               <h2>이벤트 안내</h2>
               <S.ViewMoreButton>
                 <span>전체보기</span>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M7.5 15L12.5 10L7.5 5" stroke="#666666" strokeWidth="2" />
-                </svg>
+                <Icon name="chevronForward" size={20} color="#666666" />
               </S.ViewMoreButton>
             </S.NoticeSectionTitle>
             <S.NoticeList>
@@ -257,9 +256,7 @@ function Main() {
               <h2>변경/공지 사항</h2>
               <S.ViewMoreButton>
                 <span>전체보기</span>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M7.5 15L12.5 10L7.5 5" stroke="#666666" strokeWidth="2" />
-                </svg>
+                <Icon name="chevronForward" size={20} color="#666666" />
               </S.ViewMoreButton>
             </S.NoticeSectionTitle>
             <S.NoticeList>
@@ -284,9 +281,7 @@ function Main() {
               <h2>매점상품 보기</h2>
               <S.ViewMoreButton onClick={() => navigate('/item-list')}>
                 <span>더보기</span>
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M6.75 13.5L11.25 9L6.75 4.5" stroke="#666666" strokeWidth="2" />
-                </svg>
+                <Icon name="chevronForward" size={18} color="#666666" />
               </S.ViewMoreButton>
             </S.ProductDisplayTitle>
 

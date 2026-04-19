@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from "common/Toast";
+import Icon from "components/Icon";
 import * as L from "./style";
 
 interface LocationState {
@@ -130,32 +131,9 @@ const Login: React.FC = () => {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M3.98014 8.22257C3.05704 9.31382 2.35263 10.596 1.93457 12.0015C3.22587 16.338 7.24332 19.5 11.9993 19.5C12.9919 19.5 13.9523 19.3623 14.8625 19.1049M6.22784 6.22763C7.8841 5.13558 9.86792 4.5 12.0002 4.5C16.7562 4.5 20.7736 7.66205 22.0649 11.9985C21.353 14.3919 19.8108 16.4277 17.7722 17.772M6.22784 6.22763L3.00021 3M6.22784 6.22763L9.87889 9.87868M17.7722 17.772L21.0002 21M17.7722 17.772L14.1215 14.1213M14.1215 14.1213C14.6644 13.5784 15.0002 12.8284 15.0002 12C15.0002 10.3431 13.6571 9 12.0002 9C11.1718 9 10.4218 9.33579 9.87889 9.87868M14.1215 14.1213L9.87889 9.87868"
-                        stroke="#111111"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <Icon name="eyeOff" size={24} color="#111111" strokeWidth={1.5} />
                   ) : (
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M2.03526 12.3224C1.96618 12.1151 1.96611 11.8907 2.03507 11.6834C3.42343 7.50972 7.3605 4.5 12.0005 4.5C16.6384 4.5 20.5739 7.50692 21.964 11.6776C22.0331 11.8849 22.0332 12.1093 21.9642 12.3166C20.5759 16.4903 16.6388 19.5 11.9988 19.5C7.3609 19.5 3.42535 16.4931 2.03526 12.3224Z"
-                        stroke="#111111"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M14.9997 12C14.9997 13.6569 13.6566 15 11.9997 15C10.3429 15 8.99971 13.6569 8.99971 12C8.99971 10.3431 10.3429 9 11.9997 9C13.6566 9 14.9997 10.3431 14.9997 12Z"
-                        stroke="#111111"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <Icon name="eye" size={24} color="#111111" strokeWidth={1.5} />
                   )}
                 </L.PasswordToggleButton>
               </L.PasswordContainer>
