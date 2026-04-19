@@ -3,11 +3,12 @@ import * as H from './style';
 import OccountLogo from 'assets/occount-logo.svg';
 import Icon from 'components/Icon';
 import { useAuth } from 'contexts/authContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Header() {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -15,21 +16,32 @@ function Header() {
     navigate('/');
   };
 
-  const handleLoginClick = (): void => {
-    navigate('/login');
-  };
-
   const handleLogoutClick = (): void => {
     logout(navigate);
   };
 
   const handleSettingsClick = (): void => {
-    setDropdownVisible(!dropdownVisible);
+    if (isLoggedIn) {
+      setDropdownVisible(!dropdownVisible);
+    } else {
+      navigate('/login');
+    }
   };
 
   const handleUserInfoChangeClick = (): void => {
     navigate('/update');
   };
+
+  const handleNavigation = (path: string): void => {
+    navigate(path);
+  };
+
+  const isAuthPage = location.pathname === '/login' ||
+                     location.pathname === '/register' ||
+                     location.pathname === '/pwchange' ||
+                     location.pathname === '/pwChange' ||
+                     location.pathname.startsWith('/pwchange/') ||
+                     location.pathname.startsWith('/pwChange/');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -47,38 +59,44 @@ function Header() {
   return (
     <H.PageHeader>
       <H.HeaderInBox>
-        <H.LogoWrapper onClick={handleLogoClick}>
-          <img 
-            src={OccountLogo} 
+        <H.LogoWrapper $isAuthPage={isAuthPage} onClick={handleLogoClick}>
+          <img
+            src={OccountLogo}
             alt="Occount Logo"
           />
         </H.LogoWrapper>
-        
-        <H.RightSection>
-          <H.MenuButton>
-            <Icon name="menu" strokeWidth={1.5} />
-            <span>메뉴</span>
-          </H.MenuButton>
-          
-          <H.SettingsContainer ref={dropdownRef}>
-            <H.SettingsButton onClick={handleSettingsClick}>
-              <Icon name="settings" size={30} />
-              <span>설정</span>
-            </H.SettingsButton>
-            {dropdownVisible && (
-              <H.DropdownMenu>
-                {isLoggedIn ? (
-                  <>
-                    <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
-                    <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
-                  </>
-                ) : (
-                  <H.DropdownItem onClick={handleLoginClick}>로그인</H.DropdownItem>
-                )}
-              </H.DropdownMenu>
-            )}
-          </H.SettingsContainer>
-        </H.RightSection>
+
+        {!isAuthPage && (
+          <>
+            <H.Navigation>
+              <H.NavItem onClick={() => handleNavigation('/')}>포인트 충전</H.NavItem>
+              <H.NavItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.NavItem>
+              <H.NavItem onClick={() => handleNavigation('/item-list')}>상품 목록</H.NavItem>
+              <H.NavItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.NavItem>
+            </H.Navigation>
+
+            <H.SettingsSection>
+              {isLoggedIn ? (
+                <H.SettingsContainer ref={dropdownRef}>
+                  <H.SettingsButton onClick={handleSettingsClick}>
+                    <Icon name="settings" size={20} />
+                    <span>설정</span>
+                  </H.SettingsButton>
+                  {dropdownVisible && (
+                    <H.DropdownMenu>
+                      <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
+                      <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
+                    </H.DropdownMenu>
+                  )}
+                </H.SettingsContainer>
+              ) : (
+                <H.LoginButton onClick={() => navigate('/login')}>
+                  로그인
+                </H.LoginButton>
+              )}
+            </H.SettingsSection>
+          </>
+        )}
       </H.HeaderInBox>
     </H.PageHeader>
   );

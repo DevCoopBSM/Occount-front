@@ -5,7 +5,7 @@ export const PageWrap = styled.div`
   width: 100%;
   height: 100vh;
   overflow: auto;
-  background-color: #d9d9d9;
+  background-color: #ffffff;
 `;
 
 export const AdminWrap = styled.div`

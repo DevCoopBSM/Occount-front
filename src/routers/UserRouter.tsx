@@ -17,17 +17,16 @@ import PrivateRoute from 'common/PrivateRoute';
 const UserRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/pwchange/:jwtToken" element={<PwChangeEX />} />
-      <Route path="/pwchange" element={<PwChange />} />
-
       <Route path="/" element={<UserPage />}>
         <Route index element={<UserMain />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="pwchange/:jwtToken" element={<PwChangeEX />} />
+        <Route path="pwchange" element={<PwChange />} />
         <Route path="howto" element={<HowTo />} />
         <Route path="event" element={<EventNotice />} />
         <Route path="notice" element={<NoticePage />} />
-        <Route path="/item-list" element={<ItemList />} />
+        <Route path="item-list" element={<ItemList />} />
         <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />
         <Route path="userlog" element={<PrivateRoute><UserLog /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/404" />} />
