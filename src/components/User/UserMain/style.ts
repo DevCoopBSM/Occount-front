@@ -12,23 +12,23 @@ export const MainContent = styled.div`
   width: 100%;
   max-width: 1920px;
   margin: 0 auto;
-  padding: 91px 180px 87px 180px;
+  padding: 40px 180px 87px 180px;
   background: white;
 
   @media (max-width: 1560px) {
-    padding: 91px 80px 87px 80px;
+    padding: 40px 80px 87px 80px;
   }
 
   @media (max-width: 1200px) {
-    padding: 91px 40px 87px 40px;
+    padding: 40px 40px 87px 40px;
   }
 
   ${mediaQuery(TABLET_BREAKPOINT)} {
-    padding: 91px 20px 87px 20px;
+    padding: 40px 20px 87px 20px;
   }
 
   ${mediaQuery(MOBILE_BREAKPOINT)} {
-    padding: 91px 20px 87px 20px;
+    padding: 40px 20px 87px 20px;
   }
 `;
 

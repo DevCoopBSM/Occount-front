@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const PageWrap = styled.div`
   width: 100%;
-  height: 100vh;
-  overflow: auto;
+  min-height: 100vh;
   background-color: #ffffff;
 `;
 
@@ -41,10 +40,7 @@ export const AdminSubPageContainer = styled.div`
 export const PageContainer = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 100%;
-  overflow: auto;
   background-color: #fff;
-  overflow-x: hidden;
 `;
 
 export const InfoContainer = styled.div`

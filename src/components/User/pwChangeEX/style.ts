@@ -16,7 +16,7 @@ export const LogoAndForm = styled.div`
   align-items: center;
   justify-content: center;
   gap: clamp(24px, 2.5vw, 48px);
-  transform: translateY(-8vh);
+  transform: translateY(-12vh);
 `;
 
 export const LogoContainer = styled.div`
