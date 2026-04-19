@@ -57,7 +57,7 @@ function Header() {
   }, []);
 
   return (
-    <H.PageHeader>
+    <H.PageHeader $isAuthPage={isAuthPage}>
       <H.HeaderInBox>
         <H.LogoWrapper $isAuthPage={isAuthPage} onClick={handleLogoClick}>
           <img
