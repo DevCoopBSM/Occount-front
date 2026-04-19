@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
-export const PageHeader = styled.header`
+export const PageHeader = styled.header<{ $isAuthPage?: boolean }>`
   position: sticky;
   top: 0;
   z-index: 100;
   display: flex;
   justify-content: center;
   width: 100%;
-  background: rgba(238, 238, 238, 0.8);
-  backdrop-filter: blur(10px);
+  height: 80px;
+  background: #ffffff;
+  border-bottom: ${props => props.$isAuthPage ? 'none' : '1px solid #f0f0f0'};
 `;
 
 export const HeaderInBox = styled.div`
@@ -17,67 +18,94 @@ export const HeaderInBox = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1920px;
-  padding: 10px 180px;
-  
+  padding: 0 180px;
+
   @media (max-width: 1560px) {
-    padding: 10px 80px;
+    padding: 0 80px;
   }
-  
+
   @media (max-width: 1200px) {
-    padding: 10px 40px;
+    padding: 0 40px;
   }
-  
+
   @media (max-width: 768px) {
-    padding: 10px 20px;
+    padding: 0 20px;
   }
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled.div<{ $isAuthPage?: boolean }>`
   cursor: pointer;
   display: flex;
   align-items: center;
-  
+  margin-left: -10px;
+
   img {
-    width: 200px;
-    height: 46px;
+    width: ${props => props.$isAuthPage ? '120px' : '180px'};
+    height: ${props => props.$isAuthPage ? '24px' : '36px'};
     object-fit: contain;
+    transition: all 0.2s ease;
   }
-  
+
   @media (max-width: 768px) {
     img {
-      width: 150px;
-      height: 35px;
+      width: 120px;
+      height: 23px;
     }
   }
 `;
 
-export const RightSection = styled.div`
+export const Navigation = styled.nav`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
-export const MenuButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+export const NavItem = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 10px;
-  font-family: 'Pretendard', sans-serif;
+  padding: 4px 0;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 18px;
-  font-weight: 400;
-  color: #111111;
+  font-weight: 500;
+  line-height: 27px;
+  color: #111827;
   transition: opacity 0.2s;
-  
+  white-space: nowrap;
+
   &:hover {
     opacity: 0.7;
   }
-  
-  svg {
-    width: 24px;
-    height: 24px;
+`;
+
+export const SettingsSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const LoginButton = styled.button`
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  width: auto;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+  color: #111827;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.7;
   }
 `;
 
@@ -88,24 +116,28 @@ export const SettingsContainer = styled.div`
 export const SettingsButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 10px;
-  font-family: 'Pretendard', sans-serif;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  width: auto;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 18px;
-  font-weight: 400;
-  color: #111111;
+  font-weight: 500;
+  line-height: 27px;
+  color: #111827;
   transition: opacity 0.2s;
-  
+
   &:hover {
     opacity: 0.7;
   }
-  
+
   svg {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
 `;
 
@@ -129,7 +161,7 @@ export const DropdownItem = styled.button`
   border: none;
   cursor: pointer;
   color: #111111;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 16px;
   font-weight: 400;
   transition: background-color 0.2s;
@@ -137,9 +169,39 @@ export const DropdownItem = styled.button`
   &:hover {
     background: #f5f5f5;
   }
-  
+
   & + & {
     border-top: 1px solid #eeeeee;
+  }
+`;
+
+export const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const MenuButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #111111;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -151,12 +213,12 @@ export const LogOutBtn = styled.button`
   border: none;
   cursor: pointer;
   padding: 10px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 18px;
   font-weight: 400;
   color: #111111;
   transition: opacity 0.2s;
-  
+
   &:hover {
     opacity: 0.7;
   }
