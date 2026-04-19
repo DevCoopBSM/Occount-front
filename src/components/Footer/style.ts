@@ -39,6 +39,12 @@ export const Logo = styled.div`
   margin-bottom: 8px;
   margin-left: -10px;
   align-self: flex-start;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   img {
     width: 100%;

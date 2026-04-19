@@ -1,14 +1,33 @@
 import * as S from './style';
 import OccountLogo from 'assets/occount-logo.svg';
 import Icon from 'components/Icon';
+import { useNavigate } from 'react-router-dom';
 
 function Footer() {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  const handleContactClick = () => {
+    navigate('/contact');
+  };
+
+  const handleGithubClick = () => {
+    window.open('https://github.com/DevCoopBSM', '_blank');
+  };
+
+  const handleAboutClick = () => {
+    navigate('/howto');
+  };
+
   return (
     <S.FooterWrapper>
       <S.FooterContainer>
         <S.FooterContent>
         <S.InfoContainer>
-          <S.Logo>
+          <S.Logo onClick={handleLogoClick}>
             <img src={OccountLogo} alt="Occount" />
           </S.Logo>
           <S.AddressText>
@@ -32,11 +51,11 @@ function Footer() {
         </S.InfoContainer>
 
         <S.UtilityLinkContainer>
-          <S.UtilityLink>
+          <S.UtilityLink onClick={handleContactClick}>
             <S.UtilityLinkText>문의 및 건의</S.UtilityLinkText>
             <Icon name="chevronForward" size={24} color="#ffffff" />
           </S.UtilityLink>
-          <S.UtilityLink>
+          <S.UtilityLink onClick={handleGithubClick}>
             <S.UtilityLinkText>GITHUB</S.UtilityLinkText>
             <Icon name="externalLink" size={24} color="#ffffff" />
           </S.UtilityLink>
@@ -47,7 +66,7 @@ function Footer() {
 
       <S.BottomSection>
         <S.PolicyLinks>
-          <S.PolicyLink>오카운트 소개</S.PolicyLink>
+          <S.PolicyLink onClick={handleAboutClick}>오카운트 소개</S.PolicyLink>
           <S.PolicyLink>이용 약관</S.PolicyLink>
         </S.PolicyLinks>
         <S.Copyright>부산소프트웨어마이스터고등학교</S.Copyright>
