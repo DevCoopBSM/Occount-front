@@ -5,14 +5,15 @@ import Icon from 'components/Icon';
 function Footer() {
   return (
     <S.FooterWrapper>
-      <S.FooterContent>
+      <S.FooterContainer>
+        <S.FooterContent>
         <S.InfoContainer>
           <S.Logo>
             <img src={OccountLogo} alt="Occount" />
           </S.Logo>
           <S.AddressText>
-            부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고 융합관
-            공간-아리소리
+            부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고<br />
+            융합관 공간-아리소리
           </S.AddressText>
           <S.InfoLabelContainer>
             <S.InfoLabel>
@@ -51,6 +52,7 @@ function Footer() {
         </S.PolicyLinks>
         <S.Copyright>부산소프트웨어마이스터고등학교</S.Copyright>
       </S.BottomSection>
+      </S.FooterContainer>
     </S.FooterWrapper>
   );
 }

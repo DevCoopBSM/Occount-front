@@ -2,20 +2,34 @@ import styled from 'styled-components';
 
 export const FooterWrapper = styled.footer`
   background-color: #2b2b2b;
-  padding: 32px 180px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+export const FooterContainer = styled.div`
+  width: 100%;
+  max-width: 1920px;
+  padding: 32px 180px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 316px;
-  justify-content: center;
+  min-height: 316px;
+
+  @media (max-width: 1560px) {
+    padding: 32px 80px;
+  }
 
   @media (max-width: 1200px) {
-    padding: 32px 60px;
+    padding: 32px 40px;
   }
 
   @media (max-width: 768px) {
     padding: 32px 20px;
+  }
+
+  @media (max-width: 900px) {
+    padding: 40px 20px;
   }
 `;
 
@@ -39,7 +53,7 @@ export const FooterContent = styled.div`
   align-items: flex-start;
   width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     flex-direction: column;
     gap: 24px;
   }
@@ -60,6 +74,16 @@ export const AddressText = styled.p`
   color: #ffffff;
   margin: 0;
   margin-bottom: 8px;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    line-height: 18px;
+  }
 `;
 
 export const InfoLabelContainer = styled.div`
@@ -82,6 +106,11 @@ export const InfoLabelTitle = styled.p`
   color: #ffffff;
   margin: 0;
   white-space: nowrap;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    line-height: 21px;
+  }
 `;
 
 export const InfoLabelValue = styled.p`
@@ -91,6 +120,11 @@ export const InfoLabelValue = styled.p`
   line-height: 25.6px;
   color: #ffffff;
   margin: 0;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    line-height: 22px;
+  }
 `;
 
 export const UtilityLinkContainer = styled.div`
@@ -98,6 +132,10 @@ export const UtilityLinkContainer = styled.div`
   flex-direction: column;
   gap: 8px;
   margin-top: 36px;
+
+  @media (max-width: 900px) {
+    margin-top: 0;
+  }
 `;
 
 export const UtilityLink = styled.div`
@@ -118,6 +156,11 @@ export const UtilityLinkText = styled.p`
   white-space: nowrap;
   display: flex;
   align-items: center;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
 `;
 
 export const FooterDivider = styled.div`
@@ -132,7 +175,7 @@ export const BottomSection = styled.div`
   align-items: center;
   width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
@@ -143,6 +186,10 @@ export const PolicyLinks = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+
+  @media (max-width: 600px) {
+    gap: 12px;
+  }
 `;
 
 export const PolicyLink = styled.p`
@@ -153,6 +200,11 @@ export const PolicyLink = styled.p`
   color: #d1d5db;
   margin: 0;
   cursor: pointer;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    line-height: 22px;
+  }
 `;
 
 export const Copyright = styled.p`
@@ -162,4 +214,9 @@ export const Copyright = styled.p`
   line-height: 27px;
   color: #d1d5db;
   margin: 0;
+
+  @media (max-width: 600px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
 `;
