@@ -1,5 +1,4 @@
 import * as S from './style';
-import OccountLogo from 'assets/occount-logo.svg';
 import Icon from 'components/Icon';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +27,7 @@ function Footer() {
         <S.FooterContent>
         <S.InfoContainer>
           <S.Logo onClick={handleLogoClick}>
-            <img src={OccountLogo} alt="Occount" />
+            <img src="/assets/occount-logo.svg" alt="Occount" />
           </S.Logo>
           <S.AddressText>
             부산광역시 강서구 가락대로 1393 부산소프트웨어마이스터고<br />
