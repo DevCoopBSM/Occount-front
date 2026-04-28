@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from 'common/Toast';
 import * as L from "./style";
@@ -66,7 +65,7 @@ function PwChange() {
       <L.Container>
         <L.SuccessContainer>
           <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <L.LogoImg src={imgLogo} alt="logo" />
+            <L.LogoImg src="/assets/occount-logo.svg" alt="logo" />
           </L.LogoWrapping>
           <L.SuccessMessage>
             {userName} 님의 이메일로 재설정 링크가 전달되었어요!
@@ -87,7 +86,7 @@ function PwChange() {
       <L.LogoAndForm>
         <L.LogoContainer>
           <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <L.LogoImg src={imgLogo} alt="logo" />
+            <L.LogoImg src="/assets/occount-logo.svg" alt="logo" />
           </L.LogoWrapping>
           <L.LogoSubText>비밀번호 찾기</L.LogoSubText>
         </L.LogoContainer>
