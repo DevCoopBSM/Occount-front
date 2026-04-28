@@ -12,6 +12,10 @@ import ExternalLinkIcon from './ExternalLinkIcon';
 import EyeIcon from './EyeIcon';
 import EyeOffIcon from './EyeOffIcon';
 import SearchIcon from './SearchIcon';
+import HistoryIcon from './HistoryIcon';
+import InventoryIcon from './InventoryIcon';
+import MailIcon from './MailIcon';
+import MenuBookIcon from './MenuBookIcon';
 
 type IconName =
   | 'close'
@@ -26,7 +30,11 @@ type IconName =
   | 'externalLink'
   | 'eye'
   | 'eyeOff'
-  | 'search';
+  | 'search'
+  | 'history'
+  | 'inventory'
+  | 'mail'
+  | 'menuBook';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   name: IconName;
@@ -49,6 +57,10 @@ const iconComponents = {
   eye: EyeIcon,
   eyeOff: EyeOffIcon,
   search: SearchIcon,
+  history: HistoryIcon,
+  inventory: InventoryIcon,
+  mail: MailIcon,
+  menuBook: MenuBookIcon,
 };
 
 const Icon: React.FC<IconProps> = ({ name, ...props }) => {

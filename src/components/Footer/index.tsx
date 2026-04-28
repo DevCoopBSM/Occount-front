@@ -19,6 +19,10 @@ function Footer() {
 
   const handleAboutClick = () => {
     navigate('/howto');
+    // 페이지 이동 후 맨 위로 스크롤
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
   };
 
   return (
