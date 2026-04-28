@@ -4,15 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
 import PaymentModal from 'components/Pg/PaymentModal';
 import InquiryModal from './InquiryModal';
-import BarcodeModal from './BarcodeModal';
 import InvestmentModal from './InvestmentModal';
+import Barcode from 'react-barcode';
 import Toast from 'common/Toast';
 import Icon from 'components/Icon';
-import MoneyIcon from 'assets/Money.svg';
-import DocumentIcon from 'assets/Document.svg';
-import WayIcon from 'assets/Way.svg';
-import QIcon from 'assets/Q.svg';
-import OringInqSmile from 'assets/Oring_inq_smile.svg';
 import { fetchNotices, Notice as ApiNotice } from './Notice/notices';
 import { mockAnnouncements, mockNotices, mockProducts, NoticeItem, Product } from './mockData';
 
@@ -34,12 +29,10 @@ function Main() {
   const [isChargeModalOpen, setIsChargeModalOpen] = useState<boolean>(false);
   const [formatPoint, setFormatPoint] = useState<string>('');
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
-  const [isBarcodeModalOpen, setIsBarcodeModalOpen] = useState<boolean>(false);
   const [showInvestmentModal, setShowInvestmentModal] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체보기');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [eventNotices, setEventNotices] = useState<NoticeItem[]>([]);
-  const [announcementNotices, setAnnouncementNotices] = useState<NoticeItem[]>([]);
+  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [allNotices, setAllNotices] = useState<NoticeItem[]>([]);
   const [showLoginToast, setShowLoginToast] = useState<boolean>(false);
 
   const memberRoles = useMemo(() => ['ROLE_MEMBER', 'ROLE_COOP', 'ROLE_ADMIN'], []);
@@ -53,14 +46,6 @@ function Main() {
       setFormatPoint(user.point.toLocaleString());
     }
   }, [user]);
-
-  const handleOpenChargeModal = useCallback((): void => {
-    if (!isUserMember()) {
-      alert('정식 조합원만 이용 가능한 기능입니다.');
-      return;
-    }
-    setIsChargeModalOpen(true);
-  }, [isUserMember]);
 
   const handleCloseChargeModal = useCallback((): void => {
     setIsChargeModalOpen(false);
@@ -91,10 +76,6 @@ function Main() {
     setIsInquiryModalOpen(false);
   }, []);
 
-  const handleCloseBarcodeModal = useCallback((): void => {
-    setIsBarcodeModalOpen(false);
-  }, []);
-
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -105,8 +86,15 @@ function Main() {
   useEffect(() => {
     if (USE_MOCK_DATA) {
       setProducts(mockProducts);
-      setEventNotices(mockNotices.filter(notice => notice.importance === 'HIGH'));
-      setAnnouncementNotices(mockAnnouncements);
+      // 모든 공지사항을 하나로 통합 (중요도 높은 것부터 표시)
+      const combinedNotices = [...mockNotices, ...mockAnnouncements]
+        .sort((a, b) => {
+          // 중요도가 높은 것 먼저, 그 다음 최신순
+          if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
+          if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+      setAllNotices(combinedNotices);
       return;
     }
 
@@ -120,12 +108,17 @@ function Main() {
           importance: notice.importance,
         }));
 
-        setEventNotices(mapped.filter(notice => notice.importance === 'HIGH'));
-        setAnnouncementNotices(mapped.filter(notice => notice.importance !== 'HIGH'));
+        // 모든 공지사항을 중요도순으로 정렬
+        const sortedNotices = mapped.sort((a, b) => {
+          if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
+          if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
+          return 0;
+        });
+
+        setAllNotices(sortedNotices);
       } catch (error) {
         console.error('공지사항 로딩 에러:', error)
-        setEventNotices([]);
-        setAnnouncementNotices([]);
+        setAllNotices([]);
       }
     };
 
@@ -164,56 +157,39 @@ function Main() {
         <S.TopCardsContainer>
           {/* 잔액 조회 카드 */}
           <S.BalanceCard>
-            <S.BalanceTitle>
-              <span className="name">{isLoggedIn ? user?.name || '사용자' : '사용자'}</span>
-              <span className="suffix">님의 잔액</span>
-            </S.BalanceTitle>
-            <S.BalanceAmount>
-              <span className="amount">{isLoggedIn ? formatPoint : '로그인 필요'}</span>
-              {isLoggedIn && <span className="unit">원</span>}
-            </S.BalanceAmount>
+            <S.BalanceContentLeft>
+              <S.BalanceTitle>
+                <span className="name">{isLoggedIn ? user?.name || '사용자' : '사용자'}</span>
+                <span className="suffix">님의 잔액</span>
+              </S.BalanceTitle>
+              <S.BalanceInfo>
+                <span className="amount">{isLoggedIn ? formatPoint : '로그인 필요'}</span>
+                {isLoggedIn && <span className="unit">원</span>}
+              </S.BalanceInfo>
+            </S.BalanceContentLeft>
+
+            {isLoggedIn && user?.code && (
+              <S.VerticalDivider />
+            )}
+
+            {isLoggedIn && user?.code && (
+              <S.BarcodeRightSection>
+                <S.BarcodeLabel>결제 바코드</S.BarcodeLabel>
+                <S.LargeBarcodeWrapper>
+                  <Barcode
+                    value={user.code}
+                    format="CODE128"
+                    width={2.5}
+                    height={75}
+                    displayValue={false}
+                    margin={0}
+                  />
+                </S.LargeBarcodeWrapper>
+              </S.BarcodeRightSection>
+            )}
           </S.BalanceCard>
 
-          {/* Ari-Pick 카드 */}
-          <S.AriPickCard>
-            <S.AriPickTitle>Ari-Pick</S.AriPickTitle>
-            <S.AriPickDescription>아리소리가 당신의 소리를 기다립니다!</S.AriPickDescription>
-            <S.AriPickIcon>
-              <img src={OringInqSmile} alt="Ari-Pick" />
-            </S.AriPickIcon>
-          </S.AriPickCard>
         </S.TopCardsContainer>
-
-        {/* 서비스 메뉴 */}
-        <S.ServiceMenuContainer>
-          <S.MenuCard onClick={handleOpenChargeModal}>
-            <S.MenuCardTitle>충전하기</S.MenuCardTitle>
-            <S.MenuCardIcon>
-              <img src={MoneyIcon} alt="충전하기" />
-            </S.MenuCardIcon>
-          </S.MenuCard>
-
-          <S.MenuCard onClick={() => handleNavigateToProtectedPage('/userlog')}>
-            <S.MenuCardTitle>사용내역보기</S.MenuCardTitle>
-            <S.MenuCardIcon>
-              <img src={DocumentIcon} alt="사용내역보기" />
-            </S.MenuCardIcon>
-          </S.MenuCard>
-
-          <S.MenuCard onClick={() => navigate('/howto')}>
-            <S.MenuCardTitle>사용방법</S.MenuCardTitle>
-            <S.MenuCardIcon>
-              <img src={WayIcon} alt="사용방법" />
-            </S.MenuCardIcon>
-          </S.MenuCard>
-
-          <S.MenuCard onClick={handleOpenInquiryModal}>
-            <S.MenuCardTitle>문의하기</S.MenuCardTitle>
-            <S.MenuCardIcon>
-              <img src={QIcon} alt="문의하기" />
-            </S.MenuCardIcon>
-          </S.MenuCard>
-        </S.ServiceMenuContainer>
 
         {/* 현재 매장 인원 체크 */}
         <S.CheckOccupancyBanner>
@@ -225,54 +201,81 @@ function Main() {
           <S.OccupancyStatus>현재 아무도 없어요!</S.OccupancyStatus>
         </S.CheckOccupancyBanner>
 
-        {/* 이벤트 안내 & 변경/공지 사항 */}
-        <S.EventNoticeContainer>
-          {/* 이벤트 안내 */}
-          <S.NoticeSection>
-            <S.NoticeSectionTitle>
-              <h2>이벤트 안내</h2>
-              <S.ViewMoreButton>
-                <span>전체보기</span>
-                <Icon name="chevronForward" size={20} color="#666666" />
-              </S.ViewMoreButton>
-            </S.NoticeSectionTitle>
-            <S.NoticeList>
-              {eventNotices.length ? (
-                eventNotices.map(notice => (
-                  <S.NoticeItem key={notice.id}>
-                    <span className="title">{notice.title}</span>
-                    <span className="date">{notice.date}</span>
-                  </S.NoticeItem>
-                ))
-              ) : (
-                <S.EmptyMessage>진행 중인 이벤트가 없습니다.</S.EmptyMessage>
-              )}
-            </S.NoticeList>
-          </S.NoticeSection>
 
-          {/* 변경/공지 사항 */}
+        {/* 공지사항과 퀵메뉴 */}
+        <S.NoticeAndMenuContainer>
           <S.NoticeSection>
             <S.NoticeSectionTitle>
-              <h2>변경/공지 사항</h2>
-              <S.ViewMoreButton>
+              <h2>공지사항</h2>
+              <S.ViewMoreButton onClick={() => navigate('/notice')}>
                 <span>전체보기</span>
                 <Icon name="chevronForward" size={20} color="#666666" />
               </S.ViewMoreButton>
             </S.NoticeSectionTitle>
             <S.NoticeList>
-              {announcementNotices.length ? (
-                announcementNotices.map(announcement => (
-                  <S.NoticeItem key={announcement.id}>
-                    <span className="title">{announcement.title}</span>
-                    <span className="date">{announcement.date}</span>
+              {allNotices.length ? (
+                allNotices.slice(0, 5).map(notice => (
+                  <S.NoticeItem key={notice.id}>
+                    <span className="meta">
+                      <span className="title">
+                        {notice.title}
+                      </span>
+                      <span className="date">{notice.date}</span>
+                    </span>
                   </S.NoticeItem>
                 ))
               ) : (
                 <S.EmptyMessage>등록된 공지사항이 없습니다.</S.EmptyMessage>
               )}
             </S.NoticeList>
+            <S.QuickMenuChipRow>
+              <S.QuickMenuChip onClick={() => handleNavigateToProtectedPage('/userlog')}>
+                <S.QuickMenuChipLead>
+                  <S.QuickMenuIcon>
+                    <S.IconCircle $bgColor="#FCC800">
+                      <Icon name="history" size={18} color="#FFFFFF" />
+                    </S.IconCircle>
+                  </S.QuickMenuIcon>
+                  <S.QuickMenuText>사용내역</S.QuickMenuText>
+                </S.QuickMenuChipLead>
+                <S.QuickMenuChevron>›</S.QuickMenuChevron>
+              </S.QuickMenuChip>
+              <S.QuickMenuChip onClick={() => navigate('/howto')}>
+                <S.QuickMenuChipLead>
+                  <S.QuickMenuIcon>
+                    <S.IconCircle $bgColor="#F49E15">
+                      <Icon name="menuBook" size={18} color="#FFFFFF" />
+                    </S.IconCircle>
+                  </S.QuickMenuIcon>
+                  <S.QuickMenuText>사용방법</S.QuickMenuText>
+                </S.QuickMenuChipLead>
+                <S.QuickMenuChevron>›</S.QuickMenuChevron>
+              </S.QuickMenuChip>
+              <S.QuickMenuChip onClick={() => navigate('/item-list')}>
+                <S.QuickMenuChipLead>
+                  <S.QuickMenuIcon>
+                    <S.IconCircle $bgColor="#FCC800">
+                      <Icon name="inventory" size={18} color="#FFFFFF" />
+                    </S.IconCircle>
+                  </S.QuickMenuIcon>
+                  <S.QuickMenuText>상품목록</S.QuickMenuText>
+                </S.QuickMenuChipLead>
+                <S.QuickMenuChevron>›</S.QuickMenuChevron>
+              </S.QuickMenuChip>
+              <S.QuickMenuChip onClick={handleOpenInquiryModal}>
+                <S.QuickMenuChipLead>
+                  <S.QuickMenuIcon>
+                    <S.IconCircle $bgColor="#F49E15">
+                      <Icon name="mail" size={18} color="#FFFFFF" />
+                    </S.IconCircle>
+                  </S.QuickMenuIcon>
+                  <S.QuickMenuText>문의하기</S.QuickMenuText>
+                </S.QuickMenuChipLead>
+                <S.QuickMenuChevron>›</S.QuickMenuChevron>
+              </S.QuickMenuChip>
+            </S.QuickMenuChipRow>
           </S.NoticeSection>
-        </S.EventNoticeContainer>
+        </S.NoticeAndMenuContainer>
 
         {/* 매점상품 보기 */}
         <S.ProductDisplaySection>
@@ -290,7 +293,7 @@ function Main() {
               {categories.map(category => (
                 <S.CategoryTab
                   key={category}
-                  active={selectedCategory === category}
+                  $active={selectedCategory === category}
                   onClick={() => setSelectedCategory(category)}
                 >
                   {category}
@@ -311,7 +314,6 @@ function Main() {
                           {product.badge === 'new' ? 'NEW' : 'HOT'}
                         </S.ProductBadge>
                       )}
-                      <S.ProductImage />
                       <S.ProductInfo>
                         <h3>{product.title}</h3>
                         <div className="price">
@@ -351,11 +353,6 @@ function Main() {
         user={user as User}
       />
 
-      <BarcodeModal
-        isOpen={isBarcodeModalOpen}
-        onRequestClose={handleCloseBarcodeModal}
-        userCode={user?.code || ''}
-      />
 
       <InvestmentModal
         isOpen={showInvestmentModal}

@@ -37,18 +37,20 @@ const NoticeList: React.FC = () => {
   };
 
   return (
-    <NoticeWrapper>
-      <HeaderContainer>
-        <Title>변경/공지사항</Title>
+    <>
+      <PageTitle>변경/공지사항</PageTitle>
+
+      <TabContainerWrapper>
+        <EmptySpace />
         <NavigationContainer>
           <NavigationButton aria-label="이전" disabled>
-            <Icon name="chevronLeft" size={40} color="#cccccc" />
+            <Icon name="chevronLeft" size={30} color="#cccccc" />
           </NavigationButton>
           <NavigationButton aria-label="다음" disabled>
-            <Icon name="chevronRight" size={40} color="#cccccc" />
+            <Icon name="chevronRight" size={30} color="#cccccc" />
           </NavigationButton>
         </NavigationContainer>
-      </HeaderContainer>
+      </TabContainerWrapper>
 
       <NoticeContainer>
         {loading ? (
@@ -80,82 +82,69 @@ const NoticeList: React.FC = () => {
         onRequestClose={handleModalClose}
         notice={selectedNotice}
       />
-    </NoticeWrapper>
+    </>
   );
 };
 
-// 스타일 컴포넌트
-const NoticeWrapper = styled.div`
-  position: absolute;
-  left: clamp(20px, 29.69vw, 570px); // 570px / 1920px = 29.69%
-  top: clamp(60px, 4.69vw, 90px); // 90px / 1920px = 4.69%
-  width: clamp(300px, 40.63vw, 780px); // 780px / 1920px = 40.63%
-  display: flex;
-  flex-direction: column;
-  gap: clamp(5px, 0.52vw, 10px); // 10px / 1920px = 0.52%
-
-  @media (max-width: 768px) {
-    position: static;
-    left: auto;
-    top: auto;
-    width: 100%;
-    padding: 0 20px;
-    margin-top: 20px;
-  }
+const PageTitle = styled.h1`
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 25px;
+  line-height: 1.4;
 `;
 
-const HeaderContainer = styled.div`
+const TabContainerWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: clamp(5px, 0.52vw, 10px);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
   width: 100%;
 `;
 
-const Title = styled.h1`
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 600;
-  font-size: clamp(24px, 1.67vw, 32px); // 32px / 1920px = 1.67%
-  color: #111111;
-  text-align: center;
-  margin: 0;
-  padding: clamp(5px, 0.52vw, 10px);
-  line-height: 1.4;
+const EmptySpace = styled.div`
+  width: 350px;
 `;
 
 const NavigationContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
   gap: 0;
-  padding: clamp(5px, 0.52vw, 10px);
+  align-items: center;
 `;
 
 const NavigationButton = styled.button`
-  background: none;
+  width: 30px;
+  height: 30px;
+  background: transparent;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(24px, 1.56vw, 30px); // 30px / 1920px = 1.56%
-  height: clamp(24px, 1.56vw, 30px);
+  padding: 0;
+  transition: all 0.3s ease;
+
+  svg path {
+    fill: #CCCCCC;
+    transition: fill 0.3s ease;
+  }
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.5;
   }
 
-  &:not(:disabled):hover {
-    opacity: 0.7;
+  &:not(:disabled):hover svg path {
+    fill: #111111;
   }
 `;
 
 const NoticeContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: clamp(1px, 0.1vw, 2px); // 2px / 1920px = 0.1%
+  gap: 2px;
   width: 100%;
-  padding: clamp(5px, 0.52vw, 10px);
+  padding: 10px;
 `;
 
 const NoticeItem = styled.div`
@@ -172,14 +161,14 @@ const NoticeItemHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: clamp(5px, 0.52vw, 10px);
+  padding: 10px;
   width: 100%;
 `;
 
 const NoticeTitle = styled.p`
   font-family: 'Pretendard', sans-serif;
   font-weight: 400;
-  font-size: clamp(14px, 0.94vw, 18px); // 18px / 1920px = 0.94%
+  font-size: 18px;
   color: #111111;
   margin: 0;
   line-height: normal;
@@ -190,7 +179,7 @@ const NoticeTitle = styled.p`
 const NoticeDate = styled.p`
   font-family: 'Pretendard', sans-serif;
   font-weight: 400;
-  font-size: clamp(14px, 0.94vw, 18px); // 18px / 1920px = 0.94%
+  font-size: 18px;
   color: #666666;
   margin: 0;
   line-height: normal;
@@ -201,7 +190,7 @@ const NoticeDate = styled.p`
 
 const LoadingMessage = styled.p`
   font-family: 'Pretendard', sans-serif;
-  font-size: clamp(14px, 0.94vw, 18px);
+  font-size: 18px;
   color: #666666;
   text-align: center;
   margin: 20px 0;
@@ -209,7 +198,7 @@ const LoadingMessage = styled.p`
 
 const ErrorMessage = styled.p`
   font-family: 'Pretendard', sans-serif;
-  font-size: clamp(14px, 0.94vw, 18px);
+  font-size: 18px;
   color: #ff6666;
   text-align: center;
   margin: 20px 0;
@@ -217,7 +206,7 @@ const ErrorMessage = styled.p`
 
 const EmptyMessage = styled.p`
   font-family: 'Pretendard', sans-serif;
-  font-size: clamp(14px, 0.94vw, 18px);
+  font-size: 18px;
   color: #666666;
   text-align: center;
   margin: 20px 0;

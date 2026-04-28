@@ -8,6 +8,12 @@ export interface LogItem {
   payDate?: number[];
   chargedPoint?: number;
   payedPoint?: number;
+  chargeAmount?: number;  // Mock 데이터용
+  paymentAmount?: number; // Mock 데이터용
+  storeName?: string;     // Mock 데이터용
+  paymentMethod?: string; // Mock 데이터용
+  chargeMethod?: string;  // Mock 데이터용
+  status?: string;        // Mock 데이터용
   chargeType?: string;
   payType?: string;
   refundState?: boolean;

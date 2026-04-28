@@ -5,6 +5,150 @@ import { useSwipeable } from 'react-swipeable';
 import PointLogItem from './PointLogItem';
 import * as S from './style';
 
+// 개발 모드 체크
+const isDevMode = () => {
+  return (
+    process.env.NODE_ENV === 'development' &&
+    process.env.REACT_APP_DEV_MODE === 'true'
+  );
+};
+
+// Mock 데이터
+const getMockPayLogs = () => [
+  {
+    payId: 1,
+    storeName: '부산소마고',
+    paymentAmount: 7500,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 21, 12, 30, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 2,
+    storeName: '학식당',
+    paymentAmount: 6800,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 21, 11, 15, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 3,
+    storeName: '자판기',
+    paymentAmount: 1200,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 21, 15, 20, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 4,
+    storeName: '카페베네',
+    paymentAmount: 3200,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 21, 16, 45, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 5,
+    storeName: '편의점GS25',
+    paymentAmount: 1800,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 20, 18, 10, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 6,
+    storeName: '학식당',
+    paymentAmount: 8200,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 20, 12, 15, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 7,
+    storeName: '도서관카페',
+    paymentAmount: 1200,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 20, 14, 30, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 8,
+    storeName: '부산소마고',
+    paymentAmount: 6500,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 19, 13, 20, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 9,
+    storeName: '자판기',
+    paymentAmount: 1200,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 19, 16, 45, 0],
+    status: '결제완료'
+  },
+  {
+    payId: 10,
+    storeName: '학식당',
+    paymentAmount: 7800,
+    paymentMethod: '아리페이',
+    payDate: [2024, 4, 18, 12, 10, 0],
+    status: '결제완료'
+  }
+];
+
+const getMockChargeLogs = () => [
+  {
+    chargeId: 1,
+    chargeAmount: 100000,
+    chargeMethod: '카드결제',
+    chargeDate: [2024, 4, 21, 9, 0, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 2,
+    chargeAmount: 50000,
+    chargeMethod: '계좌이체',
+    chargeDate: [2024, 4, 18, 15, 30, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 3,
+    chargeAmount: 30000,
+    chargeMethod: '카드결제',
+    chargeDate: [2024, 4, 15, 13, 45, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 4,
+    chargeAmount: 50000,
+    chargeMethod: '계좌이체',
+    chargeDate: [2024, 4, 10, 10, 20, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 5,
+    chargeAmount: 20000,
+    chargeMethod: '카드결제',
+    chargeDate: [2024, 4, 8, 14, 15, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 6,
+    chargeAmount: 10000,
+    chargeMethod: '계좌이체',
+    chargeDate: [2024, 4, 5, 11, 30, 0],
+    status: '충전완료'
+  },
+  {
+    chargeId: 7,
+    chargeAmount: 5000,
+    chargeMethod: '카드결제',
+    chargeDate: [2024, 4, 3, 16, 45, 0],
+    status: '충전완료'
+  }
+];
+
 function UserLog() {
   const [currentPage, setCurrentPage] = useState(0);
   const [useLogData, setUseLogData] = useState([]);
@@ -18,11 +162,18 @@ function UserLog() {
 
   const fetchUserLog = async () => {
     try {
+      // 개발 모드일 때 Mock 데이터 사용
+      if (isDevMode()) {
+        setUseLogData(getMockPayLogs());
+        setChargeLogData(getMockChargeLogs());
+        return;
+      }
+
       const [paylogResponse, chargelogResponse] = await Promise.all([
         axiosInstance.get("v2/transaction/paylog"),
         axiosInstance.get("v2/transaction/chargelog")
       ]);
-      
+
       setUseLogData(paylogResponse.data.payLogList || []);
       setChargeLogData(chargelogResponse.data.chargeLogList || []);
     } catch (error) {
@@ -97,7 +248,7 @@ function UserLog() {
 
   return (
     <S.CompeleteWrap>
-      <S.PageTitle>아리페이 충전하기</S.PageTitle>
+      <S.PageTitle>아리페이 사용 내역</S.PageTitle>
 
       {/* 탭 메뉴와 화살표 */}
       <S.TabContainerWrapper>
