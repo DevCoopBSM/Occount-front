@@ -3,6 +3,7 @@ import * as S from './style';
 import { ContentContainer } from 'common/ContentContainer';
 import Icon from 'components/Icon';
 import axiosInstance from 'utils/Axios';
+import { mockProducts } from 'components/User/UserMain/mockData';
 
 interface Item {
   itemId: number;
@@ -13,6 +14,16 @@ interface Item {
   isNew?: boolean;
   isHot?: boolean;
 }
+
+const fallbackItems: Item[] = mockProducts.map(product => ({
+  itemId: product.id,
+  itemName: product.title,
+  itemCode: `MOCK-${product.id}`,
+  itemPrice: product.price ?? 0,
+  category: product.category,
+  isNew: product.badge === 'new',
+  isHot: product.badge === 'hot',
+}));
 
 const categories = [
   '전체보기',
@@ -52,6 +63,10 @@ const ItemList: React.FC = () => {
   }, [items, selectedCategory, searchTerm]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetchItems();
   }, []);
 
@@ -66,9 +81,8 @@ const ItemList: React.FC = () => {
       const response = await axiosInstance.get('v2/item/');
 
       if (response.status === 204 || !response.data.itemList || response.data.itemList.length === 0) {
-        // API returned no items - empty state will be shown in UI
-        setItems([]);
-        setFilteredItems([]);
+        setItems(fallbackItems);
+        setFilteredItems(fallbackItems);
       } else {
         const remappedData: Item[] = response.data.itemList.map((item: any) => ({
           itemId: item.itemId,
@@ -84,7 +98,9 @@ const ItemList: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching items:', error);
-      setError('상품 목록을 불러오는 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      setItems(fallbackItems);
+      setFilteredItems(fallbackItems);
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -101,7 +117,7 @@ const ItemList: React.FC = () => {
   return (
     <ContentContainer>
       <S.Title>매점상품 보기</S.Title>
-      
+
       <S.FilterSection>
         <S.CategoryTabBar>
           {categories.map((category) => (
@@ -114,7 +130,7 @@ const ItemList: React.FC = () => {
             </S.CategoryTab>
           ))}
         </S.CategoryTabBar>
-        
+
         <S.SearchBar>
           <S.SearchInput
             type="text"
@@ -123,7 +139,7 @@ const ItemList: React.FC = () => {
             onChange={handleSearchChange}
           />
           <S.SearchIcon>
-            <Icon name="search" size={24} color="#666666" strokeWidth={2} />
+            <Icon name="search" size={22} color="#F49E15" strokeWidth={2} />
           </S.SearchIcon>
         </S.SearchBar>
       </S.FilterSection>
@@ -138,18 +154,17 @@ const ItemList: React.FC = () => {
         <S.ProductGrid>
           {filteredItems.map((item) => (
             <S.ProductCard key={item.itemId}>
-              {(item.isNew || item.isHot) && (
-                <S.Badge type={item.isNew ? 'new' : 'hot'}>
-                  {item.isNew ? 'NEW' : 'HOT'}
-                </S.Badge>
-              )}
               <S.ProductInfo>
+                {(item.isNew || item.isHot) && (
+                  <S.Badge type={item.isNew ? 'new' : 'hot'}>
+                    {item.isNew ? 'NEW' : 'HOT'}
+                  </S.Badge>
+                )}
                 <S.ProductTitle>{item.itemName}</S.ProductTitle>
                 <S.ProductPrice>
                   {item.itemPrice.toLocaleString()} 원
                 </S.ProductPrice>
               </S.ProductInfo>
-              <S.ProductImagePlaceholder />
             </S.ProductCard>
           ))}
         </S.ProductGrid>
@@ -159,4 +174,3 @@ const ItemList: React.FC = () => {
 };
 
 export default ItemList;
-

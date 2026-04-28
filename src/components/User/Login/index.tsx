@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, ChangeEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from "common/Toast";
 import Icon from "components/Icon";
@@ -102,7 +101,7 @@ const Login: React.FC = () => {
         <L.LogoAndForm>
           <L.LogoContainer>
             <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-              <L.LogoImg src={imgLogo} alt="logo" />
+              <L.LogoImg src="/assets/occount-logo.svg" alt="logo" />
             </L.LogoWrapping>
             <L.LogoSubText>
               로그인 후 오카운트의 더 다양한 기능을 만나보세요!

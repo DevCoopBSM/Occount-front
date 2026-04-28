@@ -183,7 +183,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
   };
 
   const handlePageChange = (newPage: number) => {
-    const maxPage = Math.ceil(inquiries.length / inquiriesPerPage) - 1;
+    const maxPage = Math.ceil((inquiries || []).length / inquiriesPerPage) - 1;
     if (newPage >= 0 && newPage <= maxPage) {
       setSlideDirection(newPage > currentPage ? 'left' : 'right');
       setCurrentPage(newPage);
@@ -253,23 +253,32 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
       {isLoading ? (
         <S.TransparentModalContent />
       ) : (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-          <S.ModalContent>
-            <S.InquiriesHeader>내 문의 목록</S.InquiriesHeader>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={onRequestClose}
+          style={{
+            padding: '32px',
+            borderRadius: '16px',
+            backgroundColor: '#fff',
+            maxWidth: '500px',
+            width: '90%'
+          }}
+        >
+          <S.InquiriesHeader>내 문의 목록</S.InquiriesHeader>
             <S.InquiriesContainer {...handlers}>
-              <S.InquiriesContent 
-                ref={containerRef} 
+              <S.InquiriesContent
+                ref={containerRef}
                 onTransitionEnd={onTransitionEnd}
                 style={{
                   transform: `translateX(${-100 * currentPage}%)`,
-                  width: `${100 * Math.ceil(inquiries.length / inquiriesPerPage)}%`
+                  width: `${100 * Math.ceil((inquiries || []).length / inquiriesPerPage)}%`
                 }}
               >
-                {Array.from({ length: Math.ceil(inquiries.length / inquiriesPerPage) }, (_, pageIndex) => (
+                {Array.from({ length: Math.ceil((inquiries || []).length / inquiriesPerPage) || 1 }, (_, pageIndex) => (
                   <S.LogPage key={pageIndex}>
-                    {inquiries.slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage).map((inquiry) => (
-                      <S.InquiryItem 
-                        key={inquiry.inquiryId} 
+                    {(inquiries || []).slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage).map((inquiry) => (
+                      <S.InquiryItem
+                        key={inquiry.inquiryId}
                         onClick={() => toggleInquiry(inquiry.inquiryId)}
                         $hasAnswer={!!inquiry.inquiryAnswer}
                       >
@@ -302,23 +311,34 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 &lt; 이전
               </S.PageNumber>
               <S.PageIndicator>
-                {currentPage + 1} / {Math.ceil(inquiries.length / inquiriesPerPage)}
+                {currentPage + 1} / {Math.ceil((inquiries || []).length / inquiriesPerPage) || 1}
               </S.PageIndicator>
-              <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(inquiries.length / inquiriesPerPage) - 1}>
+              <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil((inquiries || []).length / inquiriesPerPage) - 1}>
                 다음 &gt;
               </S.PageNumber>
             </S.Pagination>
-            <S.ModalFooter>
-              <S.NewInquiryButton onClick={() => setIsInquiryFormOpen(true)}>문의 작성</S.NewInquiryButton>
-              <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
-            </S.ModalFooter>
-          </S.ModalContent>
+          <S.ModalFooter>
+            <S.NewInquiryButton onClick={() => setIsInquiryFormOpen(true)}>문의 작성</S.NewInquiryButton>
+            <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
+          </S.ModalFooter>
         </Modal>
       )}
       {isInquiryFormOpen && (
-        <Modal isOpen={isInquiryFormOpen} onRequestClose={() => setIsInquiryFormOpen(false)}>
-          <S.ModalContent>
-            <S.ModalHeader>문의하기</S.ModalHeader>
+        <Modal
+          isOpen={isInquiryFormOpen}
+          onRequestClose={() => {
+            setIsInquiryFormOpen(false);
+            onRequestClose();
+          }}
+          style={{
+            padding: '32px',
+            borderRadius: '16px',
+            backgroundColor: '#fff',
+            maxWidth: '500px',
+            width: '90%'
+          }}
+        >
+          <S.ModalHeader>문의하기</S.ModalHeader>
             <S.InquiryForm onSubmit={handleSubmit}>
               <S.InquirySelect
                 value={category}
@@ -344,10 +364,12 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 <S.SubmitButton type="submit" disabled={isSubmitting}>
                   {isSubmitting ? '제출 중...' : '제출하기'}
                 </S.SubmitButton>
-                <S.CloseButton onClick={() => setIsInquiryFormOpen(false)}>취소</S.CloseButton>
-              </S.ModalFooter>
-            </S.InquiryForm>
-          </S.ModalContent>
+                <S.CloseButton onClick={() => {
+                  setIsInquiryFormOpen(false);
+                  onRequestClose();
+                }}>취소</S.CloseButton>
+            </S.ModalFooter>
+          </S.InquiryForm>
         </Modal>
       )}
     </>

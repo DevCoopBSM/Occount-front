@@ -45,7 +45,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   };
 
   const date = formatDate(item.chargeDate || item.payDate);
-  const inner_point = item.chargedPoint || item.payedPoint;
+  const inner_point = item.chargedPoint || item.payedPoint || item.chargeAmount || item.paymentAmount;
   const itemType = item.chargeType || item.payType;
 
   const currentDate = new Date();

@@ -2,35 +2,80 @@ import styled from 'styled-components';
 import Modal from 'components/Modal';
 
 const MOBILE_BREAKPOINT = '480px';
+const TABLET_BREAKPOINT = '768px';
+const LAPTOP_BREAKPOINT = '1440px';
 
-export const StyledModal = styled(Modal).attrs((props) => ({
-  style: {
-    width: "800px",
+// Modal에 전달할 스타일 객체들
+export const getModalStyle = () => {
+  const baseStyle = {
+    width: "600px",
     maxWidth: "90%",
+    maxHeight: "95vh",
     backgroundColor: "#fff",
-    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
     borderRadius: "12px",
-    padding: "40px",
-    position: "relative",
-    ...props.style,
+    padding: "32px"
+  };
+
+  const laptopStyle = {
+    ...baseStyle,
+    width: "500px",
+    maxHeight: "85vh",
+    padding: "28px"
+  };
+
+  const tabletStyle = {
+    ...baseStyle,
+    width: "500px",
+    maxHeight: "85vh",
+    padding: "24px"
+  };
+
+  const mobileStyle = {
+    ...baseStyle,
+    width: "95%",
+    maxHeight: "90vh",
+    padding: "20px"
+  };
+
+  // 현재 화면 크기에 따라 스타일 반환
+  if (window.innerWidth <= 480) {
+    return mobileStyle;
+  } else if (window.innerWidth <= 768) {
+    return tabletStyle;
+  } else if (window.innerWidth <= 1440) {
+    return laptopStyle;
   }
-}))`
+  return baseStyle;
+};
+
+export const StyledModal = styled.div`
+  position: relative;
+
+  .modal-content {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+export const ModalHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    margin-bottom: 16px;
+  }
+
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    ${props => props.style?.mobileFullScreen && `
-      .modal-content {
-        width: 100%;
-        height: 100vh;
-        margin: 0;
-        border-radius: 0;
-      }
-    `}
+    margin-bottom: 14px;
   }
 `;
 
 export const CloseButton = styled.button`
-  position: absolute;
-  top: 40px;
-  right: 20px;
   width: 24px;
   height: 24px;
   background: transparent;
@@ -43,7 +88,8 @@ export const CloseButton = styled.button`
   color: #111111;
   font-size: 24px;
   line-height: 1;
-  
+  flex-shrink: 0;
+
   &:hover {
     opacity: 0.7;
   }
@@ -52,15 +98,33 @@ export const CloseButton = styled.button`
     width: 100%;
     height: 100%;
   }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    width: 18px;
+    height: 18px;
+  }
 `;
 
 export const ModalHeader = styled.h2`
   font-size: 32px;
   font-weight: 600;
   color: #111111;
-  margin: 0 0 20px 0;
+  margin: 0;
   padding: 0;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    font-size: 28px;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 26px;
+  }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
     font-size: 24px;
@@ -83,21 +147,30 @@ export const HighlightText = styled.div`
   align-items: center;
   gap: 5px;
   background-color: #FFF3D8;
-  padding: 20px;
+  padding: 16px;
   border-radius: 8px;
-  margin-bottom: 25px;
-  
+  margin-bottom: 20px;
+
   span {
-    font-size: 18px;
+    font-size: 16px;
     color: #F49E15;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  @media (max-width: ${MOBILE_BREAKPOINT}) {
-    padding: 15px;
-    
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    padding: 14px;
+    margin-bottom: 16px;
+
     span {
-      font-size: 16px;
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    padding: 12px;
+
+    span {
+      font-size: 14px;
     }
   }
 `;
@@ -117,17 +190,23 @@ export const InfoIcon = styled.div`
 export const ModalList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  margin-bottom: 20px;
-  font-size: 18px;
-  line-height: 24px;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 22px;
   color: #111111;
   list-style: none;
   padding: 0;
 
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    gap: 12px;
+    font-size: 15px;
+    line-height: 20px;
+  }
+
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    font-size: 16px;
-    gap: 20px;
+    font-size: 14px;
+    gap: 10px;
   }
 `;
 
@@ -167,8 +246,12 @@ export const ModalInputWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0 50px 0;
+  margin: 16px 0 32px 0;
   gap: 20px;
+
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    margin: 14px 0 28px 0;
+  }
 `;
 
 export const InputGroup = styled.div`
@@ -244,8 +327,12 @@ export const ButtonWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  margin-top: 40px;
+  margin-top: 24px;
   width: 100%;
+
+  @media (max-width: ${LAPTOP_BREAKPOINT}) {
+    margin-top: 20px;
+  }
 `;
 
 export const CancelButton = styled.button`

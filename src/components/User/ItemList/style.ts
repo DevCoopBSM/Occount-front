@@ -1,20 +1,26 @@
 import styled from 'styled-components';
 
+const TABLET_BREAKPOINT = '768px';
 
 export const Title = styled.h1`
   font-family: 'Pretendard', sans-serif;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 600;
   color: #111111;
-  margin: 0 0 40px 0;
+  margin: 0 0 28px 0;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 30px;
+    margin-bottom: 24px;
+  }
 `;
 
 export const FilterSection = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 50px;
-  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 24px;
 
   @media (max-width: 1200px) {
     flex-direction: column;
@@ -25,47 +31,55 @@ export const FilterSection = styled.div`
 export const CategoryTabBar = styled.div`
   display: flex;
   align-items: center;
-  height: 40px;
+  flex-wrap: wrap;
+  gap: 12px;
   flex: 1;
-  max-width: 780px;
+  max-width: 900px;
 
   @media (max-width: 1200px) {
     max-width: 100%;
     overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
   }
 `;
 
 export const CategoryTab = styled.button<{ active: boolean }>`
-  flex: 1;
   min-width: fit-content;
-  padding: 10px 15px;
+  padding: 16px 28px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: ${props => props.active ? 600 : 500};
   color: ${props => props.active ? '#111111' : '#666666'};
-  background: transparent;
-  border-radius: 0;
-  border: none;
-  border-bottom: ${props => props.active ? '3px solid #F49E15' : 'none'};
+  background: ${props => props.active ? '#FCC800' : '#FFFFFF'};
+  border-radius: 999px;
+  border: 1px solid ${props => props.active ? '#FCC800' : '#EFEFEF'};
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 
   &:hover {
     color: #111111;
+    border-color: #F49E15;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    padding: 14px 22px;
+    font-size: 16px;
   }
 `;
 
 export const SearchBar = styled.div`
   position: relative;
-  width: 500px;
-  height: 40px;
-  background: #F3F3F3;
-  border-radius: 8px;
+  width: 420px;
+  min-height: 56px;
+  background: #FFFFFF;
+  border: 1px solid #FCC800;
+  border-radius: 999px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 10px;
+  padding: 0 20px 0 24px;
+  gap: 12px;
 
   @media (max-width: 1200px) {
     width: 100%;
@@ -83,6 +97,10 @@ export const SearchInput = styled.input`
 
   &::placeholder {
     color: #666666;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 16px;
   }
 `;
 
@@ -107,45 +125,49 @@ export const ProductGrid = styled.div`
 `;
 
 export const ProductCard = styled.div`
-  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
   height: 190px;
   background: white;
-  border: 1px solid #CCCCCC;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  border: 1px solid #ececec;
+  border-radius: 24px;
+  padding: 24px 26px;
 
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    height: auto;
+    min-height: 164px;
+    padding: 22px 20px;
+    border-radius: 20px;
   }
 `;
 
 export const Badge = styled.div<{ type: 'new' | 'hot' }>`
-  position: absolute;
-  left: 20px;
-  top: 60px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 5px;
-  border-radius: 8px;
+  width: fit-content;
+  padding: 4px 12px;
+  border-radius: 999px;
   background: ${props => props.type === 'new' ? '#FCC800' : '#F49E15'};
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 600;
   color: ${props => props.type === 'new' ? '#111111' : '#FFFFFF'};
-  z-index: 2;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 16px;
+  }
 `;
 
 export const ProductInfo = styled.div`
-  position: absolute;
-  bottom: 30px;
-  left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  z-index: 2;
-  max-width: 273px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
 `;
 
 export const ProductTitle = styled.h3`
@@ -155,6 +177,10 @@ export const ProductTitle = styled.h3`
   color: #111111;
   margin: 0;
   line-height: normal;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 26px;
+  }
 `;
 
 export const ProductPrice = styled.div`
@@ -163,21 +189,10 @@ export const ProductPrice = styled.div`
   gap: 5px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 500;
   color: #666666;
   margin: 0;
   line-height: normal;
-`;
-
-export const ProductImagePlaceholder = styled.div`
-  position: absolute;
-  right: -0.5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 300px;
-  height: 190px;
-  background: linear-gradient(270deg, #D9D9D9 0%, rgba(115, 115, 115, 0.00) 100%);
-  z-index: 1;
 `;
 
 export const LoadingMessage = styled.div`
@@ -199,4 +214,3 @@ export const EmptyMessage = styled.div`
   font-size: 20px;
   color: #666666;
 `;
-

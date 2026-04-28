@@ -16,25 +16,32 @@ export const ErrorMessage = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  padding: 30px;
+  padding: 32px;
   background-color: #fff;
-  border-radius: 12px;
-  max-width: 600px;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90%;
   margin: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #f0f0f0;
 
   @media (max-width: 600px) {
-    padding: 20px;
+    padding: 24px;
+    border-radius: 12px;
   }
 `;
 
 export const ModalHeader = styled.h2`
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111111;
   text-align: center;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   @media (max-width: 600px) {
-    font-size: 24px;
+    font-size: 22px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -44,20 +51,25 @@ export const InquiryForm = styled.form`
 `;
 
 const commonInputStyles = `
-  margin-bottom: 15px;
-  padding: 12px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-family: inherit;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+
   &:focus {
     outline: none;
-    border-color: #f0ce00;
+    border-color: #FCC800;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(252, 200, 0, 0.1);
   }
 
   @media (max-width: 600px) {
-    font-size: 14px;
-    padding: 10px;
+    font-size: 15px;
+    padding: 12px 14px;
   }
 `;
 
@@ -82,28 +94,35 @@ export const InquiryTextarea = styled.textarea`
 export const ModalFooter = styled.div`
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
   flex-direction: row;
 
   @media (max-width: 600px) {
-    gap: 10px;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    flex-direction: column-reverse;
   }
 `;
 
 const ButtonStyles = `
   padding: 12px 24px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 150px;
+  transition: all 0.2s ease;
+  min-width: 120px;
   white-space: nowrap;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.4;
 
   @media (max-width: 600px) {
-    font-size: 14px;
+    font-size: 15px;
     padding: 10px 20px;
     min-width: 100px;
   }
@@ -111,26 +130,31 @@ const ButtonStyles = `
 
 export const SubmitButton = styled.button`
   ${ButtonStyles}
-  background-color: #f0ce00;
-  color: #ffffff;
+  background-color: #FCC800;
+  color: #111111;
 
   &:hover {
-    background-color: #e0be00;
+    background-color: #F49E15;
+    transform: translateY(-1px);
   }
 
   &:disabled {
-    background-color: #cccccc;
+    background-color: #E8E8E8;
+    color: #999999;
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
 export const CloseButton = styled.button`
   ${ButtonStyles}
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #F3F3F3;
+  color: #111111;
+  border: 1px solid #CCCCCC;
 
   &:hover {
-    background-color: #e0e0e0;
+    background-color: #E8E8E8;
+    transform: translateY(-1px);
   }
 `;
 
@@ -162,14 +186,23 @@ export const NoInquiries = styled.p`
 `;
 
 export const InquiryItem = styled.div<InquiryItemProps>`
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
   cursor: pointer;
-  background-color: ${props => (props.$hasAnswer ? '#e0ffe0' : '#ffffff')};
+  background-color: ${props => (props.$hasAnswer ? '#f8fff8' : '#ffffff')};
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  &:hover {
+    border-color: #FCC800;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
 
   @media (max-width: 600px) {
-    padding: 8px;
+    padding: 12px;
   }
 `;
 
@@ -178,9 +211,13 @@ export const InquiryTitle = styled.h3`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   @media (max-width: 600px) {
-    font-size: 18px;
+    font-size: 15px;
   }
 `;
 
@@ -270,11 +307,12 @@ export const LoadingSpinner = styled.div`
 
 export const NewInquiryButton = styled.button`
   ${ButtonStyles}
-  background-color: #f0ce00;
-  color: #ffffff;
+  background-color: #FCC800;
+  color: #111111;
 
   &:hover {
-    background-color: #e0be00;
+    background-color: #F49E15;
+    transform: translateY(-1px);
   }
 `;
 

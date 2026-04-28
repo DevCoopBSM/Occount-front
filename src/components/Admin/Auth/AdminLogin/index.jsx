@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import imgLogo from "assets/DevCoopL.svg";
 import { useAuth } from "contexts/authContext";
 import * as L from "./style";
 import { PageTitle } from "./style";
@@ -40,7 +39,7 @@ function AdminLogin() {
     <div>
       <L.LoginWrap onSubmit={handleSubmit}>
         <PageTitle>Admin 로그인 페이지</PageTitle>
-        <L.LogoImg src={imgLogo} alt="logo image" />
+        <L.LogoImg src="/assets/DevCoopL.svg" alt="logo image" />
         <L.LoginInput
           type="email"
           name="email"

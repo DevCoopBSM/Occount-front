@@ -41,6 +41,17 @@ export const ModalContent = styled.div<ModalContentProps>`
   max-width: ${props => props.$style.maxWidth || 'none'};
   max-height: ${props => props.$style.maxHeight || '90vh'};
 
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE 및 Edge */
+  -ms-overflow-style: none;
+
   @media (max-width: 768px) {
     width: ${props => props.$style.width || '95%'};
     padding: ${props => props.$style.padding || '20px'};

@@ -18,7 +18,7 @@ function UserLayout() {
       <P.PageContainer>
         <UserHeader />
         <main><Outlet /></main>
-        {!isAuthPage && <Footer />}
+        <Footer />
       </P.PageContainer>
     </P.PageWrap>
   );

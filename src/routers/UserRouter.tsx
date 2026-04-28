@@ -10,7 +10,6 @@ import Register from 'components/User/Register';
 import Update from 'components/User/Update';
 import UserLog from 'components/User/UserLog';
 import ItemList from 'components/User/ItemList';
-import EventNotice from 'components/User/EventNotice';
 import NoticePage from 'pages/User/NoticePage';
 import PrivateRoute from 'common/PrivateRoute';
 
@@ -24,7 +23,6 @@ const UserRoutes: React.FC = () => {
         <Route path="pwchange/:jwtToken" element={<PwChangeEX />} />
         <Route path="pwchange" element={<PwChange />} />
         <Route path="howto" element={<HowTo />} />
-        <Route path="event" element={<EventNotice />} />
         <Route path="notice" element={<NoticePage />} />
         <Route path="item-list" element={<ItemList />} />
         <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />

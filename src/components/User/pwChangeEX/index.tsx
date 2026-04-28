@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import imgLogo from "assets/occount-logo.svg";
 import { useAuth } from "contexts/authContext";
 import Toast from "common/Toast";
 import * as L from "./style";
@@ -111,7 +110,7 @@ function PwChangeEX(): JSX.Element {
       <L.LogoAndForm>
         <L.LogoContainer>
           <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <L.LogoImg src={imgLogo} alt="logo" />
+            <L.LogoImg src="/assets/occount-logo.svg" alt="logo" />
           </L.LogoWrapping>
           <L.Title>비밀번호 재설정</L.Title>
         </L.LogoContainer>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as H from './style';
-import OccountLogo from 'assets/occount-logo.svg';
 import Icon from 'components/Icon';
 import { useAuth } from 'contexts/authContext';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -10,6 +9,8 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
+  const [lastScrollY, setLastScrollY] = useState<number>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogoClick = (): void => {
@@ -56,12 +57,31 @@ function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = (): void => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        setIsHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
-    <H.PageHeader $isAuthPage={isAuthPage}>
+    <H.PageHeader $isAuthPage={isAuthPage} $isVisible={isHeaderVisible}>
       <H.HeaderInBox>
         <H.LogoWrapper $isAuthPage={isAuthPage} onClick={handleLogoClick}>
           <img
-            src={OccountLogo}
+            src="/assets/occount-logo.svg"
             alt="Occount Logo"
           />
         </H.LogoWrapper>
@@ -69,9 +89,9 @@ function Header() {
         {!isAuthPage && (
           <>
             <H.Navigation>
-              <H.NavItem onClick={() => handleNavigation('/')}>포인트 충전</H.NavItem>
-              <H.NavItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.NavItem>
               <H.NavItem onClick={() => handleNavigation('/item-list')}>상품 목록</H.NavItem>
+              <H.NavItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.NavItem>
+              <H.NavItem onClick={() => handleNavigation('/notice')}>공지사항</H.NavItem>
               <H.NavItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.NavItem>
             </H.Navigation>
 

@@ -23,7 +23,10 @@ export const mockNotices: NoticeItem[] = [
 
 export const mockAnnouncements: NoticeItem[] = [
   { id: 1, title: '들어온 상품 안내', date: '2025.07.12', importance: 'LOW' },
-  { id: 2, title: '들어온 상품 안내', date: '2025.07.12', importance: 'LOW' },
+  { id: 2, title: '매점 운영 시간 변경 안내', date: '2025.07.10', importance: 'LOW' },
+  { id: 3, title: '시스템 점검 안내', date: '2025.07.08', importance: 'LOW' },
+  { id: 4, title: '여름 휴가 기간 안내', date: '2025.07.05', importance: 'LOW' },
+  { id: 5, title: '신규 결제 방식 도입 안내', date: '2025.07.03', importance: 'LOW' },
 ];
 
 export const mockDetailedNotices = [
@@ -59,9 +62,23 @@ export const mockDetailedNotices = [
 
 export const mockProducts: Product[] = [
   { id: 1, title: '초코파이', price: 1200, badge: 'new', category: '과자' },
-  { id: 2, title: '바나나우유', price: 1500, badge: null, category: '음료' },
-  { id: 3, title: '새우깡', price: 1300, badge: null, category: '과자' },
-  { id: 4, title: '붕어싸만코', price: 2000, badge: 'hot', category: '아이스크림' },
-  { id: 5, title: '김밥', price: 2500, badge: null, category: '식품' },
-  { id: 6, title: '핫바', price: 1800, badge: 'hot', category: '냉동식품' },
+  { id: 2, title: '새우깡', price: 1300, badge: null, category: '과자' },
+  { id: 3, title: '허니버터칩', price: 1700, badge: 'hot', category: '과자' },
+  { id: 4, title: '바나나우유', price: 1500, badge: null, category: '음료' },
+  { id: 5, title: '코카콜라 제로', price: 1800, badge: null, category: '음료' },
+  { id: 6, title: '포카리스웨트', price: 1900, badge: 'new', category: '음료' },
+  { id: 7, title: '붕어싸만코', price: 2000, badge: 'hot', category: '아이스크림' },
+  { id: 8, title: '메로나', price: 1200, badge: null, category: '아이스크림' },
+  { id: 9, title: '월드콘', price: 2200, badge: null, category: '아이스크림' },
+  { id: 10, title: '핫바', price: 1800, badge: 'hot', category: '냉동식품' },
+  { id: 11, title: '만두', price: 3200, badge: null, category: '냉동식품' },
+  { id: 12, title: '치즈크러스트 피자', price: 4900, badge: 'new', category: '냉동식품' },
+  { id: 13, title: '소시지빵', price: 2300, badge: null, category: '빵류' },
+  { id: 14, title: '크림치즈 베이글', price: 2800, badge: 'new', category: '빵류' },
+  { id: 15, title: '김밥', price: 2500, badge: null, category: '식품' },
+  { id: 16, title: '컵라면', price: 1700, badge: 'hot', category: '식품' },
+  { id: 17, title: '햄치즈 샌드위치', price: 3300, badge: null, category: '식품' },
+  { id: 18, title: '물티슈', price: 1000, badge: null, category: '잡화' },
+  { id: 19, title: '건전지', price: 2500, badge: null, category: '잡화' },
+  { id: 20, title: '칫솔', price: 1800, badge: 'new', category: '잡화' },
 ];
