@@ -44,16 +44,16 @@ export const CategoryTabBar = styled.div`
   }
 `;
 
-export const CategoryTab = styled.button<{ active: boolean }>`
+export const CategoryTab = styled.button<{ $active: boolean }>`
   min-width: fit-content;
   padding: 16px 28px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: ${props => props.active ? 600 : 500};
-  color: ${props => props.active ? '#111111' : '#666666'};
-  background: ${props => props.active ? '#FCC800' : '#FFFFFF'};
+  font-weight: ${props => props.$active ? 600 : 500};
+  color: ${props => props.$active ? '#111111' : '#666666'};
+  background: ${props => props.$active ? '#FCC800' : '#FFFFFF'};
   border-radius: 999px;
-  border: 1px solid ${props => props.active ? '#FCC800' : '#EFEFEF'};
+  border: 1px solid ${props => props.$active ? '#FCC800' : '#EFEFEF'};
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;

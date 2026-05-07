@@ -81,8 +81,8 @@ const ItemList: React.FC = () => {
       const response = await axiosInstance.get('v2/item/');
 
       if (response.status === 204 || !response.data.itemList || response.data.itemList.length === 0) {
-        setItems(fallbackItems);
-        setFilteredItems(fallbackItems);
+        setItems([]);
+        setFilteredItems([]);
       } else {
         const remappedData: Item[] = response.data.itemList.map((item: any) => ({
           itemId: item.itemId,
@@ -123,7 +123,7 @@ const ItemList: React.FC = () => {
           {categories.map((category) => (
             <S.CategoryTab
               key={category}
-              active={selectedCategory === category}
+              $active={selectedCategory === category}
               onClick={() => handleCategoryClick(category)}
             >
               {category}

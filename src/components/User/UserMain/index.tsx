@@ -83,6 +83,11 @@ function Main() {
     return `${year}.${month}.${day}`;
   };
 
+  const parseNoticeDate = (dateString: string) => {
+    const normalizedDate = dateString.replace(/\./g, '-');
+    return new Date(normalizedDate).getTime();
+  };
+
   useEffect(() => {
     if (USE_MOCK_DATA) {
       setProducts(mockProducts);
@@ -92,7 +97,7 @@ function Main() {
           // 중요도가 높은 것 먼저, 그 다음 최신순
           if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
           if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
+          return parseNoticeDate(b.date) - parseNoticeDate(a.date);
         });
       setAllNotices(combinedNotices);
       return;
@@ -339,6 +344,7 @@ function Main() {
         </S.ProductDisplaySection>
       </S.MainContent>
 
+      {/* 향후 충전 기능 재활성화를 위해 모달/state 로직은 유지하고, 현재는 UI 트리거를 노출하지 않음 */}
       <PaymentModal 
         type="charge"
         isOpen={isChargeModalOpen} 

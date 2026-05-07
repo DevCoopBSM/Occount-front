@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 
 function HowTo() {
-  const sectionsRef = useRef([]);
+  const navigate = useNavigate();
   const [isRotating, setIsRotating] = useState(false);
 
   // 컴포넌트 마운트 시 맨 위로 스크롤
@@ -11,7 +12,7 @@ function HowTo() {
   }, []);
 
   const handleHomeClick = () => {
-    window.location.href = '/';
+    navigate('/');
   };
 
   const handleOringClick = () => {
@@ -26,9 +27,9 @@ function HowTo() {
 
 
   return (
-    <S.HowToContainer>
+      <S.HowToContainer>
       {/* 히어로 섹션 */}
-      <S.HeroSection ref={(el) => el && (sectionsRef.current[0] = el)}>
+      <S.HeroSection>
         <S.HeroContent>
           <S.HeroLogo src="/assets/OccountLogo.svg" alt="Occount logo" />
           <S.HeroTitle>
@@ -42,7 +43,7 @@ function HowTo() {
       </S.HeroSection>
 
       {/* 오카운트 소개 섹션 */}
-      <S.Section ref={(el) => el && (sectionsRef.current[1] = el)}>
+      <S.Section>
         <S.SectionHeader>
           <S.CharacterWrapper>
             <S.Firework>🎉</S.Firework>
@@ -69,7 +70,7 @@ function HowTo() {
       </S.Section>
 
       {/* 포인트 획득 방법 섹션 */}
-      <S.Section ref={(el) => el && (sectionsRef.current[2] = el)}>
+      <S.Section>
         <S.SectionHeader>
           <S.SectionTitle>포인트 획득 방법</S.SectionTitle>
           <S.SectionDescription>
@@ -89,7 +90,7 @@ function HowTo() {
       </S.Section>
 
       {/* 잔액 확인 가이드 섹션 */}
-      <S.Section ref={(el) => el && (sectionsRef.current[3] = el)}>
+      <S.Section>
         <S.SectionHeader>
           <S.SectionTitle>잔액 확인 방법</S.SectionTitle>
         </S.SectionHeader>
@@ -122,7 +123,7 @@ function HowTo() {
       </S.Section>
 
       {/* 사용 방법 섹션 */}
-      <S.Section ref={(el) => el && (sectionsRef.current[4] = el)}>
+      <S.Section>
         <S.SectionHeader>
           <S.SectionTitle>사용 방법</S.SectionTitle>
           <S.SectionDescription>
@@ -154,7 +155,7 @@ function HowTo() {
       </S.Section>
 
       {/* CTA 섹션 */}
-      <S.CTASection ref={(el) => el && (sectionsRef.current[5] = el)}>
+      <S.CTASection>
         <S.CTAContent>
           <S.CTATitle>지금 바로 오카운트를 시작해보세요!</S.CTATitle>
           <S.CTAButton onClick={handleHomeClick} $primary>
