@@ -41,7 +41,6 @@ const NoticeList: React.FC = () => {
       <PageTitle>변경/공지사항</PageTitle>
 
       <TabContainerWrapper>
-        <EmptySpace />
         <NavigationContainer>
           <NavigationButton aria-label="이전" disabled>
             <Icon name="chevronLeft" size={30} color="#cccccc" />
@@ -98,19 +97,15 @@ const PageTitle = styled.h1`
 const TabContainerWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 40px;
   width: 100%;
-`;
-
-const EmptySpace = styled.div`
-  width: 350px;
 `;
 
 const NavigationContainer = styled.div`
   display: flex;
   gap: 0;
   align-items: center;
+  margin-left: auto;
 `;
 
 const NavigationButton = styled.button`

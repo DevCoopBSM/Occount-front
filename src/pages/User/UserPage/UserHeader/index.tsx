@@ -10,8 +10,8 @@ function Header() {
   const location = useLocation();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
-  const [lastScrollY, setLastScrollY] = useState<number>(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const lastScrollYRef = useRef<number>(0);
 
   const handleLogoClick = (): void => {
     navigate('/');
@@ -60,21 +60,22 @@ function Header() {
   useEffect(() => {
     const handleScroll = (): void => {
       const currentScrollY = window.scrollY;
+      const lastScrollY = lastScrollYRef.current;
 
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsHeaderVisible(false);
-      } else if (currentScrollY < lastScrollY) {
+      } else {
         setIsHeaderVisible(true);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]);
+  }, []);
 
   return (
     <H.PageHeader $isAuthPage={isAuthPage} $isVisible={isHeaderVisible}>

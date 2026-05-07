@@ -100,7 +100,7 @@ const ItemList: React.FC = () => {
       console.error('Error fetching items:', error);
       setItems(fallbackItems);
       setFilteredItems(fallbackItems);
-      setError(null);
+      setError('상품 목록을 불러오지 못해 임시 목록을 표시하고 있습니다.');
     } finally {
       setLoading(false);
     }
@@ -144,10 +144,10 @@ const ItemList: React.FC = () => {
         </S.SearchBar>
       </S.FilterSection>
 
+      {error && <S.WarningMessage>{error}</S.WarningMessage>}
+
       {loading ? (
         <S.LoadingMessage>로딩 중...</S.LoadingMessage>
-      ) : error ? (
-        <S.EmptyMessage>{error}</S.EmptyMessage>
       ) : filteredItems.length === 0 ? (
         <S.EmptyMessage>상품이 없습니다.</S.EmptyMessage>
       ) : (

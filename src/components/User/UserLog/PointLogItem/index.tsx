@@ -17,7 +17,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   const { refetchUser } = useAuth();
 
   const item = data[0];
-  const itemId = item.chargeId || item.payId;
+  const itemId = item.chargeId ?? item.payId;
 
   useEffect(() => {
     setIsExpanded(false);
@@ -44,9 +44,10 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
     return new Date();
   };
 
-  const date = formatDate(item.chargeDate || item.payDate);
-  const inner_point = item.chargedPoint || item.payedPoint || item.chargeAmount || item.paymentAmount;
-  const itemType = item.chargeType || item.payType;
+  const date = formatDate(item.chargeDate ?? item.payDate);
+  const innerPoint = item.chargedPoint ?? item.payedPoint ?? item.chargeAmount ?? item.paymentAmount ?? 0;
+  const serializedInnerPoint = innerPoint.toString();
+  const itemType = item.chargeType ?? item.payType;
 
   const currentDate = new Date();
   const timeDiff = Math.abs(currentDate.getTime() - date.getTime());
@@ -97,8 +98,8 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
                   ...item,
                   type: itemType || '',
                   date: date.toISOString(),
-                  inner_point: inner_point.toString(),
-                  chargeId: item.chargeId || 0,
+                  inner_point: serializedInnerPoint,
+                  chargeId: item.chargeId ?? 0,
                 };
                 const refundAccountForRequest: RefundAccount = {
                   bank: refundAccount.bank,
@@ -132,7 +133,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
       >
         <_.LeftSection>
           <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace(/\./g, '')}</_.DateText>
-          <_.AmountText>{`${inner_point?.toLocaleString() ?? 0}원`}</_.AmountText>
+          <_.AmountText>{`${innerPoint.toLocaleString()}원`}</_.AmountText>
         </_.LeftSection>
         <_.ChargeTypeText>{getTransactionType()}</_.ChargeTypeText>
       </_.PointLogWrap>
@@ -149,7 +150,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
           </_.DetailRow>
           <_.DetailRow>
             <_.DetailLabel>금액:</_.DetailLabel>
-            <_.DetailValue>{inner_point?.toLocaleString() ?? 0}원</_.DetailValue>
+            <_.DetailValue>{innerPoint.toLocaleString()}원</_.DetailValue>
           </_.DetailRow>
           {type === 1 && (
             <>
@@ -173,8 +174,8 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
               ...item,
               type: itemType || '',
               date: date.toISOString(),
-              inner_point: inner_point.toString(),
-              chargeId: item.chargeId || 0,
+              inner_point: serializedInnerPoint,
+              chargeId: item.chargeId ?? 0,
             };
             const refundAccountForRequest: RefundAccount = {
               bank: refundAccount.bank,

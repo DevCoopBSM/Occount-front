@@ -205,6 +205,23 @@ export const LoadingMessage = styled.div`
   color: #666666;
 `;
 
+export const WarningMessage = styled.div`
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #fff7e0;
+  border: 1px solid #f4d27a;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  color: #7a5600;
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    font-size: 14px;
+    padding: 14px 16px;
+  }
+`;
+
 export const EmptyMessage = styled.div`
   display: flex;
   align-items: center;
