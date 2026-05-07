@@ -182,18 +182,6 @@ export const ButtonConfirm = styled(ButtonCancel)`
   color: #fff;
 `;
 
-export const FilterImg = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 100%;
-
-  &::before {
-    content: url('/assets/FilterIcon.svg');
-    width: 100%;
-    height: 100%;
-  }
-`;
-
 export const StockInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
