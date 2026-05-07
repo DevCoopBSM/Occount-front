@@ -51,8 +51,8 @@ export const PageContainer = styled.div`
     min-height: 0;
   }
 
-  /* Sticky Footer - 마지막 자식(푸터)을 하단에 고정 */
-  > *:last-child {
+  /* Sticky Footer - footer만 하단으로 밀어냄 */
+  > footer {
     margin-top: auto;
   }
 `;

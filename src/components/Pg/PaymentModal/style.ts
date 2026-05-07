@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Modal from 'components/Modal';
 
 const MOBILE_BREAKPOINT = '480px';
 const TABLET_BREAKPOINT = '768px';
@@ -7,7 +6,7 @@ const LAPTOP_BREAKPOINT = '1440px';
 
 // Modal에 전달할 스타일 객체들
 export const getModalStyle = () => {
-  const baseStyle = {
+  return {
     width: "600px",
     maxWidth: "90%",
     maxHeight: "95vh",
@@ -15,37 +14,6 @@ export const getModalStyle = () => {
     borderRadius: "12px",
     padding: "32px"
   };
-
-  const laptopStyle = {
-    ...baseStyle,
-    width: "500px",
-    maxHeight: "85vh",
-    padding: "28px"
-  };
-
-  const tabletStyle = {
-    ...baseStyle,
-    width: "500px",
-    maxHeight: "85vh",
-    padding: "24px"
-  };
-
-  const mobileStyle = {
-    ...baseStyle,
-    width: "95%",
-    maxHeight: "90vh",
-    padding: "20px"
-  };
-
-  // 현재 화면 크기에 따라 스타일 반환
-  if (window.innerWidth <= 480) {
-    return mobileStyle;
-  } else if (window.innerWidth <= 768) {
-    return tabletStyle;
-  } else if (window.innerWidth <= 1440) {
-    return laptopStyle;
-  }
-  return baseStyle;
 };
 
 export const StyledModal = styled.div`
@@ -53,6 +21,24 @@ export const StyledModal = styled.div`
 
   .modal-content {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+    @media (max-width: ${LAPTOP_BREAKPOINT}) {
+      width: 500px;
+      max-height: 85vh;
+      padding: 28px;
+    }
+
+    @media (max-width: ${TABLET_BREAKPOINT}) {
+      width: 500px;
+      max-height: 85vh;
+      padding: 24px;
+    }
+
+    @media (max-width: ${MOBILE_BREAKPOINT}) {
+      width: 95%;
+      max-height: 90vh;
+      padding: 20px;
+    }
   }
 `;
 

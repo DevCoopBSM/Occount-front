@@ -167,11 +167,26 @@ export const CharacterWrapper = styled.div`
   }
 `;
 
+export const CharacterButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid #fcc800;
+    outline-offset: 6px;
+    border-radius: 50%;
+  }
+`;
+
 export const CharacterIcon = styled.img`
   width: 120px;
   height: 120px;
   object-fit: contain;
-  cursor: pointer;
   animation: ${props => props.$isRotating ? 'spinOnce 0.8s ease-out' : 'none'};
 
   @keyframes spinOnce {
@@ -186,6 +201,10 @@ export const CharacterIcon = styled.img`
   @media (max-width: 768px) {
     width: 80px;
     height: 80px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 `;
 
@@ -208,6 +227,10 @@ export const Firework = styled.span`
 
   @media (max-width: 768px) {
     font-size: 36px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 `;
 
@@ -542,7 +565,7 @@ export const StepNumber = styled.div`
 
 export const StepImage = styled.img`
   width: 100%;
-  max-width: ${props => props.large ? '400px' : '250px'};
+  max-width: ${props => props.$large ? '400px' : '250px'};
   height: auto;
   margin: 20px 0;
   border-radius: 8px;
@@ -645,8 +668,8 @@ export const CTATitle = styled.h2`
 `;
 
 export const CTAButton = styled.button`
-  background: ${props => props.primary ? '#333' : '#FCC800'};
-  color: ${props => props.primary ? '#fff' : '#333'};
+  background: ${props => props.$primary ? '#333' : '#FCC800'};
+  color: ${props => props.$primary ? '#fff' : '#333'};
   border: none;
   padding: 16px 48px;
   font-size: 18px;
@@ -662,7 +685,15 @@ export const CTAButton = styled.button`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    background: ${props => props.primary ? '#555' : '#F49E15'};
+    background: ${props => props.$primary ? '#555' : '#F49E15'};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 
   @media (max-width: 768px) {

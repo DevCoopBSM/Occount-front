@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as G from '../../../common/GlobalStyle';
 import * as S from './style';
 
 function HowTo() {
@@ -47,12 +46,17 @@ function HowTo() {
         <S.SectionHeader>
           <S.CharacterWrapper>
             <S.Firework>🎉</S.Firework>
-            <S.CharacterIcon
-              src="/assets/happyOring.svg"
-              alt="Happy Oring Character"
-              $isRotating={isRotating}
+            <S.CharacterButton
+              type="button"
               onClick={handleOringClick}
-            />
+              aria-label="오링 캐릭터 애니메이션 재생"
+            >
+              <S.CharacterIcon
+                src="/assets/happyOring.svg"
+                alt="Happy Oring Character"
+                $isRotating={isRotating}
+              />
+            </S.CharacterButton>
             <S.Firework>🎉</S.Firework>
           </S.CharacterWrapper>
           <S.SectionTitle>오카운트가 무엇인가요?</S.SectionTitle>
@@ -93,7 +97,7 @@ function HowTo() {
         <S.StepContainer>
           <S.StepItem>
             <S.StepNumber>1</S.StepNumber>
-            <S.StepImage src="/assets/howto1.png" alt="로그인" large />
+            <S.StepImage src="/assets/howto1.png" alt="로그인" $large />
             <S.StepDescription>
               오카운트 웹사이트에 로그인하세요
             </S.StepDescription>
@@ -153,7 +157,7 @@ function HowTo() {
       <S.CTASection ref={(el) => el && (sectionsRef.current[5] = el)}>
         <S.CTAContent>
           <S.CTATitle>지금 바로 오카운트를 시작해보세요!</S.CTATitle>
-          <S.CTAButton onClick={handleHomeClick} primary>
+          <S.CTAButton onClick={handleHomeClick} $primary>
             잔액 확인하기
           </S.CTAButton>
           <S.CTATerms>
