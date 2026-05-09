@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DataTable from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import { PrettyDateTime } from 'utils/Date';
@@ -17,7 +17,7 @@ export default function InventoryCheck() {
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const queryParams = `?start_date=${
       startDate.toISOString().split('T')[0]
     }&end_date=${endDate.toISOString().split('T')[0]}`;
@@ -45,11 +45,11 @@ export default function InventoryCheck() {
       .catch((error) => {
         console.error('Error sending data:', error);
       });
-  };
+  }, [startDate, endDate]);
 
   useEffect(() => {
     handleSearch();
-  }, [startDate, endDate]);
+  }, [handleSearch]);
 
   return (
     <><_.ButtonContainer>

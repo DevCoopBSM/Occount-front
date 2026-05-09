@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import * as _ from './style';
 import DatePicker from 'react-datepicker';
 import * as xlsx from 'xlsx';
-import { InfoHeader } from 'common/PageWrapStyle';
 
 const TableHeader = ({
   startDate,
@@ -33,7 +32,6 @@ const TableHeader = ({
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
-  console.log(startDate);
   return (
     <>
       <_.InfoHeader>
