@@ -43,22 +43,24 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   // 모달 열릴 때 body 스크롤 막기
   useEffect(() => {
-    if (isOpen) {
-      // 현재 스크롤바 너비 계산
-      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-      // 스크롤 막고 스크롤바 너비만큼 패딩 추가하여 레이아웃 shift 방지
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
+    if (!isOpen) {
+      return undefined;
     }
+
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+
+    // 현재 스크롤바 너비 계산
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    // 스크롤 막고 스크롤바 너비만큼 패딩 추가하여 레이아웃 shift 방지
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
 
     // 컴포넌트 언마운트 시 정리
     return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
     };
   }, [isOpen]);
 

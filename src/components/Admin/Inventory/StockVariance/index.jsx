@@ -129,9 +129,12 @@ const StockVariance = () => {
             <_.Infochooses>
               <_.Infotext>최종 변동 일시</_.Infotext>
               <_.FilterImg
+                type="button"
                 onClick={() => setIsEndDateVisible(!isEndDateVisible)}
-                style={{ cursor: 'pointer', marginRight: '5px' }}
-              />
+                aria-label="최종 변동 일시 필터 토글"
+              >
+                <img src="/assets/FilterIcon.svg" alt="" aria-hidden="true" />
+              </_.FilterImg>
             </_.Infochooses>
           </_.Info>
           <_.StockInfoWrap>
