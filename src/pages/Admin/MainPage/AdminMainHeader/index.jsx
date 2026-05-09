@@ -1,6 +1,4 @@
 import React from 'react';
-import * as H from 'common/PageWrapStyle';
-import { ReactComponent as AriPayLogo } from 'assets/AdminMainHeader.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
 import * as _ from './style';
@@ -38,7 +36,9 @@ const AdminMainHeader = ({
   return (
     <_.AdminMainHeader>
       <_.NewHeaderInBox>
-        <AriPayLogo width={'200px'} height={'75px'} onClick={goToBarcode} />
+        <_.LogoButton type="button" onClick={goToBarcode} aria-label="관리자 메인으로 이동">
+          <img src="/assets/AdminMainHeader.svg" width={'200px'} height={'75px'} alt="AriPay Logo" />
+        </_.LogoButton>
         <_.NewHeaderComponents>
           {activeMenu &&
             activeMenu.links.map((link) => (

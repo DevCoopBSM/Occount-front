@@ -3,7 +3,6 @@ import * as _ from './style';
 import * as P from 'common/PageWrapStyle';
 import { ManyChargeItem } from './ManyChargeItem';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as FilterIcon } from 'assets/FilterIcon.svg';
 import axiosInstance from 'utils/Axios';
 import StudentCharge from './ChargeModal';
 
@@ -97,7 +96,7 @@ const ManyCharge = () => {
             />
             <_.Inputbutton>{/* <SearchIcon /> */}</_.Inputbutton>
             <_.Filter>
-              <FilterIcon />
+              <img src="/assets/FilterIcon.svg" alt="Filter" />
             </_.Filter>
           </_.Infosearch>
 

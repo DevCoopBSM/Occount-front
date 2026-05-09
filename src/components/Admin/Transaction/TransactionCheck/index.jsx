@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import Modal from "components/Modal";
-import { ReactComponent as QuestionLogo } from "assets/QuestionLogo.svg";
 import { useNavigate } from "react-router-dom";
 import * as _ from "./style";
 import axiosInstance from "utils/Axios";
@@ -56,7 +55,7 @@ const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
       </button>
       <Modal isOpen={modalOpen}>
         <_.ContentWrap>
-          <QuestionLogo style={{ width: "60px", height: "60px" }} />
+          <img src="/assets/QuestionLogo.svg" style={{ width: "60px", height: "60px" }} alt="Question" />
           <_.ContentTitle>{amount.toLocaleString()}원</_.ContentTitle>
           <_.ContentSubTitle>
             {actionType === "pay" ? "결제하시겠습니까?" : "충전하시겠습니까?"}

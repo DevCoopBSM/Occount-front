@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const PageHeader = styled.header<{ $isAuthPage?: boolean }>`
+export const PageHeader = styled.header<{ $isAuthPage?: boolean; $isVisible?: boolean }>`
   position: sticky;
   top: 0;
   z-index: 100;
@@ -10,6 +10,8 @@ export const PageHeader = styled.header<{ $isAuthPage?: boolean }>`
   height: 80px;
   background: #ffffff;
   border-bottom: ${props => props.$isAuthPage ? 'none' : '1px solid #f0f0f0'};
+  transform: ${props => props.$isVisible ? 'translateY(0)' : 'translateY(-100%)'};
+  transition: transform 0.1s ease-in-out;
 `;
 
 export const HeaderInBox = styled.div`

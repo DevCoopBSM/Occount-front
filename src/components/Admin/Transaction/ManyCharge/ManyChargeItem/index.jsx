@@ -9,7 +9,7 @@ export const ManyChargeItem = ({
   onSelectAll,
 }) => {
   const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
+    const { name } = event.target;
     onToggleStudentSelection(name);
   };
 

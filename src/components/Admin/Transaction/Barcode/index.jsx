@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import imgLogo from "assets/DevCoopL.svg";
 import axiosInstance from "utils/Axios";
 import { useNavigate } from "react-router-dom";
 import * as _ from "./style"; // 스타일 파일을 임포트
@@ -63,7 +62,7 @@ export const Barcode = () => {
         >
           학생증 스캔 페이지
         </div>
-        <_.LogoImg src={imgLogo} alt="logo image" />
+        <_.LogoImg src="/assets/DevCoopL.svg" alt="logo image" />
         <_.BarcodeInput
           placeholder="바코드를 스캔해주세요"
           onChange={handleChange}

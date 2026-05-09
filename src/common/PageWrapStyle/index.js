@@ -41,6 +41,20 @@ export const PageContainer = styled.div`
   margin: 0 auto;
   width: 100%;
   background-color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  main {
+    flex: 1;
+    /* main이 최대한 공간을 차지하도록 */
+    min-height: 0;
+  }
+
+  /* Sticky Footer - footer만 하단으로 밀어냄 */
+  > footer {
+    margin-top: auto;
+  }
 `;
 
 export const InfoContainer = styled.div`

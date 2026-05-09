@@ -37,6 +37,7 @@ const Modal: React.FC<ModalProps> = ({
       $overlayColor={style.overlayColor}
     >
       <S.ModalContent
+        className="modal-content"
         $style={style}
         $mobileFullScreen={style.mobileFullScreen}
       >

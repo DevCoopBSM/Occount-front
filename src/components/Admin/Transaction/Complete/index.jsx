@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactComponent as CheckLogo } from "assets/CheckLogo.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import * as _ from "./style";
 import { color } from "constants/color";
@@ -36,7 +35,7 @@ const Complete = () => {
     <>
       <_.CompeleteWrap>
         <_.PaymentsTopWrap>
-          <CheckLogo style={{ width: "70px", height: "70px" }} />
+          <img src="/assets/CheckLogo.svg" style={{ width: "70px", height: "70px" }} alt="Check" />
           <_.PaymentsTopTitle>
             {transactionAmount ? transactionAmount.toLocaleString() : "0"}원
           </_.PaymentsTopTitle>
