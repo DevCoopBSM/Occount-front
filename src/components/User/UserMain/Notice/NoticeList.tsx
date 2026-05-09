@@ -38,7 +38,7 @@ const NoticeList: React.FC = () => {
 
   return (
     <>
-      <PageTitle>변경/공지사항</PageTitle>
+      <PageTitle>공지사항</PageTitle>
 
       <TabContainerWrapper>
         <NavigationContainer>

@@ -182,5 +182,3 @@ export const Divider = styled.span`
   font-weight: 400;
   padding: clamp(4px, 0.42vw, 8px);
 `;
-
-

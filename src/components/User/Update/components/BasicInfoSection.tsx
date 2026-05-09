@@ -14,7 +14,7 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     handleChange
 }) => {
     return (
-        <>
+        <S.InputGrid>
             <S.InputContainer>
                 <S.InputLabel>이름</S.InputLabel>
                 <S.RegisterInput
@@ -55,6 +55,6 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                     disabled={!isVerified}
                 />
             </S.InputContainer>
-        </>
+        </S.InputGrid>
     );
 };

@@ -5,6 +5,11 @@ const MOBILE_BREAKPOINT = '480px';
 const TABLET_BREAKPOINT = '768px';
 const DESKTOP_BREAKPOINT = '1440px';
 const FHD_BREAKPOINT = '1920px';
+const sectionCardBackground = '#f8f9fa';
+const sectionCardBorder = '1.5px solid rgba(17, 17, 17, 0.08)';
+const sectionCardRadius = '28px';
+const innerCardBorder = '1.5px solid rgba(17, 17, 17, 0.08)';
+const accentBorder = '1.5px solid rgba(244, 158, 21, 0.35)';
 
 export const MainContent = styled.div`
   width: 100%;
@@ -47,20 +52,21 @@ export const MainContent = styled.div`
 // 상단 카드 컨테이너 (잔액 조회만)
 export const TopCardsContainer = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 36px;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     flex-direction: column;
+    margin-bottom: 28px;
   }
 `;
 
 // 잔액 조회 카드 (전체 너비)
 export const BalanceCard = styled.div`
   width: 100%;
-  background: white;
-  border: 1px solid #cccccc;
-  border-radius: 16px;
-  padding: 32px;
+  background: #ffffff;
+  border: ${sectionCardBorder};
+  border-radius: ${sectionCardRadius};
+  padding: 36px 42px;
   min-height: 160px;
   position: relative;
   display: flex;
@@ -69,12 +75,13 @@ export const BalanceCard = styled.div`
   gap: 20px;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    padding: 24px;
+    padding: 24px 22px;
     min-height: 140px;
     gap: 20px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 22px;
   }
 `;
 
@@ -226,7 +233,7 @@ export const BarcodeWrapper = styled.div`
     border-radius: 8px;
     background: white;
     padding: 12px 16px;
-    border: 1px solid #e8e8e8;
+    border: ${innerCardBorder};
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
@@ -466,17 +473,14 @@ export const EventNoticeContainer = styled.div`
 
 export const NoticeSection = styled.div`
   width: 100%;
-  padding: 28px 30px 24px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
-  border: 1px solid rgba(17, 17, 17, 0.06);
-  box-shadow:
-    0 8px 18px rgba(17, 17, 17, 0.035),
-    0 2px 6px rgba(17, 17, 17, 0.025);
+  padding: 36px 42px 30px;
+  border-radius: ${sectionCardRadius};
+  background: #ffffff;
+  border: ${sectionCardBorder};
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     width: 100%;
-    padding: 22px 18px 20px;
+    padding: 24px 22px 22px;
     border-radius: 22px;
   }
 `;
@@ -628,14 +632,12 @@ export const ProductDisplaySection = styled.div`
   gap: 15px;
   align-items: center;
   justify-content: center;
-  margin-top: 60px;
   width: 100%;
   padding: 34px 28px 28px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(248, 249, 250, 0.9) 0%, rgba(244, 246, 248, 0.75) 100%);
+  border-radius: ${sectionCardRadius};
+  background: ${sectionCardBackground};
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    margin-top: 40px;
     gap: 12px;
     padding: 24px 18px 22px;
     border-radius: 22px;
@@ -712,7 +714,7 @@ export const CategoryTab = styled.div<{ $active?: boolean }>`
   font-size: 16px;
   font-weight: 500;
   color: ${props => props.$active ? '#111111' : '#5f6368'};
-  border: 1px solid ${props => props.$active ? 'rgba(252, 200, 0, 0.45)' : 'rgba(17, 17, 17, 0.06)'};
+  border: 1px solid ${props => props.$active ? 'rgba(252, 200, 0, 0.55)' : 'rgba(17, 17, 17, 0.10)'};
   background: ${props => props.$active
     ? '#FCC800'
     : 'rgba(255, 255, 255, 0.72)'};
@@ -761,7 +763,7 @@ export const ProductCardRow = styled.div`
 export const ProductCard = styled.div`
   flex: 1;
   background: white;
-  border: 1px solid rgba(17, 17, 17, 0.08);
+  border: ${innerCardBorder};
   border-radius: 16px;
   min-height: 150px;
   position: relative;
@@ -995,22 +997,6 @@ export const BarcodeCenterSection = styled.div`
 
 export const LargeBarcodeWrapper = styled.div`
   position: relative;
-  background: #fafafa;
-  border: 1px solid #e0e0e0;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 8px 20px rgba(0, 0, 0, 0.12),
-      0 4px 8px rgba(0, 0, 0, 0.08);
-    border-color: #d0d0d0;
-  }
 
   svg {
     display: block;
@@ -1018,14 +1004,11 @@ export const LargeBarcodeWrapper = styled.div`
     border-radius: 8px;
     background: white;
     padding: 16px 20px;
-    border: 1px solid #f0f0f0;
+    border: ${innerCardBorder};
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    padding: 20px;
-    border-radius: 14px;
-
     svg {
       padding: 12px 16px;
       border-radius: 6px;
@@ -1183,11 +1166,22 @@ export const ImportantBadge = styled.span`
 export const NoticeAndMenuContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 40px 0;
+  margin: 40px 0 0;
   gap: 0;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
-    margin: 30px 0;
+    margin: 30px 0 0;
+  }
+`;
+
+export const SectionDivider = styled.div`
+  width: 100%;
+  height: 2px;
+  margin: 40px 0;
+  background: rgba(17, 17, 17, 0.08);
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    margin: 28px 0;
   }
 `;
 
@@ -1214,7 +1208,7 @@ export const QuickMenuChip = styled.button`
   gap: 12px;
   width: 100%;
   padding: 13px 15px;
-  border: 1px solid #fcc800;
+  border: 1px solid #e5e5e5;
   border-radius: 18px;
   background: #ffffff;
   cursor: pointer;
@@ -1222,7 +1216,7 @@ export const QuickMenuChip = styled.button`
 
   &:hover {
     background: #ffffff;
-    border-color: #f49e15;
+    border-color: #d6d6d6;
     transform: translateY(-1px);
   }
 
@@ -1390,7 +1384,7 @@ export const QuickMenuText = styled.span`
 
 export const QuickMenuChevron = styled.span`
   font-size: 15px;
-  color: #f49e15;
+  color: #9a9a9a;
   transition: all 0.2s ease;
   flex-shrink: 0;
 `;

@@ -34,9 +34,9 @@ export const ModalContent = styled.div`
 export const ModalHeader = styled.h2`
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 24px;
+  margin: 0;
   color: #111111;
-  text-align: center;
+  text-align: left;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   @media (max-width: 600px) {
@@ -48,6 +48,18 @@ export const ModalHeader = styled.h2`
 export const InquiryForm = styled.form`
   display: flex;
   flex-direction: column;
+`;
+
+export const ModalHeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+
+  @media (max-width: 600px) {
+    align-items: flex-start;
+  }
 `;
 
 const commonInputStyles = `
@@ -96,8 +108,6 @@ export const ModalFooter = styled.div`
   justify-content: center;
   gap: 16px;
   margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
   flex-direction: row;
 
   @media (max-width: 600px) {
@@ -170,7 +180,11 @@ export const InquiriesContent = styled.div`
 `;
 
 export const InquiriesHeader = styled.h2`
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #111111;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   @media (max-width: 600px) {
     font-size: 24px;
@@ -281,13 +295,20 @@ export const PageNumber = styled.span<{ disabled?: boolean }>`
   }
 `;
 
-export const OpenInquiryFormButton = styled.button`
-  ${ButtonStyles}
-  background-color: #f0ce00;
-  color: #ffffff;
+export const TextActionButton = styled.button`
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #8a6a12;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
   &:hover {
-    background-color: #e0be00;
+    color: #6f550d;
+    text-decoration: underline;
   }
 `;
 
@@ -305,24 +326,9 @@ export const LoadingSpinner = styled.div`
   color: #666;
 `;
 
-export const NewInquiryButton = styled.button`
-  ${ButtonStyles}
-  background-color: #FCC800;
-  color: #111111;
-
-  &:hover {
-    background-color: #F49E15;
-    transform: translateY(-1px);
-  }
-`;
-
 export const TransparentModalContent = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background: transparent;
+  min-height: 280px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -348,4 +354,22 @@ export const LogTitle = styled.h2`
   font-size: 18px;
   margin-bottom: 10px;
   text-align: center;
+`;
+
+export const EmptyState = styled.div`
+  display: flex;
+  min-height: 240px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px 0 4px;
+`;
+
+export const EmptyStateText = styled.p`
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #999999;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 `;

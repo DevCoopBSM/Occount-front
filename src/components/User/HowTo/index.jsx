@@ -13,6 +13,9 @@ function HowTo() {
 
   const handleHomeClick = () => {
     navigate('/');
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
   };
 
   const handleOringClick = () => {

@@ -196,16 +196,7 @@ function Main() {
 
         </S.TopCardsContainer>
 
-        {/* 현재 매장 인원 체크 */}
-        <S.CheckOccupancyBanner>
-          <S.OccupancyInfo>
-            <span className="regular">현재 매장 인원</span>
-            <span className="bold">999</span>
-            <span className="regular">명</span>
-          </S.OccupancyInfo>
-          <S.OccupancyStatus>현재 아무도 없어요!</S.OccupancyStatus>
-        </S.CheckOccupancyBanner>
-
+        {/* 현재 매장 인원 기능 재도입 전까지는 UI에서 숨김 */}
 
         {/* 공지사항과 퀵메뉴 */}
         <S.NoticeAndMenuContainer>
@@ -281,6 +272,7 @@ function Main() {
             </S.QuickMenuChipRow>
           </S.NoticeSection>
         </S.NoticeAndMenuContainer>
+        <S.SectionDivider />
 
         {/* 매점상품 보기 */}
         <S.ProductDisplaySection>

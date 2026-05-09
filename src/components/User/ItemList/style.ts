@@ -4,10 +4,11 @@ const TABLET_BREAKPOINT = '768px';
 
 export const Title = styled.h1`
   font-family: 'Pretendard', sans-serif;
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 600;
   color: #111111;
-  margin: 0 0 28px 0;
+  margin: 0 0 25px 0;
+  line-height: 1.4;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     font-size: 30px;
@@ -45,11 +46,15 @@ export const CategoryTabBar = styled.div`
 `;
 
 export const CategoryTab = styled.button<{ $active: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: fit-content;
   padding: 16px 28px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: ${props => props.$active ? 600 : 500};
+  line-height: 1;
   color: ${props => props.$active ? '#111111' : '#666666'};
   background: ${props => props.$active ? '#FCC800' : '#FFFFFF'};
   border-radius: 999px;

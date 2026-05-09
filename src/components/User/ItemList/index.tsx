@@ -116,7 +116,7 @@ const ItemList: React.FC = () => {
 
   return (
     <ContentContainer>
-      <S.Title>매점상품 보기</S.Title>
+      <S.Title>상품 목록</S.Title>
 
       <S.FilterSection>
         <S.CategoryTabBar>

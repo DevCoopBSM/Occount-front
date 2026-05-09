@@ -248,7 +248,7 @@ function UserLog() {
 
   return (
     <S.CompeleteWrap>
-      <S.PageTitle>아리페이 사용 내역</S.PageTitle>
+      <S.PageTitle>결제 내역</S.PageTitle>
 
       {/* 탭 메뉴와 화살표 */}
       <S.TabContainerWrapper>
