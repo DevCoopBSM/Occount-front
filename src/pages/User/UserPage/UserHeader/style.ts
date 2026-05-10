@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+const MOBILE_BREAKPOINT = '480px';
+const TABLET_BREAKPOINT = '768px';
+const DESKTOP_BREAKPOINT = '1440px';
+const FHD_BREAKPOINT = '1920px';
+
 export const PageHeader = styled.header<{ $isAuthPage?: boolean; $isVisible?: boolean }>`
   position: sticky;
   top: 0;
@@ -20,9 +25,17 @@ export const HeaderInBox = styled.div`
   align-items: center;
   width: 100%;
   max-width: 1920px;
-  padding: 0 180px;
+  padding: 0 240px;
 
-  @media (max-width: 1560px) {
+  @media (min-width: ${FHD_BREAKPOINT}) {
+    padding: 0 300px;
+  }
+
+  @media (max-width: 1919px) and (min-width: ${DESKTOP_BREAKPOINT}) {
+    padding: 0 120px;
+  }
+
+  @media (max-width: ${DESKTOP_BREAKPOINT}) {
     padding: 0 80px;
   }
 
@@ -30,7 +43,11 @@ export const HeaderInBox = styled.div`
     padding: 0 40px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    padding: 0 20px;
+  }
+
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
     padding: 0 20px;
   }
 `;
@@ -48,7 +65,7 @@ export const LogoWrapper = styled.div<{ $isAuthPage?: boolean }>`
     transition: all 0.2s ease;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     img {
       width: 120px;
       height: 23px;
@@ -61,7 +78,7 @@ export const Navigation = styled.nav`
   align-items: center;
   gap: 8px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     display: none;
   }
 `;
@@ -93,7 +110,7 @@ export const MobileMenuContainer = styled.div`
   position: relative;
   display: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     display: block;
   }
 `;
@@ -215,7 +232,7 @@ export const MenuButton = styled.button`
     height: 24px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${TABLET_BREAKPOINT}) {
     display: flex;
   }
 `;

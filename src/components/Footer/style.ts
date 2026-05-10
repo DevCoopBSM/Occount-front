@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+const MOBILE_BREAKPOINT = '480px';
+const TABLET_BREAKPOINT = '768px';
+const DESKTOP_BREAKPOINT = '1440px';
+const FHD_BREAKPOINT = '1920px';
+
 export const FooterWrapper = styled.footer`
   background-color: #2b2b2b;
   width: 100%;
@@ -10,13 +15,21 @@ export const FooterWrapper = styled.footer`
 export const FooterContainer = styled.div`
   width: 100%;
   max-width: 1920px;
-  padding: 32px 180px;
+  padding: 32px 240px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-height: 316px;
 
-  @media (max-width: 1560px) {
+  @media (min-width: ${FHD_BREAKPOINT}) {
+    padding: 32px 300px;
+  }
+
+  @media (max-width: 1919px) and (min-width: ${DESKTOP_BREAKPOINT}) {
+    padding: 32px 120px;
+  }
+
+  @media (max-width: ${DESKTOP_BREAKPOINT}) {
     padding: 32px 80px;
   }
 
@@ -24,12 +37,12 @@ export const FooterContainer = styled.div`
     padding: 32px 40px;
   }
 
-  @media (max-width: 900px) {
-    padding: 40px 20px;
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    padding: 32px 20px;
   }
 
-  @media (max-width: 768px) {
-    padding: 32px 20px;
+  @media (max-width: ${MOBILE_BREAKPOINT}) {
+    padding: 40px 20px;
   }
 `;
 
