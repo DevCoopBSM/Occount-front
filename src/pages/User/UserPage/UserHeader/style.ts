@@ -89,6 +89,15 @@ export const SettingsSection = styled.div`
   align-items: center;
 `;
 
+export const MobileMenuContainer = styled.div`
+  position: relative;
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
 export const LoginButton = styled.button`
   display: flex;
   align-items: center;
@@ -184,7 +193,7 @@ export const RightSection = styled.div`
 `;
 
 export const MenuButton = styled.button`
-  display: flex;
+  display: none;
   align-items: center;
   gap: 10px;
   background: transparent;
@@ -204,6 +213,44 @@ export const MenuButton = styled.button`
   svg {
     width: 24px;
     height: 24px;
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+`;
+
+export const MobileMenuPanel = styled.div`
+  position: absolute;
+  top: 52px;
+  right: 0;
+  min-width: 180px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 1000;
+`;
+
+export const MobileMenuItem = styled.button`
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+  color: #111111;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  & + & {
+    border-top: 1px solid #eeeeee;
   }
 `;
 

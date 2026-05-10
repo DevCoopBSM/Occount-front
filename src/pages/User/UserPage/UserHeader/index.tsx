@@ -9,8 +9,10 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [mobileMenuVisible, setMobileMenuVisible] = useState<boolean>(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const lastScrollYRef = useRef<number>(0);
 
   const handleLogoClick = (): void => {
@@ -34,6 +36,7 @@ function Header() {
   };
 
   const handleNavigation = (path: string): void => {
+    setMobileMenuVisible(false);
     navigate(path);
   };
 
@@ -48,6 +51,10 @@ function Header() {
     const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownVisible(false);
+      }
+
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuVisible(false);
       }
     };
 
@@ -96,7 +103,25 @@ function Header() {
               <H.NavItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.NavItem>
             </H.Navigation>
 
-            <H.SettingsSection>
+            <H.RightSection>
+              <H.MobileMenuContainer ref={mobileMenuRef}>
+                <H.MenuButton
+                  onClick={() => setMobileMenuVisible(prev => !prev)}
+                  aria-label="모바일 메뉴 열기"
+                >
+                  <Icon name="menu" size={24} />
+                </H.MenuButton>
+                {mobileMenuVisible && (
+                  <H.MobileMenuPanel>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/item-list')}>상품 목록</H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/notice')}>공지사항</H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.MobileMenuItem>
+                  </H.MobileMenuPanel>
+                )}
+              </H.MobileMenuContainer>
+
+              <H.SettingsSection>
               {isLoggedIn ? (
                 <H.SettingsContainer ref={dropdownRef}>
                   <H.SettingsButton onClick={handleSettingsClick}>
@@ -115,7 +140,8 @@ function Header() {
                   로그인
                 </H.LoginButton>
               )}
-            </H.SettingsSection>
+              </H.SettingsSection>
+            </H.RightSection>
           </>
         )}
       </H.HeaderInBox>

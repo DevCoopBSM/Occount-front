@@ -24,12 +24,12 @@ export const FooterContainer = styled.div`
     padding: 32px 40px;
   }
 
-  @media (max-width: 768px) {
-    padding: 32px 20px;
-  }
-
   @media (max-width: 900px) {
     padding: 40px 20px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 32px 20px;
   }
 `;
 
@@ -144,15 +144,18 @@ export const UtilityLinkContainer = styled.div`
   }
 `;
 
-export const UtilityLink = styled.div`
+export const UtilityLink = styled.button`
   display: flex;
   gap: 8px;
   align-items: center;
   justify-content: flex-start;
+  padding: 0;
+  border: none;
+  background: transparent;
   cursor: pointer;
 `;
 
-export const UtilityLinkText = styled.p`
+export const UtilityLinkText = styled.span`
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 18px;
   font-weight: 500;
@@ -198,12 +201,15 @@ export const PolicyLinks = styled.div`
   }
 `;
 
-export const PolicyLink = styled.p`
+export const PolicyLink = styled.button`
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 25.6px;
   color: #d1d5db;
+  padding: 0;
+  border: none;
+  background: transparent;
   margin: 0;
   cursor: pointer;
 

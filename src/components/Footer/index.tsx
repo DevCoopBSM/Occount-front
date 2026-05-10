@@ -70,7 +70,6 @@ function Footer() {
       <S.BottomSection>
         <S.PolicyLinks>
           <S.PolicyLink onClick={handleAboutClick}>오카운트 소개</S.PolicyLink>
-          <S.PolicyLink>이용 약관</S.PolicyLink>
         </S.PolicyLinks>
         <S.Copyright>부산소프트웨어마이스터고등학교</S.Copyright>
       </S.BottomSection>
