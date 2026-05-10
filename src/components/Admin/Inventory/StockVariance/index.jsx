@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as _ from './style';
 import * as P from 'common/PageWrapStyle';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +21,7 @@ const StockVariance = () => {
   const [isEndDateVisible, setIsEndDateVisible] = useState(false);
   const [data, setData] = useState([]);
 
-  // 월초부터 월말까지 기본 조회
-  useEffect(() => {
-    handleSearch();
-  }, [startDate, endDate]);
-
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const queryParams = `?start_date=${
       startDate.toISOString().split('T')[0]
     }&end_date=${endDate.toISOString().split('T')[0]}`;
@@ -47,7 +42,12 @@ const StockVariance = () => {
       .catch((error) => {
         console.error('Error sending data:', error);
       });
-  };
+  }, [startDate, endDate]);
+
+  // 월초부터 월말까지 기본 조회
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
 
   const handleDownload = () => {
     const queryParams = `?start_date=${
@@ -129,9 +129,12 @@ const StockVariance = () => {
             <_.Infochooses>
               <_.Infotext>최종 변동 일시</_.Infotext>
               <_.FilterImg
+                type="button"
                 onClick={() => setIsEndDateVisible(!isEndDateVisible)}
-                style={{ cursor: 'pointer', marginRight: '5px' }}
-              />
+                aria-label="최종 변동 일시 필터 토글"
+              >
+                <img src="/assets/FilterIcon.svg" alt="" aria-hidden="true" />
+              </_.FilterImg>
             </_.Infochooses>
           </_.Info>
           <_.StockInfoWrap>

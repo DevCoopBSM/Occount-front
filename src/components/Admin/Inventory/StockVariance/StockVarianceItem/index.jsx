@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as _ from './style';
 import styled from 'styled-components';
 import { PrettyDateTime } from 'utils/Date';

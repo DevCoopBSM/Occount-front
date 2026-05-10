@@ -11,13 +11,16 @@ root.render(
   </React.StrictMode>
 );
 
-// PWA Service Worker 등록
+// PWA Service Worker는 배포 환경에서만 등록합니다.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .catch((error) => {
-        console.error('SW 등록 실패:', error);
-      });
+    if (process.env.NODE_ENV !== 'production') {
+        return;
+    }
+
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.error('SW 등록 실패:', error);
+    });
   });
 }
 

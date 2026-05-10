@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Modal from 'components/Modal';
 import * as S from './style';
 import axiosInstance from 'utils/Axios';
@@ -11,7 +11,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
   const { user } = useAuth(); // authContext에서 user 정보 가져오기
 
   // 학생 정보를 가져오는 함수
-  const fetchStudentsInfo = () => {
+  const fetchStudentsInfo = useCallback(() => {
     if (selectedStudents.length) {
       console.log('Fetching info for selectedStudents:', selectedStudents);
       axiosInstance
@@ -31,7 +31,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
           console.error(error);
         });
     }
-  };
+  }, [selectedStudents]);
 
   const BulkCharge = async (userCodeList, chargedPoint) => {
     try {
@@ -56,7 +56,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
 
   useEffect(() => {
     fetchStudentsInfo();
-  }, [selectedStudents]);
+  }, [fetchStudentsInfo]);
 
   const handlePointChange = (e) => {
     setChargedPoint(e.target.value);

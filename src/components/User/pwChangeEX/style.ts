@@ -4,9 +4,10 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
   background-color: #ffffff;
-  padding: 0 20px;
+  padding: 20px;
   position: relative;
 `;
 
@@ -14,8 +15,9 @@ export const LogoAndForm = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: clamp(24px, 2.5vw, 48px);
-  transform: translateY(clamp(-40px, -4vh, -20px));
+  transform: translateY(-12vh);
 `;
 
 export const LogoContainer = styled.div`

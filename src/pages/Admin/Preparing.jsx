@@ -1,11 +1,10 @@
 import React from 'react';
-import { ReactComponent as PreLogo } from 'assets/PreparingLogo.svg';
 import * as N from '../../common/PageWrapStyle';
 
 export default function Preparing() {
   return (
     <N.PreWrap>
-      <PreLogo width={'400px'} height={'200px'} />
+      <img src="/assets/PreparingLogo.svg" width={'400px'} height={'200px'} alt="Preparing" />
       <N.PreTitle>서비스 준비중입니다!</N.PreTitle>
       <N.PreContent>
         이용에 불편을 드려 죄송합니다.

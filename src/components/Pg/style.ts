@@ -17,10 +17,18 @@ export const Wrapper = styled.div`
 `;
 
 export const BoxSection = styled.div`
-  width: 800px;
+  width: 600px;
   max-width: 90%;
   margin: 0 auto;
-  
+
+  @media (max-width: 1440px) {
+    width: 500px;
+  }
+
+  @media (max-width: 768px) {
+    width: 85%;
+  }
+
   @media (max-width: ${MOBILE_BREAKPOINT}) {
     width: 95%;
   }

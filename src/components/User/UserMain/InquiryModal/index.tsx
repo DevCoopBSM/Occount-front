@@ -1,10 +1,9 @@
-import React, { useState, Suspense, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import Modal from 'components/Modal';
 import axiosInstance from 'utils/Axios';
 import * as S from './style';
 import { AxiosError } from 'axios';
-import { ErrorBoundary } from 'react-error-boundary';
 
 interface Inquiry {
   inquiryId: number;
@@ -23,6 +22,8 @@ interface InquiryModalProps {
   user: any;
 }
 
+type InquiryViewMode = 'form' | 'list';
+
 const getCategoryInKorean = (inquiryType: string): string => {
   switch (inquiryType) {
     case 'SERVICE_SUGGEST': return '서비스 건의';
@@ -37,106 +38,11 @@ const formatDate = (dateArray: [number, number, number, number, number]): string
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
 };
 
-const fetchInquiries = async () => {
-  const response = await axiosInstance.suspense<{ inquiryList: Inquiry[] }>({ 
-    url: 'v2/inquiry/user',
-    method: 'GET'
-  });
-  return response.inquiryList;
-};
-
-const InquiryList: React.FC = () => {
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchInquiries()
-      .then(data => {
-        setInquiries(data);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Failed to fetch inquiries:', error);
-        setIsLoading(false);
-      });
-  }, []);
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [inquiriesPerPage] = useState<number>(5);
-  const [expandedInquiries, setExpandedInquiries] = useState<{ [key: number]: boolean }>({});
-
-  const toggleInquiry = (inquiryId: number) => {
-    setExpandedInquiries(prev => ({ ...prev, [inquiryId]: !prev[inquiryId] }));
-  };
-
-  const indexOfLastInquiry = currentPage * inquiriesPerPage;
-  const indexOfFirstInquiry = indexOfLastInquiry - inquiriesPerPage;
-  const currentInquiries = inquiries.slice(indexOfFirstInquiry, indexOfLastInquiry);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  if (isLoading) {
-    return null; // 로딩 중에는 아무것도 표시하지 않음
-  }
-
-  if (inquiries.length === 0) {
-    return <S.NoInquiries>문의 내역이 없습니다.</S.NoInquiries>;
-  }
-
-  return (
-    <>
-      {currentInquiries.map((inquiry) => (
-        <S.InquiryItem 
-          key={inquiry.inquiryId} 
-          onClick={() => toggleInquiry(inquiry.inquiryId)}
-          $hasAnswer={!!inquiry.inquiryAnswer} // 'hasAnswer'를 '$hasAnswer'로 변경
-        >
-          <S.InquiryTitle>
-            {inquiry.inquiryTitle}
-            <S.InquiryCategory>{getCategoryInKorean(inquiry.inquiryType)}</S.InquiryCategory>
-          </S.InquiryTitle>
-          <S.InquiryDate>{formatDate(inquiry.createdAt)}</S.InquiryDate>
-          {expandedInquiries[inquiry.inquiryId] && (
-            <>
-              <S.InquiryContent>{inquiry.inquiryContent}</S.InquiryContent>
-              <S.InquiryAnswer $hasAnswer={!!inquiry.inquiryAnswer}> // 'hasAnswer'를 '$hasAnswer'로 변경
-                {inquiry.inquiryAnswer ? (
-                  <>
-                    <div>{inquiry.inquiryAnswer}</div>
-                    <S.AnswerDate>답변 일시: {formatDate(inquiry.answeredAt!)}</S.AnswerDate>
-                  </>
-                ) : '답변 대기 중'}
-              </S.InquiryAnswer>
-            </>
-          )}
-        </S.InquiryItem>
-      ))}
-      <S.Pagination>
-        {Array.from({ length: Math.ceil(inquiries.length / inquiriesPerPage) }, (_, i) => (
-          <S.PageNumber key={i + 1} onClick={() => paginate(i + 1)}>
-            {i + 1}
-          </S.PageNumber>
-        ))}
-      </S.Pagination>
-    </>
-  );
-};
-
-const SuspenseInquiryList: React.FC = () => (
-  <ErrorBoundary
-    fallback={<S.ErrorMessage>문의 목록을 불러오는 데 실패했습니다.</S.ErrorMessage>}
-  >
-    <Suspense fallback={null}>
-      <InquiryList />
-    </Suspense>
-  </ErrorBoundary>
-);
-
 const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, user }) => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [isInquiryFormOpen, setIsInquiryFormOpen] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<InquiryViewMode>('form');
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -145,8 +51,8 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [inquiriesPerPage] = useState<number>(5);
-  const [slideDirection, setSlideDirection] = useState<string>('');
-  const containerRef = useRef<HTMLDivElement>(null);
+  const safeInquiries = Array.isArray(inquiries) ? inquiries : [];
+  const totalPages = Math.max(1, Math.ceil(safeInquiries.length / inquiriesPerPage));
 
   const handlers = useSwipeable({
     onSwipedLeft: () => handlePageChange(currentPage + 1),
@@ -157,7 +63,11 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   useEffect(() => {
     if (isOpen) {
-      fetchInquiries();
+      setViewMode('form');
+      setCurrentPage(0);
+      setExpandedInquiries({});
+      setError(null);
+      setIsLoading(false);
     }
   }, [isOpen]);
 
@@ -169,10 +79,11 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
         url: 'v2/inquiry/user',
         method: 'GET'
       });
-      setInquiries(response.inquiryList);
+      setInquiries(Array.isArray(response?.inquiryList) ? response.inquiryList : []);
     } catch (error) {
       console.error('Failed to fetch inquiries:', error);
       setError(error instanceof Error ? error : new Error('An unknown error occurred'));
+      setInquiries([]);
     } finally {
       setIsLoading(false);
     }
@@ -183,15 +94,17 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
   };
 
   const handlePageChange = (newPage: number) => {
-    const maxPage = Math.ceil(inquiries.length / inquiriesPerPage) - 1;
+    const maxPage = totalPages - 1;
     if (newPage >= 0 && newPage <= maxPage) {
-      setSlideDirection(newPage > currentPage ? 'left' : 'right');
       setCurrentPage(newPage);
     }
   };
 
-  const onTransitionEnd = () => {
-    setSlideDirection('');
+  const openListView = async () => {
+    setCurrentPage(0);
+    setExpandedInquiries({});
+    setViewMode('list');
+    await fetchInquiries();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -212,8 +125,8 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
       setCategory('');
       setTitle('');
       setContent('');
-      setIsInquiryFormOpen(false);
-      fetchInquiries();
+      setViewMode('list');
+      await fetchInquiries();
     } catch (error: unknown) {
       console.error('문의 제출 실패:', error);
       if (error instanceof AxiosError && error.response) {
@@ -236,40 +149,96 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
           <S.ModalHeader>알림</S.ModalHeader>
           <S.NoInquiries>로그인 후 이용 가능합니다.</S.NoInquiries>
           <S.ModalFooter>
-            <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
+            <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
           </S.ModalFooter>
         </S.ModalContent>
       </Modal>
     );
   }
 
-  if (error) {
-    onRequestClose();
-    return null;
-  }
-
   return (
-    <>
-      {isLoading ? (
-        <S.TransparentModalContent />
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      style={{
+        padding: '32px',
+        borderRadius: '16px',
+        backgroundColor: '#fff',
+        maxWidth: '560px',
+        width: '92%'
+      }}
+    >
+      {viewMode === 'form' ? (
+        <>
+          <S.ModalHeaderRow>
+            <S.ModalHeader>문의 작성</S.ModalHeader>
+            <S.TextActionButton
+              type="button"
+              onClick={openListView}
+            >
+              내 문의 보기
+            </S.TextActionButton>
+          </S.ModalHeaderRow>
+          <S.InquiryForm onSubmit={handleSubmit}>
+            <S.InquirySelect
+              value={category}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
+            >
+              <option value="">카테고리 선택</option>
+              <option value="SERVICE_SUGGEST">서비스 건의</option>
+              <option value="SERVICE_ERROR">서비스 장애</option>
+              <option value="SERVICE_ETC">기타</option>
+            </S.InquirySelect>
+            <S.InquiryInput
+              type="text"
+              placeholder="제목"
+              value={title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+            />
+            <S.InquiryTextarea
+              placeholder="내용"
+              value={content}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+            />
+            <S.ModalFooter>
+              <S.SubmitButton type="submit" disabled={isSubmitting}>
+                {isSubmitting ? '제출 중...' : '제출하기'}
+              </S.SubmitButton>
+              <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
+            </S.ModalFooter>
+          </S.InquiryForm>
+        </>
       ) : (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-          <S.ModalContent>
+        <>
+          <S.ModalHeaderRow>
             <S.InquiriesHeader>내 문의 목록</S.InquiriesHeader>
+          </S.ModalHeaderRow>
+          {isLoading ? (
+            <S.TransparentModalContent>
+              <S.LoadingSpinner>로딩 중...</S.LoadingSpinner>
+            </S.TransparentModalContent>
+          ) : error ? (
+            <S.EmptyState>
+              <S.EmptyStateText>문의 목록을 불러오지 못했습니다.</S.EmptyStateText>
+            </S.EmptyState>
+          ) : safeInquiries.length === 0 ? (
+            <S.EmptyState>
+              <S.EmptyStateText>아직 작성한 문의가 없습니다.</S.EmptyStateText>
+            </S.EmptyState>
+          ) : (
+            <>
             <S.InquiriesContainer {...handlers}>
-              <S.InquiriesContent 
-                ref={containerRef} 
-                onTransitionEnd={onTransitionEnd}
+              <S.InquiriesContent
                 style={{
                   transform: `translateX(${-100 * currentPage}%)`,
-                  width: `${100 * Math.ceil(inquiries.length / inquiriesPerPage)}%`
+                  width: `${100 * totalPages}%`
                 }}
               >
-                {Array.from({ length: Math.ceil(inquiries.length / inquiriesPerPage) }, (_, pageIndex) => (
+                {Array.from({ length: totalPages }, (_, pageIndex) => (
                   <S.LogPage key={pageIndex}>
-                    {inquiries.slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage).map((inquiry) => (
-                      <S.InquiryItem 
-                        key={inquiry.inquiryId} 
+                    {safeInquiries.slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage).map((inquiry) => (
+                      <S.InquiryItem
+                        key={inquiry.inquiryId}
                         onClick={() => toggleInquiry(inquiry.inquiryId)}
                         $hasAnswer={!!inquiry.inquiryAnswer}
                       >
@@ -297,60 +266,27 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 ))}
               </S.InquiriesContent>
             </S.InquiriesContainer>
-            <S.Pagination>
-              <S.PageNumber onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
-                &lt; 이전
-              </S.PageNumber>
-              <S.PageIndicator>
-                {currentPage + 1} / {Math.ceil(inquiries.length / inquiriesPerPage)}
-              </S.PageIndicator>
-              <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(inquiries.length / inquiriesPerPage) - 1}>
-                다음 &gt;
-              </S.PageNumber>
-            </S.Pagination>
-            <S.ModalFooter>
-              <S.NewInquiryButton onClick={() => setIsInquiryFormOpen(true)}>문의 작성</S.NewInquiryButton>
-              <S.CloseButton onClick={onRequestClose}>닫기</S.CloseButton>
-            </S.ModalFooter>
-          </S.ModalContent>
-        </Modal>
+            {totalPages > 1 && (
+              <S.Pagination>
+                <S.PageNumber onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+                  &lt; 이전
+                </S.PageNumber>
+                <S.PageIndicator>
+                  {currentPage + 1} / {totalPages}
+                </S.PageIndicator>
+                <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages - 1}>
+                  다음 &gt;
+                </S.PageNumber>
+              </S.Pagination>
+            )}
+            </>
+          )}
+          <S.ModalFooter>
+            <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
+          </S.ModalFooter>
+        </>
       )}
-      {isInquiryFormOpen && (
-        <Modal isOpen={isInquiryFormOpen} onRequestClose={() => setIsInquiryFormOpen(false)}>
-          <S.ModalContent>
-            <S.ModalHeader>문의하기</S.ModalHeader>
-            <S.InquiryForm onSubmit={handleSubmit}>
-              <S.InquirySelect
-                value={category}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
-              >
-                <option value="">카테고리 선택</option>
-                <option value="SERVICE_SUGGEST">서비스 건의</option>
-                <option value="SERVICE_ERROR">서비스 장애</option>
-                <option value="SERVICE_ETC">기타</option>
-              </S.InquirySelect>
-              <S.InquiryInput
-                type="text"
-                placeholder="제목"
-                value={title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-              />
-              <S.InquiryTextarea
-                placeholder="내용"
-                value={content}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
-              />
-              <S.ModalFooter>
-                <S.SubmitButton type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? '제출 중...' : '제출하기'}
-                </S.SubmitButton>
-                <S.CloseButton onClick={() => setIsInquiryFormOpen(false)}>취소</S.CloseButton>
-              </S.ModalFooter>
-            </S.InquiryForm>
-          </S.ModalContent>
-        </Modal>
-      )}
-    </>
+    </Modal>
   );
 };
 

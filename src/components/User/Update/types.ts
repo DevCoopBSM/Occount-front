@@ -1,5 +1,3 @@
-import { ReactElement } from 'react';
-
 // 기본 열거형
 export enum UserType {
     TEACHER = "교사",
