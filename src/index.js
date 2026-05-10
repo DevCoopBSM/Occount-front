@@ -14,23 +14,13 @@ root.render(
 // PWA Service Worker는 배포 환경에서만 등록합니다.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    if (process.env.NODE_ENV === 'production') {
-      navigator.serviceWorker.register('/sw.js').catch((error) => {
-        console.error('SW 등록 실패:', error);
-      });
-      return;
+    if (process.env.NODE_ENV !== 'production') {
+        return;
     }
 
-    navigator.serviceWorker
-      .getRegistrations()
-      .then((registrations) => {
-        registrations.forEach((registration) => {
-          registration.unregister();
-        });
-      })
-      .catch((error) => {
-        console.error('SW 해제 실패:', error);
-      });
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.error('SW 등록 실패:', error);
+    });
   });
 }
 
