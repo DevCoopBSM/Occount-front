@@ -1,10 +1,7 @@
 import React from 'react';
+import type { BaseIconProps } from './types';
 
-export interface IconProps extends React.SVGProps<SVGSVGElement> {
-  size?: number;
-  color?: string;
-  strokeWidth?: number;
-}
+export interface IconProps extends BaseIconProps {}
 
 const MinusIcon: React.FC<IconProps> = ({
   size = 24,
@@ -17,7 +14,9 @@ const MinusIcon: React.FC<IconProps> = ({
     width={size}
     height={size}
     fill="none"
-    aria-hidden={props['aria-label'] ? undefined : true}
+    aria-hidden={
+      props['aria-label'] || props['aria-labelledby'] ? undefined : true
+    }
     {...props}
   >
     <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />

@@ -24,11 +24,7 @@ function Header() {
   };
 
   const handleSettingsClick = (): void => {
-    if (isLoggedIn) {
-      setDropdownVisible(!dropdownVisible);
-    } else {
-      navigate('/login');
-    }
+    setDropdownVisible(!dropdownVisible);
   };
 
   const handleUserInfoChangeClick = (): void => {

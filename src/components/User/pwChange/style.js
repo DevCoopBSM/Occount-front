@@ -5,6 +5,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px);
+  box-sizing: border-box;
   background-color: #ffffff;
   padding: 20px;
   position: relative;
