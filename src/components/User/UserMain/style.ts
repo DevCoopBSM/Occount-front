@@ -24,7 +24,7 @@ export const MainContent = styled.div`
   }
 
   /* FHD (1440px~1920px) - 적당한 여백 유지 */
-  @media (max-width: 1920px) and (min-width: ${DESKTOP_BREAKPOINT}) {
+  @media (max-width: 1919px) and (min-width: ${DESKTOP_BREAKPOINT}) {
     padding: 40px 120px 87px 120px;
   }
 
@@ -723,7 +723,6 @@ export const CategoryTab = styled.button<{ $active?: boolean }>`
     : 'rgba(255, 255, 255, 0.72)'};
   border-radius: 999px;
   cursor: pointer;
-  outline: none;
   white-space: nowrap;
   line-height: normal;
   box-sizing: border-box;
@@ -736,6 +735,11 @@ export const CategoryTab = styled.button<{ $active?: boolean }>`
       ? '#FCC800'
       : 'rgba(255, 255, 255, 0.92)'};
     transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(244, 158, 21, 0.75);
+    outline-offset: 2px;
   }
 
   @media (max-width: ${TABLET_BREAKPOINT}) {

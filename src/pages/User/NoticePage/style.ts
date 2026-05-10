@@ -5,7 +5,7 @@ export const NoticePageWrap = styled.div`
   max-width: 1920px;
   margin: 0 auto;
   padding: 34px 180px 85px;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 396px);
   box-sizing: border-box;
 
   @media (max-width: 1600px) {
