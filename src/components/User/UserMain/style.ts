@@ -705,7 +705,10 @@ export const CategoryTabBar = styled.div`
   }
 `;
 
-export const CategoryTab = styled.div<{ $active?: boolean }>`
+export const CategoryTab = styled.button<{ $active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
   min-width: fit-content;
   padding: 11px 18px;
@@ -720,6 +723,7 @@ export const CategoryTab = styled.div<{ $active?: boolean }>`
     : 'rgba(255, 255, 255, 0.72)'};
   border-radius: 999px;
   cursor: pointer;
+  outline: none;
   white-space: nowrap;
   line-height: normal;
   box-sizing: border-box;

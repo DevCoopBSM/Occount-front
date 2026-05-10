@@ -3,7 +3,18 @@ import * as _ from './style';
 import { useAuth } from 'contexts/authContext';
 import RefundFormModal from './RefundFormModal';
 import { handleRefundRequest } from './refundService';
-import { LogItem, PointLogItemProps, RefundAccount } from './types';
+import { LogItem, MockLogItem, PointLogItemProps, RefundAccount, UserLogItem } from './types';
+
+const isMockLogItem = (item: UserLogItem): item is MockLogItem => {
+  return (
+    'chargeAmount' in item ||
+    'paymentAmount' in item ||
+    'storeName' in item ||
+    'paymentMethod' in item ||
+    'chargeMethod' in item ||
+    'status' in item
+  );
+};
 
 function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -45,7 +56,9 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   };
 
   const date = formatDate(item.chargeDate ?? item.payDate);
-  const innerPoint = item.chargedPoint ?? item.payedPoint ?? item.chargeAmount ?? item.paymentAmount ?? 0;
+  const innerPoint = item.chargedPoint
+    ?? item.payedPoint
+    ?? (isMockLogItem(item) ? item.chargeAmount ?? item.paymentAmount ?? 0 : 0);
   const serializedInnerPoint = innerPoint.toString();
   const itemType = item.chargeType ?? item.payType;
 

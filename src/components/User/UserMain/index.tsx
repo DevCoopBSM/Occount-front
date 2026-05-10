@@ -117,7 +117,7 @@ function Main() {
         const sortedNotices = mapped.sort((a, b) => {
           if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
           if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
-          return 0;
+          return parseNoticeDate(b.date) - parseNoticeDate(a.date);
         });
 
         setAllNotices(sortedNotices);
@@ -290,7 +290,9 @@ function Main() {
               {categories.map(category => (
                 <S.CategoryTab
                   key={category}
+                  type="button"
                   $active={selectedCategory === category}
+                  aria-pressed={selectedCategory === category}
                   onClick={() => setSelectedCategory(category)}
                 >
                   {category}

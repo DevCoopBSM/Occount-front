@@ -35,7 +35,7 @@ const Complete = () => {
     <>
       <_.CompeleteWrap>
         <_.PaymentsTopWrap>
-          <img src="/assets/CheckLogo.svg" style={{ width: "70px", height: "70px" }} alt="Check" />
+          <img src="/assets/CheckLogo.svg" style={{ width: "70px", height: "70px" }} alt="" aria-hidden="true" />
           <_.PaymentsTopTitle>
             {transactionAmount ? transactionAmount.toLocaleString() : "0"}원
           </_.PaymentsTopTitle>

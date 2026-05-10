@@ -4,9 +4,9 @@ import * as S from './style';
 
 const NoticePage: React.FC = () => {
   return (
-    <S.CompeleteWrap>
+    <S.NoticePageWrap>
       <NoticeList />
-    </S.CompeleteWrap>
+    </S.NoticePageWrap>
   );
 };
 

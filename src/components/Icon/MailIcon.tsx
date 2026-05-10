@@ -1,10 +1,7 @@
 import React from 'react';
+import type { BaseIconProps } from './types';
 
-export interface IconProps extends React.SVGProps<SVGSVGElement> {
-  size?: number;
-  color?: string;
-  strokeWidth?: number;
-}
+export interface IconProps extends BaseIconProps {}
 
 export const MailIcon: React.FC<IconProps> = ({
   size = 24,

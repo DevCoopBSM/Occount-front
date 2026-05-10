@@ -32,7 +32,7 @@ export default function ItemPage() {
   }, []);
   useEffect(() => {
     fetchData();
-  }, [fetchData]); // 빈 의존성 배열을 전달하여 이 useEffect가 마운트 시에만 실행되도록 합니다.
+  }, [fetchData]); // fetchData 참조가 바뀔 때만 다시 실행되도록 의존성을 명시합니다.
 
   return <DataTable TableName="상품 내역" data={data} />;
 }

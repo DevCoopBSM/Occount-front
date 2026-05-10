@@ -8,17 +8,22 @@ export interface LogItem {
   payDate?: number[];
   chargedPoint?: number;
   payedPoint?: number;
-  chargeAmount?: number;  // Mock 데이터용
-  paymentAmount?: number; // Mock 데이터용
-  storeName?: string;     // Mock 데이터용
-  paymentMethod?: string; // Mock 데이터용
-  chargeMethod?: string;  // Mock 데이터용
-  status?: string;        // Mock 데이터용
   chargeType?: string;
   payType?: string;
   refundState?: boolean;
   reason?: string;
 }
+
+export interface MockLogItem extends LogItem {
+  chargeAmount?: number;
+  paymentAmount?: number;
+  storeName?: string;
+  paymentMethod?: string;
+  chargeMethod?: string;
+  status?: string;
+}
+
+export type UserLogItem = LogItem | MockLogItem;
 
 export interface RefundAccount {
   bank: string;
@@ -29,6 +34,6 @@ export interface RefundAccount {
 
 export interface PointLogItemProps {
   type: number;
-  data: LogItem[];
+  data: UserLogItem[];
   fetchUserLog: (type: string) => Promise<void>;
 }

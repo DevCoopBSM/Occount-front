@@ -16,6 +16,7 @@ import HistoryIcon from './HistoryIcon';
 import InventoryIcon from './InventoryIcon';
 import MailIcon from './MailIcon';
 import MenuBookIcon from './MenuBookIcon';
+import type { BaseIconProps } from './types';
 
 type IconName =
   | 'close'
@@ -36,11 +37,8 @@ type IconName =
   | 'mail'
   | 'menuBook';
 
-export interface IconProps extends React.SVGProps<SVGSVGElement> {
+export interface IconProps extends BaseIconProps {
   name: IconName;
-  size?: number;
-  color?: string;
-  strokeWidth?: number;
 }
 
 const iconComponents = {

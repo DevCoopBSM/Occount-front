@@ -41,16 +41,21 @@ export const ModalContent = styled.div<ModalContentProps>`
   max-width: ${props => props.$style.maxWidth || 'none'};
   max-height: ${props => props.$style.maxHeight || '90vh'};
 
-  /* 스크롤바 숨기기 */
   &::-webkit-scrollbar {
-    display: none;
+    width: 8px;
   }
 
-  /* Firefox */
-  scrollbar-width: none;
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(17, 17, 17, 0.18);
+    border-radius: 999px;
+  }
 
-  /* IE 및 Edge */
-  -ms-overflow-style: none;
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 17, 17, 0.18) transparent;
 
   @media (max-width: 768px) {
     width: ${props => props.$style.width || '95%'};

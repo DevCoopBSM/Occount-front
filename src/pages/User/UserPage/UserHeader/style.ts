@@ -10,7 +10,7 @@ export const PageHeader = styled.header<{ $isAuthPage?: boolean; $isVisible?: bo
   height: 80px;
   background: #ffffff;
   border-bottom: ${props => props.$isAuthPage ? 'none' : '1px solid #f0f0f0'};
-  transform: ${props => props.$isVisible ? 'translateY(0)' : 'translateY(-100%)'};
+  transform: ${props => props.$isVisible === false ? 'translateY(-100%)' : 'translateY(0)'};
   transition: transform 0.1s ease-in-out;
 `;
 

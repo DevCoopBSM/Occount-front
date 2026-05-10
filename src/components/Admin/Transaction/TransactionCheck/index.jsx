@@ -55,7 +55,7 @@ const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
       </button>
       <Modal isOpen={modalOpen}>
         <_.ContentWrap>
-          <img src="/assets/QuestionLogo.svg" style={{ width: "60px", height: "60px" }} alt="Question" />
+          <img src="/assets/QuestionLogo.svg" style={{ width: "60px", height: "60px" }} alt="" aria-hidden="true" />
           <_.ContentTitle>{amount.toLocaleString()}원</_.ContentTitle>
           <_.ContentSubTitle>
             {actionType === "pay" ? "결제하시겠습니까?" : "충전하시겠습니까?"}

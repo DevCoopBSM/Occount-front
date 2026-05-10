@@ -40,7 +40,7 @@ const formatDate = (dateArray: [number, number, number, number, number]): string
 
 const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, user }) => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [viewMode, setViewMode] = useState<InquiryViewMode>('form');
   const [category, setCategory] = useState<string>('');
@@ -66,7 +66,8 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
       setViewMode('form');
       setCurrentPage(0);
       setExpandedInquiries({});
-      fetchInquiries();
+      setError(null);
+      setIsLoading(false);
     }
   }, [isOpen]);
 
@@ -99,6 +100,13 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     }
   };
 
+  const openListView = async () => {
+    setCurrentPage(0);
+    setExpandedInquiries({});
+    setViewMode('list');
+    await fetchInquiries();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!category || !title || !content) {
@@ -117,8 +125,8 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
       setCategory('');
       setTitle('');
       setContent('');
-      await fetchInquiries();
       setViewMode('list');
+      await fetchInquiries();
     } catch (error: unknown) {
       console.error('문의 제출 실패:', error);
       if (error instanceof AxiosError && error.response) {
@@ -148,11 +156,6 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     );
   }
 
-  if (error) {
-    onRequestClose();
-    return null;
-  }
-
   return (
     <Modal
       isOpen={isOpen}
@@ -165,21 +168,13 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
         width: '92%'
       }}
     >
-      {isLoading ? (
-        <S.TransparentModalContent>
-          <S.LoadingSpinner>로딩 중...</S.LoadingSpinner>
-        </S.TransparentModalContent>
-      ) : viewMode === 'form' ? (
+      {viewMode === 'form' ? (
         <>
           <S.ModalHeaderRow>
             <S.ModalHeader>문의 작성</S.ModalHeader>
             <S.TextActionButton
               type="button"
-              onClick={() => {
-                setCurrentPage(0);
-                setExpandedInquiries({});
-                setViewMode('list');
-              }}
+              onClick={openListView}
             >
               내 문의 보기
             </S.TextActionButton>
@@ -218,7 +213,15 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
           <S.ModalHeaderRow>
             <S.InquiriesHeader>내 문의 목록</S.InquiriesHeader>
           </S.ModalHeaderRow>
-          {safeInquiries.length === 0 ? (
+          {isLoading ? (
+            <S.TransparentModalContent>
+              <S.LoadingSpinner>로딩 중...</S.LoadingSpinner>
+            </S.TransparentModalContent>
+          ) : error ? (
+            <S.EmptyState>
+              <S.EmptyStateText>문의 목록을 불러오지 못했습니다.</S.EmptyStateText>
+            </S.EmptyState>
+          ) : safeInquiries.length === 0 ? (
             <S.EmptyState>
               <S.EmptyStateText>아직 작성한 문의가 없습니다.</S.EmptyStateText>
             </S.EmptyState>

@@ -62,7 +62,7 @@ export const Barcode = () => {
         >
           학생증 스캔 페이지
         </div>
-        <_.LogoImg src="/assets/DevCoopL.svg" alt="logo image" />
+        <_.LogoImg src="/assets/DevCoopL.svg" alt="DevCoop 로고" />
         <_.BarcodeInput
           placeholder="바코드를 스캔해주세요"
           onChange={handleChange}

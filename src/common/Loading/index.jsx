@@ -88,6 +88,7 @@ const LogoWrapper = styled.div`
 
 const Loading = () => {
   const { isLoading, error, shouldShowLoading } = useLoading();
+  const publicAssetBase = process.env.PUBLIC_URL || '';
 
   const [tears, setTears] = useState([]);
   const logoRef = useRef(null);
@@ -164,11 +165,11 @@ const Loading = () => {
 
   const renderLogo = () => {
     if (is500Error) {
-      return <img src="/assets/ulmangOring.svg" alt="Error Oring" style={{width: '100%', height: '100%'}} />;
+      return <img src={`${publicAssetBase}/assets/ulmangOring.svg`} alt="Error Oring" style={{width: '100%', height: '100%'}} />;
     } else if (is400Error) {
-      return <img src="/assets/jjinggeulOring.svg" alt="Warning Oring" style={{width: '100%', height: '100%'}} />;
+      return <img src={`${publicAssetBase}/assets/jjinggeulOring.svg`} alt="Warning Oring" style={{width: '100%', height: '100%'}} />;
     } else {
-      return <img src="/assets/happyOring.svg" alt="Happy Oring" style={{width: '100%', height: '100%'}} />;
+      return <img src={`${publicAssetBase}/assets/happyOring.svg`} alt="Happy Oring" style={{width: '100%', height: '100%'}} />;
     }
   };
 
