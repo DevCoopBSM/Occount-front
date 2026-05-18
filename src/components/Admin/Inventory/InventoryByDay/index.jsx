@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
@@ -37,10 +37,6 @@ export default function InventoryByDay() {
     setFilteredItemList(filteredItems);
   }, [itemName, itemList]);
 
-  useEffect(() => {
-    handleSearch();
-  }, [endDate]);
-
   const fetchItems = async () => {
     try {
       const response = await axiosInstance.get('v2/items/');
@@ -57,7 +53,7 @@ export default function InventoryByDay() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const queryParams = `?end_date=${endDate.toISOString().split('T')[0]}`;
     axiosInstance
       .get(`/v2/inventory/byday${queryParams}`)
@@ -78,7 +74,11 @@ export default function InventoryByDay() {
       .catch(error => {
         console.error('Error sending data:', error);
       });
-  };
+  }, [endDate]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [handleSearch]);
 
   const handleItemSelect = item => {
     setBarcode(item.바코드);

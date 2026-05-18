@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   background-color: #ffffff;
   padding: 0 20px;
   position: relative;
@@ -182,5 +182,3 @@ export const Divider = styled.span`
   font-weight: 400;
   padding: clamp(4px, 0.42vw, 8px);
 `;
-
-

@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 
 export const PageWrap = styled.div`
   width: 100%;
-  height: 100vh;
-  overflow: auto;
-  background-color: #d9d9d9;
+  min-height: 100vh;
+  background-color: #ffffff;
 `;
 
 export const AdminWrap = styled.div`
@@ -41,10 +40,21 @@ export const AdminSubPageContainer = styled.div`
 export const PageContainer = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 100%;
-  overflow: auto;
   background-color: #fff;
-  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  main {
+    flex: 1;
+    /* main이 최대한 공간을 차지하도록 */
+    min-height: 0;
+  }
+
+  /* Sticky Footer - footer만 하단으로 밀어냄 */
+  > footer {
+    margin-top: auto;
+  }
 `;
 
 export const InfoContainer = styled.div`

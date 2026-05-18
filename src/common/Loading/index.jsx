@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ReactComponent as HappyOring } from 'assets/happyOring.svg';
-import { ReactComponent as JjinggeulOring } from 'assets/jjinggeulOring.svg';
-import { ReactComponent as UlmangOring } from 'assets/ulmangOring.svg';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useLoading } from 'contexts/loadingContext';
 
 const rotate = keyframes`
@@ -91,6 +88,7 @@ const LogoWrapper = styled.div`
 
 const Loading = () => {
   const { isLoading, error, shouldShowLoading } = useLoading();
+  const publicAssetBase = process.env.PUBLIC_URL || '';
 
   const [tears, setTears] = useState([]);
   const logoRef = useRef(null);
@@ -167,11 +165,11 @@ const Loading = () => {
 
   const renderLogo = () => {
     if (is500Error) {
-      return <UlmangOring />;
+      return <img src={`${publicAssetBase}/assets/ulmangOring.svg`} alt="Error Oring" style={{width: '100%', height: '100%'}} />;
     } else if (is400Error) {
-      return <JjinggeulOring />;
+      return <img src={`${publicAssetBase}/assets/jjinggeulOring.svg`} alt="Warning Oring" style={{width: '100%', height: '100%'}} />;
     } else {
-      return <HappyOring />;
+      return <img src={`${publicAssetBase}/assets/happyOring.svg`} alt="Happy Oring" style={{width: '100%', height: '100%'}} />;
     }
   };
 

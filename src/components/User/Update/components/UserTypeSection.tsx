@@ -7,7 +7,7 @@ interface UserTypeSectionProps {
 }
 
 export const UserTypeSection: React.FC<UserTypeSectionProps> = ({ userInfo }) => (
-    <>
+    <S.InputGrid>
         <S.InputContainer>
             <S.InputLabel>회원 유형</S.InputLabel>
             <S.RegisterInput
@@ -24,5 +24,5 @@ export const UserTypeSection: React.FC<UserTypeSectionProps> = ({ userInfo }) =>
                 disabled
             />
         </S.InputContainer>
-    </>
+    </S.InputGrid>
 );

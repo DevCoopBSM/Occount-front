@@ -1,20 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DataTable from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
-
-const stockData = [
-  {
-    item_id: 1,
-    item_name: '상품 A',
-    quantity: 100,
-    last_updated: '2023-11-14 18:46:41',
-  },
-];
 
 export default function ItemPage() {
   const [data, setData] = useState([]);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     axiosInstance
       .get(`v2/item/`)
       .then((response) => {
@@ -38,10 +29,10 @@ export default function ItemPage() {
       .catch((error) => {
         console.error('Error sending data:', error);
       });
-  };
+  }, []);
   useEffect(() => {
     fetchData();
-  }, []); // 빈 의존성 배열을 전달하여 이 useEffect가 마운트 시에만 실행되도록 합니다.
+  }, [fetchData]); // fetchData 참조가 바뀔 때만 다시 실행되도록 의존성을 명시합니다.
 
   return <DataTable TableName="상품 내역" data={data} />;
 }

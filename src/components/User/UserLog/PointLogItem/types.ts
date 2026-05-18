@@ -14,6 +14,17 @@ export interface LogItem {
   reason?: string;
 }
 
+export interface MockLogItem extends LogItem {
+  chargeAmount?: number;
+  paymentAmount?: number;
+  storeName?: string;
+  paymentMethod?: string;
+  chargeMethod?: string;
+  status?: string;
+}
+
+export type UserLogItem = LogItem | MockLogItem;
+
 export interface RefundAccount {
   bank: string;
   accountNumber: string;
@@ -23,6 +34,6 @@ export interface RefundAccount {
 
 export interface PointLogItemProps {
   type: number;
-  data: LogItem[];
+  data: UserLogItem[];
   fetchUserLog: (type: string) => Promise<void>;
 }
