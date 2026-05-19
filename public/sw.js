@@ -1,5 +1,18 @@
 /* eslint-disable no-restricted-globals */
 
+const isDev = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
+
+if (isDev) {
+  self.addEventListener('install', () => self.skipWaiting());
+  self.addEventListener('activate', (event) => {
+    event.waitUntil(
+      caches.keys()
+        .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
+        .then(() => self.registration.unregister()),
+    );
+  });
+} else {
+
 const CACHE_NAME = 'occount-v1.0.0';
 
 const PRECACHE_URLS = ['/', '/manifest.json'];
@@ -170,3 +183,5 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(self.clients.openWindow('/'));
 });
+
+} // end else (production only)
