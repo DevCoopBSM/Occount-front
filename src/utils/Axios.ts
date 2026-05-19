@@ -22,7 +22,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
   let mockData: any = { success: true, message: '개발 모드: Mock 응답' };
   
   // 엔드포인트별 mock 응답
-  if (url.includes('v2/account/user/info')) {
+  if (url.includes('account/user/info')) {
     mockData = {
       userPoint: 100000,
       userName: '개발자',
@@ -32,7 +32,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
       todayTotalPayment: 0,
       roles: 'ROLE_MEMBER'
     };
-  } else if (url.includes('v2/auth/login')) {
+  } else if (url.includes('auth/login')) {
     mockData = {
       success: true,
       accessToken: 'dev-mock-token',
@@ -168,15 +168,20 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     if (!isDevMode()) {
       decrementActiveRequests();
-      if (setGlobalError) setGlobalError(error);
+      const config = error.config as any;
+      if (!config?.skipGlobalError && setGlobalError) setGlobalError(error);
     }
 
     if (error.response && error.response.status === 401 && !isDevMode()) {
-      const originalRequest = error.config;
+      const originalRequest = error.config as any;
+
+      if (originalRequest?.skipAuthRedirect) {
+        return Promise.reject(error);
+      }
 
       // 로그인과 비밀번호 확인 요청은 401 에러가 발생해도 로그아웃 처리하지 않음
-      if (originalRequest && (originalRequest.url === 'v2/auth/login' || 
-          originalRequest.url === 'v2/account/verify')) {
+      if (originalRequest && (originalRequest.url === 'auth/login' ||
+          originalRequest.url === 'account/verify')) {
         return Promise.reject(error);
       }
 
