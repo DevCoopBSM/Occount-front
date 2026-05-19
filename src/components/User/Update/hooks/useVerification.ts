@@ -10,7 +10,7 @@ export const useVerification = () => {
 
     const handleVerify = async (): Promise<void> => {
         try {
-            const response = await axiosInstance.post('/v2/account/verify', {
+            const response = await axiosInstance.post('/account/verify', {
                 userPassword: currentPassword,
             });
             
