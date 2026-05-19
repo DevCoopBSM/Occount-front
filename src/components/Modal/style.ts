@@ -41,6 +41,22 @@ export const ModalContent = styled.div<ModalContentProps>`
   max-width: ${props => props.$style.maxWidth || 'none'};
   max-height: ${props => props.$style.maxHeight || '90vh'};
 
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(17, 17, 17, 0.18);
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 17, 17, 0.18) transparent;
+
   @media (max-width: 768px) {
     width: ${props => props.$style.width || '95%'};
     padding: ${props => props.$style.padding || '20px'};

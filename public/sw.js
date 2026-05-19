@@ -1,18 +1,33 @@
 /* eslint-disable no-restricted-globals */
 
-const isDev = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
+const IS_LOCAL_DEV = ['localhost', '127.0.0.1', '[::1]'].includes(
+  self.location.hostname,
+);
 
-if (isDev) {
-  self.addEventListener('install', () => self.skipWaiting());
+if (IS_LOCAL_DEV) {
+  self.addEventListener('install', (event) => {
+    event.waitUntil(self.skipWaiting());
+  });
+
   self.addEventListener('activate', (event) => {
     event.waitUntil(
-      caches.keys()
-        .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
-        .then(() => self.registration.unregister()),
+      (async () => {
+        const cacheKeys = await caches.keys();
+        await Promise.all(cacheKeys.map((cacheKey) => caches.delete(cacheKey)));
+        await self.registration.unregister();
+
+        const clients = await self.clients.matchAll({
+          type: 'window',
+          includeUncontrolled: true,
+        });
+
+        clients.forEach((client) => {
+          client.navigate(client.url);
+        });
+      })(),
     );
   });
 } else {
-
 const CACHE_NAME = 'occount-v1.0.0';
 
 const PRECACHE_URLS = ['/', '/manifest.json'];
@@ -183,5 +198,4 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(self.clients.openWindow('/'));
 });
-
-} // end else (production only)
+}

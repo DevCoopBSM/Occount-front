@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-const maxWidth = "900px";
-
 export const Info = styled.div`
   display: flex;
   justify-content: space-around;

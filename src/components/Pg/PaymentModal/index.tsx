@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from 'components/Icon';
+import Modal from 'components/Modal';
 import * as _ from './style';
 import { PaymentCheckoutPage } from '../PaymentCheckout';
 
@@ -39,6 +40,29 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     setIsPaymentModalOpen(false);
     // 결제 모달만 닫고 충전하기 모달은 닫지 않음
   };
+
+  // 모달 열릴 때 body 스크롤 막기
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+
+    // 현재 스크롤바 너비 계산
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    // 스크롤 막고 스크롤바 너비만큼 패딩 추가하여 레이아웃 shift 방지
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
+
+    // 컴포넌트 언마운트 시 정리
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
+    };
+  }, [isOpen]);
 
   const handlePaymentClick = (): void => {
     if (!user) {
@@ -107,15 +131,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   return (
     <>
-      <_.StyledModal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-      >
-        <_.CloseButton onClick={onRequestClose} aria-label="닫기">
-          <Icon name="close" />
-        </_.CloseButton>
-        
-        <_.ModalHeader>{type === 'charge' ? '아리페이 충전하기' : '출자금 납부'}</_.ModalHeader>
+      <_.StyledModal>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={onRequestClose}
+          style={_.getModalStyle()}
+        >
+          <_.ModalHeaderContainer>
+            <_.ModalHeader>{type === 'charge' ? '아리페이 충전하기' : '출자금 납부'}</_.ModalHeader>
+            <_.CloseButton onClick={onRequestClose} aria-label="닫기">
+              <Icon name="close" />
+            </_.CloseButton>
+          </_.ModalHeaderContainer>
         
         <_.ModalContent>
           <_.HighlightText>
@@ -175,6 +202,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             {type === 'charge' ? '결제진행' : '출자금 납부'}
           </_.ConfirmButton>
         </_.ButtonWrapper>
+        </Modal>
       </_.StyledModal>
 
       {isPaymentModalOpen && user && (

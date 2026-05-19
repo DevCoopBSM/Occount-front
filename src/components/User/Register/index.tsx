@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import imgLogo from "assets/occregisterLogo.svg";
 import axiosInstance from "utils/Axios";
 import { UserTypeStep } from './components/UserTypeStep';
 import { PrivacyStep } from './components/PrivacyStep';
@@ -157,7 +156,7 @@ const Register: React.FC = () => {
 
   return (
     <R.Container>
-      <R.LogoImg src={imgLogo} alt="logo" />
+      <R.LogoImg src="/assets/occregisterLogo.svg" alt="logo" />
       <R.ContentContainer>
         {renderStep()}
       </R.ContentContainer>

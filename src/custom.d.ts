@@ -1,5 +1,4 @@
-// Axios 타입 확장
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 declare module '*.svg' {
     import React = require('react');

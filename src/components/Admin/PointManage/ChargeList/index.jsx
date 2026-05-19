@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import { PrettyDateTime } from 'utils/Date';
@@ -12,7 +12,7 @@ const ReceiptCheck = () => {
   );
   const [data, setData] = useState([]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const queryParams = `?start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}&type=0`;
 
     axiosInstance
@@ -39,11 +39,11 @@ const ReceiptCheck = () => {
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  };
+  }, [startDate, endDate]);
 
   useEffect(() => {
     handleSearch();
-  }, [startDate, endDate]);
+  }, [handleSearch]);
 
   return (
     <TablePage

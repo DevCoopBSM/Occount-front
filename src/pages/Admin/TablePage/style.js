@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ReactComponent as FilterIcon } from 'assets/FilterIcon.svg';
 
 const maxWidth = '900px';
 
@@ -181,12 +180,6 @@ export const ButtonCancel = styled.button`
 export const ButtonConfirm = styled(ButtonCancel)`
   background-color: #3498db;
   color: #fff;
-`;
-
-export const FilterImg = styled(FilterIcon)`
-  display: flex;
-  justify-content: center;
-  height: 100%;
 `;
 
 export const StockInfoWrap = styled.div`

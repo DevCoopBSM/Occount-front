@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from 'utils/Axios';
 import * as S from './style';
@@ -15,19 +15,7 @@ export function PaymentRedirectPage() {
 
   const isSuccess = !code  || location.state?.status === 'success';
 
-  useEffect(() => {
-    console.log('Redirect Page Loaded');
-    console.log('Is Success:', isSuccess);
-    console.log('PaymentId:', paymentId);
-
-    if (isSuccess && paymentId) {
-      handlePaymentSuccess();
-    } else {
-      handlePaymentFail();
-    }
-  }, [isSuccess, paymentId]);
-
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = useCallback(async () => {
     try {
       console.log('Sending confirm request:', { paymentId });
       const confirmResponse = await axiosInstance.post(
@@ -52,9 +40,9 @@ export function PaymentRedirectPage() {
       console.error('Confirm request failed:', error);
       navigate('/payment-result', { state: { success: false, error } });
     }
-  };
+  }, [navigate, paymentId]);
 
-  const handlePaymentFail = () => {
+  const handlePaymentFail = useCallback(() => {
     console.log('Payment failed');
     navigate('/payment-result', {
       state: {
@@ -62,7 +50,19 @@ export function PaymentRedirectPage() {
         error: message || '결제에 실패했습니다.'
       }
     });
-  };
+  }, [message, navigate]);
+
+  useEffect(() => {
+    console.log('Redirect Page Loaded');
+    console.log('Is Success:', isSuccess);
+    console.log('PaymentId:', paymentId);
+
+    if (isSuccess && paymentId) {
+      handlePaymentSuccess();
+    } else {
+      handlePaymentFail();
+    }
+  }, [handlePaymentFail, handlePaymentSuccess, isSuccess, paymentId]);
 
   return (
     <S.Wrapper>
