@@ -11,7 +11,7 @@ export interface Notice {
 
 // 공지사항 가져오기
 export const fetchNotices = async (): Promise<Notice[]> => {
-    const response = await axiosInstance.get('v2/notices');
+    const response = await axiosInstance.get('v2/notices', { skipGlobalError: true } as any);
     const notices: Notice[] = response.data.map((notice: any) => {
         return {
             ...notice,

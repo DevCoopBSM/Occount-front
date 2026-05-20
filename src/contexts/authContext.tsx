@@ -118,10 +118,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
       const loginAxios = createBypassAxios();
 
-      const response = await loginAxios.post('v2/auth/login', {
-        userEmail: email,
-        userPassword: password,
+      const response = await loginAxios.post('auth/login', {
+        email: email,
+        password: password,
       });
+
+      if ((response.status === 200 || response.status === 201) && (!response.data || Object.keys(response.data).length === 0)) {
+        const authHeader = response.headers['authorization'] || response.headers['Authorization'];
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.substring(7);
+
+          let role = 'ROLE_USER';
+          try {
+            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(atob(base64));
+            role = payload.roles || payload.role || payload.authority || 'ROLE_USER';
+          } catch {
+            // 디코딩 실패 시 기본값 유지
+          }
+
+          const isAdmin = role === 'ROLE_ADMIN';
+          if (admin && !isAdmin) {
+            throw new Error('권한이 없습니다.');
+          }
+
+          setAccessToken(token);
+
+          const userInfo: User = {
+            point: 0,
+            name: email.split('@')[0] || '사용자',
+            code: email.split('@')[0] || 'USER',
+            email: email,
+            phone: '',
+            role,
+          };
+
+          dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
+          dispatch({ type: actionTypes.SET_USER, payload: userInfo });
+          navigate(isAdmin ? '/admin' : '/');
+          dispatch({ type: actionTypes.CLEAR_ERROR });
+          return userInfo;
+        } else {
+          throw new Error('서버에서 인증 토큰을 반환하지 않았습니다.');
+        }
+      }
 
       if (!response.data.success) {
         if (response.data.status === "REDIRECT") {
@@ -169,18 +209,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const response = await axiosInstance.get('v2/account/user/info');
-      
+      const [infoRes, pointRes] = await Promise.all([
+        axiosInstance.get('users/pre-order-info', { skipAuthRedirect: true, skipGlobalError: true } as any),
+        axiosInstance.get('wallet/point', { skipAuthRedirect: true, skipGlobalError: true } as any),
+      ]);
+
       const userInfo: User = {
-        point: response.data.userPoint,
-        name: response.data.userName,
-        code: response.data.userCode,
-        email: response.data.userEmail,
-        phone: response.data.userPhone,
-        todayTotalPayment: response.data.todayTotalPayment,
-        role: response.data.roles  // roles 필드 추가
+        point: pointRes.data.point,
+        name: infoRes.data.username,
+        code: '',
+        email: '',
+        phone: '',
       };
-      
+
       dispatch({ type: actionTypes.SET_USER, payload: userInfo });
       return userInfo;
     } catch (error) {
@@ -203,7 +244,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const registerStudent = useCallback(
     async (userName: string, userEmail: string, userPassword: string) => {
       try {
-        const response = await axiosInstance.post('v2/auth/register', {
+        const response = await axiosInstance.post('auth/register', {
           userName,
           userEmail,
           userPassword,
@@ -229,7 +270,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // 비밀번호 재설정 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
       const pwResetAxios = createBypassAxios();
 
-      const response = await pwResetAxios.post('v2/verify/send', {
+      const response = await pwResetAxios.post('verify/send', {
         userEmail: email,
         userName: name,
       });
@@ -249,7 +290,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const pwChangeAxios = createBypassAxios();
 
       const response = await pwChangeAxios.post(
-        `v2/auth/pwChange/${jwtToken}`,
+        `auth/pwChange/${jwtToken}`,
         { newPassword }
       );
       return { success: true, message: response.data.message || '비밀번호가 성공적으로 변경되었습니다.' };
@@ -265,7 +306,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // 개발 모드가 아닐 때만 사용자 정보 가져오기
     if (!isDevMode() && state.isLoggedIn) {
-      fetchUserInformation();
+      fetchUserInformation().catch(() => {
+        // 에러 무시 - 로그인 상태는 유지
+      });
     }
   }, [state.isLoggedIn, fetchUserInformation]);
 

@@ -19,7 +19,7 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
 
     console.log(response)
     const { data } = await axiosInstance.post(
-      "/v2/verify/identity",
+      "/verify/identity",
       { identityVerificationId }
     );
     return {
