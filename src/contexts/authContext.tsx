@@ -130,7 +130,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           let role = 'ROLE_USER';
           try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
+            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(atob(base64));
             role = payload.roles || payload.role || payload.authority || 'ROLE_USER';
           } catch {
             // 디코딩 실패 시 기본값 유지

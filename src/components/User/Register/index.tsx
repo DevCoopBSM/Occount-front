@@ -68,10 +68,8 @@ const Register: React.FC = () => {
         password: formData.userPassword
       });
 
-      if (response.status === 200 || response.status === 201) {
-        alert("회원가입이 완료되었습니다.");
-        navigate('/');
-      }
+      alert("회원가입이 완료되었습니다.");
+      navigate('/');
     } catch (error) {
       console.error("Register error:", error);
       alert(error.response?.data?.message || '회원가입 중 오류가 발생했습니다.');
