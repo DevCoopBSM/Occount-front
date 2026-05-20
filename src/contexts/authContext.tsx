@@ -155,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
           dispatch({ type: actionTypes.SET_USER, payload: userInfo });
-          navigate(isAdmin ? '/admin' : '/');
+          navigate(admin ? '/admin' : '/');
           dispatch({ type: actionTypes.CLEAR_ERROR });
           return userInfo;
         } else {
