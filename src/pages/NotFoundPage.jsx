@@ -4,7 +4,7 @@ import * as N from 'common/PageWrapStyle';
 export default function NotFoundPage() {
   return (
     <N.NotFoundWrap>
-      <img src="/assets/404AriPayC.svg" width={'400px'} height={'200px'} alt="404 Not Found" />
+      <img src="/assets/404AriPayC.webp" width={'400px'} height={'200px'} alt="404 Not Found" />
       <N.NotFoundTitle>
         죄송합니다. 페이지를 찾을 수 없습니다 :{'('}{' '}
       </N.NotFoundTitle>

@@ -83,7 +83,7 @@ function HowTo() {
 
         <S.FeatureGrid>
           <S.FeatureCard>
-            <S.FeatureIcon src="/assets/Money.png" alt="교내 행사" />
+            <S.FeatureIcon src="/assets/Money.webp" alt="교내 행사" loading="lazy" />
             <S.FeatureTitle>교내 행사 참여</S.FeatureTitle>
             <S.FeatureDescription>
               교내 각종 행사, 특별한 활동이나 기여에 참가하여 포인트를 받을 수 있습니다
@@ -101,7 +101,7 @@ function HowTo() {
         <S.StepContainer>
           <S.StepItem>
             <S.StepNumber>1</S.StepNumber>
-            <S.StepImage src="/assets/howto1.png" alt="로그인" $large />
+            <S.StepImage src="/assets/howto1.webp" alt="로그인" loading="lazy" $large />
             <S.StepDescription>
               오카운트 웹사이트에 로그인하세요
             </S.StepDescription>
@@ -109,7 +109,7 @@ function HowTo() {
 
           <S.StepItem>
             <S.StepNumber>2</S.StepNumber>
-            <S.StepImage src="/assets/howto2.png" alt="잔액 확인" />
+            <S.StepImage src="/assets/howto2.webp" alt="잔액 확인" loading="lazy" />
             <S.StepDescription>
               메인 페이지에서 현재 잔액을 확인할 수 있습니다
             </S.StepDescription>
@@ -117,7 +117,7 @@ function HowTo() {
 
           <S.StepItem>
             <S.StepNumber>3</S.StepNumber>
-            <S.StepImage src="/assets/howto3.png" alt="사용내역" />
+            <S.StepImage src="/assets/howto3.webp" alt="사용내역" loading="lazy" />
             <S.StepDescription>
               사용내역 보기에서 포인트 적립 및 사용 내역을 확인하세요
             </S.StepDescription>
@@ -136,7 +136,7 @@ function HowTo() {
 
         <S.UsageGrid>
           <S.UsageCard>
-            <S.UsageIcon src="/assets/AriSoriCounter.jpg" alt="카운터 결제" />
+            <S.UsageIcon src="/assets/AriSoriCounter.webp" alt="카운터 결제" loading="lazy" />
             <S.UsageTitle>카운터에서 결제</S.UsageTitle>
             <S.UsageDescription>
               카운터에서 오카운트 사용을 말씀하시고
@@ -146,7 +146,7 @@ function HowTo() {
           </S.UsageCard>
 
           <S.UsageCard>
-            <S.UsageIcon src="/assets/Mac.png" alt="키오스크 결제" />
+            <S.UsageIcon src="/assets/Mac.webp" alt="키오스크 결제" loading="lazy" />
             <S.UsageTitle>키오스크에서 결제</S.UsageTitle>
             <S.UsageDescription>
               키오스크에서 PIN 번호를 입력하여
