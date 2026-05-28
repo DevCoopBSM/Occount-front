@@ -9,7 +9,7 @@ export const PointLogWrap = styled.div<PointLogWrapProps>`
   justify-content: space-between;
   align-items: center;
   padding: 15px 25px;
-  background-color: ${props => props.backgroundColor || '#ffffff'};
+  background-color: ${(props) => props.backgroundColor || '#ffffff'};
   border-radius: 8px;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;

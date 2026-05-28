@@ -13,16 +13,19 @@ interface NoticeDetailModalProps {
 const NoticeDetailModal: React.FC<NoticeDetailModalProps> = ({
   isOpen,
   onRequestClose,
-  notice
+  notice,
 }) => {
   if (!notice) return null;
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).replace(/\. /g, '.').replace('.', '');
+    return new Date(date)
+      .toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      })
+      .replace(/\. /g, '.')
+      .replace('.', '');
   };
 
   return (
@@ -53,15 +56,13 @@ const NoticeDetailModal: React.FC<NoticeDetailModalProps> = ({
 
           <S.NoticeContentText
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(notice.content.replace(/\n/g, '<br/>'))
+              __html: DOMPurify.sanitize(notice.content.replace(/\n/g, '<br/>')),
             }}
           />
         </S.ModalContent>
 
         <S.ModalFooter>
-          <S.CloseFooterButton onClick={onRequestClose}>
-            닫기
-          </S.CloseFooterButton>
+          <S.CloseFooterButton onClick={onRequestClose}>닫기</S.CloseFooterButton>
         </S.ModalFooter>
       </S.ModalContainer>
     </Modal>

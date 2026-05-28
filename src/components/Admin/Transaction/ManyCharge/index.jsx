@@ -84,11 +84,7 @@ const ManyCharge = () => {
 
         <_.Infolist>
           <_.Infosearch>
-            <_.InfoInput
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="이름 검색"
-            />
+            <_.InfoInput value={searchTerm} onChange={handleSearchChange} placeholder="이름 검색" />
             <_.InfoInput
               value={studentIdSearchTerm}
               onChange={handleStudentIdSearchChange}

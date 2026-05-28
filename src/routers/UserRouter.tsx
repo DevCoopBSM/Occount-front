@@ -26,9 +26,30 @@ const UserRoutes: React.FC = () => {
         <Route path="howto" element={<HowTo />} />
         <Route path="notice" element={<NoticePage />} />
         <Route path="item-list" element={<ItemList />} />
-        <Route path="contact" element={<PrivateRoute><ContactPage /></PrivateRoute>} />
-        <Route path="update" element={<PrivateRoute><Update /></PrivateRoute>} />
-        <Route path="userlog" element={<PrivateRoute><UserLog /></PrivateRoute>} />
+        <Route
+          path="contact"
+          element={
+            <PrivateRoute>
+              <ContactPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="update"
+          element={
+            <PrivateRoute>
+              <Update />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="userlog"
+          element={
+            <PrivateRoute>
+              <UserLog />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/404" />} />
       </Route>
     </Routes>

@@ -89,9 +89,7 @@ const DataTable = ({ data }) => {
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {headers.map((header, columnIndex) => (
-              <StyledTd key={`${rowIndex}-${columnIndex}`}>
-                {row[header]}
-              </StyledTd>
+              <StyledTd key={`${rowIndex}-${columnIndex}`}>{row[header]}</StyledTd>
             ))}
           </tr>
         ))}

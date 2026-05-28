@@ -103,15 +103,15 @@ const Loading = () => {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     const radius = rect.width / 2;
-    
+
     const computedStyle = window.getComputedStyle(logoRef.current);
     const transform = computedStyle.getPropertyValue('transform');
     const matrix = new DOMMatrix(transform);
     const currentRotation = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
-    
+
     const rotationRad = (currentRotation * Math.PI) / 180;
-    const baseEyeAngle = Math.random() < 0.5 ?  2 * Math.PI / 5 : 3 * Math.PI / 4;
-    const eyeOffset = (Math.random() - 0.5) * Math.PI / 12;
+    const baseEyeAngle = Math.random() < 0.5 ? (2 * Math.PI) / 5 : (3 * Math.PI) / 4;
+    const eyeOffset = ((Math.random() - 0.5) * Math.PI) / 12;
     const tearAngle = rotationRad + baseEyeAngle + eyeOffset;
 
     return {
@@ -121,7 +121,7 @@ const Loading = () => {
       angle: tearAngle,
       distance: radius * 0.3,
       speed: 1.4,
-      opacity: 0.8 + Math.random() * 0.2
+      opacity: 0.8 + Math.random() * 0.2,
     };
   }, []);
 
@@ -130,7 +130,7 @@ const Loading = () => {
       const tearInterval = setInterval(() => {
         const newTear = generateTear();
         if (newTear) {
-          setTears(prevTears => [...prevTears, newTear]);
+          setTears((prevTears) => [...prevTears, newTear]);
         }
       }, 10);
       return () => clearInterval(tearInterval);
@@ -142,16 +142,21 @@ const Loading = () => {
   useEffect(() => {
     if (is500Error) {
       const animateTears = () => {
-        setTears(prevTears => 
-          prevTears.map(tear => ({
-            ...tear,
-            distance: tear.distance + tear.speed,
-            x: tear.centerX + Math.cos(tear.angle) * (tear.distance + tear.speed),
-            y: tear.centerY + Math.sin(tear.angle) * (tear.distance + tear.speed),
-          })).filter(tear => 
-            tear.x > -100 && tear.x < window.innerWidth + 100 && 
-            tear.y > -100 && tear.y < window.innerHeight + 100
-          )
+        setTears((prevTears) =>
+          prevTears
+            .map((tear) => ({
+              ...tear,
+              distance: tear.distance + tear.speed,
+              x: tear.centerX + Math.cos(tear.angle) * (tear.distance + tear.speed),
+              y: tear.centerY + Math.sin(tear.angle) * (tear.distance + tear.speed),
+            }))
+            .filter(
+              (tear) =>
+                tear.x > -100 &&
+                tear.x < window.innerWidth + 100 &&
+                tear.y > -100 &&
+                tear.y < window.innerHeight + 100
+            )
         );
       };
 
@@ -165,11 +170,29 @@ const Loading = () => {
 
   const renderLogo = () => {
     if (is500Error) {
-      return <img src={`${publicAssetBase}/assets/ulmangOring.svg`} alt="Error Oring" style={{width: '100%', height: '100%'}} />;
+      return (
+        <img
+          src={`${publicAssetBase}/assets/ulmangOring.svg`}
+          alt="Error Oring"
+          style={{ width: '100%', height: '100%' }}
+        />
+      );
     } else if (is400Error) {
-      return <img src={`${publicAssetBase}/assets/jjinggeulOring.svg`} alt="Warning Oring" style={{width: '100%', height: '100%'}} />;
+      return (
+        <img
+          src={`${publicAssetBase}/assets/jjinggeulOring.svg`}
+          alt="Warning Oring"
+          style={{ width: '100%', height: '100%' }}
+        />
+      );
     } else {
-      return <img src={`${publicAssetBase}/assets/happyOring.svg`} alt="Happy Oring" style={{width: '100%', height: '100%'}} />;
+      return (
+        <img
+          src={`${publicAssetBase}/assets/happyOring.svg`}
+          alt="Happy Oring"
+          style={{ width: '100%', height: '100%' }}
+        />
+      );
     }
   };
 
@@ -183,14 +206,14 @@ const Loading = () => {
         </LogoWrapper>
         {is500Error && (
           <TearsContainer>
-            {tears.map(tear => (
+            {tears.map((tear) => (
               <Tear
                 key={tear.id}
                 style={{
                   left: `${tear.x}px`,
                   top: `${tear.y}px`,
                   opacity: tear.opacity * Math.min(tear.distance / (tear.speed * 10), 1),
-                  transform: `scale(${Math.min(1 + tear.distance / 300, 1.5)})`
+                  transform: `scale(${Math.min(1 + tear.distance / 300, 1.5)})`,
                 }}
               />
             ))}

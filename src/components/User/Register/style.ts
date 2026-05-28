@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import { animated } from 'react-spring';
 
 // 인터페이스 정의
@@ -9,12 +9,6 @@ interface ToggleButtonProps {
 interface NavigationButtonProps {
   isPrev?: boolean;
 }
-
-
-
-
-
-
 
 export const Container = styled.div`
   display: flex;
@@ -61,8 +55,8 @@ export const ToggleButtonContainer = styled.div`
 export const ToggleButton = styled.button<ToggleButtonProps>`
   width: 32%;
   height: 80px;
-  background-color: ${({ active }) => (active ? "#F49E15" : "transparent")};
-  color: ${({ active }) => (active ? "white" : "#F49E15")};
+  background-color: ${({ active }) => (active ? '#F49E15' : 'transparent')};
+  color: ${({ active }) => (active ? 'white' : '#F49E15')};
   border: 2px solid #F49E15;
   border-radius: 12px;
   font-size: 22px;
@@ -74,7 +68,7 @@ export const ToggleButton = styled.button<ToggleButtonProps>`
   text-overflow: ellipsis;
 
   &:hover {
-    background-color: ${({ active }) => (active ? "#E08C00" : "#FFF5E6")};
+    background-color: ${({ active }) => (active ? '#E08C00' : '#FFF5E6')};
   }
 `;
 
@@ -89,8 +83,8 @@ export const ButtonContainer = styled.div`
 export const NavigationButton = styled.button<NavigationButtonProps>`
   width: 48%;
   height: 60px;
-  background-color: ${props => props.isPrev ? '#D9D9D9' : '#F49E15'};
-  color: ${props => props.isPrev ? '#333' : 'white'};
+  background-color: ${(props) => (props.isPrev ? '#D9D9D9' : '#F49E15')};
+  color: ${(props) => (props.isPrev ? '#333' : 'white')};
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -99,7 +93,7 @@ export const NavigationButton = styled.button<NavigationButtonProps>`
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${props => props.isPrev ? '#C0C0C0' : '#E08C00'};
+    background-color: ${(props) => (props.isPrev ? '#C0C0C0' : '#E08C00')};
   }
 
   &:disabled {
@@ -392,7 +386,7 @@ export const ErrorMessage = styled.p<{ isVisible: boolean }>`
   color: #f44336;
   font-size: 14px;
   margin-top: 5px;
-  display: ${props => props.isVisible ? 'block' : 'none'};
+  display: ${(props) => (props.isVisible ? 'block' : 'none')};
 `;
 
 export const PasswordContainer = styled.div`
@@ -406,7 +400,7 @@ export const SuccessMessage = styled.p<{ isVisible: boolean }>`
   color: #4CAF50;
   font-size: 14px;
   margin-top: 5px;
-  display: ${props => props.isVisible ? 'block' : 'none'};
+  display: ${(props) => (props.isVisible ? 'block' : 'none')};
 `;
 
 export const PinContainer = styled.div`
@@ -500,8 +494,8 @@ export const StyledButton = styled.button<{ variant?: 'primary' | 'secondary' }>
   cursor: pointer;
   transition: all 0.2s ease;
 
-  background-color: ${props => props.variant === 'primary' ? '#F49E15' : '#E0E0E0'};
-  color: ${props => props.variant === 'primary' ? 'white' : '#333'};
+  background-color: ${(props) => (props.variant === 'primary' ? '#F49E15' : '#E0E0E0')};
+  color: ${(props) => (props.variant === 'primary' ? 'white' : '#333')};
 
   &:hover {
     opacity: 0.9;

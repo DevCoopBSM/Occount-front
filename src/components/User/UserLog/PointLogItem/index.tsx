@@ -50,15 +50,23 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
 
   const formatDate = (dateArray: number[] | undefined): Date => {
     if (Array.isArray(dateArray) && dateArray.length === 6) {
-      return new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
+      return new Date(
+        dateArray[0],
+        dateArray[1] - 1,
+        dateArray[2],
+        dateArray[3],
+        dateArray[4],
+        dateArray[5]
+      );
     }
     return new Date();
   };
 
   const date = formatDate(item.chargeDate ?? item.payDate);
-  const innerPoint = item.chargedPoint
-    ?? item.payedPoint
-    ?? (isMockLogItem(item) ? item.chargeAmount ?? item.paymentAmount ?? 0 : 0);
+  const innerPoint =
+    item.chargedPoint ??
+    item.payedPoint ??
+    (isMockLogItem(item) ? (item.chargeAmount ?? item.paymentAmount ?? 0) : 0);
   const serializedInnerPoint = innerPoint.toString();
   const itemType = item.chargeType ?? item.payType;
 
@@ -74,10 +82,14 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   const getTransactionType = () => {
     if (type !== 1) return '포인트 사용';
     switch (itemType) {
-      case '1': return '오프라인 충전';
-      case '2': return '카드 충전';
-      case '3': return '계좌 충전';
-      default: return '기타 충전';
+      case '1':
+        return '오프라인 충전';
+      case '2':
+        return '카드 충전';
+      case '3':
+        return '계좌 충전';
+      default:
+        return '기타 충전';
     }
   };
 
@@ -116,7 +128,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
                 };
                 const refundAccountForRequest: RefundAccount = {
                   bank: refundAccount.bank,
-                  accountNumber: refundAccount.accountNumber,  // number를 accountNumber로 매핑
+                  accountNumber: refundAccount.accountNumber, // number를 accountNumber로 매핑
                   holderName: refundAccount.holderName,
                 };
                 handleRefundRequest(
@@ -140,12 +152,14 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
 
   return (
     <div>
-      <_.PointLogWrap
-        onClick={handleItemClick}
-        style={{ background: getBackgroundColor() }}
-      >
+      <_.PointLogWrap onClick={handleItemClick} style={{ background: getBackgroundColor() }}>
         <_.LeftSection>
-          <_.DateText>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '/').replace(/\./g, '')}</_.DateText>
+          <_.DateText>
+            {date
+              .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+              .replace(/\. /g, '/')
+              .replace(/\./g, '')}
+          </_.DateText>
           <_.AmountText>{`${innerPoint.toLocaleString()}원`}</_.AmountText>
         </_.LeftSection>
         <_.ChargeTypeText>{getTransactionType()}</_.ChargeTypeText>
@@ -155,11 +169,22 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
         <_.DetailWrap>
           <_.DetailRow>
             <_.DetailLabel>날짜:</_.DetailLabel>
-            <_.DetailValue>{date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.').slice(0, -1)}</_.DetailValue>
+            <_.DetailValue>
+              {date
+                .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+                .replace(/\./g, '.')
+                .slice(0, -1)}
+            </_.DetailValue>
           </_.DetailRow>
           <_.DetailRow>
             <_.DetailLabel>시간:</_.DetailLabel>
-            <_.DetailValue>{date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</_.DetailValue>
+            <_.DetailValue>
+              {date.toLocaleTimeString('ko-KR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              })}
+            </_.DetailValue>
           </_.DetailRow>
           <_.DetailRow>
             <_.DetailLabel>금액:</_.DetailLabel>

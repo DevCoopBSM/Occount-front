@@ -20,7 +20,13 @@ const ChevronForwardIcon: React.FC<IconProps> = ({
     aria-hidden={props['aria-label'] ? undefined : true}
     {...props}
   >
-    <path d="M9 18L15 12L9 6" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M9 18L15 12L9 6"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 

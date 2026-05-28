@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { axiosInstance } from "utils/Axios";
+import { axiosInstance } from 'utils/Axios';
 import { LogItem, RefundAccount } from './types';
 
 interface RefundResponse {
@@ -25,7 +25,7 @@ export const handleRefundRequest = async (
     const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     if (dayDiff > 7) {
-      alert("충전한지 1주일이 초과된 건은 환불할 수 없습니다.");
+      alert('충전한지 1주일이 초과된 건은 환불할 수 없습니다.');
       return;
     }
 
@@ -35,13 +35,15 @@ export const handleRefundRequest = async (
 
     if (confirmed) {
       try {
-        const requestData: { chargeId: number; refundAccount?: RefundAccount } = { chargeId: item.chargeId };
+        const requestData: { chargeId: number; refundAccount?: RefundAccount } = {
+          chargeId: item.chargeId,
+        };
         if (itemType === 3 && refundAccount) {
           requestData.refundAccount = refundAccount;
         }
 
-        const response = await axiosInstance.post<RefundResponse>("v2/pg/refund", requestData);
-        
+        const response = await axiosInstance.post<RefundResponse>('v2/pg/refund', requestData);
+
         if (response.data.success) {
           alert(`환불 신청이 완료되었습니다: ${response.data.message}`);
           await fetchUserLog(type);
@@ -58,6 +60,6 @@ export const handleRefundRequest = async (
       }
     }
   } else {
-    alert("온라인 결제가 아닌 항목은 환불할 수 없습니다.");
+    alert('온라인 결제가 아닌 항목은 환불할 수 없습니다.');
   }
 };

@@ -4,7 +4,7 @@ export const Container = styled.div<{ color: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${props => props.color};
+  background-color: ${(props) => props.color};
   padding: 15px 20px;
   border-radius: 12px;
   margin: 15px 0;

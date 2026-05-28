@@ -3,19 +3,13 @@ import type { BaseIconProps } from './types';
 
 export interface IconProps extends BaseIconProps {}
 
-export const MailIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = 'currentColor',
-  ...props
-}) => (
+export const MailIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', ...props }) => (
   <svg
     viewBox="0 0 24 24"
     width={size}
     height={size}
     fill="none"
-    aria-hidden={
-      props['aria-label'] || props['aria-labelledby'] ? undefined : true
-    }
+    aria-hidden={props['aria-label'] || props['aria-labelledby'] ? undefined : true}
     {...props}
   >
     <path

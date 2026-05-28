@@ -81,9 +81,7 @@ export const HeaderLink = styled(Link)`
   width: 120px;
   height: 50px;
   background-color: ${(props) =>
-    props['data-isactive'] === 'true'
-      ? '#F7BD4C'
-      : '#51515e'}; // 노란색으로 변경
+    props['data-isactive'] === 'true' ? '#F7BD4C' : '#51515e'}; // 노란색으로 변경
   font-size: 15px;
   color: #fff;
   display: flex;

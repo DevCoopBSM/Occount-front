@@ -1,27 +1,24 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from "contexts/authContext";
-import * as L from "./style";
-import { PageTitle } from "./style";
+import { useAuth } from 'contexts/authContext';
+import * as L from './style';
+import { PageTitle } from './style';
 
 function AdminLogin() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    unifiedLogin,
-    errorMessage
-  } = useAuth();
+  const { unifiedLogin, errorMessage } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
 
-    if (name === "email") {
+    if (name === 'email') {
       setEmail(value);
-    } else if (name === "password") {
+    } else if (name === 'password') {
       setPassword(value);
     }
   };
@@ -31,7 +28,7 @@ function AdminLogin() {
     try {
       await unifiedLogin(email, password, navigate, true); // <-- AdminLogin이므로 admin을 true로 설정
     } catch (error) {
-      console.error("AdminLogin component error:", error);
+      console.error('AdminLogin component error:', error);
     }
   };
 
@@ -58,9 +55,7 @@ function AdminLogin() {
       </L.LoginWrap>
       {errorMessage && location.pathname === '/admin/login' && (
         <L.ModalOverlay>
-          <L.ModalContent>
-            {errorMessage}
-          </L.ModalContent>
+          <L.ModalContent>{errorMessage}</L.ModalContent>
         </L.ModalOverlay>
       )}
     </div>

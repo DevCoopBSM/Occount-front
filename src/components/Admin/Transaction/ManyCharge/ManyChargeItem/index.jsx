@@ -50,7 +50,8 @@ export const ManyChargeItem = ({
               />
             </_.Infochoose>
             <_.Infochoose>
-              <_.Infotext>{student.stuNumber || 'N/A'}</_.Infotext> {/* 학번이 없는 경우 "N/A"로 표시 */}
+              <_.Infotext>{student.stuNumber || 'N/A'}</_.Infotext>{' '}
+              {/* 학번이 없는 경우 "N/A"로 표시 */}
             </_.Infochoose>
             <_.Infochoose>
               <_.Infotext>{student.stuName}</_.Infotext>

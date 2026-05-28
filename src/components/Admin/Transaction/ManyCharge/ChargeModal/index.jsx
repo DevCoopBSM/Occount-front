@@ -66,10 +66,12 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
     try {
       const response = await BulkCharge(selectedStudents, chargedPoint);
       if (response && response.chargesList && response.chargesList.length > 0) {
-        const resultMessages = response.chargesList.map(
-          (result) =>
-            `학생 ${result.userName} (${result.userCode}): 이전 포인트 ${result.beforePoint} -> 이후 포인트 ${result.afterPoint} (충전 포인트: ${result.chargedPoint})`
-        ).join('\n');
+        const resultMessages = response.chargesList
+          .map(
+            (result) =>
+              `학생 ${result.userName} (${result.userCode}): 이전 포인트 ${result.beforePoint} -> 이후 포인트 ${result.afterPoint} (충전 포인트: ${result.chargedPoint})`
+          )
+          .join('\n');
         alert(`충전 결과:\n${resultMessages}`);
 
         // 충전이 성공적으로 완료되면 체크박스를 해제
@@ -98,9 +100,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
       <S.Infobutton onClick={handleBulkModalClick}>일괄충전</S.Infobutton>
       <Modal isOpen={modalOpen}>
         <S.TitleWrap>
-          <S.ContentTitle>
-            선택한 학생들에게 포인트를 일괄 충전합니다.
-          </S.ContentTitle>
+          <S.ContentTitle>선택한 학생들에게 포인트를 일괄 충전합니다.</S.ContentTitle>
         </S.TitleWrap>
         <S.StudentList>
           {studentsInfo.map((student) => (
@@ -113,11 +113,7 @@ const StudentCharge = ({ selectedStudents, setSelectedStudents }) => {
         <S.PointWrap>
           <S.PointInTop>
             <S.InfoText color="#8A8A8A">포인트</S.InfoText>
-            <S.PointInput
-              name="point"
-              value={chargedPoint}
-              onChange={handlePointChange}
-            />
+            <S.PointInput name="point" value={chargedPoint} onChange={handlePointChange} />
           </S.PointInTop>
           <S.PointBottom>
             <span>관리자: {user?.name}</span> {/* authContext에서 가져온 사용자 이름 사용 */}

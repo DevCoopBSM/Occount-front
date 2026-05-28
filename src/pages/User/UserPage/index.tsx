@@ -9,7 +9,9 @@ function UserLayout() {
     <P.PageWrap>
       <P.PageContainer>
         <UserHeader />
-        <main><Outlet /></main>
+        <main>
+          <Outlet />
+        </main>
         <Footer />
       </P.PageContainer>
     </P.PageWrap>

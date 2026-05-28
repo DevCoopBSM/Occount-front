@@ -5,11 +5,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
   color?: string;
 }
 
-const ChevronRightIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = 'currentColor',
-  ...props
-}) => (
+const ChevronRightIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', ...props }) => (
   <svg
     viewBox="0 0 30 30"
     width={size}

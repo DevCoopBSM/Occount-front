@@ -107,7 +107,6 @@ export const NoticeDate = styled.span`
   }
 `;
 
-
 export const NoticeContentText = styled.div`
   font-family: 'Pretendard', sans-serif;
   font-weight: 400;

@@ -12,4 +12,3 @@ export const handleCharge = async ({ userCode, chargedPoint }) => {
     throw error; // 에러를 던져 상위 컴포넌트에서 처리할 수 있게 합니다.
   }
 };
-

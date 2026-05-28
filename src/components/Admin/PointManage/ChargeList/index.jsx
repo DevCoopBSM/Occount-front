@@ -31,7 +31,7 @@ const ReceiptCheck = () => {
             최종포인트: parseInt(item.point) + parseInt(item.inner_point),
             충전담당ID: item.charger_id,
             거래일시: PrettyDateTime(item.date),
-            환불상태: item.refundState
+            환불상태: item.refundState,
           }));
           setData(remappedData);
         }

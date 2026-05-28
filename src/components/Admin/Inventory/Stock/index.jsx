@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Modal from "components/Modal";
+import React, { useState } from 'react';
+import Modal from 'components/Modal';
 
 const Stock = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const closeModal = () => {
     setModalOpen(false);
-};
+  };
 
   return (
     <>

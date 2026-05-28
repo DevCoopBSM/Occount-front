@@ -42,7 +42,6 @@ export const InfoInput = styled.input`
   margin-bottom: 10px;
 `;
 
-
 export const ItemList = styled.ul`
   max-height: 200px;
   overflow-y: scroll;

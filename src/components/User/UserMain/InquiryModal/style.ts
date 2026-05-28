@@ -205,7 +205,7 @@ export const InquiryItem = styled.div<InquiryItemProps>`
   padding: 16px;
   margin-bottom: 12px;
   cursor: pointer;
-  background-color: ${props => (props.$hasAnswer ? '#f8fff8' : '#ffffff')};
+  background-color: ${(props) => (props.$hasAnswer ? '#f8fff8' : '#ffffff')};
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
@@ -251,7 +251,7 @@ export const InquiryContent = styled.p`
 `;
 
 export const InquiryAnswer = styled.div<InquiryAnswerProps>`
-  color: ${props => (props.$hasAnswer ? '#000' : '#999')};
+  color: ${(props) => (props.$hasAnswer ? '#000' : '#999')};
   margin-top: 10px;
   padding: 10px;
   background-color: #f9f9f9;
@@ -281,17 +281,17 @@ export const Pagination = styled.div`
 
 export const PageNumber = styled.span<{ disabled?: boolean }>`
   margin: 0 10px;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   font-size: 14px;
-  color: ${props => props.disabled ? '#999' : '#666'};
+  color: ${(props) => (props.disabled ? '#999' : '#666')};
   padding: 5px 10px;
-  border: 1px solid ${props => props.disabled ? '#999' : '#f0ce00'};
+  border: 1px solid ${(props) => (props.disabled ? '#999' : '#f0ce00')};
   border-radius: 4px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${props => props.disabled ? 'transparent' : '#f0ce00'};
-    color: ${props => props.disabled ? '#999' : 'white'};
+    background-color: ${(props) => (props.disabled ? 'transparent' : '#f0ce00')};
+    color: ${(props) => (props.disabled ? '#999' : 'white')};
   }
 `;
 

@@ -39,19 +39,19 @@ export const AccountStep: React.FC<AccountStepProps> = ({
   const fadeIn = useSpring({
     opacity: 1,
     from: { opacity: 0 },
-    config: { duration: 500 }
+    config: { duration: 500 },
   });
 
   const confirmPasswordSpring = useSpring({
     opacity: formData.userPassword ? 1 : 0,
     height: formData.userPassword ? 'auto' : 0,
-    config: { tension: 300, friction: 20 }
+    config: { tension: 300, friction: 20 },
   });
 
   return (
     <R.AnimatedContainer style={fadeIn}>
       <R.StepTitle>계정 정보 입력</R.StepTitle>
-      
+
       <R.InputContainer>
         <R.InputLabel>이메일</R.InputLabel>
         {userType === UserType.STUDENT || userType === UserType.TEACHER ? (
@@ -61,7 +61,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({
               name="userEmail"
               value={emailPrefix}
               onChange={onInputChange}
-              placeholder={userType === UserType.STUDENT ? "학생 학교 계정명" : "교사 학교 계정명"}
+              placeholder={userType === UserType.STUDENT ? '학생 학교 계정명' : '교사 학교 계정명'}
               required
             />
             <R.EmailDomain>@bssm.hs.kr</R.EmailDomain>
@@ -76,9 +76,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({
             required
           />
         )}
-        {errors.userEmail && 
-          <R.ErrorMessage isVisible={true}>{errors.userEmail}</R.ErrorMessage>
-        }
+        {errors.userEmail && <R.ErrorMessage isVisible={true}>{errors.userEmail}</R.ErrorMessage>}
       </R.InputContainer>
 
       <R.PasswordContainer>
@@ -120,26 +118,19 @@ export const AccountStep: React.FC<AccountStepProps> = ({
           </R.InputContainer>
         </animated.div>
 
-        {formData.confirmPassword && (
-          passwordMatch ? (
-            <R.SuccessMessage isVisible={true}>
-              비밀번호가 일치합니다.
-            </R.SuccessMessage>
+        {formData.confirmPassword &&
+          (passwordMatch ? (
+            <R.SuccessMessage isVisible={true}>비밀번호가 일치합니다.</R.SuccessMessage>
           ) : (
-            <R.ErrorMessage isVisible={true}>
-              {ERROR_MESSAGES.PASSWORD_MISMATCH}
-            </R.ErrorMessage>
-          )
-        )}
+            <R.ErrorMessage isVisible={true}>{ERROR_MESSAGES.PASSWORD_MISMATCH}</R.ErrorMessage>
+          ))}
       </R.PasswordContainer>
 
       <R.ButtonContainer>
         <R.NavigationButton onClick={onPrev} isPrev>
           이전
         </R.NavigationButton>
-        <R.NavigationButton onClick={onNext}>
-          다음
-        </R.NavigationButton>
+        <R.NavigationButton onClick={onNext}>다음</R.NavigationButton>
       </R.ButtonContainer>
     </R.AnimatedContainer>
   );

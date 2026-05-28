@@ -15,7 +15,7 @@ interface Item {
   isHot?: boolean;
 }
 
-const fallbackItems: Item[] = mockProducts.map(product => ({
+const fallbackItems: Item[] = mockProducts.map((product) => ({
   itemId: product.id,
   itemName: product.title,
   itemCode: `MOCK-${product.id}`,
@@ -25,16 +25,7 @@ const fallbackItems: Item[] = mockProducts.map(product => ({
   isHot: product.badge === 'hot',
 }));
 
-const categories = [
-  '전체보기',
-  '과자',
-  '아이스크림',
-  '음료',
-  '냉동식품',
-  '빵류',
-  '식품',
-  '잡화'
-];
+const categories = ['전체보기', '과자', '아이스크림', '음료', '냉동식품', '빵류', '식품', '잡화'];
 
 const ItemList: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -49,12 +40,12 @@ const ItemList: React.FC = () => {
 
     // 카테고리 필터
     if (selectedCategory !== '전체보기') {
-      filtered = filtered.filter(item => item.category === selectedCategory);
+      filtered = filtered.filter((item) => item.category === selectedCategory);
     }
 
     // 검색어 필터
     if (searchTerm.trim() !== '') {
-      filtered = filtered.filter(item =>
+      filtered = filtered.filter((item) =>
         item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -80,7 +71,11 @@ const ItemList: React.FC = () => {
       setError(null);
       const response = await axiosInstance.get('v2/item/');
 
-      if (response.status === 204 || !response.data.itemList || response.data.itemList.length === 0) {
+      if (
+        response.status === 204 ||
+        !response.data.itemList ||
+        response.data.itemList.length === 0
+      ) {
         setItems([]);
         setFilteredItems([]);
       } else {
@@ -156,14 +151,10 @@ const ItemList: React.FC = () => {
             <S.ProductCard key={item.itemId}>
               <S.ProductInfo>
                 {(item.isNew || item.isHot) && (
-                  <S.Badge type={item.isNew ? 'new' : 'hot'}>
-                    {item.isNew ? 'NEW' : 'HOT'}
-                  </S.Badge>
+                  <S.Badge type={item.isNew ? 'new' : 'hot'}>{item.isNew ? 'NEW' : 'HOT'}</S.Badge>
                 )}
                 <S.ProductTitle>{item.itemName}</S.ProductTitle>
-                <S.ProductPrice>
-                  {item.itemPrice.toLocaleString()} 원
-                </S.ProductPrice>
+                <S.ProductPrice>{item.itemPrice.toLocaleString()} 원</S.ProductPrice>
               </S.ProductInfo>
             </S.ProductCard>
           ))}

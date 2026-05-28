@@ -53,12 +53,12 @@ export const CategoryTab = styled.button<{ $active: boolean }>`
   padding: 16px 28px;
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: ${props => props.$active ? 600 : 500};
+  font-weight: ${(props) => (props.$active ? 600 : 500)};
   line-height: 1;
-  color: ${props => props.$active ? '#111111' : '#666666'};
-  background: ${props => props.$active ? '#FCC800' : '#FFFFFF'};
+  color: ${(props) => (props.$active ? '#111111' : '#666666')};
+  background: ${(props) => (props.$active ? '#FCC800' : '#FFFFFF')};
   border-radius: 999px;
-  border: 1px solid ${props => props.$active ? '#FCC800' : '#EFEFEF'};
+  border: 1px solid ${(props) => (props.$active ? '#FCC800' : '#EFEFEF')};
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -154,11 +154,11 @@ export const Badge = styled.div<{ type: 'new' | 'hot' }>`
   width: fit-content;
   padding: 4px 12px;
   border-radius: 999px;
-  background: ${props => props.type === 'new' ? '#FCC800' : '#F49E15'};
+  background: ${(props) => (props.type === 'new' ? '#FCC800' : '#F49E15')};
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.type === 'new' ? '#111111' : '#FFFFFF'};
+  color: ${(props) => (props.type === 'new' ? '#111111' : '#FFFFFF')};
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     font-size: 16px;

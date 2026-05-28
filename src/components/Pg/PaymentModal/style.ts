@@ -7,12 +7,12 @@ const LAPTOP_BREAKPOINT = '1440px';
 // Modal에 전달할 스타일 객체들
 export const getModalStyle = () => {
   return {
-    width: "600px",
-    maxWidth: "90%",
-    maxHeight: "95vh",
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "32px"
+    width: '600px',
+    maxWidth: '90%',
+    maxHeight: '95vh',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '32px',
   };
 };
 

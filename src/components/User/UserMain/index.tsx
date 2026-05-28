@@ -60,13 +60,16 @@ function Main() {
     }
   }, [isLoggedIn]);
 
-  const handleNavigateToProtectedPage = useCallback((path: string): void => {
-    if (isLoggedIn) {
-      navigate(path);
-    } else {
-      setShowLoginToast(true);
-    }
-  }, [isLoggedIn, navigate]);
+  const handleNavigateToProtectedPage = useCallback(
+    (path: string): void => {
+      if (isLoggedIn) {
+        navigate(path);
+      } else {
+        setShowLoginToast(true);
+      }
+    },
+    [isLoggedIn, navigate]
+  );
 
   const handleCloseLoginToast = useCallback((): void => {
     setShowLoginToast(false);
@@ -92,13 +95,12 @@ function Main() {
     if (USE_MOCK_DATA) {
       setProducts(mockProducts);
       // 모든 공지사항을 하나로 통합 (중요도 높은 것부터 표시)
-      const combinedNotices = [...mockNotices, ...mockAnnouncements]
-        .sort((a, b) => {
-          // 중요도가 높은 것 먼저, 그 다음 최신순
-          if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
-          if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
-          return parseNoticeDate(b.date) - parseNoticeDate(a.date);
-        });
+      const combinedNotices = [...mockNotices, ...mockAnnouncements].sort((a, b) => {
+        // 중요도가 높은 것 먼저, 그 다음 최신순
+        if (a.importance === 'HIGH' && b.importance !== 'HIGH') return -1;
+        if (a.importance !== 'HIGH' && b.importance === 'HIGH') return 1;
+        return parseNoticeDate(b.date) - parseNoticeDate(a.date);
+      });
       setAllNotices(combinedNotices);
       return;
     }
@@ -122,7 +124,7 @@ function Main() {
 
         setAllNotices(sortedNotices);
       } catch (error) {
-        console.error('공지사항 로딩 에러:', error)
+        console.error('공지사항 로딩 에러:', error);
         setAllNotices([]);
       }
     };
@@ -144,7 +146,7 @@ function Main() {
 
   const filteredProducts = useMemo(() => {
     if (selectedCategory === '전체보기') return products;
-    return products.filter(product => product.category === selectedCategory);
+    return products.filter((product) => product.category === selectedCategory);
   }, [products, selectedCategory]);
 
   const productRows = useMemo(() => {
@@ -173,9 +175,7 @@ function Main() {
               </S.BalanceInfo>
             </S.BalanceContentLeft>
 
-            {isLoggedIn && user?.code && (
-              <S.VerticalDivider />
-            )}
+            {isLoggedIn && user?.code && <S.VerticalDivider />}
 
             {isLoggedIn && user?.code && (
               <S.BarcodeRightSection>
@@ -193,7 +193,6 @@ function Main() {
               </S.BarcodeRightSection>
             )}
           </S.BalanceCard>
-
         </S.TopCardsContainer>
 
         {/* 현재 매장 인원 기능 재도입 전까지는 UI에서 숨김 */}
@@ -210,12 +209,10 @@ function Main() {
             </S.NoticeSectionTitle>
             <S.NoticeList>
               {allNotices.length ? (
-                allNotices.slice(0, 5).map(notice => (
+                allNotices.slice(0, 5).map((notice) => (
                   <S.NoticeItem key={notice.id}>
                     <span className="meta">
-                      <span className="title">
-                        {notice.title}
-                      </span>
+                      <span className="title">{notice.title}</span>
                       <span className="date">{notice.date}</span>
                     </span>
                   </S.NoticeItem>
@@ -287,7 +284,7 @@ function Main() {
 
             {/* 카테고리 탭 */}
             <S.CategoryTabBar>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <S.CategoryTab
                   key={category}
                   type="button"
@@ -306,7 +303,7 @@ function Main() {
             {productRows.length ? (
               productRows.map((row, rowIndex) => (
                 <S.ProductCardRow key={rowIndex}>
-                  {row.map(product => (
+                  {row.map((product) => (
                     <S.ProductCard key={product.id}>
                       {product.badge && (
                         <S.ProductBadge type={product.badge}>
@@ -316,7 +313,11 @@ function Main() {
                       <S.ProductInfo>
                         <h3>{product.title}</h3>
                         <div className="price">
-                          <span>{product.price !== undefined ? product.price.toLocaleString() : '가격 정보 없음'}</span>
+                          <span>
+                            {product.price !== undefined
+                              ? product.price.toLocaleString()
+                              : '가격 정보 없음'}
+                          </span>
                           {product.price !== undefined && <span>원</span>}
                         </div>
                       </S.ProductInfo>
@@ -339,9 +340,9 @@ function Main() {
       </S.MainContent>
 
       {/* 향후 충전 기능 재활성화를 위해 모달/state 로직은 유지하고, 현재는 UI 트리거를 노출하지 않음 */}
-      <PaymentModal 
+      <PaymentModal
         type="charge"
-        isOpen={isChargeModalOpen} 
+        isOpen={isChargeModalOpen}
         onRequestClose={handleCloseChargeModal}
         user={user as User}
         maxAmount={50000}
@@ -352,7 +353,6 @@ function Main() {
         onRequestClose={handleCloseInquiryModal}
         user={user as User}
       />
-
 
       <InvestmentModal
         isOpen={showInvestmentModal}
@@ -369,6 +369,6 @@ function Main() {
       />
     </>
   );
-};
+}
 
 export default Main;

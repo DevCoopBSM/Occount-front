@@ -37,10 +37,7 @@ const InstallPrompt = () => {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
-      window.removeEventListener(
-        'beforeinstallprompt',
-        handleBeforeInstallPrompt,
-      );
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
@@ -91,9 +88,7 @@ const InstallPrompt = () => {
         </IconWrapper>
         <TextContent>
           <Title>앱으로 더 편하게 이용해보세요! 😉</Title>
-          <Description>
-            더 빠른 접속과 함께 앱과 같은 경험을 제공합니다.
-          </Description>
+          <Description>더 빠른 접속과 함께 앱과 같은 경험을 제공합니다.</Description>
         </TextContent>
       </LeftContent>
 

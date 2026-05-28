@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-const mediaQuery = (breakpoint: string): string =>
-  `@media (max-width: ${breakpoint})`;
+const mediaQuery = (breakpoint: string): string => `@media (max-width: ${breakpoint})`;
 
 const slideIn = keyframes`
   from {

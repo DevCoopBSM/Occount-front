@@ -13,9 +13,7 @@ export const MenuBookIcon: React.FC<IconProps> = ({
     width={size}
     height={size}
     fill="none"
-    aria-hidden={
-      props['aria-label'] || props['aria-labelledby'] ? undefined : true
-    }
+    aria-hidden={props['aria-label'] || props['aria-labelledby'] ? undefined : true}
     {...props}
   >
     <path

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import PaymentsCheck from "../TransactionCheck"; // 통합된 체크 컴포넌트 사용
-import TransactionLog from "../TransactionLog"; // 통합된 로그 컴포넌트 사용
-import * as C from "../Complete/style";
-import * as _ from "./style";
-import * as P from "common/PageWrapStyle";
-import { color } from "constants/color";
-import { useLocation } from "react-router-dom";
-import { useAuth } from "contexts/authContext"; // AuthContext에서 데이터를 가져옴
-import axiosInstance from "utils/Axios"; // axiosInstance 임포트
+import React, { useState, useEffect } from 'react';
+import PaymentsCheck from '../TransactionCheck'; // 통합된 체크 컴포넌트 사용
+import TransactionLog from '../TransactionLog'; // 통합된 로그 컴포넌트 사용
+import * as C from '../Complete/style';
+import * as _ from './style';
+import * as P from 'common/PageWrapStyle';
+import { color } from 'constants/color';
+import { useLocation } from 'react-router-dom';
+import { useAuth } from 'contexts/authContext'; // AuthContext에서 데이터를 가져옴
+import axiosInstance from 'utils/Axios'; // axiosInstance 임포트
 
 const Payments = () => {
   const location = useLocation();
@@ -15,12 +15,12 @@ const Payments = () => {
   const { user } = useAuth(); // AuthContext에서 사용자 정보를 가져옴
 
   const [state, setState] = useState({
-    charger: user?.name || "", // 컨텍스트에서 가져온 adminName을 사용
-    userName: "",
-    userPoint: "",
-    variousPoint: "",
-    userCode: initialUserCode || "",
-    errorMessage: "",
+    charger: user?.name || '', // 컨텍스트에서 가져온 adminName을 사용
+    userName: '',
+    userPoint: '',
+    variousPoint: '',
+    userCode: initialUserCode || '',
+    errorMessage: '',
   });
 
   // 서버로부터 사용자 정보를 받아오는 함수
@@ -36,7 +36,7 @@ const Payments = () => {
         userPoint,
       }));
     } catch (error) {
-      console.log("사용자 정보를 가져오는데 실패했습니다.", error);
+      console.log('사용자 정보를 가져오는데 실패했습니다.', error);
     }
   };
 
@@ -51,18 +51,18 @@ const Payments = () => {
     const { name, value } = e.target;
 
     const isNumeric = /^\d+$/; // 숫자만 포함하는 정규 표현식
-    if (name === "variousPoint" && (!isNumeric.test(value) || parseInt(value, 10) < 1)) {
+    if (name === 'variousPoint' && (!isNumeric.test(value) || parseInt(value, 10) < 1)) {
       setState((prevState) => ({
         ...prevState,
-        variousPoint: "자연수로 입력해주세요", // 오류 메시지를 `variousPoint`에 설정
-        errorMessage: "point value error", // 오류 메시지 설정 (이것은 선택적입니다. 필요에 따라 사용하거나 제거할 수 있습니다.)
+        variousPoint: '자연수로 입력해주세요', // 오류 메시지를 `variousPoint`에 설정
+        errorMessage: 'point value error', // 오류 메시지 설정 (이것은 선택적입니다. 필요에 따라 사용하거나 제거할 수 있습니다.)
       }));
 
       setTimeout(() => {
         setState((prevState) => ({
           ...prevState,
-          variousPoint: "",
-          errorMessage: "",
+          variousPoint: '',
+          errorMessage: '',
         }));
       }, 2000);
       return;
@@ -71,7 +71,7 @@ const Payments = () => {
     setState((prevState) => ({
       ...prevState,
       [name]: value,
-      errorMessage: "",
+      errorMessage: '',
     }));
   };
 
@@ -85,13 +85,9 @@ const Payments = () => {
           </C.StudentInfoDetail>
         </C.StudentInfo>
 
-        <C.ExChangeDetailWrap
-          width={"900px"}
-          paddingTop={"10px"}
-          marginTop={"5px"}
-        >
+        <C.ExChangeDetailWrap width={'900px'} paddingTop={'10px'} marginTop={'5px'}>
           <C.InfoText color={color.default}>남은 금액</C.InfoText>
-          <C.Exchange fontSize={"30px"} fontWeight={"700"}>
+          <C.Exchange fontSize={'30px'} fontWeight={'700'}>
             {state.userPoint.toLocaleString()}원
           </C.Exchange>
         </C.ExChangeDetailWrap>

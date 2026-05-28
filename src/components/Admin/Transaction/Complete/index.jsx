@@ -1,7 +1,7 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import * as _ from "./style";
-import { color } from "constants/color";
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import * as _ from './style';
+import { color } from 'constants/color';
 
 const Complete = () => {
   const location = useLocation();
@@ -9,16 +9,16 @@ const Complete = () => {
 
   const dataFromState = location.state?.data || {};
 
-  console.log("Received Data:", dataFromState); // 추가: 이 부분에서 받은 데이터 확인
+  console.log('Received Data:', dataFromState); // 추가: 이 부분에서 받은 데이터 확인
 
-  const transactionType = dataFromState.plusPoint ? "충전" : "결제";
+  const transactionType = dataFromState.plusPoint ? '충전' : '결제';
   const transactionAmount = dataFromState.chargedPoint || dataFromState.payedPoint;
   const oldPoint = dataFromState.oldPoint;
   const newPoint = dataFromState.newPoint;
   const studentName = dataFromState.studentName;
 
   const GoBack = () => {
-    navigate("/admin/payments", {
+    navigate('/admin/payments', {
       state: {
         userName: studentName,
         userPoint: newPoint, // 남은 금액을 새로운 시작 금액으로 설정
@@ -28,16 +28,21 @@ const Complete = () => {
   };
 
   const GoBackBarcode = () => {
-    navigate("/admin/barcode");
+    navigate('/admin/barcode');
   };
 
   return (
     <>
       <_.CompeleteWrap>
         <_.PaymentsTopWrap>
-          <img src="/assets/CheckLogo.svg" style={{ width: "70px", height: "70px" }} alt="" aria-hidden="true" />
+          <img
+            src="/assets/CheckLogo.svg"
+            style={{ width: '70px', height: '70px' }}
+            alt=""
+            aria-hidden="true"
+          />
           <_.PaymentsTopTitle>
-            {transactionAmount ? transactionAmount.toLocaleString() : "0"}원
+            {transactionAmount ? transactionAmount.toLocaleString() : '0'}원
           </_.PaymentsTopTitle>
           <_.PaymentsTopSubTitle>{transactionType}완료</_.PaymentsTopSubTitle>
         </_.PaymentsTopWrap>
@@ -51,28 +56,26 @@ const Complete = () => {
           </_.StudentInfo>
 
           <_.ExChangeWrap>
-            <_.ExChangeDetailWrap marginTop={"30px"}>
+            <_.ExChangeDetailWrap marginTop={'30px'}>
               <_.InfoText color={color.default}>원래금액</_.InfoText>
-              <_.Exchange>
-                {oldPoint ? oldPoint.toLocaleString() : "0"}원
-              </_.Exchange>
+              <_.Exchange>{oldPoint ? oldPoint.toLocaleString() : '0'}원</_.Exchange>
             </_.ExChangeDetailWrap>
 
             <_.ExChangeDetailWrap>
               <_.InfoText color={color.default}>{transactionType}금액</_.InfoText>
               <_.Exchange>
-                {transactionAmount ? transactionAmount.toLocaleString() : "0"}원
+                {transactionAmount ? transactionAmount.toLocaleString() : '0'}원
               </_.Exchange>
             </_.ExChangeDetailWrap>
 
             <_.ExChangeDetailWrap
-              paddingTop={"10px"}
-              marginTop={"5px"}
+              paddingTop={'10px'}
+              marginTop={'5px'}
               border={`1px solid #D3D3D3`}
             >
               <_.InfoText color={color.default}>남은금액</_.InfoText>
-              <_.Exchange fontSize={"30px"} fontWeight={"700"}>
-                {newPoint ? newPoint.toLocaleString() : "0"}원
+              <_.Exchange fontSize={'30px'} fontWeight={'700'}>
+                {newPoint ? newPoint.toLocaleString() : '0'}원
               </_.Exchange>
             </_.ExChangeDetailWrap>
           </_.ExChangeWrap>

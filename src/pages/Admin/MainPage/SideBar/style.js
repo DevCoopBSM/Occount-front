@@ -26,9 +26,7 @@ export const SidebarItemLink = styled(Link)`
   font-size: 20px;
   /* 클릭된 항목의 스타일 */
   background-color: ${(props) =>
-    props['data-isactive'] === 'true'
-      ? '#F7BD4C'
-      : 'transparent'}; // 노란색으로 변경
+    props['data-isactive'] === 'true' ? '#F7BD4C' : 'transparent'}; // 노란색으로 변경
 
   &:hover {
     background-color: #666; // 호버 스타일

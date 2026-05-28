@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { FormData, UserType } from '../types';
-import { 
-  validateEmail, 
-  validatePassword, 
-} from '../utils/validation';
+import { validateEmail, validatePassword } from '../utils/validation';
 
 interface PasswordValidationState {
   length: boolean;
@@ -14,21 +11,21 @@ interface PasswordValidationState {
 
 export const useRegisterForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    userName: "",
-    userEmail: "",
-    userPassword: "",
-    userAddress: "",
-    userPin: "",
-    userCode: "",
-    addressDetail: "",
-    confirmPassword: "",
+    userName: '',
+    userEmail: '',
+    userPassword: '',
+    userAddress: '',
+    userPin: '',
+    userCode: '',
+    addressDetail: '',
+    confirmPassword: '',
   });
   const [emailPrefix, setEmailPrefix] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<PasswordValidationState>({
     length: false,
     lowerCase: false,
     number: false,
-    specialChar: false
+    specialChar: false,
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
 
@@ -36,8 +33,8 @@ export const useRegisterForm = () => {
     if (userType === UserType.STUDENT || userType === UserType.TEACHER) {
       setEmailPrefix(value);
       const fullEmail = `${value}@bssm.hs.kr`;
-      setFormData(prev => ({ ...prev, userEmail: fullEmail }));
-      
+      setFormData((prev) => ({ ...prev, userEmail: fullEmail }));
+
       const emailError = validateEmail(fullEmail, userType);
       if (emailError) {
         // 이메일 에러 처리 로직
@@ -47,20 +44,20 @@ export const useRegisterForm = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, userType: UserType) => {
     const { name, value } = e.target;
-    
-    setFormData(prev => {
+
+    setFormData((prev) => {
       const newFormData = { ...prev, [name]: value };
-      
+
       if (name === 'userPassword') {
         setPasswordErrors(validatePassword(value));
         setPasswordMatch(value === newFormData.confirmPassword);
       } else if (name === 'confirmPassword') {
         setPasswordMatch(newFormData.userPassword === value);
       }
-      
+
       return newFormData;
     });
-    
+
     if (name === 'userEmail') {
       handleEmailChange(value, userType);
     }
@@ -72,6 +69,6 @@ export const useRegisterForm = () => {
     emailPrefix,
     passwordErrors,
     passwordMatch,
-    handleInputChange
+    handleInputChange,
   };
 };
