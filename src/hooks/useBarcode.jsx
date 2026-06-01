@@ -21,7 +21,7 @@ export const useBarcode = () => {
   // console.log("BArcord~")
   const [barcode, setBarcode] = useState('');
 
-  const handleChange = (e) => {
+  const _handleChange = (e) => {
     // console.log(e.target.value);
     setBarcode(e.target.value);
   };
@@ -38,5 +38,5 @@ export const useBarcode = () => {
     }
   };
 
-  return barcode, handleChange, handleSubmit;
+  return barcode, _handleChange, handleSubmit;
 };

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { setLoadingFunction, setErrorFunction } from 'utils/Axios';
 
 const LoadingContext = createContext();

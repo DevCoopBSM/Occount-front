@@ -1,4 +1,3 @@
-import React from 'react';
 import * as _ from './style';
 import styled from 'styled-components';
 import { PrettyDateTime } from 'utils/Date';

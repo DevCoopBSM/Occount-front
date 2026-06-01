@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PaymentsCheck from '../TransactionCheck'; // 통합된 체크 컴포넌트 사용
 import TransactionLog from '../TransactionLog'; // 통합된 로그 컴포넌트 사용
 import * as C from '../Complete/style';

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as _ from './style';
 import * as P from 'common/PageWrapStyle';
 import { useNavigate } from 'react-router-dom';

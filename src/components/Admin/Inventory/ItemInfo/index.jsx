@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DataTable from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as P from 'common/PageWrapStyle';
 import AdminRouter from 'components/Admin/AdminRouter';
 import AdminMainHeader from './AdminMainHeader';

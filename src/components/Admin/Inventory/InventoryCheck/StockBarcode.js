@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axiosInstance from 'utils/Axios';
 import Modal from 'components/Modal';
 import * as _ from './style';

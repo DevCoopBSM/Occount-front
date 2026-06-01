@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DataTablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';
 import { PrettyDateTime } from 'utils/Date';

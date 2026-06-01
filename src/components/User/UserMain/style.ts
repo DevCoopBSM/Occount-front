@@ -9,7 +9,6 @@ const sectionCardBackground = '#f8f9fa';
 const sectionCardBorder = '1.5px solid rgba(17, 17, 17, 0.08)';
 const sectionCardRadius = '28px';
 const innerCardBorder = '1.5px solid rgba(17, 17, 17, 0.08)';
-const accentBorder = '1.5px solid rgba(244, 158, 21, 0.35)';
 
 export const MainContent = styled.div`
   width: 100%;

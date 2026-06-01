@@ -16,7 +16,7 @@ const NoticeList: React.FC = () => {
       try {
         const fetchedNotices = await fetchNotices();
         setNotices(fetchedNotices);
-      } catch (err) {
+      } catch (_err) {
         setError('공지사항을 가져오는 데 실패했습니다.');
       } finally {
         setLoading(false);
