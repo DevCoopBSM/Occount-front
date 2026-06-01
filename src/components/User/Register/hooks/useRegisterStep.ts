@@ -22,9 +22,9 @@ export const useRegisterStep = () => {
       isPrivacyCollectionAgreed,
       isPrivacyThirdPartyAgreed
     );
-    
+
     if (Object.keys(stepErrors).length === 0) {
-      setStep(prev => prev + 1 as StepType);
+      setStep((prev) => (prev + 1) as StepType);
     } else {
       setErrors(stepErrors);
     }
@@ -32,7 +32,7 @@ export const useRegisterStep = () => {
 
   const prevStep = () => {
     if (step > 1) {
-      setStep(prev => prev - 1 as StepType);
+      setStep((prev) => (prev - 1) as StepType);
     }
   };
 
@@ -40,6 +40,6 @@ export const useRegisterStep = () => {
     step,
     errors,
     nextStep,
-    prevStep
+    prevStep,
   };
 };

@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "contexts/authContext";
+import { useAuth } from 'contexts/authContext';
 import Toast from 'common/Toast';
-import * as L from "./style";
+import * as L from './style';
 
 function PwChange() {
   const navigate = useNavigate();
   const { requestEmailVerification } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState('error');
   const [toastMessage, setToastMessage] = useState('');
   const [toastTitle, setToastTitle] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
 
   const handleCloseToast = React.useCallback(() => {
     setShowToast(false);
@@ -23,9 +23,9 @@ function PwChange() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "email") {
+    if (name === 'email') {
       setEmail(value);
-    } else if (name === "name") {
+    } else if (name === 'name') {
       setName(value);
     }
 
@@ -33,7 +33,7 @@ function PwChange() {
       setShowToast(false);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,15 +67,9 @@ function PwChange() {
           <L.LogoWrapping onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <L.LogoImg src="/assets/occount-logo.svg" alt="logo" />
           </L.LogoWrapping>
-          <L.SuccessMessage>
-            {userName} 님의 이메일로 재설정 링크가 전달되었어요!
-          </L.SuccessMessage>
-          <L.SuccessSubMessage>
-            로그인 후에 OCCOUNT의 서비스를 이용해보세요
-          </L.SuccessSubMessage>
-          <L.LoginButton onClick={() => navigate('/login')}>
-            로그인하러가기
-          </L.LoginButton>
+          <L.SuccessMessage>{userName} 님의 이메일로 재설정 링크가 전달되었어요!</L.SuccessMessage>
+          <L.SuccessSubMessage>로그인 후에 OCCOUNT의 서비스를 이용해보세요</L.SuccessSubMessage>
+          <L.LoginButton onClick={() => navigate('/login')}>로그인하러가기</L.LoginButton>
         </L.SuccessContainer>
       </L.Container>
     );

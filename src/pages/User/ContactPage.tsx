@@ -11,13 +11,7 @@ const ContactPage: React.FC = () => {
     navigate('/');
   };
 
-  return (
-    <InquiryModal
-      isOpen={true}
-      onRequestClose={handleClose}
-      user={user}
-    />
-  );
+  return <InquiryModal isOpen={true} onRequestClose={handleClose} user={user} />;
 };
 
 export default ContactPage;

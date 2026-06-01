@@ -8,9 +8,7 @@ const SideBar = ({ openItems, toggleItem, activeLink, handleLinkClick }) => {
     <P.LeftBar>
       {MenuItems.map((item) => (
         <React.Fragment key={item.name}>
-          <_.SidebarItem onClick={() => toggleItem(item.name)}>
-            {item.name}
-          </_.SidebarItem>
+          <_.SidebarItem onClick={() => toggleItem(item.name)}>{item.name}</_.SidebarItem>
           <_.SubItems isOpen={openItems[item.name]?.isOpen}>
             {item.links.map((link) => (
               <_.SidebarItemLink

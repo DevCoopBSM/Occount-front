@@ -263,7 +263,6 @@ export const ItemList = styled.ul`
   list-style: none;
 `;
 
-
 export const Item = styled.li`
   padding: 10px;
   cursor: pointer;
@@ -295,7 +294,6 @@ export const SelectedItem = styled.li`
   padding: 10px;
   border-bottom: 1px solid #d3d3d3;
 `;
-
 
 export const RemoveButton = styled.button`
   padding: 5px 10px;

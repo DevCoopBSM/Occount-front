@@ -23,7 +23,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
   const fadeIn = useSpring({
     opacity: 1,
     from: { opacity: 0 },
-    config: { duration: 500 }
+    config: { duration: 500 },
   });
 
   return (
@@ -33,42 +33,33 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
         <>
           <R.InputContainer>
             <R.InputLabel>이름</R.InputLabel>
-            <R.RegisterInput
-              type="text"
-              value={userInfo.userName}
-              disabled
-            />
+            <R.RegisterInput type="text" value={userInfo.userName} disabled />
           </R.InputContainer>
           <R.InputContainer>
             <R.InputLabel>생년월일</R.InputLabel>
-            <R.RegisterInput
-              type="text"
-              value={userInfo.userBirthDate}
-              disabled
-            />
+            <R.RegisterInput type="text" value={userInfo.userBirthDate} disabled />
           </R.InputContainer>
           <R.InputContainer>
             <R.InputLabel>핸드폰 번호</R.InputLabel>
-            <R.RegisterInput
-              type="text"
-              value={userInfo.userPhone}
-              disabled
-            />
+            <R.RegisterInput type="text" value={userInfo.userPhone} disabled />
           </R.InputContainer>
-          <R.Button 
+          <R.Button
             onClick={onResetVerification}
-            style={{backgroundColor: '#F49E15', color: 'white', marginTop: '20px'}}
+            style={{ backgroundColor: '#F49E15', color: 'white', marginTop: '20px' }}
           >
             재인증
           </R.Button>
         </>
       ) : (
-        <R.Button 
-          onClick={onVerify} 
+        <R.Button
+          onClick={onVerify}
           disabled={isVerified}
-          style={{backgroundColor: isVerified ? '#D9D9D9' : '#F49E15', color: isVerified ? '#333' : 'white'}}
+          style={{
+            backgroundColor: isVerified ? '#D9D9D9' : '#F49E15',
+            color: isVerified ? '#333' : 'white',
+          }}
         >
-          {isVerified ? "본인인증 완료" : "본인인증"}
+          {isVerified ? '본인인증 완료' : '본인인증'}
         </R.Button>
       )}
       <R.ButtonContainer>

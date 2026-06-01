@@ -5,11 +5,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
   color?: string;
 }
 
-const SettingsIcon: React.FC<IconProps> = ({
-  size = 24,
-  color = 'currentColor',
-  ...props
-}) => (
+const SettingsIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 21 20"

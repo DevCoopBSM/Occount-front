@@ -7,23 +7,20 @@ export function PaymentRedirectPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
-  
+
   // URL 파라미터와 state에서 모두 paymentId를 확인
   const paymentId = searchParams.get('paymentId') || location.state?.paymentId;
   const code = searchParams.get('code');
   const message = searchParams.get('message');
 
-  const isSuccess = !code  || location.state?.status === 'success';
+  const isSuccess = !code || location.state?.status === 'success';
 
   const handlePaymentSuccess = useCallback(async () => {
     try {
       console.log('Sending confirm request:', { paymentId });
-      const confirmResponse = await axiosInstance.post(
-        'v2/pg/confirm',
-        { paymentId }
-      );
+      const confirmResponse = await axiosInstance.post('v2/pg/confirm', { paymentId });
       console.log('Confirm response:', confirmResponse.data);
-      
+
       // 필요한 정보만 추출
       const { method, amount, customer } = confirmResponse.data;
       const paymentInfo = {
@@ -32,9 +29,9 @@ export function PaymentRedirectPage() {
         method: method?.type,
         amount: amount?.total,
         currency: amount?.currency,
-        customer: customer?.name
+        customer: customer?.name,
       };
-      
+
       navigate('/payment-result', { state: paymentInfo });
     } catch (error) {
       console.error('Confirm request failed:', error);
@@ -47,8 +44,8 @@ export function PaymentRedirectPage() {
     navigate('/payment-result', {
       state: {
         success: false,
-        error: message || '결제에 실패했습니다.'
-      }
+        error: message || '결제에 실패했습니다.',
+      },
     });
   }, [message, navigate]);
 

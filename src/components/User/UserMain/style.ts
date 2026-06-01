@@ -244,7 +244,6 @@ export const BarcodeWrapper = styled.div`
   }
 `;
 
-
 // Ari-Pick 카드
 export const AriPickCard = styled.div`
   flex: 1;
@@ -716,11 +715,9 @@ export const CategoryTab = styled.button<{ $active?: boolean }>`
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: ${props => props.$active ? '#111111' : '#5f6368'};
-  border: 1px solid ${props => props.$active ? 'rgba(252, 200, 0, 0.55)' : 'rgba(17, 17, 17, 0.10)'};
-  background: ${props => props.$active
-    ? '#FCC800'
-    : 'rgba(255, 255, 255, 0.72)'};
+  color: ${(props) => (props.$active ? '#111111' : '#5f6368')};
+  border: 1px solid ${(props) => (props.$active ? 'rgba(252, 200, 0, 0.55)' : 'rgba(17, 17, 17, 0.10)')};
+  background: ${(props) => (props.$active ? '#FCC800' : 'rgba(255, 255, 255, 0.72)')};
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
@@ -731,9 +728,7 @@ export const CategoryTab = styled.button<{ $active?: boolean }>`
   &:hover {
     color: #111111;
     border-color: rgba(17, 17, 17, 0.1);
-    background: ${props => props.$active
-      ? '#FCC800'
-      : 'rgba(255, 255, 255, 0.92)'};
+    background: ${(props) => (props.$active ? '#FCC800' : 'rgba(255, 255, 255, 0.92)')};
     transform: translateY(-1px);
   }
 
@@ -797,8 +792,8 @@ export const ProductBadge = styled.div<{ type: 'new' | 'hot' }>`
   top: 22px;
   left: 22px;
 
-  background: ${props => props.type === 'new' ? '#fcc800' : '#f49e15'};
-  color: ${props => props.type === 'new' ? '#111111' : '#ffffff'};
+  background: ${(props) => (props.type === 'new' ? '#fcc800' : '#f49e15')};
+  color: ${(props) => (props.type === 'new' ? '#111111' : '#ffffff')};
   padding: 3px 8px;
   border-radius: 999px;
   font-family: 'Pretendard', sans-serif;
@@ -875,10 +870,10 @@ export const ScrollBar = styled.div`
 `;
 
 export const ScrollDot = styled.div<{ active?: boolean }>`
-  width: ${props => props.active ? '30px' : '6px'};
+  width: ${(props) => (props.active ? '30px' : '6px')};
   height: 6px;
   border-radius: 6px;
-  background: ${props => props.active ? '#666666' : '#dddddd'};
+  background: ${(props) => (props.active ? '#666666' : '#dddddd')};
   flex-shrink: 0;
 `;
 
@@ -1364,7 +1359,7 @@ export const IconCircle = styled.div<{ $bgColor?: string }>`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: ${props => props.$bgColor || '#f0f0f0'};
+  background-color: ${(props) => props.$bgColor || '#f0f0f0'};
   display: flex;
   align-items: center;
   justify-content: center;

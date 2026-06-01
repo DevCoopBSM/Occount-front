@@ -26,10 +26,14 @@ type InquiryViewMode = 'form' | 'list';
 
 const getCategoryInKorean = (inquiryType: string): string => {
   switch (inquiryType) {
-    case 'SERVICE_SUGGEST': return '서비스 건의';
-    case 'SERVICE_ERROR': return '서비스 장애';
-    case 'SERVICE_ETC': return '기타';
-    default: return inquiryType;
+    case 'SERVICE_SUGGEST':
+      return '서비스 건의';
+    case 'SERVICE_ERROR':
+      return '서비스 장애';
+    case 'SERVICE_ETC':
+      return '기타';
+    default:
+      return inquiryType;
   }
 };
 
@@ -58,7 +62,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     onSwipedLeft: () => handlePageChange(currentPage + 1),
     onSwipedRight: () => handlePageChange(currentPage - 1),
     preventScrollOnSwipe: true,
-    trackMouse: true
+    trackMouse: true,
   });
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     try {
       const response = await axiosInstance.suspense<{ inquiryList: Inquiry[] }>({
         url: 'v2/inquiry/user',
-        method: 'GET'
+        method: 'GET',
       });
       setInquiries(Array.isArray(response?.inquiryList) ? response.inquiryList : []);
     } catch (error) {
@@ -90,7 +94,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
   };
 
   const toggleInquiry = (inquiryId: number) => {
-    setExpandedInquiries(prev => ({ ...prev, [inquiryId]: !prev[inquiryId] }));
+    setExpandedInquiries((prev) => ({ ...prev, [inquiryId]: !prev[inquiryId] }));
   };
 
   const handlePageChange = (newPage: number) => {
@@ -116,10 +120,10 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
     setIsSubmitting(true);
     try {
-      await axiosInstance.suspense({ 
+      await axiosInstance.suspense({
         url: 'v2/inquiry/new',
         method: 'POST',
-        data: { category, title, content }
+        data: { category, title, content },
       });
       alert('문의가 성공적으로 제출되었습니다.');
       setCategory('');
@@ -149,7 +153,9 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
           <S.ModalHeader>알림</S.ModalHeader>
           <S.NoInquiries>로그인 후 이용 가능합니다.</S.NoInquiries>
           <S.ModalFooter>
-            <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
+            <S.CloseButton type="button" onClick={onRequestClose}>
+              닫기
+            </S.CloseButton>
           </S.ModalFooter>
         </S.ModalContent>
       </Modal>
@@ -165,17 +171,14 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
         borderRadius: '16px',
         backgroundColor: '#fff',
         maxWidth: '560px',
-        width: '92%'
+        width: '92%',
       }}
     >
       {viewMode === 'form' ? (
         <>
           <S.ModalHeaderRow>
             <S.ModalHeader>문의 작성</S.ModalHeader>
-            <S.TextActionButton
-              type="button"
-              onClick={openListView}
-            >
+            <S.TextActionButton type="button" onClick={openListView}>
               내 문의 보기
             </S.TextActionButton>
           </S.ModalHeaderRow>
@@ -204,7 +207,9 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
               <S.SubmitButton type="submit" disabled={isSubmitting}>
                 {isSubmitting ? '제출 중...' : '제출하기'}
               </S.SubmitButton>
-              <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
+              <S.CloseButton type="button" onClick={onRequestClose}>
+                닫기
+              </S.CloseButton>
             </S.ModalFooter>
           </S.InquiryForm>
         </>
@@ -227,62 +232,78 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
             </S.EmptyState>
           ) : (
             <>
-            <S.InquiriesContainer {...handlers}>
-              <S.InquiriesContent
-                style={{
-                  transform: `translateX(${-100 * currentPage}%)`,
-                  width: `${100 * totalPages}%`
-                }}
-              >
-                {Array.from({ length: totalPages }, (_, pageIndex) => (
-                  <S.LogPage key={pageIndex}>
-                    {safeInquiries.slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage).map((inquiry) => (
-                      <S.InquiryItem
-                        key={inquiry.inquiryId}
-                        onClick={() => toggleInquiry(inquiry.inquiryId)}
-                        $hasAnswer={!!inquiry.inquiryAnswer}
-                      >
-                        <S.InquiryTitle>
-                          {inquiry.inquiryTitle}
-                          <S.InquiryCategory>{getCategoryInKorean(inquiry.inquiryType)}</S.InquiryCategory>
-                        </S.InquiryTitle>
-                        <S.InquiryDate>{formatDate(inquiry.createdAt)}</S.InquiryDate>
-                        {expandedInquiries[inquiry.inquiryId] && (
-                          <>
-                            <S.InquiryContent>{inquiry.inquiryContent}</S.InquiryContent>
-                            <S.InquiryAnswer $hasAnswer={!!inquiry.inquiryAnswer}>
-                              {inquiry.inquiryAnswer ? (
-                                <>
-                                  <div>{inquiry.inquiryAnswer}</div>
-                                  <S.AnswerDate>답변 일시: {formatDate(inquiry.answeredAt!)}</S.AnswerDate>
-                                </>
-                              ) : '답변 대기 중'}
-                            </S.InquiryAnswer>
-                          </>
-                        )}
-                      </S.InquiryItem>
-                    ))}
-                  </S.LogPage>
-                ))}
-              </S.InquiriesContent>
-            </S.InquiriesContainer>
-            {totalPages > 1 && (
-              <S.Pagination>
-                <S.PageNumber onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
-                  &lt; 이전
-                </S.PageNumber>
-                <S.PageIndicator>
-                  {currentPage + 1} / {totalPages}
-                </S.PageIndicator>
-                <S.PageNumber onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages - 1}>
-                  다음 &gt;
-                </S.PageNumber>
-              </S.Pagination>
-            )}
+              <S.InquiriesContainer {...handlers}>
+                <S.InquiriesContent
+                  style={{
+                    transform: `translateX(${-100 * currentPage}%)`,
+                    width: `${100 * totalPages}%`,
+                  }}
+                >
+                  {Array.from({ length: totalPages }, (_, pageIndex) => (
+                    <S.LogPage key={pageIndex}>
+                      {safeInquiries
+                        .slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage)
+                        .map((inquiry) => (
+                          <S.InquiryItem
+                            key={inquiry.inquiryId}
+                            onClick={() => toggleInquiry(inquiry.inquiryId)}
+                            $hasAnswer={!!inquiry.inquiryAnswer}
+                          >
+                            <S.InquiryTitle>
+                              {inquiry.inquiryTitle}
+                              <S.InquiryCategory>
+                                {getCategoryInKorean(inquiry.inquiryType)}
+                              </S.InquiryCategory>
+                            </S.InquiryTitle>
+                            <S.InquiryDate>{formatDate(inquiry.createdAt)}</S.InquiryDate>
+                            {expandedInquiries[inquiry.inquiryId] && (
+                              <>
+                                <S.InquiryContent>{inquiry.inquiryContent}</S.InquiryContent>
+                                <S.InquiryAnswer $hasAnswer={!!inquiry.inquiryAnswer}>
+                                  {inquiry.inquiryAnswer ? (
+                                    <>
+                                      <div>{inquiry.inquiryAnswer}</div>
+                                      <S.AnswerDate>
+                                        답변 일시: {formatDate(inquiry.answeredAt!)}
+                                      </S.AnswerDate>
+                                    </>
+                                  ) : (
+                                    '답변 대기 중'
+                                  )}
+                                </S.InquiryAnswer>
+                              </>
+                            )}
+                          </S.InquiryItem>
+                        ))}
+                    </S.LogPage>
+                  ))}
+                </S.InquiriesContent>
+              </S.InquiriesContainer>
+              {totalPages > 1 && (
+                <S.Pagination>
+                  <S.PageNumber
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                  >
+                    &lt; 이전
+                  </S.PageNumber>
+                  <S.PageIndicator>
+                    {currentPage + 1} / {totalPages}
+                  </S.PageIndicator>
+                  <S.PageNumber
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                  >
+                    다음 &gt;
+                  </S.PageNumber>
+                </S.Pagination>
+              )}
             </>
           )}
           <S.ModalFooter>
-            <S.CloseButton type="button" onClick={onRequestClose}>닫기</S.CloseButton>
+            <S.CloseButton type="button" onClick={onRequestClose}>
+              닫기
+            </S.CloseButton>
           </S.ModalFooter>
         </>
       )}

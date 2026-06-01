@@ -10,8 +10,8 @@ interface User {
   email: string;
   phone: string;
   todayTotalPayment?: number;
-  role?: string;  // 역할 추가
-  isFullMember?: boolean;  // 정식 조합원 여부 추가
+  role?: string; // 역할 추가
+  isFullMember?: boolean; // 정식 조합원 여부 추가
 }
 
 interface AuthState {
@@ -22,14 +22,29 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  unifiedLogin: (email: string, password: string, navigate: NavigateFunction, admin?: boolean) => Promise<User | void>;
+  unifiedLogin: (
+    email: string,
+    password: string,
+    navigate: NavigateFunction,
+    admin?: boolean
+  ) => Promise<User | void>;
   logout: (navigate: NavigateFunction) => Promise<void>;
   setErrorMessage: (msg: string) => void;
   clearErrorMessage: () => void;
   refetchUser: () => Promise<User | null>;
-  requestEmailVerification: (email: string, name: string) => Promise<{ success: boolean; message: string }>;
-  registerStudent: (userName: string, userEmail: string, userPassword: string) => Promise<{ success: boolean; message: string }>;
-  changePassword: (jwtToken: string, newPassword: string) => Promise<{ success: boolean; message: string }>;
+  requestEmailVerification: (
+    email: string,
+    name: string
+  ) => Promise<{ success: boolean; message: string }>;
+  registerStudent: (
+    userName: string,
+    userEmail: string,
+    userPassword: string
+  ) => Promise<{ success: boolean; message: string }>;
+  changePassword: (
+    jwtToken: string,
+    newPassword: string
+  ) => Promise<{ success: boolean; message: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,7 +89,7 @@ const actionTypes = {
   SET_USER: 'SET_USER',
 } as const;
 
-type ActionType = 
+type ActionType =
   | { type: typeof actionTypes.LOGIN_SUCCESS; isAdmin: boolean }
   | { type: typeof actionTypes.LOGOUT }
   | { type: typeof actionTypes.SET_ERROR; payload: string }
@@ -113,92 +128,100 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const unifiedLogin = useCallback(async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
-    try {
-      // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
-      const loginAxios = createBypassAxios();
+  const unifiedLogin = useCallback(
+    async (email: string, password: string, navigate: NavigateFunction, admin = false) => {
+      try {
+        // 로그인 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
+        const loginAxios = createBypassAxios();
 
-      const response = await loginAxios.post('auth/login', {
-        email: email,
-        password: password,
-      });
+        const response = await loginAxios.post('auth/login', {
+          email: email,
+          password: password,
+        });
 
-      if ((response.status === 200 || response.status === 201) && (!response.data || Object.keys(response.data).length === 0)) {
-        const authHeader = response.headers['authorization'] || response.headers['Authorization'];
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-          const token = authHeader.substring(7);
+        if (
+          (response.status === 200 || response.status === 201) &&
+          (!response.data || Object.keys(response.data).length === 0)
+        ) {
+          const authHeader = response.headers['authorization'] || response.headers['Authorization'];
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.substring(7);
 
-          let role = 'ROLE_USER';
-          try {
-            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-            const payload = JSON.parse(atob(base64));
-            role = payload.roles || payload.role || payload.authority || 'ROLE_USER';
-          } catch {
-            // 디코딩 실패 시 기본값 유지
+            let role = 'ROLE_USER';
+            try {
+              const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+              const payload = JSON.parse(atob(base64));
+              role = payload.roles || payload.role || payload.authority || 'ROLE_USER';
+            } catch {
+              // 디코딩 실패 시 기본값 유지
+            }
+
+            const isAdmin = role === 'ROLE_ADMIN';
+            if (admin && !isAdmin) {
+              throw new Error('권한이 없습니다.');
+            }
+
+            setAccessToken(token);
+
+            const userInfo: User = {
+              point: 0,
+              name: email.split('@')[0] || '사용자',
+              code: email.split('@')[0] || 'USER',
+              email: email,
+              phone: '',
+              role,
+            };
+
+            dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
+            dispatch({ type: actionTypes.SET_USER, payload: userInfo });
+            navigate(admin ? '/admin' : '/');
+            dispatch({ type: actionTypes.CLEAR_ERROR });
+            return userInfo;
+          } else {
+            throw new Error('서버에서 인증 토큰을 반환하지 않았습니다.');
           }
+        }
 
-          const isAdmin = role === 'ROLE_ADMIN';
-          if (admin && !isAdmin) {
-            throw new Error('권한이 없습니다.');
+        if (!response.data.success) {
+          if (response.data.status === 'REDIRECT') {
+            navigate(response.data.redirectUrl);
+            return;
           }
-
-          setAccessToken(token);
-
-          const userInfo: User = {
-            point: 0,
-            name: email.split('@')[0] || '사용자',
-            code: email.split('@')[0] || 'USER',
-            email: email,
-            phone: '',
-            role,
-          };
-
-          dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
-          dispatch({ type: actionTypes.SET_USER, payload: userInfo });
-          navigate(admin ? '/admin' : '/');
-          dispatch({ type: actionTypes.CLEAR_ERROR });
-          return userInfo;
-        } else {
-          throw new Error('서버에서 인증 토큰을 반환하지 않았습니다.');
+          throw new Error(response.data.message || '로그인에 실패했습니다.');
         }
-      }
 
-      if (!response.data.success) {
-        if (response.data.status === "REDIRECT") {
-          navigate(response.data.redirectUrl);
-          return;
+        const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } =
+          response.data;
+
+        const isAdmin = roles === 'ROLE_ADMIN';
+        if (admin && !isAdmin) {
+          throw new Error('권한이 없습니다.');
         }
-        throw new Error(response.data.message || '로그인에 실패했습니다.');
+
+        setAccessToken(accessToken);
+        dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
+        const userInfo: User = {
+          point: userPoint,
+          name: userName,
+          code: userCode,
+          email: userEmail,
+          phone: userPhone,
+          role: roles, // roles 문자열을 그대로 저장
+        };
+        dispatch({ type: actionTypes.SET_USER, payload: userInfo });
+        navigate(admin ? '/admin' : '/');
+        dispatch({ type: actionTypes.CLEAR_ERROR });
+        return userInfo;
+      } catch (error: any) {
+        console.error('Login error:', error);
+        const errMsg =
+          error.response?.data?.message || error.message || '로그인 중 오류가 발생했습니다.';
+        dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
+        throw error;
       }
-
-      const { accessToken, userCode, userName, userEmail, userPoint, userPhone, roles } = response.data;
-
-      const isAdmin = roles === 'ROLE_ADMIN';
-      if (admin && !isAdmin) {
-        throw new Error('권한이 없습니다.');
-      }
-
-      setAccessToken(accessToken);
-      dispatch({ type: actionTypes.LOGIN_SUCCESS, isAdmin });
-      const userInfo: User = { 
-        point: userPoint, 
-        name: userName, 
-        code: userCode, 
-        email: userEmail, 
-        phone: userPhone,
-        role: roles  // roles 문자열을 그대로 저장
-      };
-      dispatch({ type: actionTypes.SET_USER, payload: userInfo });
-      navigate(admin ? '/admin' : '/');
-      dispatch({ type: actionTypes.CLEAR_ERROR });
-      return userInfo;
-    } catch (error: any) {
-      console.error('Login error:', error);
-      const errMsg = error.response?.data?.message || error.message || '로그인 중 오류가 발생했습니다.';
-      dispatch({ type: actionTypes.SET_ERROR, payload: errMsg });
-      throw error;
-    }
-  }, []);
+    },
+    []
+  );
 
   const fetchUserInformation = useCallback(async (): Promise<User | null> => {
     // 개발 모드일 때는 mock 사용자 반환
@@ -210,7 +233,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const [infoRes, pointRes] = await Promise.all([
-        axiosInstance.get('users/pre-order-info', { skipAuthRedirect: true, skipGlobalError: true } as any),
+        axiosInstance.get('users/pre-order-info', {
+          skipAuthRedirect: true,
+          skipGlobalError: true,
+        } as any),
         axiosInstance.get('wallet/point', { skipAuthRedirect: true, skipGlobalError: true } as any),
       ]);
 
@@ -255,8 +281,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
       } catch (error: any) {
         console.error('Student registration error:', error);
-        const errorMessage =
-          error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
+        const errorMessage = error.response?.data?.message || '회원가입 중 오류가 발생했습니다.';
         dispatch({ type: actionTypes.SET_ERROR, payload: errorMessage });
         setTimeout(() => dispatch({ type: actionTypes.CLEAR_ERROR }), 3000);
         return { success: false, message: errorMessage };
@@ -280,7 +305,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
     } catch (error: any) {
       console.error('Email verification request failed:', error);
-      return { success: false, message: error.response?.data?.message || '이메일 인증 요청에 실패했습니다.' };
+      return {
+        success: false,
+        message: error.response?.data?.message || '이메일 인증 요청에 실패했습니다.',
+      };
     }
   }, []);
 
@@ -289,16 +317,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // 비밀번호 변경 요청만을 위한 별도 axios 인스턴스 생성 (전역 인터셉터 우회)
       const pwChangeAxios = createBypassAxios();
 
-      const response = await pwChangeAxios.post(
-        `auth/pwChange/${jwtToken}`,
-        { newPassword }
-      );
-      return { success: true, message: response.data.message || '비밀번호가 성공적으로 변경되었습니다.' };
+      const response = await pwChangeAxios.post(`auth/pwChange/${jwtToken}`, { newPassword });
+      return {
+        success: true,
+        message: response.data.message || '비밀번호가 성공적으로 변경되었습니다.',
+      };
     } catch (error: any) {
       console.error('Password change error:', error);
-      return { 
-        success: false, 
-        message: error.response?.data?.message || '비밀번호 변경 중 오류가 발생했습니다.' 
+      return {
+        success: false,
+        message: error.response?.data?.message || '비밀번호 변경 중 오류가 발생했습니다.',
       };
     }
   }, []);
@@ -324,11 +352,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     changePassword,
   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {

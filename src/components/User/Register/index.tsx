@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from "utils/Axios";
+import axiosInstance from 'utils/Axios';
 import { UserTypeStep } from './components/UserTypeStep';
 import { PrivacyStep } from './components/PrivacyStep';
 import { VerificationStep } from './components/VerificationStep';
@@ -11,8 +11,8 @@ import { useVerification } from './hooks/useVerification';
 import { useAddress } from './hooks/useAddress';
 import { useRegisterStep } from './hooks/useRegisterStep';
 import { STEPS } from './constants/steps';
-import { UserType } from "./types";
-import * as R from "./style";
+import { UserType } from './types';
+import * as R from './style';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -21,40 +21,19 @@ const Register: React.FC = () => {
   const [isPrivacyThirdPartyAgreed, setIsPrivacyThirdPartyAgreed] = React.useState(false);
 
   // Custom Hooks
-  const {
-    formData,
-    setFormData,
-    emailPrefix,
-    passwordErrors,
-    passwordMatch,
-    handleInputChange
-  } = useRegisterForm();
+  const { formData, setFormData, emailPrefix, passwordErrors, passwordMatch, handleInputChange } =
+    useRegisterForm();
 
-  const {
-    isVerified,
-    userInfo,
-    handleVerification,
-    resetVerification
-  } = useVerification();
+  const { isVerified, userInfo, handleVerification, resetVerification } = useVerification();
 
-  const {
-    isScriptLoaded,
-    addressDetail,
-    setAddressDetail,
-    openAddressSearch
-  } = useAddress();
+  const { isScriptLoaded, addressDetail, setAddressDetail, openAddressSearch } = useAddress();
 
-  const {
-    step,
-    errors,
-    nextStep,
-    prevStep
-  } = useRegisterStep();
+  const { step, errors, nextStep, prevStep } = useRegisterStep();
 
   // 회원가입 제출 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isVerified || !isPrivacyCollectionAgreed || !isPrivacyThirdPartyAgreed) {
       return;
     }
@@ -65,26 +44,35 @@ const Register: React.FC = () => {
         userName: userInfo.userName,
         userPhone: userInfo.userPhone,
         userEmail: formData.userEmail,
-        password: formData.userPassword
+        password: formData.userPassword,
       });
 
-      alert("회원가입이 완료되었습니다.");
+      alert('회원가입이 완료되었습니다.');
       navigate('/');
     } catch (error) {
-      console.error("Register error:", error);
+      console.error('Register error:', error);
       alert(error.response?.data?.message || '회원가입 중 오류가 발생했습니다.');
     }
   };
 
   // 스텝별 컴포넌트 렌더링
   const renderStep = () => {
-    switch(step) {
+    switch (step) {
       case STEPS.USER_TYPE:
         return (
           <UserTypeStep
             userType={userType}
             setUserType={setUserType}
-            onNext={() => nextStep(step, formData, userType, isVerified, isPrivacyCollectionAgreed, isPrivacyThirdPartyAgreed)}
+            onNext={() =>
+              nextStep(
+                step,
+                formData,
+                userType,
+                isVerified,
+                isPrivacyCollectionAgreed,
+                isPrivacyThirdPartyAgreed
+              )
+            }
             onPrev={() => navigate('/')}
           />
         );
@@ -96,7 +84,16 @@ const Register: React.FC = () => {
             setIsPrivacyCollectionAgreed={setIsPrivacyCollectionAgreed}
             isPrivacyThirdPartyAgreed={isPrivacyThirdPartyAgreed}
             setIsPrivacyThirdPartyAgreed={setIsPrivacyThirdPartyAgreed}
-            onNext={() => nextStep(step, formData, userType, isVerified, isPrivacyCollectionAgreed, isPrivacyThirdPartyAgreed)}
+            onNext={() =>
+              nextStep(
+                step,
+                formData,
+                userType,
+                isVerified,
+                isPrivacyCollectionAgreed,
+                isPrivacyThirdPartyAgreed
+              )
+            }
             onPrev={prevStep}
             errors={errors}
           />
@@ -109,7 +106,16 @@ const Register: React.FC = () => {
             userInfo={userInfo}
             onVerify={handleVerification}
             onResetVerification={resetVerification}
-            onNext={() => nextStep(step, formData, userType, isVerified, isPrivacyCollectionAgreed, isPrivacyThirdPartyAgreed)}
+            onNext={() =>
+              nextStep(
+                step,
+                formData,
+                userType,
+                isVerified,
+                isPrivacyCollectionAgreed,
+                isPrivacyThirdPartyAgreed
+              )
+            }
             onPrev={prevStep}
           />
         );
@@ -124,7 +130,16 @@ const Register: React.FC = () => {
             passwordMatch={passwordMatch}
             errors={errors}
             onInputChange={(e) => handleInputChange(e, userType)}
-            onNext={() => nextStep(step, formData, userType, isVerified, isPrivacyCollectionAgreed, isPrivacyThirdPartyAgreed)}
+            onNext={() =>
+              nextStep(
+                step,
+                formData,
+                userType,
+                isVerified,
+                isPrivacyCollectionAgreed,
+                isPrivacyThirdPartyAgreed
+              )
+            }
             onPrev={prevStep}
           />
         );
@@ -155,9 +170,7 @@ const Register: React.FC = () => {
   return (
     <R.Container>
       <R.LogoImg src="/assets/occregisterLogo.svg" alt="logo" />
-      <R.ContentContainer>
-        {renderStep()}
-      </R.ContentContainer>
+      <R.ContentContainer>{renderStep()}</R.ContentContainer>
     </R.Container>
   );
 };

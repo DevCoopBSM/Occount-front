@@ -1,5 +1,5 @@
-import React from "react";
-import * as S from "./style";
+import React from 'react';
+import * as S from './style';
 
 interface ModalProps {
   isOpen: boolean;
@@ -17,12 +17,7 @@ interface ModalProps {
   };
 }
 
-const Modal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onRequestClose, 
-  children,
-  style = {}
-}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onRequestClose, children, style = {} }) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -32,10 +27,7 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <S.ModalOverlay 
-      onClick={handleOverlayClick} 
-      $overlayColor={style.overlayColor}
-    >
+    <S.ModalOverlay onClick={handleOverlayClick} $overlayColor={style.overlayColor}>
       <S.ModalContent
         className="modal-content"
         $style={style}

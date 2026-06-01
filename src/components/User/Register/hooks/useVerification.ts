@@ -15,13 +15,13 @@ export const useVerification = () => {
           userName: result.userName,
           userBirthDate: result.userBirthDate,
           userPhone: result.userPhone,
-          userCiNumber: result.userCiNumber
+          userCiNumber: result.userCiNumber,
         });
-        alert("본인인증이 완료되었습니다.");
+        alert('본인인증이 완료되었습니다.');
       }
     } catch (error) {
-      console.error("Verification error:", error);
-      alert("본인인증에 실패했습니다.");
+      console.error('Verification error:', error);
+      alert('본인인증에 실패했습니다.');
     }
   };
 
@@ -34,6 +34,6 @@ export const useVerification = () => {
     isVerified,
     userInfo,
     handleVerification,
-    resetVerification
+    resetVerification,
   };
 };

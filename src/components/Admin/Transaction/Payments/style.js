@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const PointWrap = styled.div`
   margin-top: 20px;
@@ -20,8 +20,8 @@ export const PointInput = styled.input`
   border-radius: 10px;
   border: 1px solid #ccc; /* 기본값 설정 */
   
-  border: ${({ isError }) => (isError ? "2px solid red" : "1px solid #ccc")};
-  font-weight: ${({ isError }) => (isError ? "bold" : "normal")};
+  border: ${({ isError }) => (isError ? '2px solid red' : '1px solid #ccc')};
+  font-weight: ${({ isError }) => (isError ? 'bold' : 'normal')};
 `;
 
 export const NumberInput = styled.input`

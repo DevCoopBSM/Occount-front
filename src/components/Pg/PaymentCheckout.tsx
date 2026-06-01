@@ -4,7 +4,11 @@ import Icon from 'components/Icon';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import * as PortOne from '@portone/browser-sdk/v2';
-import { PaymentCheckoutPageProps, PaymentRequestOptions, PaymentType } from './PaymentCheckout.types';
+import {
+  PaymentCheckoutPageProps,
+  PaymentRequestOptions,
+  PaymentType,
+} from './PaymentCheckout.types';
 
 const storeId = process.env.REACT_APP_STORE_ID;
 const channelKey = process.env.REACT_APP_CHANNEL_KEY_PAY;
@@ -34,9 +38,7 @@ export function PaymentCheckoutPage({
     if (!PortOne) {
       console.error('PortOne SDK가 로드되지 않았습니다.');
       setModalContent(
-        <S.LoadingText>
-          결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.
-        </S.LoadingText>
+        <S.LoadingText>결제 시스템을 로드하는데 실패했습니다. 다시 시도해 주세요.</S.LoadingText>
       );
       return;
     }
@@ -46,9 +48,10 @@ export function PaymentCheckoutPage({
     const paymentOptions: PaymentRequestOptions = {
       storeId: storeId!,
       paymentId,
-      orderName: paymentType === 'aripay' 
-        ? `아리페이 ${rechargeAmount} 결제`
-        : `출자금 ${rechargeAmount} 결제`,
+      orderName:
+        paymentType === 'aripay'
+          ? `아리페이 ${rechargeAmount} 결제`
+          : `출자금 ${rechargeAmount} 결제`,
       totalAmount: rechargeAmount,
       currency: 'KRW',
       channelKey: channelKey!,
@@ -74,9 +77,7 @@ export function PaymentCheckoutPage({
       };
     }
 
-    setModalContent(
-      <S.LoadingText>결제 요청을 진행 중입니다...</S.LoadingText>
-    );
+    setModalContent(<S.LoadingText>결제 요청을 진행 중입니다...</S.LoadingText>);
 
     PortOne.requestPayment(paymentOptions as any)
       .then((response: PortOne.PaymentResponse) => {
@@ -100,24 +101,27 @@ export function PaymentCheckoutPage({
             },
           });
         } else {
-          setModalContent(
-            <S.LoadingText>
-              결제에 실패했습니다: {response.message}
-            </S.LoadingText>
-          );
+          setModalContent(<S.LoadingText>결제에 실패했습니다: {response.message}</S.LoadingText>);
           setTimeout(() => onRequestClose(), 3000);
         }
       })
       .catch((error) => {
         console.error('결제 요청 실패', error);
         setModalContent(
-          <S.LoadingText>
-            결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.
-          </S.LoadingText>
+          <S.LoadingText>결제 처리 중 오류가 발생했습니다. 다시 시도해 주세요.</S.LoadingText>
         );
         setTimeout(() => onRequestClose(), 3000);
       });
-  }, [customerEmail, customerName, customerPhone, rechargeAmount, payMethod, navigate, onRequestClose, paymentType]);
+  }, [
+    customerEmail,
+    customerName,
+    customerPhone,
+    rechargeAmount,
+    payMethod,
+    navigate,
+    onRequestClose,
+    paymentType,
+  ]);
 
   useEffect(() => {
     if (payMethod) {
@@ -137,9 +141,9 @@ export function PaymentCheckoutPage({
             <S.CloseButton onClick={onRequestClose} aria-label="닫기">
               <Icon name="close" />
             </S.CloseButton>
-            
+
             <S.Title>아리페이 충전하기</S.Title>
-            
+
             <S.HighlightBox>
               <S.InfoIcon>
                 <Icon name="info" color="#F49E15" />
@@ -148,11 +152,13 @@ export function PaymentCheckoutPage({
                 결제수단을 선택해주세요. ( 현재는 카드 결제만 지원합니다.)
               </S.HighlightText>
             </S.HighlightBox>
-            
+
             <S.NoticeBox>
               <S.NoticeText>
-                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.<br />
-                결제 진행시 동의 여부를 물어보며 이에 동의하지 않으실 시 결제서비스를 이용하실 수 없습니다.
+                결제 서비스 제공을 위해 아래와 같은 정보가 스마트로(주)에 제공됩니다.
+                <br />
+                결제 진행시 동의 여부를 물어보며 이에 동의하지 않으실 시 결제서비스를 이용하실 수
+                없습니다.
               </S.NoticeText>
               <S.InfoTable>
                 <S.InfoRow>
@@ -167,12 +173,8 @@ export function PaymentCheckoutPage({
             </S.NoticeBox>
 
             <S.ButtonGroup>
-              <S.CancelButton onClick={onRequestClose}>
-                취소
-              </S.CancelButton>
-              <S.PaymentButton onClick={handlePaymentStart}>
-                결제진행
-              </S.PaymentButton>
+              <S.CancelButton onClick={onRequestClose}>취소</S.CancelButton>
+              <S.PaymentButton onClick={handlePaymentStart}>결제진행</S.PaymentButton>
             </S.ButtonGroup>
           </S.PaymentModal>
         ) : (
@@ -184,7 +186,7 @@ export function PaymentCheckoutPage({
               padding: '24px',
               borderRadius: '16px',
               width: '90%',
-              maxWidth: '300px'
+              maxWidth: '300px',
             }}
           >
             {modalContent}

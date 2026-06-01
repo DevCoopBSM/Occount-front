@@ -19,7 +19,7 @@ export default function UserList() {
             이름: item.userName,
             권한: item.roles,
             이메일: item.userEmail,
-            아리페이잔액: item.userPoint
+            아리페이잔액: item.userPoint,
           }));
 
           // 재매핑된 데이터를 상태에 설정합니다.

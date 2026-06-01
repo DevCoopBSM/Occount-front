@@ -28,9 +28,8 @@ function HowTo() {
     }
   };
 
-
   return (
-      <S.HowToContainer>
+    <S.HowToContainer>
       {/* 히어로 섹션 */}
       <S.HeroSection>
         <S.HeroContent>
@@ -39,9 +38,7 @@ function HowTo() {
             내 학생증 안에 작은 지갑, <S.BrandName>오카운트</S.BrandName>
           </S.HeroTitle>
           <S.HeroDescription>BSSM 디지털 포인트 서비스</S.HeroDescription>
-          <S.CTAButton onClick={handleHomeClick}>
-            잔액 확인하러 가기
-          </S.CTAButton>
+          <S.CTAButton onClick={handleHomeClick}>잔액 확인하러 가기</S.CTAButton>
         </S.HeroContent>
       </S.HeroSection>
 
@@ -76,9 +73,7 @@ function HowTo() {
       <S.Section>
         <S.SectionHeader>
           <S.SectionTitle>포인트 획득 방법</S.SectionTitle>
-          <S.SectionDescription>
-            오카운트 포인트를 받는 방법을 알아보세요
-          </S.SectionDescription>
+          <S.SectionDescription>오카운트 포인트를 받는 방법을 알아보세요</S.SectionDescription>
         </S.SectionHeader>
 
         <S.FeatureGrid>
@@ -102,17 +97,13 @@ function HowTo() {
           <S.StepItem>
             <S.StepNumber>1</S.StepNumber>
             <S.StepImage src="/assets/howto1.webp" alt="로그인" loading="lazy" $large />
-            <S.StepDescription>
-              오카운트 웹사이트에 로그인하세요
-            </S.StepDescription>
+            <S.StepDescription>오카운트 웹사이트에 로그인하세요</S.StepDescription>
           </S.StepItem>
 
           <S.StepItem>
             <S.StepNumber>2</S.StepNumber>
             <S.StepImage src="/assets/howto2.webp" alt="잔액 확인" loading="lazy" />
-            <S.StepDescription>
-              메인 페이지에서 현재 잔액을 확인할 수 있습니다
-            </S.StepDescription>
+            <S.StepDescription>메인 페이지에서 현재 잔액을 확인할 수 있습니다</S.StepDescription>
           </S.StepItem>
 
           <S.StepItem>
@@ -129,9 +120,7 @@ function HowTo() {
       <S.Section>
         <S.SectionHeader>
           <S.SectionTitle>사용 방법</S.SectionTitle>
-          <S.SectionDescription>
-            매점에서 간편하게 사용하는 방법
-          </S.SectionDescription>
+          <S.SectionDescription>매점에서 간편하게 사용하는 방법</S.SectionDescription>
         </S.SectionHeader>
 
         <S.UsageGrid>
@@ -165,8 +154,9 @@ function HowTo() {
             잔액 확인하기
           </S.CTAButton>
           <S.CTATerms>
-            오카운트는 공간 아리소리(매점)에서 사용하는 포인트입니다. • 포인트는 교내 행사 참여를 통해 획득할 수 있습니다. • 환전, 조합원 간 양도 및 교환이
-            불가합니다. • 조합원 자격 상실 시 포인트는 전액 소멸됩니다.
+            오카운트는 공간 아리소리(매점)에서 사용하는 포인트입니다. • 포인트는 교내 행사 참여를
+            통해 획득할 수 있습니다. • 환전, 조합원 간 양도 및 교환이 불가합니다. • 조합원 자격 상실
+            시 포인트는 전액 소멸됩니다.
           </S.CTATerms>
         </S.CTAContent>
       </S.CTASection>

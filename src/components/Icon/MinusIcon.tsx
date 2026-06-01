@@ -14,9 +14,7 @@ const MinusIcon: React.FC<IconProps> = ({
     width={size}
     height={size}
     fill="none"
-    aria-hidden={
-      props['aria-label'] || props['aria-labelledby'] ? undefined : true
-    }
+    aria-hidden={props['aria-label'] || props['aria-labelledby'] ? undefined : true}
     {...props}
   >
     <path d="M5 12H19" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />

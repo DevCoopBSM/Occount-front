@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Infobutton = styled.button`
-  margin-right: ${(props) => (props.mRight ? props.mRight : "")};
+  margin-right: ${(props) => (props.mRight ? props.mRight : '')};
   width: 150px;
   height: 45px;
   color: #fff;
@@ -78,7 +78,7 @@ export const PointBottom = styled.div`
 `;
 
 export const InfoText = styled.div`
-    color: ${props => props.color ? props.color : "#333"};
+    color: ${(props) => (props.color ? props.color : '#333')};
     font-size: 23px;
     width: 100px;
 `;

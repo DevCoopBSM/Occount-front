@@ -1,4 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosHeaders,
+} from 'axios';
 
 const currentDomain = window.location.hostname;
 const currentProtocol = window.location.protocol;
@@ -9,18 +16,19 @@ interface AxiosInstanceWithSuspense extends AxiosInstance {
 
 // 개발 모드 체크 함수
 const isDevMode = (): boolean => {
-  return process.env.NODE_ENV === 'development' && 
-         (localStorage.getItem('DEV_MODE') === 'true' || 
-          process.env.REACT_APP_DEV_MODE === 'true');
+  return (
+    process.env.NODE_ENV === 'development' &&
+    (localStorage.getItem('DEV_MODE') === 'true' || process.env.REACT_APP_DEV_MODE === 'true')
+  );
 };
 
 // 개발 모드용 Mock 응답 생성 함수
 const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse => {
   const url = config.url || '';
-  
+
   // 기본 mock 응답
   let mockData: any = { success: true, message: '개발 모드: Mock 응답' };
-  
+
   // 엔드포인트별 mock 응답
   if (url.includes('account/user/info')) {
     mockData = {
@@ -30,7 +38,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
       userEmail: 'dev@example.com',
       userPhone: '010-1234-5678',
       todayTotalPayment: 0,
-      roles: 'ROLE_MEMBER'
+      roles: 'ROLE_MEMBER',
     };
   } else if (url.includes('auth/login')) {
     mockData = {
@@ -41,7 +49,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
       userEmail: 'dev@example.com',
       userPoint: 100000,
       userPhone: '010-1234-5678',
-      roles: 'ROLE_MEMBER'
+      roles: 'ROLE_MEMBER',
     };
   } else if (url.includes('v2/notices')) {
     mockData = [
@@ -51,7 +59,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
         content: '새로운 상품이 입고되었습니다.',
         createdAt: [2025, 7, 12, 14, 30, 0],
         importance: 'HIGH',
-        expirationDate: null
+        expirationDate: null,
       },
       {
         id: 2,
@@ -59,7 +67,7 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
         content: '매점 운영 시간이 변경되었습니다.',
         createdAt: [2025, 7, 10, 9, 0, 0],
         importance: 'MEDIUM',
-        expirationDate: null
+        expirationDate: null,
       },
       {
         id: 3,
@@ -67,11 +75,11 @@ const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse =
         content: '시스템 점검으로 인한 서비스 중단 안내입니다.',
         createdAt: [2025, 7, 8, 16, 45, 0],
         importance: 'LOW',
-        expirationDate: null
-      }
+        expirationDate: null,
+      },
     ];
   }
-  
+
   return {
     data: mockData,
     status: 200,
@@ -95,10 +103,12 @@ export const axiosInstance: AxiosInstanceWithSuspense = axios.create({
     'Content-Type': 'application/json',
   },
   // 개발 모드일 때 adapter를 오버라이드하여 실제 네트워크 요청 차단
-  adapter: isDevMode() ? (config: any) => {
-    console.log('개발 모드: 네트워크 요청 완전 차단', config.method?.toUpperCase(), config.url);
-    return Promise.resolve(createMockResponse(config));
-  } : undefined,
+  adapter: isDevMode()
+    ? (config: any) => {
+        console.log('개발 모드: 네트워크 요청 완전 차단', config.method?.toUpperCase(), config.url);
+        return Promise.resolve(createMockResponse(config));
+      }
+    : undefined,
 }) as AxiosInstanceWithSuspense;
 
 type SetLoadingFunction = (isLoading: boolean) => void;
@@ -135,7 +145,7 @@ axiosInstance.interceptors.request.use(
     if (!isDevMode()) {
       incrementActiveRequests();
     }
-    
+
     const token = getAccessToken();
     if (token) {
       if (config.headers instanceof AxiosHeaders) {
@@ -143,7 +153,7 @@ axiosInstance.interceptors.request.use(
       } else {
         config.headers = new AxiosHeaders({
           Authorization: `Bearer ${token}`,
-          ...(config.headers as Record<string, string> || {})
+          ...((config.headers as Record<string, string>) || {}),
         });
       }
     }
@@ -180,8 +190,10 @@ axiosInstance.interceptors.response.use(
       }
 
       // 로그인과 비밀번호 확인 요청은 401 에러가 발생해도 로그아웃 처리하지 않음
-      if (originalRequest && (originalRequest.url === 'auth/login' ||
-          originalRequest.url === 'account/verify')) {
+      if (
+        originalRequest &&
+        (originalRequest.url === 'auth/login' || originalRequest.url === 'account/verify')
+      ) {
         return Promise.reject(error);
       }
 
@@ -204,7 +216,7 @@ axiosInstance.suspense = async <T = any>(config: AxiosRequestConfig): Promise<T>
     const mockResponse = createMockResponse(config as InternalAxiosRequestConfig);
     return mockResponse.data as T;
   }
-  
+
   incrementActiveRequests();
   try {
     const response = await axiosInstance(config);

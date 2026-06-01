@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const CompeleteWrap = styled.div`
   margin: 0 auto;
@@ -38,7 +38,7 @@ export const StudentInfo = styled.div`
 `;
 
 export const InfoText = styled.div`
-  color: ${(props) => (props.color ? props.color : "#333")};
+  color: ${(props) => (props.color ? props.color : '#333')};
   font-weight: 400;
   font-size: 23px;
   margin-top: 5px;
@@ -68,17 +68,17 @@ export const ExChangeDetailWrap = styled.div`
   justify-content: space-between;
 
   margin: 0 auto;
-  margin-top: ${(props) => (props.marginTop ? props.marginTop : "0")};
-  padding-top: ${(props) => (props.paddingTop ? props.paddingTop : "0")};
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : '0')};
+  padding-top: ${(props) => (props.paddingTop ? props.paddingTop : '0')};
 
-  width: ${(props) => (props.width ? props.width : "800px")};
+  width: ${(props) => (props.width ? props.width : '800px')};
   height: 50px;
 
   border-top: ${(props) => (props.border ? props.border : null)};
 `;
 
 export const Exchange = styled.p`
-  font-size: ${(props) => (props.fontSize ? props.fontSize : "25px")};
+  font-size: ${(props) => (props.fontSize ? props.fontSize : '25px')};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : null)};
 `;
 

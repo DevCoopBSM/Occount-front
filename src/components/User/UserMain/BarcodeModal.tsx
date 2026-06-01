@@ -33,17 +33,17 @@ const BarcodeModal: React.FC<BarcodeModalProps> = ({ isOpen, onRequestClose, use
           borderRadius: '4px',
           outline: 'none',
           padding: '0',
-        }
+        },
       }}
     >
       <ModalContent>
         <ModalHeader>바코드</ModalHeader>
         <BarcodeWrapper>
-          <StyledBarcode 
-            value={userCode} 
-            format="CODE128" 
+          <StyledBarcode
+            value={userCode}
+            format="CODE128"
             width={2}
-            height={100} 
+            height={100}
             displayValue={false}
           />
         </BarcodeWrapper>

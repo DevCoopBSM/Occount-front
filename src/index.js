@@ -15,10 +15,9 @@ root.render(
 if ('serviceWorker' in navigator) {
   if (process.env.NODE_ENV === 'production') {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .catch((error) => {
-          console.error('SW 등록 실패:', error);
-        });
+      navigator.serviceWorker.register('/sw.js').catch((error) => {
+        console.error('SW 등록 실패:', error);
+      });
     });
   } else {
     // 개발 환경에서는 기존 SW를 모두 해제 (HMR 충돌 방지)

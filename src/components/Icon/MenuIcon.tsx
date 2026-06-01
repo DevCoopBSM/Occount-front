@@ -20,7 +20,12 @@ const MenuIcon: React.FC<IconProps> = ({
     aria-hidden={props['aria-label'] ? undefined : true}
     {...props}
   >
-    <path d="M3 6.75H21M3 12H21M3 17.25H21" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    <path
+      d="M3 6.75H21M3 12H21M3 17.25H21"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+    />
   </svg>
 );
 

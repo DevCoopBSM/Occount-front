@@ -187,7 +187,7 @@ export const CharacterIcon = styled.img`
   width: 120px;
   height: 120px;
   object-fit: contain;
-  animation: ${props => props.$isRotating ? 'spinOnce 0.8s ease-out' : 'none'};
+  animation: ${(props) => (props.$isRotating ? 'spinOnce 0.8s ease-out' : 'none')};
 
   @keyframes spinOnce {
     0% {
@@ -365,7 +365,6 @@ export const ScrollButton = styled.button`
     height: 35px;
   }
 `;
-
 
 export const Content = styled.div`
   display: flex;
@@ -565,7 +564,7 @@ export const StepNumber = styled.div`
 
 export const StepImage = styled.img`
   width: 100%;
-  max-width: ${props => props.$large ? '400px' : '250px'};
+  max-width: ${(props) => (props.$large ? '400px' : '250px')};
   height: auto;
   margin: 20px 0;
   border-radius: 8px;
@@ -668,8 +667,8 @@ export const CTATitle = styled.h2`
 `;
 
 export const CTAButton = styled.button`
-  background: ${props => props.$primary ? '#333' : '#FCC800'};
-  color: ${props => props.$primary ? '#fff' : '#333'};
+  background: ${(props) => (props.$primary ? '#333' : '#FCC800')};
+  color: ${(props) => (props.$primary ? '#fff' : '#333')};
   border: none;
   padding: 16px 48px;
   font-size: 18px;
@@ -685,7 +684,7 @@ export const CTAButton = styled.button`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    background: ${props => props.$primary ? '#555' : '#F49E15'};
+    background: ${(props) => (props.$primary ? '#555' : '#F49E15')};
   }
 
   @media (prefers-reduced-motion: reduce) {

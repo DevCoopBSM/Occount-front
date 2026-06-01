@@ -14,8 +14,8 @@ export const PageHeader = styled.header<{ $isAuthPage?: boolean; $isVisible?: bo
   width: 100%;
   height: 80px;
   background: #ffffff;
-  border-bottom: ${props => props.$isAuthPage ? 'none' : '1px solid #f0f0f0'};
-  transform: ${props => props.$isVisible === false ? 'translateY(-100%)' : 'translateY(0)'};
+  border-bottom: ${(props) => (props.$isAuthPage ? 'none' : '1px solid #f0f0f0')};
+  transform: ${(props) => (props.$isVisible === false ? 'translateY(-100%)' : 'translateY(0)')};
   transition: transform 0.1s ease-in-out;
 `;
 
@@ -59,8 +59,8 @@ export const LogoWrapper = styled.div<{ $isAuthPage?: boolean }>`
   margin-left: -10px;
 
   img {
-    width: ${props => props.$isAuthPage ? '120px' : '180px'};
-    height: ${props => props.$isAuthPage ? '24px' : '36px'};
+    width: ${(props) => (props.$isAuthPage ? '120px' : '180px')};
+    height: ${(props) => (props.$isAuthPage ? '24px' : '36px')};
     object-fit: contain;
     transition: all 0.2s ease;
   }

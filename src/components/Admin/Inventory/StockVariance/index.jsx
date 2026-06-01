@@ -13,9 +13,7 @@ const StockVariance = () => {
     new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
   );
   const [endDate, setEndDate] = useState(
-    new Date(
-      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
-    )
+    new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0))
   );
 
   const [isEndDateVisible, setIsEndDateVisible] = useState(false);

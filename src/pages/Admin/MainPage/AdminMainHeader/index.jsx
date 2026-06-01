@@ -16,12 +16,7 @@ const getActiveMenu = (menuItems, openItems) => {
   return null;
 };
 
-const AdminMainHeader = ({
-  handleLinkClick,
-  menuItems,
-  openItems,
-  activeLink,
-}) => {
+const AdminMainHeader = ({ handleLinkClick, menuItems, openItems, activeLink }) => {
   const { isAdminLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
   const activeMenu = getActiveMenu(menuItems, openItems);
@@ -37,7 +32,12 @@ const AdminMainHeader = ({
     <_.AdminMainHeader>
       <_.NewHeaderInBox>
         <_.LogoButton type="button" onClick={goToBarcode} aria-label="관리자 메인으로 이동">
-          <img src="/assets/AdminMainHeader.svg" width={'200px'} height={'75px'} alt="AriPay Logo" />
+          <img
+            src="/assets/AdminMainHeader.svg"
+            width={'200px'}
+            height={'75px'}
+            alt="AriPay Logo"
+          />
         </_.LogoButton>
         <_.NewHeaderComponents>
           {activeMenu &&
@@ -58,9 +58,7 @@ const AdminMainHeader = ({
         {isAdminLoggedIn ? (
           <_.NewLogOutBtn onClick={handleLogoutClick}>로그아웃</_.NewLogOutBtn>
         ) : (
-          <_.NewLogOutBtn onClick={() => navigate('/admin/login')}>
-            로그인
-          </_.NewLogOutBtn>
+          <_.NewLogOutBtn onClick={() => navigate('/admin/login')}>로그인</_.NewLogOutBtn>
         )}
       </_.NewHeaderInBox>
     </_.AdminMainHeader>

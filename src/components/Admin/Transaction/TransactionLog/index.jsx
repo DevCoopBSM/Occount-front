@@ -16,9 +16,9 @@ const TransactionLog = ({ userCode, type }) => {
           const logData = response.data;
 
           // Date 배열을 Date 객체로 변환하여 사용
-          const formattedData = logData.map(entry => ({
+          const formattedData = logData.map((entry) => ({
             ...entry,
-            [`${type}Date`]: new Date(...entry[`${type}Date`])
+            [`${type}Date`]: new Date(...entry[`${type}Date`]),
           }));
 
           setLogEntries(formattedData);
@@ -44,9 +44,18 @@ const TransactionLog = ({ userCode, type }) => {
     const actionText = type === 'charge' ? '충전' : '결제';
     const barColor = type === 'charge' ? '#e6ebff' : '#e7e7e7';
 
-    const safeBeforePoint = logEntry.beforePoint !== null && logEntry.beforePoint !== undefined ? logEntry.beforePoint.toLocaleString() : 'N/A';
-    const safeAmount = logEntry[amountKey] !== null && logEntry[amountKey] !== undefined ? logEntry[amountKey].toLocaleString() : 'N/A';
-    const safeAfterPoint = logEntry.afterPoint !== null && logEntry.afterPoint !== undefined ? logEntry.afterPoint.toLocaleString() : 'N/A';
+    const safeBeforePoint =
+      logEntry.beforePoint !== null && logEntry.beforePoint !== undefined
+        ? logEntry.beforePoint.toLocaleString()
+        : 'N/A';
+    const safeAmount =
+      logEntry[amountKey] !== null && logEntry[amountKey] !== undefined
+        ? logEntry[amountKey].toLocaleString()
+        : 'N/A';
+    const safeAfterPoint =
+      logEntry.afterPoint !== null && logEntry.afterPoint !== undefined
+        ? logEntry.afterPoint.toLocaleString()
+        : 'N/A';
 
     return (
       <_.LogDetailsWrap>
@@ -61,7 +70,9 @@ const TransactionLog = ({ userCode, type }) => {
           </_.LogInfoWrap>
           <_.LogInfoWrap>
             <_.LogInfoText>{`${actionText}금액`}</_.LogInfoText>
-            <_.LogInfoText>{type === 'charge' ? `+${safeAmount}` : `-${safeAmount}`}원</_.LogInfoText>
+            <_.LogInfoText>
+              {type === 'charge' ? `+${safeAmount}` : `-${safeAmount}`}원
+            </_.LogInfoText>
           </_.LogInfoWrap>
           <hr style={{ marginTop: '40px' }} />
           <_.LogInfoWrap>
@@ -79,14 +90,19 @@ const TransactionLog = ({ userCode, type }) => {
     <div style={{ flexDirection: 'column' }}>
       {logEntries.map((item, index) => (
         <div key={index}>
-          <_.LogWrap onClick={() => toggleModal(index)} backgroundColor={type === 'charge' ? "#E6EBFF" : "#E7E7E7"}>
+          <_.LogWrap
+            onClick={() => toggleModal(index)}
+            backgroundColor={type === 'charge' ? '#E6EBFF' : '#E7E7E7'}
+          >
             <_.LogEntry>
               <_.LogDate>{PrettyDateTime(item[`${type}Date`])}</_.LogDate>
               <_.LogAmount positive={type === 'charge'}>
                 {type === 'charge' ? `+` : `-`}
-                {item[type === 'charge' ? 'chargedPoint' : 'payedPoint'] !== null && item[type === 'charge' ? 'chargedPoint' : 'payedPoint'] !== undefined
+                {item[type === 'charge' ? 'chargedPoint' : 'payedPoint'] !== null &&
+                item[type === 'charge' ? 'chargedPoint' : 'payedPoint'] !== undefined
                   ? item[type === 'charge' ? 'chargedPoint' : 'payedPoint'].toLocaleString()
-                  : 'N/A'}원
+                  : 'N/A'}
+                원
               </_.LogAmount>
               <_.LogType>{type === 'charge' ? '충전' : '결제'}</_.LogType>
             </_.LogEntry>

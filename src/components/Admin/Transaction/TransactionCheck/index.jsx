@@ -1,8 +1,8 @@
-import React, {useState} from "react";
-import Modal from "components/Modal";
-import { useNavigate } from "react-router-dom";
-import * as _ from "./style";
-import axiosInstance from "utils/Axios";
+import React, { useState } from 'react';
+import Modal from 'components/Modal';
+import { useNavigate } from 'react-router-dom';
+import * as _ from './style';
+import axiosInstance from 'utils/Axios';
 
 const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,8 +11,8 @@ const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
   const navigate = useNavigate();
 
   const completePage = (data) => {
-    console.log("Complete Page Data:", data); // 추가: 이 부분에서 데이터 확인
-    navigate("/admin/complete", { state: { data } });
+    console.log('Complete Page Data:', data); // 추가: 이 부분에서 데이터 확인
+    navigate('/admin/complete', { state: { data } });
   };
 
   const openModal = () => {
@@ -24,10 +24,10 @@ const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
   };
 
   const handleAction = () => {
-    const endpoint = actionType === "pay" ? `v2/transaction/pay` : `v2/transaction/charge`;
+    const endpoint = actionType === 'pay' ? `v2/transaction/pay` : `v2/transaction/charge`;
     const payload = {
       userCode: state.userCode,
-      [actionType === "pay" ? "payedPoint" : "chargedPoint"]: state.variousPoint,
+      [actionType === 'pay' ? 'payedPoint' : 'chargedPoint']: state.variousPoint,
       charger: state.charger,
     };
 
@@ -35,30 +35,33 @@ const PaymentsCheck = ({ state, fetchUserInfo, actionType }) => {
       .post(endpoint, payload)
       .then((result) => {
         const data = result.data;
-        console.log("요청성공", data);
+        console.log('요청성공', data);
         completePage(data);
       })
       .catch((error) => {
-        if (error.response && error.response.data.message === "잘못된 요청입니다. 잔액초과") {
-          setErrorMessage("잔액이 부족합니다.");
+        if (error.response && error.response.data.message === '잘못된 요청입니다. 잔액초과') {
+          setErrorMessage('잔액이 부족합니다.');
           setTimeout(() => setErrorMessage(null), 3000);
         } else {
-          console.log("요청실패", error);
+          console.log('요청실패', error);
         }
       });
   };
 
   return (
     <>
-      <button onClick={openModal}>
-        {actionType === "pay" ? "결제" : "충전"}
-      </button>
+      <button onClick={openModal}>{actionType === 'pay' ? '결제' : '충전'}</button>
       <Modal isOpen={modalOpen}>
         <_.ContentWrap>
-          <img src="/assets/QuestionLogo.svg" style={{ width: "60px", height: "60px" }} alt="" aria-hidden="true" />
+          <img
+            src="/assets/QuestionLogo.svg"
+            style={{ width: '60px', height: '60px' }}
+            alt=""
+            aria-hidden="true"
+          />
           <_.ContentTitle>{amount.toLocaleString()}원</_.ContentTitle>
           <_.ContentSubTitle>
-            {actionType === "pay" ? "결제하시겠습니까?" : "충전하시겠습니까?"}
+            {actionType === 'pay' ? '결제하시겠습니까?' : '충전하시겠습니까?'}
           </_.ContentSubTitle>
           {errorMessage && <div>{errorMessage}</div>}
         </_.ContentWrap>

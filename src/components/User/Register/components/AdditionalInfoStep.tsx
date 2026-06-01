@@ -41,7 +41,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
   const fadeIn = useSpring({
     opacity: 1,
     from: { opacity: 0 },
-    config: { duration: 500 }
+    config: { duration: 500 },
   });
 
   const confirmPinSpring = useSpring({
@@ -64,17 +64,13 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
           readOnly
           required
         />
-        {errors.userAddress && 
+        {errors.userAddress && (
           <R.ErrorMessage isVisible={true}>{errors.userAddress}</R.ErrorMessage>
-        }
+        )}
       </R.InputContainer>
 
-      <R.AddressSearchButton 
-        type="button" 
-        onClick={onAddressSearch} 
-        disabled={!isScriptLoaded}
-      >
-        {isScriptLoaded ? "주소 검색" : "로딩 중..."}
+      <R.AddressSearchButton type="button" onClick={onAddressSearch} disabled={!isScriptLoaded}>
+        {isScriptLoaded ? '주소 검색' : '로딩 중...'}
       </R.AddressSearchButton>
 
       {formData.userAddress && (
@@ -126,13 +122,12 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
         </animated.div>
       </R.PinContainer>
 
-      {formData.confirmPin && (
-        pinMatch ? (
+      {formData.confirmPin &&
+        (pinMatch ? (
           <R.SuccessMessage isVisible={true}>PIN 번호가 일치합니다.</R.SuccessMessage>
         ) : (
           <R.ErrorMessage isVisible={true}>{ERROR_MESSAGES.PIN_MISMATCH}</R.ErrorMessage>
-        )
-      )}
+        ))}
 
       {userType === UserType.STUDENT && (
         <R.InputContainer>
@@ -145,9 +140,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
             placeholder="학생증 바코드를 입력해주세요"
             required
           />
-          {errors.userCode && 
-            <R.ErrorMessage isVisible={true}>{errors.userCode}</R.ErrorMessage>
-          }
+          {errors.userCode && <R.ErrorMessage isVisible={true}>{errors.userCode}</R.ErrorMessage>}
         </R.InputContainer>
       )}
 
@@ -155,9 +148,7 @@ export const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
         <R.NavigationButton onClick={onPrev} isPrev>
           이전
         </R.NavigationButton>
-        <R.NavigationButton onClick={onSubmit}>
-          회원가입
-        </R.NavigationButton>
+        <R.NavigationButton onClick={onSubmit}>회원가입</R.NavigationButton>
       </R.ButtonContainer>
     </R.AnimatedContainer>
   );

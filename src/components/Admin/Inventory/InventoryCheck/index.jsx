@@ -10,9 +10,7 @@ export default function InventoryCheck() {
     new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
   );
   const [endDate, setEndDate] = useState(
-    new Date(
-      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
-    )
+    new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0))
   );
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,7 +50,8 @@ export default function InventoryCheck() {
   }, [handleSearch]);
 
   return (
-    <><_.ButtonContainer>
+    <>
+      <_.ButtonContainer>
         <_.Dbutton onClick={() => setModalOpen(true)}>재고변동등록</_.Dbutton>
       </_.ButtonContainer>
       <DataTable

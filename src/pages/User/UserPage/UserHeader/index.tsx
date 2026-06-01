@@ -36,12 +36,13 @@ function Header() {
     navigate(path);
   };
 
-  const isAuthPage = location.pathname === '/login' ||
-                     location.pathname === '/register' ||
-                     location.pathname === '/pwchange' ||
-                     location.pathname === '/pwChange' ||
-                     location.pathname.startsWith('/pwchange/') ||
-                     location.pathname.startsWith('/pwChange/');
+  const isAuthPage =
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/pwchange' ||
+    location.pathname === '/pwChange' ||
+    location.pathname.startsWith('/pwchange/') ||
+    location.pathname.startsWith('/pwChange/');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -84,10 +85,7 @@ function Header() {
     <H.PageHeader $isAuthPage={isAuthPage} $isVisible={isHeaderVisible}>
       <H.HeaderInBox>
         <H.LogoWrapper $isAuthPage={isAuthPage} onClick={handleLogoClick}>
-          <img
-            src="/assets/occount-logo.svg"
-            alt="Occount Logo"
-          />
+          <img src="/assets/occount-logo.svg" alt="Occount Logo" />
         </H.LogoWrapper>
 
         {!isAuthPage && (
@@ -102,40 +100,48 @@ function Header() {
             <H.RightSection>
               <H.MobileMenuContainer ref={mobileMenuRef}>
                 <H.MenuButton
-                  onClick={() => setMobileMenuVisible(prev => !prev)}
+                  onClick={() => setMobileMenuVisible((prev) => !prev)}
                   aria-label="모바일 메뉴 열기"
                 >
                   <Icon name="menu" size={24} />
                 </H.MenuButton>
                 {mobileMenuVisible && (
                   <H.MobileMenuPanel>
-                    <H.MobileMenuItem onClick={() => handleNavigation('/item-list')}>상품 목록</H.MobileMenuItem>
-                    <H.MobileMenuItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.MobileMenuItem>
-                    <H.MobileMenuItem onClick={() => handleNavigation('/notice')}>공지사항</H.MobileMenuItem>
-                    <H.MobileMenuItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/item-list')}>
+                      상품 목록
+                    </H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/userlog')}>
+                      결제 내역
+                    </H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/notice')}>
+                      공지사항
+                    </H.MobileMenuItem>
+                    <H.MobileMenuItem onClick={() => handleNavigation('/contact')}>
+                      문의 및 건의
+                    </H.MobileMenuItem>
                   </H.MobileMenuPanel>
                 )}
               </H.MobileMenuContainer>
 
               <H.SettingsSection>
-              {isLoggedIn ? (
-                <H.SettingsContainer ref={dropdownRef}>
-                  <H.SettingsButton onClick={handleSettingsClick}>
-                    <Icon name="settings" size={20} />
-                    <span>설정</span>
-                  </H.SettingsButton>
-                  {dropdownVisible && (
-                    <H.DropdownMenu>
-                      <H.DropdownItem onClick={handleUserInfoChangeClick}>회원 정보 변경</H.DropdownItem>
-                      <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
-                    </H.DropdownMenu>
-                  )}
-                </H.SettingsContainer>
-              ) : (
-                <H.LoginButton onClick={() => navigate('/login')}>
-                  로그인
-                </H.LoginButton>
-              )}
+                {isLoggedIn ? (
+                  <H.SettingsContainer ref={dropdownRef}>
+                    <H.SettingsButton onClick={handleSettingsClick}>
+                      <Icon name="settings" size={20} />
+                      <span>설정</span>
+                    </H.SettingsButton>
+                    {dropdownVisible && (
+                      <H.DropdownMenu>
+                        <H.DropdownItem onClick={handleUserInfoChangeClick}>
+                          회원 정보 변경
+                        </H.DropdownItem>
+                        <H.DropdownItem onClick={handleLogoutClick}>로그아웃</H.DropdownItem>
+                      </H.DropdownMenu>
+                    )}
+                  </H.SettingsContainer>
+                ) : (
+                  <H.LoginButton onClick={() => navigate('/login')}>로그인</H.LoginButton>
+                )}
               </H.SettingsSection>
             </H.RightSection>
           </>

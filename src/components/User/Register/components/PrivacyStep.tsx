@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSpring } from 'react-spring';
-import { 
-  PRIVACY_CONTENT, 
-  PRIVACY_SECTIONS, 
-  PRIVACY_NOTICE, 
-  PRIVACY_AGREEMENTS 
+import {
+  PRIVACY_CONTENT,
+  PRIVACY_SECTIONS,
+  PRIVACY_NOTICE,
+  PRIVACY_AGREEMENTS,
 } from '../constants/privacy';
 import * as R from '../style';
 
@@ -30,7 +30,7 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
   const fadeIn = useSpring({
     opacity: 1,
     from: { opacity: 0 },
-    config: { duration: 500 }
+    config: { duration: 500 },
   });
 
   return (
@@ -47,16 +47,18 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
           <tr>
             <td>필수항목</td>
             <td>
-              {PRIVACY_CONTENT.REQUIRED_ITEMS.purposes.map(purpose => (
+              {PRIVACY_CONTENT.REQUIRED_ITEMS.purposes.map((purpose) => (
                 <React.Fragment key={purpose}>
-                  - {purpose}<br/>
+                  - {purpose}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
             <td>
-              {PRIVACY_CONTENT.REQUIRED_ITEMS.items.map(item => (
+              {PRIVACY_CONTENT.REQUIRED_ITEMS.items.map((item) => (
                 <React.Fragment key={item}>
-                  - {item}<br/>
+                  - {item}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
@@ -64,16 +66,18 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
           <tr>
             <td>본인인증 시</td>
             <td>
-              {PRIVACY_CONTENT.VERIFICATION_ITEMS.purposes.map(purpose => (
+              {PRIVACY_CONTENT.VERIFICATION_ITEMS.purposes.map((purpose) => (
                 <React.Fragment key={purpose}>
-                  - {purpose}<br/>
+                  - {purpose}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
             <td>
-              {PRIVACY_CONTENT.VERIFICATION_ITEMS.items.map(item => (
+              {PRIVACY_CONTENT.VERIFICATION_ITEMS.items.map((item) => (
                 <React.Fragment key={item}>
-                  - {item}<br/>
+                  - {item}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
@@ -89,9 +93,10 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
           <tr>
             <th>{PRIVACY_SECTIONS.RETENTION.tableHeaders.legal}</th>
             <td>
-              {PRIVACY_CONTENT.RETENTION.legal_obligations.map(obligation => (
+              {PRIVACY_CONTENT.RETENTION.legal_obligations.map((obligation) => (
                 <React.Fragment key={obligation}>
-                  - {obligation}<br/>
+                  - {obligation}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
@@ -99,9 +104,10 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
           <tr>
             <th>{PRIVACY_SECTIONS.RETENTION.tableHeaders.disposal}</th>
             <td>
-              {PRIVACY_CONTENT.RETENTION.disposal_methods.map(method => (
+              {PRIVACY_CONTENT.RETENTION.disposal_methods.map((method) => (
                 <React.Fragment key={method}>
-                  - {method}<br/>
+                  - {method}
+                  <br />
                 </React.Fragment>
               ))}
             </td>
@@ -134,13 +140,14 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
             <th>{PRIVACY_SECTIONS.OUTSOURCING.tableHeaders.processor}</th>
             <th>{PRIVACY_SECTIONS.OUTSOURCING.tableHeaders.tasks}</th>
           </tr>
-          {PRIVACY_CONTENT.PROCESSORS.map(processor => (
+          {PRIVACY_CONTENT.PROCESSORS.map((processor) => (
             <tr key={processor.name}>
               <td>{processor.name}</td>
               <td>
-                {processor.tasks.map(task => (
+                {processor.tasks.map((task) => (
                   <React.Fragment key={task}>
-                    - {task}<br/>
+                    - {task}
+                    <br />
                   </React.Fragment>
                 ))}
               </td>
@@ -150,20 +157,24 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
 
         <h3>{PRIVACY_SECTIONS.RIGHTS.title}</h3>
         <p>
-          {PRIVACY_SECTIONS.RIGHTS.description}<br/>
-          {PRIVACY_CONTENT.USER_RIGHTS.map(right => (
+          {PRIVACY_SECTIONS.RIGHTS.description}
+          <br />
+          {PRIVACY_CONTENT.USER_RIGHTS.map((right) => (
             <React.Fragment key={right}>
-              - {right}<br/>
+              - {right}
+              <br />
             </React.Fragment>
           ))}
         </p>
 
         <h3>{PRIVACY_SECTIONS.SECURITY.title}</h3>
         <p>
-          {PRIVACY_SECTIONS.SECURITY.description}<br/>
-          {PRIVACY_CONTENT.SECURITY_MEASURES.map(measure => (
+          {PRIVACY_SECTIONS.SECURITY.description}
+          <br />
+          {PRIVACY_CONTENT.SECURITY_MEASURES.map((measure) => (
             <React.Fragment key={measure}>
-              - {measure}<br/>
+              - {measure}
+              <br />
             </React.Fragment>
           ))}
         </p>
@@ -198,7 +209,7 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
             {PRIVACY_AGREEMENTS.collection.label}
           </R.PrivacyLabel>
         </R.PrivacyCheckboxWrapper>
-        
+
         <R.PrivacyCheckboxWrapper>
           <R.PrivacyCheckbox
             type="checkbox"
@@ -212,15 +223,15 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
         </R.PrivacyCheckboxWrapper>
       </R.PrivacyAgreementContainer>
 
-      {errors.privacyAgreement && 
+      {errors.privacyAgreement && (
         <R.ErrorMessage isVisible={true}>{errors.privacyAgreement}</R.ErrorMessage>
-      }
+      )}
 
       <R.ButtonContainer>
         <R.NavigationButton onClick={onPrev} isPrev>
           이전
         </R.NavigationButton>
-        <R.NavigationButton 
+        <R.NavigationButton
           onClick={onNext}
           disabled={!isPrivacyCollectionAgreed || !isPrivacyThirdPartyAgreed}
         >

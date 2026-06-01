@@ -8,9 +8,7 @@ export default function ReceiptCheck() {
     new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
   );
   const [endDate, setEndDate] = useState(
-    new Date(
-      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
-    )
+    new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0))
   );
   const [data, setData] = useState([]);
 

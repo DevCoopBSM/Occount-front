@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const CompeleteWrap = styled.div`
   width: 100%;
@@ -55,10 +55,10 @@ export const TabButton = styled.button`
   height: 31px;
   background: transparent;
   border: none;
-  border-bottom: ${props => props.active ? '2px solid #fcc800' : 'none'};
+  border-bottom: ${(props) => (props.active ? '2px solid #fcc800' : 'none')};
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
-  font-weight: ${props => props.active ? '400' : '400'};
+  font-weight: ${(props) => (props.active ? '400' : '400')};
   color: #111111;
   line-height: 21px;
   cursor: pointer;
@@ -66,7 +66,7 @@ export const TabButton = styled.button`
   white-space: nowrap;
   
   &:hover {
-    opacity: ${props => props.active ? '1' : '0.7'};
+    opacity: ${(props) => (props.active ? '1' : '0.7')};
   }
 `;
 

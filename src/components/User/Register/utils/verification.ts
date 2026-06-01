@@ -1,5 +1,5 @@
 import { UserInfo } from '../types';
-import * as PortOne from "@portone/browser-sdk/v2";
+import * as PortOne from '@portone/browser-sdk/v2';
 import axiosInstance from 'utils/Axios';
 
 export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => {
@@ -9,7 +9,7 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
       storeId: process.env.REACT_APP_STORE_ID,
       identityVerificationId,
       channelKey: process.env.REACT_APP_CHANNEL_KEY_AUTH,
-      redirectUrl: 'https://occount.bsm-aripay.kr/identity-verification-redirect'
+      redirectUrl: 'https://occount.bsm-aripay.kr/identity-verification-redirect',
     });
 
     if (response.code !== undefined) {
@@ -17,20 +17,17 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
       throw new Error(response.message);
     }
 
-    console.log(response)
-    const { data } = await axiosInstance.post(
-      "/verify/identity",
-      { identityVerificationId }
-    );
+    console.log(response);
+    const { data } = await axiosInstance.post('/verify/identity', { identityVerificationId });
     return {
       success: true,
       userName: data.name,
       userBirthDate: data.birth,
       userPhone: data.phone,
-      userCiNumber: data.verificationId
+      userCiNumber: data.verificationId,
     };
   } catch (error) {
-    alert(error instanceof Error ? error.message : "인증에 실패했습니다");
+    alert(error instanceof Error ? error.message : '인증에 실패했습니다');
     throw error;
   }
 };

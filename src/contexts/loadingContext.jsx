@@ -23,7 +23,7 @@ export const LoadingProvider = ({ children }) => {
   }, []);
 
   const setLoading = useCallback((loading) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isLoading: loading,
       shouldShowLoading: loading || !!prev.error,
@@ -36,7 +36,7 @@ export const LoadingProvider = ({ children }) => {
       clearTimeout(timerRef.current);
     }
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isLoading: false,
       error: err,
@@ -45,12 +45,12 @@ export const LoadingProvider = ({ children }) => {
 
     if (err) {
       timerRef.current = setTimeout(() => {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           error: null,
           shouldShowLoading: false,
         }));
-      }, 1000 );
+      }, 1000);
     }
   }, []);
 
@@ -62,9 +62,7 @@ export const LoadingProvider = ({ children }) => {
   }, [setLoading, setError, clearAll]);
 
   return (
-    <LoadingContext.Provider value={{ ...state, clearAll }}>
-      {children}
-    </LoadingContext.Provider>
+    <LoadingContext.Provider value={{ ...state, clearAll }}>{children}</LoadingContext.Provider>
   );
 };
 

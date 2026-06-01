@@ -5,10 +5,10 @@ import AdminMainPage from 'pages/Admin/MainPage';
 
 const AdminRoutes: React.FC = () => {
   return (
-      <Routes>
-        <Route path="login" element={<AdminLoginPage />} />
-        <Route path="*" element={<AdminMainPage />} />
-      </Routes>
+    <Routes>
+      <Route path="login" element={<AdminLoginPage />} />
+      <Route path="*" element={<AdminMainPage />} />
+    </Routes>
   );
 };
 

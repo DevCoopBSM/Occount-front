@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const LogWrap = styled.div`
   display: flex;
@@ -8,14 +8,14 @@ export const LogWrap = styled.div`
   padding: 15px;
   width: 100%;
   max-width: 500px;
-  background-color: ${(props) => props.backgroundColor || "#eff0f2"};
-  border: 1px solid ${(props) => props.borderColor || "#EFF0F2"};
+  background-color: ${(props) => props.backgroundColor || '#eff0f2'};
+  border: 1px solid ${(props) => props.borderColor || '#EFF0F2'};
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${(props) => props.hoverColor || "#d6d9e0"};
+    background-color: ${(props) => props.hoverColor || '#d6d9e0'};
   }
 `;
 
@@ -33,7 +33,7 @@ export const LogDate = styled.div`
 
 export const LogAmount = styled.div`
   font-size: 16px;
-  color: ${(props) => (props.positive ? "#4CAF50" : "#F44336")};
+  color: ${(props) => (props.positive ? '#4CAF50' : '#F44336')};
   font-weight: bold;
   flex: 1;
   text-align: right;
@@ -61,7 +61,7 @@ export const LogDetailsBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: ${(props) => props.barColor || "#e7e7e7"};
+  background-color: ${(props) => props.barColor || '#e7e7e7'};
   border-radius: 6px 6px 0 0;
   padding: 10px;
   font-weight: bold;
@@ -87,7 +87,7 @@ export const LogInfoText = styled.span`
 export const StatusText = styled.span`
   font-size: 14px;
   color: #fff;
-  background-color: ${(props) => props.statusColor || "#4CAF50"};
+  background-color: ${(props) => props.statusColor || '#4CAF50'};
   padding: 5px 10px;
   border-radius: 12px;
   font-weight: bold;
@@ -95,11 +95,11 @@ export const StatusText = styled.span`
 
 export const LogToggleButton = styled.div`
   font-size: 14px;
-  color: ${(props) => props.color || "#007bff"};
+  color: ${(props) => props.color || '#007bff'};
   cursor: pointer;
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${(props) => props.hoverColor || "#0056b3"};
+    color: ${(props) => props.hoverColor || '#0056b3'};
   }
 `;

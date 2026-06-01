@@ -8,9 +8,7 @@ export default function ReceiptCheck() {
     new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
   );
   const [endDate, setEndDate] = useState(
-    new Date(
-      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0)
-    )
+    new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() + 1, 0))
   );
   const [data, setData] = useState([]);
 
@@ -28,7 +26,6 @@ export default function ReceiptCheck() {
           console.log('No content');
           setData([]);
         } else {
-
           // 받아온 데이터의 필드를 재매핑합니다.
           const remappedData = response.data.map((item) => ({
             거래번호: item.receiptId,

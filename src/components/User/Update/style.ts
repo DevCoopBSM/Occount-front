@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const TABLET_BREAKPOINT = "768px";
-const DESKTOP_BREAKPOINT = "1440px";
+const TABLET_BREAKPOINT = '768px';
+const DESKTOP_BREAKPOINT = '1440px';
 
 export const Container = styled.div`
   display: flex;
@@ -295,7 +295,7 @@ export const SuccessMessage = styled.p<{ isVisible: boolean }>`
   font-size: 13px;
   line-height: 1.5;
   font-family: "Pretendard", sans-serif;
-  display: ${props => props.isVisible ? "block" : "none"};
+  display: ${(props) => (props.isVisible ? 'block' : 'none')};
 `;
 
 export const AuthContainer = styled.div`

@@ -3,14 +3,7 @@ import * as _ from './style';
 import DatePicker from 'react-datepicker';
 import * as xlsx from 'xlsx';
 
-const TableHeader = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  data,
-  TableName,
-}) => {
+const TableHeader = ({ startDate, setStartDate, endDate, setEndDate, data, TableName }) => {
   const handleDownload = () => {
     const workbook = xlsx.utils.book_new(); // 새로운 워크북 생성
     const worksheet = xlsx.utils.json_to_sheet(data); // 데이터를 시트로 변환

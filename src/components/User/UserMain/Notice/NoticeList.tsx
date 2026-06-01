@@ -62,11 +62,14 @@ const NoticeList: React.FC = () => {
               <NoticeItemHeader>
                 <NoticeTitle>{notice.title}</NoticeTitle>
                 <NoticeDate>
-                  {new Date(notice.createdAt).toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  }).replace(/\. /g, '.').replace('.', '')}
+                  {new Date(notice.createdAt)
+                    .toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })
+                    .replace(/\. /g, '.')
+                    .replace('.', '')}
                 </NoticeDate>
               </NoticeItemHeader>
             </NoticeItem>
@@ -181,7 +184,6 @@ const NoticeDate = styled.p`
   text-align: right;
   flex-shrink: 0;
 `;
-
 
 const LoadingMessage = styled.p`
   font-family: 'Pretendard', sans-serif;

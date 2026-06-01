@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface ModalOverlayProps {
   $overlayColor?: string;
@@ -24,7 +24,7 @@ export const ModalOverlay = styled.div<ModalOverlayProps>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${props => props.$overlayColor || 'rgba(0, 0, 0, 0.5)'};
+  background-color: ${(props) => props.$overlayColor || 'rgba(0, 0, 0, 0.5)'};
   z-index: 9999;
   display: flex;
   justify-content: center;
@@ -32,14 +32,14 @@ export const ModalOverlay = styled.div<ModalOverlayProps>`
 `;
 
 export const ModalContent = styled.div<ModalContentProps>`
-  background-color: ${props => props.$style.backgroundColor || '#ffffff'};
-  padding: ${props => props.$style.padding || '0'};
-  border-radius: ${props => props.$style.borderRadius || '0'};
+  background-color: ${(props) => props.$style.backgroundColor || '#ffffff'};
+  padding: ${(props) => props.$style.padding || '0'};
+  border-radius: ${(props) => props.$style.borderRadius || '0'};
   overflow-y: auto;
   position: relative;
-  width: ${props => props.$style.width || 'auto'};
-  max-width: ${props => props.$style.maxWidth || 'none'};
-  max-height: ${props => props.$style.maxHeight || '90vh'};
+  width: ${(props) => props.$style.width || 'auto'};
+  max-width: ${(props) => props.$style.maxWidth || 'none'};
+  max-height: ${(props) => props.$style.maxHeight || '90vh'};
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -58,15 +58,15 @@ export const ModalContent = styled.div<ModalContentProps>`
   scrollbar-color: rgba(17, 17, 17, 0.18) transparent;
 
   @media (max-width: 768px) {
-    width: ${props => props.$style.width || '95%'};
-    padding: ${props => props.$style.padding || '20px'};
+    width: ${(props) => props.$style.width || '95%'};
+    padding: ${(props) => props.$style.padding || '20px'};
   }
 
   @media (max-width: 480px) {
-    width: ${props => props.$mobileFullScreen ? '100%' : (props.$style.width || '95%')};
-    height: ${props => props.$mobileFullScreen ? '100vh' : 'auto'};
-    max-height: ${props => props.$mobileFullScreen ? 'none' : props.$style.maxHeight || '90vh'};
-    border-radius: ${props => props.$mobileFullScreen ? '0' : props.$style.borderRadius || '16px'};
-    padding: ${props => props.$style.padding || '16px'};
+    width: ${(props) => (props.$mobileFullScreen ? '100%' : props.$style.width || '95%')};
+    height: ${(props) => (props.$mobileFullScreen ? '100vh' : 'auto')};
+    max-height: ${(props) => (props.$mobileFullScreen ? 'none' : props.$style.maxHeight || '90vh')};
+    border-radius: ${(props) => (props.$mobileFullScreen ? '0' : props.$style.borderRadius || '16px')};
+    padding: ${(props) => props.$style.padding || '16px'};
   }
 `;
