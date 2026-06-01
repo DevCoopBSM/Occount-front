@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import * as _ from './style';
 import { useAuth } from 'contexts/authContext';
 import RefundFormModal from './RefundFormModal';

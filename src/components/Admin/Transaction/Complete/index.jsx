@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as _ from './style';
 import { color } from 'constants/color';

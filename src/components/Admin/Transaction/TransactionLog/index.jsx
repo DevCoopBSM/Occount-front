@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as _ from './style.js'; // 스타일 파일을 _로 매핑
 import { PrettyDateTime } from 'utils/Date';
 import axiosInstance from 'utils/Axios';

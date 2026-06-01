@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTablePage from 'pages/Admin/TablePage';
 import axiosInstance from 'utils/Axios';

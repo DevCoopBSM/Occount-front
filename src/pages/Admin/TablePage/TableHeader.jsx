@@ -1,4 +1,3 @@
-import React from 'react';
 import * as _ from './style';
 import DatePicker from 'react-datepicker';
 import * as xlsx from 'xlsx';

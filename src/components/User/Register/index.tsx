@@ -39,7 +39,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axiosInstance.post('auth/register', {
+      await axiosInstance.post('auth/register', {
         userCiNumber: userInfo.userCiNumber,
         userName: userInfo.userName,
         userPhone: userInfo.userPhone,

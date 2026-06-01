@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Modal from 'components/Modal';
 import * as S from './style';
 import axiosInstance from 'utils/Axios';

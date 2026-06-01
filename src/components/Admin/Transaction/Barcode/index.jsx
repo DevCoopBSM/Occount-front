@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import axiosInstance from 'utils/Axios';
 import { useNavigate } from 'react-router-dom';
 import * as _ from './style'; // 스타일 파일을 임포트
@@ -41,7 +41,7 @@ export const Barcode = () => {
           userCode,
         },
       });
-    } catch (error) {
+    } catch (_error) {
       setErrorMessage('바코드 인식에 실패했습니다. 다시 시도해주세요.');
       setUserCode(''); // 바코드 입력창을 초기화
       inputRef.current.focus(); // 입력창에 포커스 맞추기

@@ -1,4 +1,3 @@
-import React from 'react';
 import TableHeader from './TableHeader';
 import DataTable from './Table';
 import styled from 'styled-components';

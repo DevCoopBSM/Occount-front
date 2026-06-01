@@ -1,4 +1,3 @@
-import React from 'react';
 import * as N from 'common/PageWrapStyle';
 
 export default function NotFoundPage() {
