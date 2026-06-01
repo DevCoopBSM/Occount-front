@@ -49,7 +49,8 @@
     "lint": "biome lint src",
     "format": "biome format --write src",
     "format:check": "biome format src",
-    "code:check": "yarn lint",
+    "code:check": "biome check src",
+    "code:fix": "biome check --write src",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "react-scripts start"
