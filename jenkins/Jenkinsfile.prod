@@ -79,7 +79,7 @@ pipeline {
                                 git clone ${MANIFEST_REPO} ${manifestDir}
                                 chmod -R a+rw ${manifestDir}
                             """
-                            def valuesPath = "${manifestDir}/helm/occount-front/${VALUES_FILE}"
+                            def valuesPath = "${manifestDir}/helm/occount-app/${VALUES_FILE}"
                             def values = readYaml file: valuesPath
                             if (!values.apps) values.apps = [:]
                             if (!values.apps[YAML_KEY]) values.apps[YAML_KEY] = [image: [:]]
@@ -91,7 +91,7 @@ pipeline {
                                     cd ${manifestDir}
                                     git config user.email "jenkins@devcoop.local"
                                     git config user.name "Jenkins CI"
-                                    git add helm/occount-front/${VALUES_FILE}
+                                    git add helm/occount-app/${VALUES_FILE}
                                     git diff --cached --quiet || git commit -m "${COMMIT_PREFIX}: bump [${YAML_KEY}] to ${env.IMAGE_TAG}"
                                     git pull --rebase ${MANIFEST_REPO} main
                                     git push ${MANIFEST_REPO} HEAD:main
