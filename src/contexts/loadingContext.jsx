@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
 import { setLoadingFunction, setErrorFunction } from 'utils/Axios';
+import { setApiClientLoadingFunction, setApiClientErrorFunction } from 'api/client';
 
 const LoadingContext = createContext();
 
@@ -57,6 +58,8 @@ export const LoadingProvider = ({ children }) => {
   useEffect(() => {
     setLoadingFunction(setLoading);
     setErrorFunction(setError);
+    setApiClientLoadingFunction(setLoading);
+    setApiClientErrorFunction(setError);
 
     return clearAll;
   }, [setLoading, setError, clearAll]);

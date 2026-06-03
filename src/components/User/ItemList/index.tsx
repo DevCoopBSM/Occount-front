@@ -1,105 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import * as S from './style';
+import React from 'react';
+import * as ItemListStyles from './style';
 import { ContentContainer } from 'common/ContentContainer';
 import Icon from 'components/Icon';
-import axiosInstance from 'utils/Axios';
-import { mockProducts } from 'components/User/UserMain/mockData';
-
-interface Item {
-  itemId: number;
-  itemName: string;
-  itemCode: string;
-  itemPrice: number;
-  category?: string;
-  isNew?: boolean;
-  isHot?: boolean;
-}
-
-const fallbackItems: Item[] = mockProducts.map((product) => ({
-  itemId: product.id,
-  itemName: product.title,
-  itemCode: `MOCK-${product.id}`,
-  itemPrice: product.price ?? 0,
-  category: product.category,
-  isNew: product.badge === 'new',
-  isHot: product.badge === 'hot',
-}));
-
-const categories = ['전체보기', '과자', '아이스크림', '음료', '냉동식품', '빵류', '식품', '잡화'];
+import { categories, useItemList } from './useItemList';
 
 const ItemList: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체보기');
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const filterItems = useCallback(() => {
-    let filtered = items;
-
-    // 카테고리 필터
-    if (selectedCategory !== '전체보기') {
-      filtered = filtered.filter((item) => item.category === selectedCategory);
-    }
-
-    // 검색어 필터
-    if (searchTerm.trim() !== '') {
-      filtered = filtered.filter((item) =>
-        item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    setFilteredItems(filtered);
-  }, [items, selectedCategory, searchTerm]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
-  useEffect(() => {
-    filterItems();
-  }, [filterItems]);
-
-  const fetchItems = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axiosInstance.get('v2/item/');
-
-      if (
-        response.status === 204 ||
-        !response.data.itemList ||
-        response.data.itemList.length === 0
-      ) {
-        setItems([]);
-        setFilteredItems([]);
-      } else {
-        const remappedData: Item[] = response.data.itemList.map((item: any) => ({
-          itemId: item.itemId,
-          itemName: item.itemName,
-          itemCode: item.itemCode,
-          itemPrice: item.itemPrice,
-          category: item.category || '기타',
-          isNew: item.isNew || false,
-          isHot: item.isHot || false,
-        }));
-        setItems(remappedData);
-        setFilteredItems(remappedData);
-      }
-    } catch (error) {
-      console.error('Error fetching items:', error);
-      setItems(fallbackItems);
-      setFilteredItems(fallbackItems);
-      setError('상품 목록을 불러오지 못해 임시 목록을 표시하고 있습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    filteredItems,
+    selectedCategory,
+    searchTerm,
+    loading,
+    error,
+    hasItems,
+    isEmpty,
+    setSelectedCategory,
+    setSearchTerm,
+  } = useItemList();
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
@@ -111,54 +27,58 @@ const ItemList: React.FC = () => {
 
   return (
     <ContentContainer>
-      <S.Title>상품 목록</S.Title>
+      <ItemListStyles.Title>상품 목록</ItemListStyles.Title>
 
-      <S.FilterSection>
-        <S.CategoryTabBar>
+      <ItemListStyles.FilterSection>
+        <ItemListStyles.CategoryTabBar>
           {categories.map((category) => (
-            <S.CategoryTab
+            <ItemListStyles.CategoryTab
               key={category}
               $active={selectedCategory === category}
               onClick={() => handleCategoryClick(category)}
             >
               {category}
-            </S.CategoryTab>
+            </ItemListStyles.CategoryTab>
           ))}
-        </S.CategoryTabBar>
+        </ItemListStyles.CategoryTabBar>
 
-        <S.SearchBar>
-          <S.SearchInput
+        <ItemListStyles.SearchBar>
+          <ItemListStyles.SearchInput
             type="text"
             placeholder="찾으시는 상품을 입력해주세요"
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <S.SearchIcon>
+          <ItemListStyles.SearchIcon>
             <Icon name="search" size={22} color="#F49E15" strokeWidth={2} />
-          </S.SearchIcon>
-        </S.SearchBar>
-      </S.FilterSection>
+          </ItemListStyles.SearchIcon>
+        </ItemListStyles.SearchBar>
+      </ItemListStyles.FilterSection>
 
-      {error && <S.WarningMessage>{error}</S.WarningMessage>}
+      {error && <ItemListStyles.WarningMessage>{error}</ItemListStyles.WarningMessage>}
 
-      {loading ? (
-        <S.LoadingMessage>로딩 중...</S.LoadingMessage>
-      ) : filteredItems.length === 0 ? (
-        <S.EmptyMessage>상품이 없습니다.</S.EmptyMessage>
-      ) : (
-        <S.ProductGrid>
+      {loading && <ItemListStyles.LoadingMessage>로딩 중...</ItemListStyles.LoadingMessage>}
+
+      {isEmpty && <ItemListStyles.EmptyMessage>상품이 없습니다.</ItemListStyles.EmptyMessage>}
+
+      {hasItems && (
+        <ItemListStyles.ProductGrid>
           {filteredItems.map((item) => (
-            <S.ProductCard key={item.itemId}>
-              <S.ProductInfo>
+            <ItemListStyles.ProductCard key={item.itemId}>
+              <ItemListStyles.ProductInfo>
                 {(item.isNew || item.isHot) && (
-                  <S.Badge type={item.isNew ? 'new' : 'hot'}>{item.isNew ? 'NEW' : 'HOT'}</S.Badge>
+                  <ItemListStyles.Badge type={item.isNew ? 'new' : 'hot'}>
+                    {item.isNew ? 'NEW' : 'HOT'}
+                  </ItemListStyles.Badge>
                 )}
-                <S.ProductTitle>{item.itemName}</S.ProductTitle>
-                <S.ProductPrice>{item.itemPrice.toLocaleString()} 원</S.ProductPrice>
-              </S.ProductInfo>
-            </S.ProductCard>
+                <ItemListStyles.ProductTitle>{item.itemName}</ItemListStyles.ProductTitle>
+                <ItemListStyles.ProductPrice>
+                  {item.itemPrice.toLocaleString()} 원
+                </ItemListStyles.ProductPrice>
+              </ItemListStyles.ProductInfo>
+            </ItemListStyles.ProductCard>
           ))}
-        </S.ProductGrid>
+        </ItemListStyles.ProductGrid>
       )}
     </ContentContainer>
   );
