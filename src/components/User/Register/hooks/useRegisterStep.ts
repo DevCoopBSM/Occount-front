@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { validateStep } from '../utils/validation';
-import { ErrorState, STEPS, StepType } from '../types';
+import { STEPS, StepType } from '../constants/steps';
+import { ErrorState } from '../types';
 
 export const useRegisterStep = () => {
   const [step, setStep] = useState<StepType>(STEPS.TERMS_AGREEMENT);

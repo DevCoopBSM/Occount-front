@@ -147,8 +147,6 @@ export const AccountStep: React.FC<AccountStepProps> = ({
             </S.InputContainer>
           )}
 
-          {errors.emailOtp && !isEmailOtpSent && <S.ErrorMessage>{errors.emailOtp}</S.ErrorMessage>}
-
           <S.PasswordContainer>
             <S.InputContainer>
               <S.InputLabel>비밀번호</S.InputLabel>

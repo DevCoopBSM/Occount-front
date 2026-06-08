@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect, useCallback } 
 import { NavigateFunction } from 'react-router-dom';
 import axios from 'axios';
 import { axiosInstance, setAccessToken, getAccessToken } from 'utils/Axios';
+import { isDevMode } from 'utils/DevMode';
 
 interface User {
   point: number;
@@ -31,7 +32,7 @@ interface AuthContextType extends AuthState {
   logout: (navigate: NavigateFunction) => Promise<void>;
   setErrorMessage: (msg: string) => void;
   clearErrorMessage: () => void;
-  refetchUser: () => Promise<User | null>;
+  refetchUser: () => Promise<void>;
   requestEmailVerification: (
     email: string,
     name: string
@@ -48,11 +49,6 @@ interface AuthContextType extends AuthState {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// 개발 모드 체크 (환경 변수로만 제어)
-const isDevMode = () => {
-  return process.env.NODE_ENV === 'development' && process.env.REACT_APP_DEV_MODE === 'true';
-};
 
 // 개발 모드용 Mock 사용자 데이터
 const getMockUser = (): User => ({
@@ -94,7 +90,7 @@ type ActionType =
   | { type: typeof actionTypes.LOGOUT }
   | { type: typeof actionTypes.SET_ERROR; payload: string }
   | { type: typeof actionTypes.CLEAR_ERROR }
-  | { type: typeof actionTypes.SET_USER; payload: User };
+  | { type: typeof actionTypes.SET_USER; payload: Partial<User> };
 
 const authReducer = (state: AuthState, action: ActionType): AuthState => {
   switch (action.type) {
@@ -108,15 +104,24 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
       return { ...state, errorMessage: action.payload };
     case actionTypes.CLEAR_ERROR:
       return { ...state, errorMessage: '' };
-    case actionTypes.SET_USER:
+    case actionTypes.SET_USER: {
+      const currentUser = state.user ?? {
+        point: 0,
+        name: '',
+        code: '',
+        email: '',
+        phone: '',
+      };
+
       return {
         ...state,
         user: {
-          ...state.user,
+          ...currentUser,
           ...action.payload,
-          code: action.payload.code || state.user?.code || '',
+          code: action.payload.code ?? currentUser.code,
         },
       };
+    }
     default:
       return state;
   }
@@ -230,12 +235,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     []
   );
 
-  const fetchUserInformation = useCallback(async (): Promise<User | null> => {
+  const fetchUserInformation = useCallback(async (): Promise<void> => {
     // 개발 모드일 때는 mock 사용자 반환
     if (isDevMode()) {
       const mockUser = getMockUser();
       dispatch({ type: actionTypes.SET_USER, payload: mockUser });
-      return mockUser;
+      return;
     }
 
     try {
@@ -247,19 +252,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         axiosInstance.get('wallet/point', { skipAuthRedirect: true, skipGlobalError: true } as any),
       ]);
 
-      const userInfo: User = {
+      const userUpdates: Partial<User> = {
         point: pointRes.data.point,
         name: infoRes.data.username,
-        code: infoRes.data.userCode || infoRes.data.user_code || infoRes.data.code || '',
-        email: '',
-        phone: '',
       };
 
-      dispatch({ type: actionTypes.SET_USER, payload: userInfo });
-      return userInfo;
+      if (typeof infoRes.data.userCode === 'string') {
+        userUpdates.code = infoRes.data.userCode;
+      }
+
+      dispatch({ type: actionTypes.SET_USER, payload: userUpdates });
     } catch (error) {
       console.error('Error fetching user information:', error);
-      return null;
     }
   }, []);
 

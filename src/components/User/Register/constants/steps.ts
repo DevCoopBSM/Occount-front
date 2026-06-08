@@ -4,4 +4,6 @@ export const STEPS = {
   ACCOUNT: 3,
 } as const;
 
+export type StepType = (typeof STEPS)[keyof typeof STEPS];
+
 export const TOTAL_STEPS = 3;

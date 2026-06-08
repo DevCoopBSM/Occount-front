@@ -5,15 +5,6 @@ export enum UserType {
   OTHER = 'OTHER',
 }
 
-// 스텝 관련 타입 추가
-export const STEPS = {
-  TERMS_AGREEMENT: 1,
-  VERIFICATION: 2,
-  ACCOUNT: 3,
-} as const;
-
-export type StepType = (typeof STEPS)[keyof typeof STEPS];
-
 export interface FormData {
   userEmail: string;
   userPassword: string;
