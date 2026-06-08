@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSpring, animated } from 'react-spring';
+import Icon from 'components/Icon';
 import { ERROR_MESSAGES } from '../constants/privacy';
 import * as S from './AccountStep.style';
 
@@ -93,17 +94,25 @@ export const AccountStep: React.FC<AccountStepProps> = ({
                 value={formData.userEmail}
                 onChange={onInputChange}
                 placeholder="이메일을 입력해주세요"
-                disabled={isEmailVerified || isSendingEmailOtp || isVerifyingEmailOtp || isSubmitting}
+                disabled={
+                  isEmailVerified || isSendingEmailOtp || isVerifyingEmailOtp || isSubmitting
+                }
                 required
               />
               <S.VerifyButton
                 type="button"
                 onClick={onSendEmailOtp}
-                disabled={!formData.userEmail || isEmailVerified || isSendingEmailOtp || isSubmitting}
+                disabled={
+                  !formData.userEmail || isEmailVerified || isSendingEmailOtp || isSubmitting
+                }
               >
                 {isSendingEmailOtp ? '발송 중' : isEmailOtpSent ? '재발송' : '인증'}
               </S.VerifyButton>
             </S.EmailContainer>
+            <S.HelperText>
+              <Icon name="warning" size={18} color="#FCC800" />
+              학교 이메일을 사용해주세요. 예: 26_00@bssm.hs.kr
+            </S.HelperText>
             {errors.userEmail && <S.ErrorMessage>{errors.userEmail}</S.ErrorMessage>}
             {isEmailOtpSent && !isEmailVerified && (
               <S.SuccessMessage>인증번호를 발송했습니다.</S.SuccessMessage>
@@ -138,9 +147,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({
             </S.InputContainer>
           )}
 
-          {errors.emailOtp && !isEmailOtpSent && (
-            <S.ErrorMessage>{errors.emailOtp}</S.ErrorMessage>
-          )}
+          {errors.emailOtp && !isEmailOtpSent && <S.ErrorMessage>{errors.emailOtp}</S.ErrorMessage>}
 
           <S.PasswordContainer>
             <S.InputContainer>
@@ -155,40 +162,50 @@ export const AccountStep: React.FC<AccountStepProps> = ({
                 disabled={isSubmitting}
                 required
               />
-              {errors.userPassword && (
-                <S.ErrorMessage>{errors.userPassword}</S.ErrorMessage>
-              )}
+              {errors.userPassword && <S.ErrorMessage>{errors.userPassword}</S.ErrorMessage>}
 
               {(formData.userPassword || passwordTouched) && (
                 <S.PasswordRequirements>
                   <S.RequirementItem $state={getRequirementState(!passwordErrors.length)}>
                     <S.CheckIcon $state={getRequirementState(!passwordErrors.length)}>
-                      {getRequirementState(!passwordErrors.length) === 'success' ? '✓' :
-                       getRequirementState(!passwordErrors.length) === 'error' ? '✗' : '•'}
+                      {getRequirementState(!passwordErrors.length) === 'success'
+                        ? '✓'
+                        : getRequirementState(!passwordErrors.length) === 'error'
+                          ? '✗'
+                          : '•'}
                     </S.CheckIcon>
                     8자 이상
                   </S.RequirementItem>
 
                   <S.RequirementItem $state={getRequirementState(!passwordErrors.lowerCase)}>
                     <S.CheckIcon $state={getRequirementState(!passwordErrors.lowerCase)}>
-                      {getRequirementState(!passwordErrors.lowerCase) === 'success' ? '✓' :
-                       getRequirementState(!passwordErrors.lowerCase) === 'error' ? '✗' : '•'}
+                      {getRequirementState(!passwordErrors.lowerCase) === 'success'
+                        ? '✓'
+                        : getRequirementState(!passwordErrors.lowerCase) === 'error'
+                          ? '✗'
+                          : '•'}
                     </S.CheckIcon>
                     소문자 포함
                   </S.RequirementItem>
 
                   <S.RequirementItem $state={getRequirementState(!passwordErrors.number)}>
                     <S.CheckIcon $state={getRequirementState(!passwordErrors.number)}>
-                      {getRequirementState(!passwordErrors.number) === 'success' ? '✓' :
-                       getRequirementState(!passwordErrors.number) === 'error' ? '✗' : '•'}
+                      {getRequirementState(!passwordErrors.number) === 'success'
+                        ? '✓'
+                        : getRequirementState(!passwordErrors.number) === 'error'
+                          ? '✗'
+                          : '•'}
                     </S.CheckIcon>
                     숫자 포함
                   </S.RequirementItem>
 
                   <S.RequirementItem $state={getRequirementState(!passwordErrors.specialChar)}>
                     <S.CheckIcon $state={getRequirementState(!passwordErrors.specialChar)}>
-                      {getRequirementState(!passwordErrors.specialChar) === 'success' ? '✓' :
-                       getRequirementState(!passwordErrors.specialChar) === 'error' ? '✗' : '•'}
+                      {getRequirementState(!passwordErrors.specialChar) === 'success'
+                        ? '✓'
+                        : getRequirementState(!passwordErrors.specialChar) === 'error'
+                          ? '✗'
+                          : '•'}
                     </S.CheckIcon>
                     특수문자 포함
                   </S.RequirementItem>

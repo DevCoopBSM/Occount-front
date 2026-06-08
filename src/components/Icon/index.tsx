@@ -16,6 +16,7 @@ import HistoryIcon from './HistoryIcon';
 import InventoryIcon from './InventoryIcon';
 import MailIcon from './MailIcon';
 import MenuBookIcon from './MenuBookIcon';
+import WarningIcon from './WarningIcon';
 import type { BaseIconProps } from './types';
 
 type IconName =
@@ -35,7 +36,8 @@ type IconName =
   | 'history'
   | 'inventory'
   | 'mail'
-  | 'menuBook';
+  | 'menuBook'
+  | 'warning';
 
 export interface IconProps extends BaseIconProps {
   name: IconName;
@@ -59,6 +61,7 @@ const iconComponents = {
   inventory: InventoryIcon,
   mail: MailIcon,
   menuBook: MenuBookIcon,
+  warning: WarningIcon,
 };
 
 const Icon: React.FC<IconProps> = ({ name, ...props }) => {

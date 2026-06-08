@@ -5,10 +5,7 @@ interface CheckboxIconProps {
   size?: number;
 }
 
-export const CheckboxIcon: React.FC<CheckboxIconProps> = ({
-  isChecked,
-  size = 40
-}) => {
+export const CheckboxIcon: React.FC<CheckboxIconProps> = ({ isChecked, size = 40 }) => {
   if (isChecked) {
     return (
       <svg

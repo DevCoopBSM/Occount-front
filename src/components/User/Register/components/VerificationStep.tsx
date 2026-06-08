@@ -54,10 +54,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
                   </S.InputContainer>
                 </S.UserInfoContainer>
 
-                <S.ReVerificationButton
-                  onClick={onResetVerification}
-                  disabled={isVerifying}
-                >
+                <S.ReVerificationButton onClick={onResetVerification} disabled={isVerifying}>
                   재인증
                 </S.ReVerificationButton>
               </>
@@ -78,9 +75,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               </S.StatusMessage>
             )}
 
-            {verificationError && (
-              <S.ErrorMessage>{verificationError}</S.ErrorMessage>
-            )}
+            {verificationError && <S.ErrorMessage>{verificationError}</S.ErrorMessage>}
           </S.VerificationContainer>
 
           <S.NavigationContainer>

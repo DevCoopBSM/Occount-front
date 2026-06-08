@@ -85,12 +85,8 @@ export const VerificationContainer = styled.div`
 export const VerificationButton = styled.button<{ $isVerifying?: boolean; $isVerified?: boolean }>`
   width: 100%;
   min-width: clamp(280px, 36.46vw, 700px);
-  background-color: ${props =>
-    props.$isVerifying || props.$isVerified ? '#41434c' : '#41434c'
-  };
-  opacity: ${props =>
-    props.$isVerifying || props.$isVerified ? 0.6 : 1
-  };
+  background-color: ${(props) => (props.$isVerifying || props.$isVerified ? '#41434c' : '#41434c')};
+  opacity: ${(props) => (props.$isVerifying || props.$isVerified ? 0.6 : 1)};
   color: white;
   border: none;
   border-radius: clamp(6px, 0.42vw, 8px);
@@ -98,9 +94,7 @@ export const VerificationButton = styled.button<{ $isVerifying?: boolean; $isVer
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(14px, 1.04vw, 20px);
   font-weight: 700;
-  cursor: ${props =>
-    props.$isVerifying || props.$isVerified ? 'not-allowed' : 'pointer'
-  };
+  cursor: ${(props) => (props.$isVerifying || props.$isVerified ? 'not-allowed' : 'pointer')};
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -109,9 +103,8 @@ export const VerificationButton = styled.button<{ $isVerifying?: boolean; $isVer
   margin-bottom: clamp(10px, 1.04vw, 20px);
 
   &:hover {
-    background-color: ${props =>
-      props.$isVerifying || props.$isVerified ? '#41434c' : '#363840'
-    };
+    background-color: ${(props) =>
+      props.$isVerifying || props.$isVerified ? '#41434c' : '#363840'};
   }
 `;
 
@@ -220,22 +213,24 @@ export const NavigationContainer = styled.div`
 
 export const NavigationButton = styled.button<{ $isPrev?: boolean }>`
   flex: 1;
-  background-color: ${props => props.$isPrev ? '#e9ecef' : '#41434c'};
-  color: ${props => props.$isPrev ? '#111111' : 'white'};
+  background-color: ${(props) => (props.$isPrev ? '#e9ecef' : '#41434c')};
+  color: ${(props) => (props.$isPrev ? '#111111' : 'white')};
   border: none;
   border-radius: clamp(6px, 0.42vw, 8px);
   padding: clamp(8px, 0.83vw, 16px) clamp(14px, 1.25vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(14px, 1.04vw, 20px);
   font-weight: 700;
+  line-height: 1;
   cursor: pointer;
   transition: all 0.3s ease;
-  opacity: ${props => props.disabled ? 0.6 : 1};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 
   &:hover {
-    background-color: ${props =>
-      props.$isPrev ? '#dee2e6' : '#363840'
-    };
+    background-color: ${(props) => (props.$isPrev ? '#dee2e6' : '#363840')};
   }
 
   &:disabled {

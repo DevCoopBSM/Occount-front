@@ -24,9 +24,17 @@ export const isPasswordValid = (password: string): boolean =>
   hasNumbers(password) &&
   hasSpecialChar(password);
 
+const SCHOOL_EMAIL_REGEX = /^(24|25|26)[._]\d{2,3}@bssm\.hs\.kr$/i;
+
 export const validateEmail = (email: string): string => {
-  if (!email.trim()) return '이메일을 입력해주세요.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return '올바른 이메일 형식이 아닙니다.';
+  const normalizedEmail = email.trim();
+  if (!normalizedEmail) return '이메일을 입력해주세요.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+    return '올바른 이메일 형식이 아닙니다.';
+  }
+  if (!SCHOOL_EMAIL_REGEX.test(normalizedEmail)) {
+    return '학교 이메일만 사용할 수 있습니다.';
+  }
   return '';
 };
 

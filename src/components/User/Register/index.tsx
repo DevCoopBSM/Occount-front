@@ -232,12 +232,14 @@ const Register: React.FC = () => {
   return (
     <R.Container>
       <R.ContentContainer>
-        {step !== STEPS.TERMS_AGREEMENT && step !== STEPS.VERIFICATION && step !== STEPS.ACCOUNT && (
-          <R.LogoContainer>
-            <R.LogoImg src="/assets/occount-logo.svg" alt="logo" />
-            <R.LogoSubText>회원가입 후 오카운트의 더 다양한 기능을 만나보세요!</R.LogoSubText>
-          </R.LogoContainer>
-        )}
+        {step !== STEPS.TERMS_AGREEMENT &&
+          step !== STEPS.VERIFICATION &&
+          step !== STEPS.ACCOUNT && (
+            <R.LogoContainer>
+              <R.LogoImg src="/assets/occount-logo.svg" alt="logo" />
+              <R.LogoSubText>회원가입 후 오카운트의 더 다양한 기능을 만나보세요!</R.LogoSubText>
+            </R.LogoContainer>
+          )}
         {renderStep()}
       </R.ContentContainer>
     </R.Container>

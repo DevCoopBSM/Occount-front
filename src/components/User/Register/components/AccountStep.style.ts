@@ -157,16 +157,20 @@ export const VerifyButton = styled.button`
   border: none;
   border-radius: clamp(4px, 0.31vw, 6px);
   padding: clamp(10px, 0.83vw, 16px) clamp(12px, 1.04vw, 20px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(12px, 0.94vw, 18px);
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
   flex-shrink: 0;
   position: relative;
   z-index: 2;
-  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
 
   &:hover {
     background-color: #5a6268;
@@ -205,6 +209,26 @@ export const SuccessMessage = styled.div`
   margin-top: clamp(4px, 0.31vw, 6px);
 `;
 
+export const HelperText = styled.div`
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.52vw, 8px);
+  width: 100%;
+  color: #4a4a4a;
+  background-color: #fff9db;
+  border: 1px solid #fce588;
+  border-radius: clamp(4px, 0.31vw, 6px);
+  padding: clamp(6px, 0.52vw, 8px) clamp(8px, 0.73vw, 12px);
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(12px, 0.83vw, 16px);
+  font-weight: 500;
+  text-align: left;
+
+  svg {
+    flex-shrink: 0;
+  }
+`;
+
 export const PasswordRequirements = styled.div`
   margin-top: clamp(6px, 0.42vw, 8px);
 `;
@@ -217,13 +241,10 @@ export const RequirementItem = styled.div<{ $state: 'success' | 'error' | 'neutr
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(11px, 0.73vw, 13px);
   font-weight: 400;
-  color: ${props =>
-    props.$state === 'success' ? '#28a745' :
-    props.$state === 'error' ? '#dc2626' :
-    '#6c757d'
-  };
+  color: ${(props) =>
+    props.$state === 'success' ? '#28a745' : props.$state === 'error' ? '#dc2626' : '#6c757d'};
   transition: color 0.2s ease;
-  opacity: ${props => props.$state === 'neutral' ? 0.6 : 1};
+  opacity: ${(props) => (props.$state === 'neutral' ? 0.6 : 1)};
 `;
 
 export const CheckIcon = styled.span<{ $state: 'success' | 'error' | 'neutral' }>`
@@ -236,11 +257,8 @@ export const CheckIcon = styled.span<{ $state: 'success' | 'error' | 'neutral' }
   font-weight: 600;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  color: ${props =>
-    props.$state === 'success' ? '#28a745' :
-    props.$state === 'error' ? '#dc2626' :
-    '#6c757d'
-  };
+  color: ${(props) =>
+    props.$state === 'success' ? '#28a745' : props.$state === 'error' ? '#dc2626' : '#6c757d'};
 `;
 
 export const NavigationContainer = styled.div`
@@ -255,25 +273,27 @@ export const NavigationContainer = styled.div`
 
 export const NavigationButton = styled.button<{ $isPrev?: boolean }>`
   flex: 1;
-  background-color: ${props => props.$isPrev ? '#e9ecef' : '#41434c'};
-  color: ${props => props.$isPrev ? '#111111' : 'white'};
+  background-color: ${(props) => (props.$isPrev ? '#e9ecef' : '#41434c')};
+  color: ${(props) => (props.$isPrev ? '#111111' : 'white')};
   border: none;
   border-radius: clamp(6px, 0.42vw, 8px);
   padding: clamp(8px, 0.83vw, 16px) clamp(14px, 1.25vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(14px, 1.04vw, 20px);
   font-weight: 700;
+  line-height: 1;
   cursor: pointer;
   transition: all 0.3s ease;
-  opacity: ${props => props.disabled ? 0.6 : 1};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
   position: relative;
   z-index: 2;
-  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
 
   &:hover {
-    background-color: ${props =>
-      props.$isPrev ? '#dee2e6' : '#363840'
-    };
+    background-color: ${(props) => (props.$isPrev ? '#dee2e6' : '#363840')};
   }
 
   &:disabled {

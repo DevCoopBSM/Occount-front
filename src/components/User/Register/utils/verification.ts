@@ -23,7 +23,8 @@ const mapIdentityVerifyResponse = (
   userName: data.name || data.username || data.user_name || '',
   userBirthDate: data.birth || data.birth_date || data.user_birth_date || '',
   userPhone: data.phone || data.user_phone || '',
-  userCiNumber: data.ci_number || data.user_ci_number || data.verificationId || identityVerificationId,
+  userCiNumber:
+    data.ci_number || data.user_ci_number || data.verificationId || identityVerificationId,
 });
 
 export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => {
@@ -62,12 +63,12 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
       throw new Error(response.message);
     }
 
-    const data = await apiClient.post<
-      IdentityVerifyResponse,
-      { identity_verification_id: string }
-    >('auth/identity/verify', {
-      identity_verification_id: identityVerificationId,
-    });
+    const data = await apiClient.post<IdentityVerifyResponse, { identity_verification_id: string }>(
+      'auth/identity/verify',
+      {
+        identity_verification_id: identityVerificationId,
+      }
+    );
 
     const userInfo = mapIdentityVerifyResponse(data, identityVerificationId);
 

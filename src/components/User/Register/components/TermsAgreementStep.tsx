@@ -98,10 +98,7 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
           <S.TermsContainer>
             <S.TermsItem>
               <S.CheckboxWrapper onClick={handleAllAgree}>
-                <S.CheckboxButton
-                  type="button"
-                  $isChecked={isAllAgreed}
-                >
+                <S.CheckboxButton type="button" $isChecked={isAllAgreed}>
                   <CheckboxIcon isChecked={isAllAgreed} size={40} />
                 </S.CheckboxButton>
                 <S.TermsLabel $isMain>전체 동의하기</S.TermsLabel>
@@ -110,10 +107,7 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
 
             <S.TermsItem>
               <S.CheckboxWrapper onClick={handlePrivacyCollectionChange}>
-                <S.CheckboxButton
-                  type="button"
-                  $isChecked={isPrivacyCollectionAgreed}
-                >
+                <S.CheckboxButton type="button" $isChecked={isPrivacyCollectionAgreed}>
                   <CheckboxIcon isChecked={isPrivacyCollectionAgreed} size={40} />
                 </S.CheckboxButton>
                 <S.TermsLabelWrapper>
@@ -125,10 +119,7 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
 
             <S.TermsItem>
               <S.CheckboxWrapper onClick={handlePrivacyThirdPartyChange}>
-                <S.CheckboxButton
-                  type="button"
-                  $isChecked={isPrivacyThirdPartyAgreed}
-                >
+                <S.CheckboxButton type="button" $isChecked={isPrivacyThirdPartyAgreed}>
                   <CheckboxIcon isChecked={isPrivacyThirdPartyAgreed} size={40} />
                 </S.CheckboxButton>
                 <S.TermsLabelWrapper>
@@ -145,7 +136,13 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
               </S.DetailContent>
               <S.DetailButton open={isDropdownOpen}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M6 9l6 6 6-6" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="#111111"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </S.DetailButton>
             </S.DetailItem>
@@ -153,15 +150,13 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
             <S.DropdownContent $isOpen={isDropdownOpen}>
               <S.DropdownText
                 dangerouslySetInnerHTML={{
-                  __html: privacyTermsContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                  __html: privacyTermsContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
                 }}
               />
             </S.DropdownContent>
           </S.TermsContainer>
 
-          {errors.privacyAgreement && (
-            <S.ErrorMessage>{errors.privacyAgreement}</S.ErrorMessage>
-          )}
+          {errors.privacyAgreement && <S.ErrorMessage>{errors.privacyAgreement}</S.ErrorMessage>}
 
           <S.NextButton
             type="button"

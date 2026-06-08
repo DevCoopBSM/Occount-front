@@ -107,7 +107,7 @@ export const TermsLabel = styled.span<{ $isMain?: boolean }>`
   color: #111111;
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(16px, 1.25vw, 20px);
-  font-weight: ${props => props.$isMain ? '600' : '400'};
+  font-weight: ${(props) => (props.$isMain ? '600' : '400')};
 `;
 
 export const TermsLabelWrapper = styled.div`
@@ -179,19 +179,19 @@ export const DetailButton = styled.button<{ open?: boolean }>`
   }
 
   svg {
-    transform: ${props => props.open ? 'rotate(180deg)' : 'rotate(0deg)'};
+    transform: ${(props) => (props.open ? 'rotate(180deg)' : 'rotate(0deg)')};
     transition: transform 0.3s ease;
   }
 `;
 
 export const DropdownContent = styled.div<{ $isOpen: boolean }>`
   width: 100%;
-  max-height: ${props => props.$isOpen ? '200px' : '0'};
-  overflow: ${props => props.$isOpen ? 'auto' : 'hidden'};
+  max-height: ${(props) => (props.$isOpen ? '200px' : '0')};
+  overflow: ${(props) => (props.$isOpen ? 'auto' : 'hidden')};
   transition: max-height 0.3s ease;
   background: #f8f9fa;
   border-radius: 8px;
-  margin-top: ${props => props.$isOpen ? '8px' : '0'};
+  margin-top: ${(props) => (props.$isOpen ? '8px' : '0')};
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -232,8 +232,8 @@ export const DropdownText = styled.div`
 export const NextButton = styled.button<{ $isEnabled: boolean }>`
   width: 100%;
   min-width: clamp(280px, 36.46vw, 700px);
-  background-color: ${props => props.$isEnabled ? '#41434c' : '#41434c'};
-  opacity: ${props => props.$isEnabled ? 1 : 0.6};
+  background-color: ${(props) => (props.$isEnabled ? '#41434c' : '#41434c')};
+  opacity: ${(props) => (props.$isEnabled ? 1 : 0.6)};
   color: white;
   border: none;
   border-radius: clamp(6px, 0.42vw, 8px);
@@ -241,7 +241,8 @@ export const NextButton = styled.button<{ $isEnabled: boolean }>`
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(14px, 1.04vw, 20px);
   font-weight: 700;
-  cursor: ${props => props.$isEnabled ? 'pointer' : 'not-allowed'};
+  line-height: 1;
+  cursor: ${(props) => (props.$isEnabled ? 'pointer' : 'not-allowed')};
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -249,6 +250,6 @@ export const NextButton = styled.button<{ $isEnabled: boolean }>`
   text-align: center;
 
   &:hover {
-    background-color: ${props => props.$isEnabled ? '#363840' : '#41434c'};
+    background-color: ${(props) => (props.$isEnabled ? '#363840' : '#41434c')};
   }
 `;
