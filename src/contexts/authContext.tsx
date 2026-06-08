@@ -109,7 +109,14 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
     case actionTypes.CLEAR_ERROR:
       return { ...state, errorMessage: '' };
     case actionTypes.SET_USER:
-      return { ...state, user: action.payload };
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+          code: action.payload.code || state.user?.code || '',
+        },
+      };
     default:
       return state;
   }
@@ -243,7 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userInfo: User = {
         point: pointRes.data.point,
         name: infoRes.data.username,
-        code: '',
+        code: infoRes.data.userCode || infoRes.data.user_code || infoRes.data.code || '',
         email: '',
         phone: '',
       };

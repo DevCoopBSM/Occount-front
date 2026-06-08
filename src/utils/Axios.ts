@@ -18,7 +18,8 @@ interface AxiosInstanceWithSuspense extends AxiosInstance {
 const isDevMode = (): boolean => {
   return (
     process.env.NODE_ENV === 'development' &&
-    (localStorage.getItem('DEV_MODE') === 'true' || process.env.REACT_APP_DEV_MODE === 'true')
+    process.env.REACT_APP_DEV_MODE === 'true' &&
+    localStorage.getItem('DEV_MODE') !== 'false'
   );
 };
 
