@@ -53,9 +53,8 @@ export const verifyUser = async (): Promise<UserInfo & { success: boolean }> => 
       channelKey: process.env.REACT_APP_CHANNEL_KEY_AUTH,
       windowType: {
         pc: 'POPUP',
-        mobile: 'REDIRECTION',
+        mobile: 'POPUP',
       },
-      redirectUrl: `${window.location.origin}/identity-verification-redirect`,
     });
 
     if (response.code !== undefined) {

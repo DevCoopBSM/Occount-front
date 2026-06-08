@@ -43,7 +43,6 @@ pipeline {
             steps {
                 container('node') {
                     sh '''
-                        export REACT_APP_API_URL="${REACT_APP_API_URL:-/api/v3/}"
                         yarn install --network-timeout 600000
                         yarn build
                     '''

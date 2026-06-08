@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from 'utils/Axios';
+import { apiClient } from 'api/client';
 import { TermsAgreementStep } from './components/TermsAgreementStep';
 import { VerificationStep } from './components/VerificationStep';
 import { AccountStep } from './components/AccountStep';
@@ -60,7 +60,7 @@ const Register: React.FC = () => {
 
     setIsSendingEmailOtp(true);
     try {
-      await axiosInstance.post('auth/email/send-otp', {
+      await apiClient.post('auth/email/send-otp', {
         email,
       });
       setIsEmailOtpSent(true);
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
 
     setIsVerifyingEmailOtp(true);
     try {
-      await axiosInstance.post('auth/email/verify-otp', {
+      await apiClient.post('auth/email/verify-otp', {
         email,
         otp_code: otpCode,
       });
@@ -141,7 +141,7 @@ const Register: React.FC = () => {
         password: formData.userPassword,
       };
 
-      await axiosInstance.post('auth/register', payload);
+      await apiClient.post('auth/register', payload);
 
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
