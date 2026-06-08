@@ -4,9 +4,15 @@ import { verifyUser } from '../utils/verification';
 
 export const useVerification = () => {
   const [isVerified, setIsVerified] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const handleVerification = async () => {
+    if (isVerifying) return;
+
+    setIsVerifying(true);
+    setVerificationError('');
     try {
       const result = await verifyUser();
       if (result.success) {
@@ -17,21 +23,25 @@ export const useVerification = () => {
           userPhone: result.userPhone,
           userCiNumber: result.userCiNumber,
         });
-        alert('본인인증이 완료되었습니다.');
       }
     } catch (error) {
       console.error('Verification error:', error);
-      alert('본인인증에 실패했습니다.');
+      setVerificationError('본인인증에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
   const resetVerification = () => {
     setIsVerified(false);
+    setVerificationError('');
     setUserInfo(null);
   };
 
   return {
     isVerified,
+    isVerifying,
+    verificationError,
     userInfo,
     handleVerification,
     resetVerification,
