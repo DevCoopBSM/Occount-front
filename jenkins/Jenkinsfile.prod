@@ -52,14 +52,16 @@ pipeline {
                           --header "X-Vault-Token: $VAULT_TOKEN" \
                           "$VAULT_ADDR/v1/secret/data/occount/prod/occount-app")
 
-                        echo "$SECRET" | node -e "
+                        cat > /tmp/parse-vault.js << 'JSEOF'
 const chunks = [];
 process.stdin.on('data', c => chunks.push(c));
 process.stdin.on('end', () => {
   const d = JSON.parse(chunks.join('')).data.data;
   const fs = require('fs');
-  fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => k+'='+v).join('\n'));
-});"
+  fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => `${k}=${v}`).join('\n'));
+});
+JSEOF
+                        echo "$SECRET" | node /tmp/parse-vault.js
 
                         echo "=== .env.production ===" && cat .env.production
 
