@@ -44,27 +44,26 @@ pipeline {
                 VAULT_TOKEN = credentials('vault-root-token')
             }
             steps {
+                script {
+                    writeFile file: 'parse-vault.js', text: [
+                        "const chunks = [];",
+                        "process.stdin.on('data', c => chunks.push(c));",
+                        "process.stdin.on('end', () => {",
+                        "  const d = JSON.parse(chunks.join('')).data.data;",
+                        "  const lines = [];",
+                        "  for (const k in d) { lines.push(k + '=' + d[k]); }",
+                        "  require('fs').writeFileSync('.env.production', lines.join('\\n'));",
+                        "});"
+                    ].join('\n')
+                }
                 container('node') {
                     sh '''
                         VAULT_ADDR=http://vault.vault.svc.cluster.local:8200
-
                         SECRET=$(wget -q -O - \
                           --header "X-Vault-Token: $VAULT_TOKEN" \
                           "$VAULT_ADDR/v1/secret/data/occount/prod/occount-app")
-
-                        cat > /tmp/parse-vault.js << 'JSEOF'
-const chunks = [];
-process.stdin.on('data', c => chunks.push(c));
-process.stdin.on('end', () => {
-  const d = JSON.parse(chunks.join('')).data.data;
-  const fs = require('fs');
-  fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => `${k}=${v}`).join('\n'));
-});
-JSEOF
-                        echo "$SECRET" | node /tmp/parse-vault.js
-
+                        echo "$SECRET" | node parse-vault.js
                         echo "=== .env.production ===" && cat .env.production
-
                         yarn install --network-timeout 600000
                         yarn build
                     '''
