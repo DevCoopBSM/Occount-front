@@ -48,16 +48,15 @@ pipeline {
                     sh '''
                         VAULT_ADDR=http://vault.vault.svc.cluster.local:8200
 
-                        SECRET=$(curl -sf \
-                          -H "X-Vault-Token: $VAULT_TOKEN" \
+                        SECRET=$(wget -q -O - \
+                          --header "X-Vault-Token: $VAULT_TOKEN" \
                           "$VAULT_ADDR/v1/secret/data/occount/prod/occount-app")
 
-                        python3 -c "
-import sys, json, os
-d = json.loads(os.environ['SECRET'])['data']['data']
-for k, v in d.items():
-    print(f'{k}={v}')
-" SECRET="$SECRET" > .env.production
+                        node -e "
+const d = JSON.parse(process.env.SECRET).data.data;
+const fs = require('fs');
+fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => k+'='+v).join('\\n'));
+" SECRET="$SECRET"
 
                         echo "=== .env.production ===" && cat .env.production
 
