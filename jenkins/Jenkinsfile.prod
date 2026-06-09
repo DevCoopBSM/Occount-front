@@ -52,11 +52,14 @@ pipeline {
                           --header "X-Vault-Token: $VAULT_TOKEN" \
                           "$VAULT_ADDR/v1/secret/data/occount/prod/occount-app")
 
-                        node -e "
-const d = JSON.parse(process.env.SECRET).data.data;
-const fs = require('fs');
-fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => k+'='+v).join('\\n'));
-" SECRET="$SECRET"
+                        echo "$SECRET" | node -e "
+const chunks = [];
+process.stdin.on('data', c => chunks.push(c));
+process.stdin.on('end', () => {
+  const d = JSON.parse(chunks.join('')).data.data;
+  const fs = require('fs');
+  fs.writeFileSync('.env.production', Object.entries(d).map(([k,v]) => k+'='+v).join('\n'));
+});"
 
                         echo "=== .env.production ===" && cat .env.production
 
