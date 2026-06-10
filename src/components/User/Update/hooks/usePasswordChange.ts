@@ -59,9 +59,7 @@ export const usePasswordChange = () => {
     const { value } = e.target;
     setNewPassword(value);
     setPasswordWarning(
-      value && !VALIDATION_PATTERNS.PASSWORD.test(value)
-        ? UPDATE_MESSAGES.VALIDATION.PASSWORD
-        : ''
+      value && !VALIDATION_PATTERNS.PASSWORD.test(value) ? UPDATE_MESSAGES.VALIDATION.PASSWORD : ''
     );
     if (confirmNewPassword) {
       setConfirmWarning(
@@ -73,9 +71,7 @@ export const usePasswordChange = () => {
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setConfirmNewPassword(value);
-    setConfirmWarning(
-      value !== newPassword ? UPDATE_MESSAGES.VALIDATION.PASSWORD_MISMATCH : ''
-    );
+    setConfirmWarning(value !== newPassword ? UPDATE_MESSAGES.VALIDATION.PASSWORD_MISMATCH : '');
   };
 
   const handleSubmit = async (email: string): Promise<void> => {

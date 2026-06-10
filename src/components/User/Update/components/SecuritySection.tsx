@@ -63,9 +63,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
         ) : !isOtpSent ? (
           /* 1단계: 인증 코드 발송 */
           <>
-            <S.InfoMessage>
-              등록된 이메일({userEmail})로 인증 코드를 발송합니다.
-            </S.InfoMessage>
+            <S.InfoMessage>등록된 이메일({userEmail})로 인증 코드를 발송합니다.</S.InfoMessage>
             <S.VerificationButton
               type="button"
               onClick={() => handleSendOtp(userEmail)}
@@ -77,9 +75,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
         ) : !isOtpVerified ? (
           /* 2단계: 코드 입력 후 인증 */
           <>
-            <S.InfoMessage>
-              이메일로 발송된 6자리 코드를 입력해주세요.
-            </S.InfoMessage>
+            <S.InfoMessage>이메일로 발송된 6자리 코드를 입력해주세요.</S.InfoMessage>
             <S.InputContainer>
               <S.InputLabel>인증 코드</S.InputLabel>
               <S.AuthContainer>

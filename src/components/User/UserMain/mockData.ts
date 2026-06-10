@@ -15,42 +15,6 @@ export interface NoticeItem {
   importance?: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
-export type AriPickStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-
-export interface AriPickProposal {
-  proposal_id: number;
-  name: string;
-  reason: string;
-  proposer_id: number;
-  proposal_date: string;
-  status: AriPickStatus;
-  like_count: number;
-}
-
-export interface CreateAriPickRequest {
-  product_name: string;
-  reason: string;
-}
-
-export interface AriPickFoodSearchItem {
-  food_id: number;
-  name: string;
-  category?: string;
-  price?: number;
-}
-
-export interface AriPickLikeToggleResponse {
-  liked: boolean;
-  like_count: number;
-}
-
-export interface AriPickStats {
-  total_count: number;
-  pending_count: number;
-  approved_count: number;
-  rejected_count: number;
-}
-
 export const mockNotices: NoticeItem[] = [
   { id: 1, title: '2025 오카운트 UI 변경', date: '2025.07.12', importance: 'HIGH' },
   { id: 2, title: '2025 오카운트 UI 변경', date: '2025.07.12', importance: 'MEDIUM' },
@@ -63,36 +27,6 @@ export const mockAnnouncements: NoticeItem[] = [
   { id: 3, title: '시스템 점검 안내', date: '2025.07.08', importance: 'LOW' },
   { id: 4, title: '여름 휴가 기간 안내', date: '2025.07.05', importance: 'LOW' },
   { id: 5, title: '신규 결제 방식 도입 안내', date: '2025.07.03', importance: 'LOW' },
-];
-
-export const mockAriPickProposals: AriPickProposal[] = [
-  {
-    proposal_id: 1,
-    name: '초코에몽',
-    reason: '달콤하고 든든해서 쉬는 시간에 마시기 좋습니다.',
-    proposer_id: 2025001,
-    proposal_date: '2025-07-12',
-    status: 'PENDING',
-    like_count: 18,
-  },
-  {
-    proposal_id: 2,
-    name: '불닭볶음면',
-    reason: '점심시간 이후 간식으로 찾는 학생들이 많습니다.',
-    proposer_id: 2025002,
-    proposal_date: '2025-07-10',
-    status: 'APPROVED',
-    like_count: 31,
-  },
-  {
-    proposal_id: 3,
-    name: '프로틴바',
-    reason: '운동하는 학생들이 간단하게 먹을 수 있는 상품이 필요합니다.',
-    proposer_id: 2025003,
-    proposal_date: '2025-07-08',
-    status: 'REJECTED',
-    like_count: 7,
-  },
 ];
 
 export const mockDetailedNotices = [

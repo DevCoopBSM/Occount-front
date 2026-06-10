@@ -1,4 +1,3 @@
-import React from 'react';
 import * as S from './style';
 import { useUpdateForm } from './hooks/useUpdateForm';
 import { BasicInfoSection } from './components/BasicInfoSection';
