@@ -63,7 +63,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
           <S.SectionSuccessMessage>{passwordSuccess}</S.SectionSuccessMessage>
         ) : !isOtpSent ? (
           /* 1단계: 인증 코드 발송 */
-          <>
+          <S.AuthContainer>
             <S.InfoMessage>등록된 이메일({userEmail})로 인증 코드를 발송합니다.</S.InfoMessage>
             <S.VerificationButton
               type="button"
@@ -72,7 +72,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             >
               {isSending ? '발송 중...' : '인증 코드 발송'}
             </S.VerificationButton>
-          </>
+          </S.AuthContainer>
         ) : !isOtpVerified ? (
           /* 2단계: 코드 입력 후 인증 */
           <>

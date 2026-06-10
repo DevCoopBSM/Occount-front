@@ -7,6 +7,7 @@ export const usePinChange = () => {
   const [password, setPassword] = useState('');
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [ticket, setTicket] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmNewPin, setConfirmNewPin] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -23,11 +24,17 @@ export const usePinChange = () => {
     setIsVerifying(true);
     setPasswordError('');
     try {
-      // TODO: POST /api/v3/auth/password/verify (백엔드 추가 예정)
-      await axiosInstance.post('/auth/password/verify', { password });
+      const response = await axiosInstance.post('/users/pin/change-ticket', { password });
+      setTicket(response.data.ticket);
       setIsPasswordVerified(true);
     } catch (error: any) {
-      setPasswordError(error.response?.data?.message || '비밀번호가 올바르지 않습니다.');
+      if (!error.response) {
+        setPasswordError('서비스에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+      } else if (error.response.status >= 500 || error.response.status === 404) {
+        setPasswordError('서비스 준비 중입니다. 잠시 후 다시 시도해주세요.');
+      } else {
+        setPasswordError(error.response?.data?.message || '비밀번호가 올바르지 않습니다.');
+      }
     } finally {
       setIsVerifying(false);
     }
@@ -56,19 +63,18 @@ export const usePinChange = () => {
 
     setIsSubmitting(true);
     try {
-      await axiosInstance.post('/users/pin/change', {
-        password,
+      await axiosInstance.put('/users/pin', {
+        ticket,
         new_pin: newPin,
       });
       setSuccessMessage('PIN이 변경되었습니다.');
       setPassword('');
+      setTicket('');
       setIsPasswordVerified(false);
       setNewPin('');
       setConfirmNewPin('');
     } catch (error: any) {
-      // 비밀번호 불일치 에러 시 인증 단계로 되돌림
-      setIsPasswordVerified(false);
-      setPasswordError(error.response?.data?.message || '비밀번호가 올바르지 않습니다.');
+      setPasswordError(error.response?.data?.message || 'PIN 변경에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }

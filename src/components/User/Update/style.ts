@@ -300,8 +300,9 @@ export const SuccessMessage = styled.p<{ isVisible: boolean }>`
 
 export const AuthContainer = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
+  width: 100%;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     flex-direction: column;
@@ -310,11 +311,11 @@ export const AuthContainer = styled.div`
 `;
 
 export const InfoMessage = styled.div`
+  flex: 1;
   background-color: #fff8e5;
   border: 1px solid #f6df9b;
   border-radius: 14px;
   padding: 12px 14px;
-  margin-bottom: 14px;
   color: #6f5a1a;
   font-size: 13px;
   line-height: 1.6;
