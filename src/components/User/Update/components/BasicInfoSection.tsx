@@ -17,25 +17,25 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     <S.InputGrid>
       <S.InputContainer>
         <S.InputLabel>이름</S.InputLabel>
-        <S.RegisterInput type="text" name="userName" value={userInfo.userName} disabled />
+        <S.RegisterInput type="text" name="username" value={userInfo.username} disabled />
       </S.InputContainer>
 
       <S.InputContainer>
         <S.InputLabel>생년월일</S.InputLabel>
-        <S.RegisterInput type="text" name="userBirthDate" value={userInfo.userBirthDate} disabled />
+        <S.RegisterInput type="text" name="birth_date" value={userInfo.birth_date} disabled />
       </S.InputContainer>
 
       <S.InputContainer>
         <S.InputLabel>이메일</S.InputLabel>
-        <S.RegisterInput type="email" name="userEmail" value={userInfo.userEmail} disabled />
+        <S.RegisterInput type="email" name="email" value={userInfo.email} disabled />
       </S.InputContainer>
 
       <S.InputContainer>
         <S.InputLabel>전화번호</S.InputLabel>
         <S.RegisterInput
           type="tel"
-          name="userPhone"
-          value={userInfo.userPhone}
+          name="phone"
+          value={userInfo.phone}
           onChange={handleChange}
           disabled={!isVerified}
         />

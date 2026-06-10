@@ -1,8 +1,9 @@
 // 기본 열거형
 export enum UserType {
-  TEACHER = '교사',
   STUDENT = '학생',
   PARENT = '학부모',
+  TEACHER = '교사',
+  OTHER = '기타',
 }
 
 export enum Role {
@@ -13,19 +14,19 @@ export enum Role {
   ROLE_ADMIN = '관리자',
 }
 
-// 기본 인터페이스
+// 기본 인터페이스 (v3 API 응답 기준)
 export interface UserInfo {
-  userName: string;
-  userEmail: string;
-  userPassword: string;
+  username: string;
+  email: string;
+  phone: string;
+  user_type: keyof typeof UserType;
+  role: keyof typeof Role;
+  birth_date: string;
+  cooperative_number: string | null;
+  // v3 미제공 - 추후 API 추가 요청 예정
   userAddress: string;
-  userPin: string;
-  userType: UserType;
-  role: Role;
-  userPhone: string;
-  userBirthDate: string;
   investmentAmount: number;
-  todayTotalPayment?: number; // 추가: 오늘의 총 결제액 (선택적 필드)
+  todayTotalPayment?: number;
 }
 
 // 폼 관련 인터페이스
@@ -47,19 +48,24 @@ export interface FormData {
 
 // 상태 관련 인터페이스
 export interface Status {
-  isVerified: boolean;
+  isPinVerified: boolean;
+  isOtpSent: boolean;
+  isOtpVerified: boolean;
   isPasswordChangeMode: boolean;
   isPinChangeMode: boolean;
   isAddressSearched: boolean;
   isInvestmentModalOpen: boolean;
   isScriptLoaded: boolean;
   isSuccessMessageVisible: boolean;
+  isSendingOtp: boolean;
 }
 
 // 메시지 관련 인터페이스
 export interface Messages {
   fetchError: string;
   verificationError: string;
+  otpError: string;
+  otpCode: string;
   successMessage: string;
   passwordWarnings: {
     password: string;
@@ -74,6 +80,8 @@ export interface Messages {
 // 핸들러 관련 인터페이스
 export interface Handlers {
   handleVerify: () => Promise<void>;
+  handleSendOtp: () => Promise<void>;
+  handleVerifyOtp: () => Promise<void>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleConfirmPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -90,6 +98,7 @@ export interface Handlers {
 // Setter 관련 인터페이스
 export interface Setters {
   setCurrentPassword: (value: string) => void;
+  setOtpCode: (value: string) => void;
   setIsPasswordChangeMode: (value: boolean) => void;
   setIsPinChangeMode: (value: boolean) => void;
   setInvestmentAmount: (amount: number) => void;
@@ -97,29 +106,39 @@ export interface Setters {
 
 // 컴포넌트 Props 인터페이스
 export interface SecuritySectionProps {
-  isVerified: boolean;
-  isPasswordChangeMode: boolean;
-  isPinChangeMode: boolean;
-  setIsPasswordChangeMode: (value: boolean) => void;
-  setIsPinChangeMode: (value: boolean) => void;
+  // 비밀번호 변경 - OTP 인증
+  isOtpSent: boolean;
+  isOtpVerified: boolean;
+  otpCode: string;
+  otpError: string;
+  isSendingOtp: boolean;
+  handleSendOtp: () => Promise<void>;
+  handleVerifyOtp: () => Promise<void>;
+  setOtpCode: (value: string) => void;
   passwordForm: {
     newPassword: string;
     confirmNewPassword: string;
-  };
-  pinForm: {
-    newPin: string;
-    confirmNewPin: string;
   };
   passwordWarnings: {
     password: string;
     confirm: string;
   };
+  handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleConfirmPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // PIN 변경 - 비밀번호 인증
+  isPinVerified: boolean;
+  currentPassword: string;
+  setCurrentPassword: (value: string) => void;
+  verificationError: string;
+  handleVerify: () => Promise<void>;
+  pinForm: {
+    newPin: string;
+    confirmNewPin: string;
+  };
   pinWarnings: {
     pin: string;
     confirm: string;
   };
-  handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleConfirmPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleConfirmPinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

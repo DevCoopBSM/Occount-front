@@ -10,7 +10,7 @@ export const UserTypeSection: React.FC<UserTypeSectionProps> = ({ userInfo }) =>
   <S.InputGrid>
     <S.InputContainer>
       <S.InputLabel>회원 유형</S.InputLabel>
-      <S.RegisterInput type="text" value={UserType[userInfo.userType]} disabled />
+      <S.RegisterInput type="text" value={UserType[userInfo.user_type]} disabled />
     </S.InputContainer>
     <S.InputContainer>
       <S.InputLabel>권한</S.InputLabel>

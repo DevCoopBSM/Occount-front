@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import { UPDATE_MESSAGES } from '../constants/messages';
 
 export const useAddressUpdate = () => {
@@ -34,7 +34,7 @@ export const useAddressUpdate = () => {
     }).open();
   };
 
-  const handleAddressDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddressDetailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAddressDetail(e.target.value);
   };
 
