@@ -25,6 +25,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
     newPassword,
     confirmNewPassword,
     otpError,
+    submitError: passwordSubmitError,
     passwordWarning,
     confirmWarning,
     successMessage: passwordSuccess,
@@ -86,7 +87,12 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
                   placeholder="인증 코드 6자리"
-                  onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp(userEmail)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleVerifyOtp(userEmail);
+                    }
+                  }}
                 />
                 <S.VerificationButton
                   type="button"
@@ -129,6 +135,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
               />
               {confirmWarning && <S.WarningMessage>{confirmWarning}</S.WarningMessage>}
             </S.InputContainer>
+            {passwordSubmitError && <S.WarningMessage>{passwordSubmitError}</S.WarningMessage>}
             <S.SectionSubmitButton
               type="button"
               onClick={() => handlePasswordSubmit(userEmail)}

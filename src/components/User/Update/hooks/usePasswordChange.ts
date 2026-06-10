@@ -13,6 +13,7 @@ export const usePasswordChange = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [otpError, setOtpError] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const [passwordWarning, setPasswordWarning] = useState('');
   const [confirmWarning, setConfirmWarning] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -82,7 +83,7 @@ export const usePasswordChange = () => {
     if (!newPassword || passwordWarning || newPassword !== confirmNewPassword) return;
 
     setIsSubmitting(true);
-    setOtpError('');
+    setSubmitError('');
     try {
       await axiosInstance.post('/auth/password/change', {
         email,
@@ -96,7 +97,7 @@ export const usePasswordChange = () => {
       setNewPassword('');
       setConfirmNewPassword('');
     } catch (error: any) {
-      setOtpError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
+      setSubmitError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -113,6 +114,7 @@ export const usePasswordChange = () => {
     newPassword,
     confirmNewPassword,
     otpError,
+    submitError,
     passwordWarning,
     confirmWarning,
     successMessage,

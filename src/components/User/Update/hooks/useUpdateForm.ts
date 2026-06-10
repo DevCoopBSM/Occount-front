@@ -31,6 +31,8 @@ export const useUpdateForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!userInfo.username) return;
+
     try {
       const updateData: UserUpdatePayload = {
         username: userInfo.username,
