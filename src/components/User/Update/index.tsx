@@ -10,6 +10,7 @@ import PaymentModal from 'components/Pg/PaymentModal';
 const Update = () => {
   const {
     userInfo,
+    handlePhoneChange,
     fetchError,
     successMessage,
     isSuccessMessageVisible,
@@ -38,7 +39,7 @@ const Update = () => {
                 <BasicInfoSection
                   userInfo={userInfo}
                   isVerified={true}
-                  handleChange={addressUpdate.handleAddressDetailChange}
+                  handleChange={handlePhoneChange}
                 />
               </S.SectionCard>
 

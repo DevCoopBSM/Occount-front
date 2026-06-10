@@ -75,6 +75,10 @@ export const usePasswordChange = () => {
   };
 
   const handleSubmit = async (email: string): Promise<void> => {
+    if (!isOtpVerified) {
+      setOtpError('OTP 인증이 필요합니다.');
+      return;
+    }
     if (!newPassword || passwordWarning || newPassword !== confirmNewPassword) return;
 
     setIsSubmitting(true);

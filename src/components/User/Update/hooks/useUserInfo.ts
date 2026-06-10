@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import axiosInstance from 'utils/Axios';
 import { UserInfo } from '../types';
 import { UPDATE_MESSAGES } from '../constants/messages';
@@ -35,5 +35,9 @@ export const useUserInfo = () => {
     fetchUserInfo();
   }, []);
 
-  return { userInfo, setUserInfo, error, refetchUserInfo: fetchUserInfo };
+  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, phone: e.target.value }));
+  };
+
+  return { userInfo, setUserInfo, handlePhoneChange, error, refetchUserInfo: fetchUserInfo };
 };

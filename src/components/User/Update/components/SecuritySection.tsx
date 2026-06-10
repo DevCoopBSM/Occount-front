@@ -84,7 +84,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                   inputMode="numeric"
                   maxLength={6}
                   value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
                   placeholder="인증 코드 6자리"
                   onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp(userEmail)}
                 />
