@@ -23,11 +23,9 @@ export interface UserInfo {
   role: keyof typeof Role;
   birth_date: string;
   cooperative_number: string | null;
-  /** @deprecated v3 미제공 - 추후 API 추가 요청 예정 */
+  // v3 미제공 - 추후 API 추가 요청 예정
   userAddress: string;
-  /** @deprecated v3 미제공 - 추후 API 추가 요청 예정 */
   investmentAmount: number;
-  /** @deprecated v3 미제공 - 추후 API 추가 요청 예정 */
   todayTotalPayment?: number;
 }
 
