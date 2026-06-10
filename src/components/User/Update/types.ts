@@ -14,7 +14,7 @@ export enum Role {
   ROLE_ADMIN = '관리자',
 }
 
-// 기본 인터페이스 (v3 API 응답 기준)
+// 기본 인터페이스
 export interface UserInfo {
   username: string;
   email: string;
