@@ -15,11 +15,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
   pinChange,
 }) => {
   const {
+    status: passwordStatus,
     isOtpSent,
     isOtpVerified,
-    isSending,
-    isVerifying: isOtpVerifying,
-    isSubmitting: isPasswordSubmitting,
     otpCode,
     setOtpCode,
     newPassword,
@@ -37,16 +35,15 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
   } = passwordChange;
 
   const {
+    status: pinStatus,
     password,
     setPassword,
     isPasswordVerified,
-    isVerifying: isPinVerifying,
     newPin,
     confirmNewPin,
     passwordError: pinPasswordError,
     pinWarning,
     confirmWarning: pinConfirmWarning,
-    isSubmitting: isPinSubmitting,
     successMessage: pinSuccess,
     handleVerifyPassword,
     handlePinChange,
@@ -68,9 +65,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             <S.VerificationButton
               type="button"
               onClick={() => handleSendOtp(userEmail)}
-              disabled={isSending}
+              disabled={passwordStatus === 'sending'}
             >
-              {isSending ? '발송 중...' : '인증 코드 발송'}
+              {passwordStatus === 'sending' ? '발송 중...' : '인증 코드 발송'}
             </S.VerificationButton>
           </S.AuthContainer>
         ) : !isOtpVerified ? (
@@ -97,9 +94,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                 <S.VerificationButton
                   type="button"
                   onClick={() => handleVerifyOtp(userEmail)}
-                  disabled={isOtpVerifying}
+                  disabled={passwordStatus === 'verifying'}
                 >
-                  {isOtpVerifying ? '확인 중...' : '인증하기'}
+                  {passwordStatus === 'verifying' ? '확인 중...' : '인증하기'}
                 </S.VerificationButton>
               </S.AuthContainer>
               {otpError && <S.WarningMessage>{otpError}</S.WarningMessage>}
@@ -107,7 +104,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             <S.ResendButton
               type="button"
               onClick={() => handleSendOtp(userEmail)}
-              disabled={isSending}
+              disabled={passwordStatus === 'sending'}
             >
               코드 재발송
             </S.ResendButton>
@@ -139,9 +136,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             <S.SectionSubmitButton
               type="button"
               onClick={() => handlePasswordSubmit(userEmail)}
-              disabled={isPasswordSubmitting}
+              disabled={passwordStatus === 'submitting'}
             >
-              {isPasswordSubmitting ? '변경 중...' : '비밀번호 변경'}
+              {passwordStatus === 'submitting' ? '변경 중...' : '비밀번호 변경'}
             </S.SectionSubmitButton>
           </>
         )}
@@ -168,9 +165,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                 <S.VerificationButton
                   type="button"
                   onClick={handleVerifyPassword}
-                  disabled={isPinVerifying}
+                  disabled={pinStatus === 'verifying'}
                 >
-                  {isPinVerifying ? '확인 중...' : '인증하기'}
+                  {pinStatus === 'verifying' ? '확인 중...' : '인증하기'}
                 </S.VerificationButton>
               </S.AuthContainer>
               {pinPasswordError && <S.WarningMessage>{pinPasswordError}</S.WarningMessage>}
@@ -206,9 +203,9 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             <S.SectionSubmitButton
               type="button"
               onClick={handlePinSubmit}
-              disabled={isPinSubmitting}
+              disabled={pinStatus === 'submitting'}
             >
-              {isPinSubmitting ? '변경 중...' : 'PIN 변경'}
+              {pinStatus === 'submitting' ? '변경 중...' : 'PIN 변경'}
             </S.SectionSubmitButton>
           </>
         )}

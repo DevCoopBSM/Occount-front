@@ -15,7 +15,7 @@ interface UserUpdatePayload {
   user_type: UserInfo['user_type'];
   birth_date: string;
   cooperative_number: string | null;
-  userAddress?: string;
+  userAddress?: string; // v3 미제공으로 기존 camelCase 임시 유지 - API 추가 시 snake_case로 통일 예정
 }
 
 export const useUpdateForm = () => {

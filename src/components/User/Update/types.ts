@@ -23,7 +23,7 @@ export interface UserInfo {
   role: keyof typeof Role;
   birth_date: string;
   cooperative_number: string | null;
-  // v3 미제공 - 추후 API 추가 요청 예정
+  // v3 미제공으로 기존 camelCase 임시 유지 - API 추가 시 snake_case로 통일 예정
   userAddress: string;
   investmentAmount: number;
   todayTotalPayment?: number;

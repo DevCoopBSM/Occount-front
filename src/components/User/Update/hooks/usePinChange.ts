@@ -3,17 +3,18 @@ import axiosInstance from 'utils/Axios';
 import { VALIDATION_PATTERNS } from '../constants/validation';
 import { UPDATE_MESSAGES } from '../constants/messages';
 
+type PinStatus = 'idle' | 'verifying' | 'submitting';
+
 export const usePinChange = () => {
+  const [status, setStatus] = useState<PinStatus>('idle');
   const [password, setPassword] = useState('');
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [ticket, setTicket] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmNewPin, setConfirmNewPin] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [pinWarning, setPinWarning] = useState('');
   const [confirmWarning, setConfirmWarning] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleVerifyPassword = async (): Promise<void> => {
@@ -21,7 +22,7 @@ export const usePinChange = () => {
       setPasswordError('현재 비밀번호를 입력해주세요.');
       return;
     }
-    setIsVerifying(true);
+    setStatus('verifying');
     setPasswordError('');
     try {
       const response = await axiosInstance.post('/users/pin/change-ticket', { password });
@@ -36,7 +37,7 @@ export const usePinChange = () => {
         setPasswordError(error.response?.data?.message || '비밀번호가 올바르지 않습니다.');
       }
     } finally {
-      setIsVerifying(false);
+      setStatus('idle');
     }
   };
 
@@ -61,7 +62,7 @@ export const usePinChange = () => {
   const handleSubmit = async (): Promise<void> => {
     if (!newPin || pinWarning || newPin !== confirmNewPin) return;
 
-    setIsSubmitting(true);
+    setStatus('submitting');
     try {
       await axiosInstance.put('/users/pin', {
         ticket,
@@ -76,21 +77,20 @@ export const usePinChange = () => {
     } catch (error: any) {
       setPasswordError(error.response?.data?.message || 'PIN 변경에 실패했습니다.');
     } finally {
-      setIsSubmitting(false);
+      setStatus('idle');
     }
   };
 
   return {
+    status,
     password,
     setPassword,
     isPasswordVerified,
-    isVerifying,
     newPin,
     confirmNewPin,
     passwordError,
     pinWarning,
     confirmWarning,
-    isSubmitting,
     successMessage,
     handleVerifyPassword,
     handlePinChange,
