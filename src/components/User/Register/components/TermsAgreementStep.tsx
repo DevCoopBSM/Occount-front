@@ -1,9 +1,9 @@
 import React, { useState, type ReactNode } from 'react';
 
 const renderWithBold = (text: string): ReactNode[] =>
-  text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
-    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-  );
+  text
+    .split(/\*\*(.*?)\*\*/g)
+    .map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part));
 import { CheckboxIcon } from 'components/Icon/CheckboxIcon';
 import { ChevronDownIcon } from 'components/Icon/ChevronDownIcon';
 import { PRIVACY_TERMS_CONTENT } from '../constants/terms';

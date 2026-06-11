@@ -23,9 +23,12 @@ export const useRegisterForm = () => {
     confirmPin: '',
   });
   const [pinMatch, setPinMatch] = useState(false);
-  const [passwordErrors, setPasswordErrors] = useState<PasswordValidationState>(
-    { length: true, lowerCase: true, number: true, specialChar: true }
-  );
+  const [passwordErrors, setPasswordErrors] = useState<PasswordValidationState>({
+    length: true,
+    lowerCase: true,
+    number: true,
+    specialChar: true,
+  });
   const [passwordMatch, setPasswordMatch] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
