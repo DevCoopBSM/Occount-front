@@ -118,9 +118,7 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const [isInitializing, setIsInitializing] = React.useState(
-    !isDevMode() && !!getAccessToken()
-  );
+  const [isInitializing, setIsInitializing] = React.useState(!isDevMode() && !!getAccessToken());
 
   // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
