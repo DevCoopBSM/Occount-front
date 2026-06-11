@@ -3,95 +3,112 @@ import axiosInstance from 'utils/Axios';
 import { VALIDATION_PATTERNS } from '../constants/validation';
 import { UPDATE_MESSAGES } from '../constants/messages';
 
-type PinStatus = 'idle' | 'verifying' | 'submitting';
+const MAX_PIN_LENGTH = 6;
+const DIGITS_ONLY = /[^0-9]/g;
+
+type PinChangeState =
+  | { step: 'passwordRequired'; password: string; error: string | null }
+  | {
+      step: 'passwordVerified';
+      ticket: string;
+      newPin: string;
+      confirmNewPin: string;
+      error: string | null;
+    }
+  | { step: 'success' };
 
 export const usePinChange = () => {
-  const [status, setStatus] = useState<PinStatus>('idle');
-  const [password, setPassword] = useState('');
-  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-  const [ticket, setTicket] = useState('');
-  const [newPin, setNewPin] = useState('');
-  const [confirmNewPin, setConfirmNewPin] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [state, setState] = useState<PinChangeState>({
+    step: 'passwordRequired',
+    password: '',
+    error: null,
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [pinWarning, setPinWarning] = useState('');
   const [confirmWarning, setConfirmWarning] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (state.step !== 'passwordRequired') return;
+    setState({ ...state, password: e.target.value, error: null });
+  };
 
   const handleVerifyPassword = async (): Promise<void> => {
-    if (!password) {
-      setPasswordError('현재 비밀번호를 입력해주세요.');
+    if (state.step !== 'passwordRequired') return;
+    if (!state.password) {
+      setState({ ...state, error: '현재 비밀번호를 입력해주세요.' });
       return;
     }
-    setStatus('verifying');
-    setPasswordError('');
+    setIsLoading(true);
     try {
-      const response = await axiosInstance.post('/users/pin/change-ticket', { password });
-      setTicket(response.data.ticket);
-      setIsPasswordVerified(true);
+      const response = await axiosInstance.post('/users/pin/change-ticket', {
+        password: state.password,
+      });
+      setState({
+        step: 'passwordVerified',
+        ticket: response.data.ticket,
+        newPin: '',
+        confirmNewPin: '',
+        error: null,
+      });
     } catch (error: any) {
-      if (!error.response) {
-        setPasswordError('서비스에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
-      } else if (error.response.status >= 500 || error.response.status === 404) {
-        setPasswordError('서비스 준비 중입니다. 잠시 후 다시 시도해주세요.');
-      } else {
-        setPasswordError(error.response?.data?.message || '비밀번호가 올바르지 않습니다.');
-      }
+      const errorMessage = !error.response
+        ? '서비스에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.'
+        : error.response.status >= 500 || error.response.status === 404
+          ? '서비스 준비 중입니다. 잠시 후 다시 시도해주세요.'
+          : error.response?.data?.message || '비밀번호가 올바르지 않습니다.';
+      setState({ ...state, error: errorMessage });
     } finally {
-      setStatus('idle');
+      setIsLoading(false);
     }
   };
 
   const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    if (value.length <= 6) {
-      setNewPin(value);
+    if (state.step !== 'passwordVerified') return;
+    const value = e.target.value.replace(DIGITS_ONLY, '');
+    if (value.length <= MAX_PIN_LENGTH) {
       setPinWarning(
         value && !VALIDATION_PATTERNS.PIN.test(value) ? UPDATE_MESSAGES.VALIDATION.PIN : ''
       );
+      setState({ ...state, newPin: value });
     }
   };
 
   const handleConfirmPinChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    if (value.length <= 6) {
-      setConfirmNewPin(value);
-      setConfirmWarning(value !== newPin ? UPDATE_MESSAGES.VALIDATION.PIN_MISMATCH : '');
+    if (state.step !== 'passwordVerified') return;
+    const value = e.target.value.replace(DIGITS_ONLY, '');
+    if (value.length <= MAX_PIN_LENGTH) {
+      setConfirmWarning(value !== state.newPin ? UPDATE_MESSAGES.VALIDATION.PIN_MISMATCH : '');
+      setState({ ...state, confirmNewPin: value });
     }
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (!newPin || pinWarning || newPin !== confirmNewPin) return;
+    if (state.step !== 'passwordVerified') return;
+    if (!state.newPin || pinWarning || state.newPin !== state.confirmNewPin) return;
 
-    setStatus('submitting');
+    setIsLoading(true);
     try {
       await axiosInstance.put('/users/pin', {
-        ticket,
-        new_pin: newPin,
+        ticket: state.ticket,
+        new_pin: state.newPin,
       });
-      setSuccessMessage('PIN이 변경되었습니다.');
-      setPassword('');
-      setTicket('');
-      setIsPasswordVerified(false);
-      setNewPin('');
-      setConfirmNewPin('');
+      setState({ step: 'success' });
     } catch (error: any) {
-      setPasswordError(error.response?.data?.message || 'PIN 변경에 실패했습니다.');
+      setState({
+        ...state,
+        error: error.response?.data?.message || 'PIN 변경에 실패했습니다.',
+      });
     } finally {
-      setStatus('idle');
+      setIsLoading(false);
     }
   };
 
   return {
-    status,
-    password,
-    setPassword,
-    isPasswordVerified,
-    newPin,
-    confirmNewPin,
-    passwordError,
+    state,
+    isLoading,
     pinWarning,
     confirmWarning,
-    successMessage,
+    handlePasswordChange,
     handleVerifyPassword,
     handlePinChange,
     handleConfirmPinChange,

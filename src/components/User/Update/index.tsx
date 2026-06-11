@@ -1,5 +1,5 @@
 import * as S from './style';
-import { useUpdateForm } from './hooks/useUpdateForm';
+import { useUserUpdatePage } from './hooks/useUserUpdatePage';
 import { BasicInfoSection } from './components/BasicInfoSection';
 import { AddressSection } from './components/AddressSection';
 import { SecuritySection } from './components/SecuritySection';
@@ -19,7 +19,7 @@ const Update = () => {
     addressUpdate,
     investment,
     handleSubmit,
-  } = useUpdateForm();
+  } = useUserUpdatePage();
 
   return (
     <S.Container>

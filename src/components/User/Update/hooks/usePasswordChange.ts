@@ -3,56 +3,34 @@ import axiosInstance from 'utils/Axios';
 import { VALIDATION_PATTERNS } from '../constants/validation';
 import { UPDATE_MESSAGES } from '../constants/messages';
 
-type OtpStatus = 'idle' | 'sending' | 'verifying' | 'submitting';
+type PasswordChangeStep = 'idle' | 'otpSent' | 'success';
 
 export const usePasswordChange = () => {
-  const [status, setStatus] = useState<OtpStatus>('idle');
-  const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [step, setStep] = useState<PasswordChangeStep>('idle');
+  const [isLoading, setIsLoading] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [otpError, setOtpError] = useState('');
-  const [submitError, setSubmitError] = useState('');
+  const [error, setError] = useState('');
   const [passwordWarning, setPasswordWarning] = useState('');
   const [confirmWarning, setConfirmWarning] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSendOtp = async (email: string): Promise<void> => {
-    setStatus('sending');
-    setOtpError('');
+    setIsLoading(true);
+    setError('');
     try {
       await axiosInstance.post('/auth/email/send-otp', {
         email,
         purpose: 'PASSWORD_RESET',
       });
-      setIsOtpSent(true);
-      setIsOtpVerified(false);
+      setStep('otpSent');
       setOtpCode('');
+      setNewPassword('');
+      setConfirmNewPassword('');
     } catch {
-      setOtpError('인증 코드 발송에 실패했습니다. 다시 시도해주세요.');
+      setError('인증 코드 발송에 실패했습니다. 다시 시도해주세요.');
     } finally {
-      setStatus('idle');
-    }
-  };
-
-  const handleVerifyOtp = async (email: string): Promise<void> => {
-    if (!otpCode) {
-      setOtpError('인증 코드를 입력해주세요.');
-      return;
-    }
-    setStatus('verifying');
-    setOtpError('');
-    try {
-      await axiosInstance.post('/auth/email/verify-otp', {
-        email,
-        otp_code: otpCode,
-      });
-      setIsOtpVerified(true);
-    } catch (error: any) {
-      setOtpError(error.response?.data?.message || '인증 코드가 올바르지 않거나 만료되었습니다.');
-    } finally {
-      setStatus('idle');
+      setIsLoading(false);
     }
   };
 
@@ -76,48 +54,39 @@ export const usePasswordChange = () => {
   };
 
   const handleSubmit = async (email: string): Promise<void> => {
-    if (!isOtpVerified) {
-      setOtpError('OTP 인증이 필요합니다.');
+    if (!otpCode) {
+      setError('인증 코드를 입력해주세요.');
       return;
     }
     if (!newPassword || passwordWarning || newPassword !== confirmNewPassword) return;
 
-    setStatus('submitting');
-    setSubmitError('');
+    setIsLoading(true);
+    setError('');
     try {
       await axiosInstance.post('/auth/password/change', {
         email,
         otp_code: otpCode,
         new_password: newPassword,
       });
-      setSuccessMessage('비밀번호가 변경되었습니다.');
-      setIsOtpSent(false);
-      setIsOtpVerified(false);
-      setOtpCode('');
-      setNewPassword('');
-      setConfirmNewPassword('');
+      setStep('success');
     } catch (error: any) {
-      setSubmitError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
+      setError(error.response?.data?.message || '비밀번호 변경에 실패했습니다.');
     } finally {
-      setStatus('idle');
+      setIsLoading(false);
     }
   };
 
   return {
-    status,
-    isOtpSent,
-    isOtpVerified,
+    step,
+    isLoading,
     otpCode,
     setOtpCode,
     newPassword,
     confirmNewPassword,
-    otpError,
-    submitError,
+    error,
     passwordWarning,
     confirmWarning,
-    successMessage,
     handleSendOtp,
-    handleVerifyOtp,
     handleNewPasswordChange,
     handleConfirmPasswordChange,
     handleSubmit,

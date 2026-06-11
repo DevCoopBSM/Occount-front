@@ -18,7 +18,7 @@ interface UserUpdatePayload {
   userAddress?: string; // v3 미제공으로 기존 camelCase 임시 유지 - API 추가 시 snake_case로 통일 예정
 }
 
-export const useUpdateForm = () => {
+export const useUserUpdatePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
 
