@@ -252,11 +252,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         axiosInstance.get('wallet/point', { skipAuthRedirect: true, skipGlobalError: true } as any),
       ]);
 
-      const userUpdates: Partial<User> = {
-        point: pointRes.data.point,
-        name: infoRes.data.username,
-      };
+      const userUpdates: Partial<User> = {};
 
+      if (typeof pointRes.data.point === 'number') {
+        userUpdates.point = pointRes.data.point;
+      }
+      if (typeof infoRes.data.username === 'string') {
+        userUpdates.name = infoRes.data.username;
+      }
       if (typeof infoRes.data.userCode === 'string') {
         userUpdates.code = infoRes.data.userCode;
       }
