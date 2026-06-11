@@ -1,13 +1,13 @@
 import React, { useState, type ReactNode } from 'react';
+import { CheckboxIcon } from 'components/Icon/CheckboxIcon';
+import { ChevronDownIcon } from 'components/Icon/ChevronDownIcon';
+import { PRIVACY_TERMS_CONTENT } from '../constants/terms';
+import * as TermsAgreementStepStyle from './TermsAgreementStep.style';
 
 const renderWithBold = (text: string): ReactNode[] =>
   text
     .split(/\*\*(.*?)\*\*/g)
     .map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part));
-import { CheckboxIcon } from 'components/Icon/CheckboxIcon';
-import { ChevronDownIcon } from 'components/Icon/ChevronDownIcon';
-import { PRIVACY_TERMS_CONTENT } from '../constants/terms';
-import * as TermsAgreementStepStyle from './TermsAgreementStep.style';
 
 interface TermsAgreementStepProps {
   onNext: () => void;
