@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserInfo } from '../types';
-import * as S from './VerificationStep.style';
+import * as VerificationStepStyle from './VerificationStep.style';
 
 interface VerificationStepProps {
   isVerified: boolean;
@@ -24,70 +24,91 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
   onPrev,
 }) => {
   return (
-    <S.Container>
-      <S.LogoAndForm>
-        <S.LogoContainer>
-          <S.LogoWrapping>
-            <S.LogoImg src="/assets/occount-logo.svg" alt="logo" />
-          </S.LogoWrapping>
-          <S.LogoSubText>회원가입 후 오카운트의 더 다양한 기능을 만나보세요!</S.LogoSubText>
-        </S.LogoContainer>
+    <VerificationStepStyle.Container>
+      <VerificationStepStyle.LogoAndForm>
+        <VerificationStepStyle.LogoContainer>
+          <VerificationStepStyle.LogoWrapping>
+            <VerificationStepStyle.LogoImg src="/assets/occount-logo.svg" alt="logo" />
+          </VerificationStepStyle.LogoWrapping>
+          <VerificationStepStyle.LogoSubText>
+            회원가입 후 오카운트의 더 다양한 기능을 만나보세요!
+          </VerificationStepStyle.LogoSubText>
+        </VerificationStepStyle.LogoContainer>
 
-        <S.FormContainer>
-          <S.StepTitle>본인 인증</S.StepTitle>
+        <VerificationStepStyle.FormContainer>
+          <VerificationStepStyle.StepTitle>본인 인증</VerificationStepStyle.StepTitle>
 
-          <S.VerificationContainer>
+          <VerificationStepStyle.VerificationContainer>
             {isVerified && userInfo ? (
               <>
-                <S.UserInfoContainer>
-                  <S.InputContainer>
-                    <S.InputLabel>이름</S.InputLabel>
-                    <S.RegisterInput type="text" value={userInfo.userName} disabled />
-                  </S.InputContainer>
-                  <S.InputContainer>
-                    <S.InputLabel>생년월일</S.InputLabel>
-                    <S.RegisterInput type="text" value={userInfo.userBirthDate} disabled />
-                  </S.InputContainer>
-                  <S.InputContainer>
-                    <S.InputLabel>핸드폰 번호</S.InputLabel>
-                    <S.RegisterInput type="text" value={userInfo.userPhone} disabled />
-                  </S.InputContainer>
-                </S.UserInfoContainer>
+                <VerificationStepStyle.UserInfoContainer>
+                  <VerificationStepStyle.InputContainer>
+                    <VerificationStepStyle.InputLabel>이름</VerificationStepStyle.InputLabel>
+                    <VerificationStepStyle.RegisterInput
+                      type="text"
+                      value={userInfo.userName}
+                      disabled
+                    />
+                  </VerificationStepStyle.InputContainer>
+                  <VerificationStepStyle.InputContainer>
+                    <VerificationStepStyle.InputLabel>생년월일</VerificationStepStyle.InputLabel>
+                    <VerificationStepStyle.RegisterInput
+                      type="text"
+                      value={userInfo.userBirthDate}
+                      disabled
+                    />
+                  </VerificationStepStyle.InputContainer>
+                  <VerificationStepStyle.InputContainer>
+                    <VerificationStepStyle.InputLabel>핸드폰 번호</VerificationStepStyle.InputLabel>
+                    <VerificationStepStyle.RegisterInput
+                      type="text"
+                      value={userInfo.userPhone}
+                      disabled
+                    />
+                  </VerificationStepStyle.InputContainer>
+                </VerificationStepStyle.UserInfoContainer>
 
-                <S.ReVerificationButton onClick={onResetVerification} disabled={isVerifying}>
+                <VerificationStepStyle.ReVerificationButton
+                  onClick={onResetVerification}
+                  disabled={isVerifying}
+                >
                   재인증
-                </S.ReVerificationButton>
+                </VerificationStepStyle.ReVerificationButton>
               </>
             ) : (
-              <S.VerificationButton
+              <VerificationStepStyle.VerificationButton
                 onClick={onVerify}
                 disabled={isVerified || isVerifying}
                 $isVerifying={isVerifying}
                 $isVerified={isVerified}
               >
                 {isVerifying ? '인증 진행 중...' : isVerified ? '본인인증 완료' : '본인인증'}
-              </S.VerificationButton>
+              </VerificationStepStyle.VerificationButton>
             )}
 
             {isVerifying && (
-              <S.StatusMessage>
+              <VerificationStepStyle.StatusMessage>
                 인증 창에서 본인인증을 완료해주세요. 창이 보이지 않으면 팝업 차단을 확인해주세요.
-              </S.StatusMessage>
+              </VerificationStepStyle.StatusMessage>
             )}
 
-            {verificationError && <S.ErrorMessage>{verificationError}</S.ErrorMessage>}
-          </S.VerificationContainer>
+            {verificationError && (
+              <VerificationStepStyle.ErrorMessage>
+                {verificationError}
+              </VerificationStepStyle.ErrorMessage>
+            )}
+          </VerificationStepStyle.VerificationContainer>
 
-          <S.NavigationContainer>
-            <S.NavigationButton onClick={onPrev} $isPrev>
+          <VerificationStepStyle.NavigationContainer>
+            <VerificationStepStyle.NavigationButton onClick={onPrev} $isPrev>
               이전
-            </S.NavigationButton>
-            <S.NavigationButton onClick={onNext} disabled={!isVerified}>
+            </VerificationStepStyle.NavigationButton>
+            <VerificationStepStyle.NavigationButton onClick={onNext} disabled={!isVerified}>
               다음
-            </S.NavigationButton>
-          </S.NavigationContainer>
-        </S.FormContainer>
-      </S.LogoAndForm>
-    </S.Container>
+            </VerificationStepStyle.NavigationButton>
+          </VerificationStepStyle.NavigationContainer>
+        </VerificationStepStyle.FormContainer>
+      </VerificationStepStyle.LogoAndForm>
+    </VerificationStepStyle.Container>
   );
 };

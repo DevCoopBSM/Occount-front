@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSpring } from 'react-spring';
 import { UserType } from '../types';
-import * as R from '../style';
+import * as UserTypeStepStyle from '../style';
 
 interface UserTypeStepProps {
   userType: UserType;
@@ -23,34 +23,36 @@ export const UserTypeStep: React.FC<UserTypeStepProps> = ({
   });
 
   return (
-    <R.AnimatedContainer style={fadeIn}>
-      <R.StepTitle>사용자 유형 선택</R.StepTitle>
-      <R.ToggleButtonContainer>
-        <R.ToggleButton
+    <UserTypeStepStyle.AnimatedContainer style={fadeIn}>
+      <UserTypeStepStyle.StepTitle>사용자 유형 선택</UserTypeStepStyle.StepTitle>
+      <UserTypeStepStyle.ToggleButtonContainer>
+        <UserTypeStepStyle.ToggleButton
           active={userType === UserType.STUDENT}
           onClick={() => setUserType(UserType.STUDENT)}
         >
           학생
-        </R.ToggleButton>
-        <R.ToggleButton
+        </UserTypeStepStyle.ToggleButton>
+        <UserTypeStepStyle.ToggleButton
           active={userType === UserType.PARENT}
           onClick={() => setUserType(UserType.PARENT)}
         >
           학부모
-        </R.ToggleButton>
-        <R.ToggleButton
+        </UserTypeStepStyle.ToggleButton>
+        <UserTypeStepStyle.ToggleButton
           active={userType === UserType.TEACHER}
           onClick={() => setUserType(UserType.TEACHER)}
         >
           교사
-        </R.ToggleButton>
-      </R.ToggleButtonContainer>
-      <R.ButtonContainer>
-        <R.NavigationButton onClick={onPrev} isPrev>
+        </UserTypeStepStyle.ToggleButton>
+      </UserTypeStepStyle.ToggleButtonContainer>
+      <UserTypeStepStyle.ButtonContainer>
+        <UserTypeStepStyle.NavigationButton onClick={onPrev} isPrev>
           취소
-        </R.NavigationButton>
-        <R.NavigationButton onClick={onNext}>다음</R.NavigationButton>
-      </R.ButtonContainer>
-    </R.AnimatedContainer>
+        </UserTypeStepStyle.NavigationButton>
+        <UserTypeStepStyle.NavigationButton onClick={onNext}>
+          다음
+        </UserTypeStepStyle.NavigationButton>
+      </UserTypeStepStyle.ButtonContainer>
+    </UserTypeStepStyle.AnimatedContainer>
   );
 };

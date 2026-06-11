@@ -6,7 +6,7 @@ import {
   PRIVACY_NOTICE,
   PRIVACY_AGREEMENTS,
 } from '../constants/privacy';
-import * as R from '../style';
+import * as PrivacyStepStyle from '../style';
 
 interface PrivacyStepProps {
   isPrivacyCollectionAgreed: boolean;
@@ -34,9 +34,9 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
   });
 
   return (
-    <R.AnimatedContainer style={fadeIn}>
-      <R.StepTitle>개인정보 수집 및 이용 동의</R.StepTitle>
-      <R.PrivacyContent>
+    <PrivacyStepStyle.AnimatedContainer style={fadeIn}>
+      <PrivacyStepStyle.StepTitle>개인정보 수집 및 이용 동의</PrivacyStepStyle.StepTitle>
+      <PrivacyStepStyle.PrivacyContent>
         <h3>{PRIVACY_SECTIONS.PROCESSING.title}</h3>
         <table>
           <tr>
@@ -190,54 +190,56 @@ export const PrivacyStep: React.FC<PrivacyStepProps> = ({
             <td>{PRIVACY_CONTENT.PRIVACY_OFFICER.contact}</td>
           </tr>
         </table>
-      </R.PrivacyContent>
+      </PrivacyStepStyle.PrivacyContent>
 
-      <R.PrivacyNotice>
+      <PrivacyStepStyle.PrivacyNotice>
         <p>{PRIVACY_NOTICE.rights}</p>
         <p>{PRIVACY_NOTICE.consequences}</p>
-      </R.PrivacyNotice>
+      </PrivacyStepStyle.PrivacyNotice>
 
-      <R.PrivacyAgreementContainer>
-        <R.PrivacyCheckboxWrapper>
-          <R.PrivacyCheckbox
+      <PrivacyStepStyle.PrivacyAgreementContainer>
+        <PrivacyStepStyle.PrivacyCheckboxWrapper>
+          <PrivacyStepStyle.PrivacyCheckbox
             type="checkbox"
             id={PRIVACY_AGREEMENTS.collection.id}
             checked={isPrivacyCollectionAgreed}
             onChange={() => setIsPrivacyCollectionAgreed(!isPrivacyCollectionAgreed)}
           />
-          <R.PrivacyLabel htmlFor={PRIVACY_AGREEMENTS.collection.id}>
+          <PrivacyStepStyle.PrivacyLabel htmlFor={PRIVACY_AGREEMENTS.collection.id}>
             {PRIVACY_AGREEMENTS.collection.label}
-          </R.PrivacyLabel>
-        </R.PrivacyCheckboxWrapper>
+          </PrivacyStepStyle.PrivacyLabel>
+        </PrivacyStepStyle.PrivacyCheckboxWrapper>
 
-        <R.PrivacyCheckboxWrapper>
-          <R.PrivacyCheckbox
+        <PrivacyStepStyle.PrivacyCheckboxWrapper>
+          <PrivacyStepStyle.PrivacyCheckbox
             type="checkbox"
             id={PRIVACY_AGREEMENTS.thirdParty.id}
             checked={isPrivacyThirdPartyAgreed}
             onChange={() => setIsPrivacyThirdPartyAgreed(!isPrivacyThirdPartyAgreed)}
           />
-          <R.PrivacyLabel htmlFor={PRIVACY_AGREEMENTS.thirdParty.id}>
+          <PrivacyStepStyle.PrivacyLabel htmlFor={PRIVACY_AGREEMENTS.thirdParty.id}>
             {PRIVACY_AGREEMENTS.thirdParty.label}
-          </R.PrivacyLabel>
-        </R.PrivacyCheckboxWrapper>
-      </R.PrivacyAgreementContainer>
+          </PrivacyStepStyle.PrivacyLabel>
+        </PrivacyStepStyle.PrivacyCheckboxWrapper>
+      </PrivacyStepStyle.PrivacyAgreementContainer>
 
       {errors.privacyAgreement && (
-        <R.ErrorMessage isVisible={true}>{errors.privacyAgreement}</R.ErrorMessage>
+        <PrivacyStepStyle.ErrorMessage isVisible={true}>
+          {errors.privacyAgreement}
+        </PrivacyStepStyle.ErrorMessage>
       )}
 
-      <R.ButtonContainer>
-        <R.NavigationButton onClick={onPrev} isPrev>
+      <PrivacyStepStyle.ButtonContainer>
+        <PrivacyStepStyle.NavigationButton onClick={onPrev} isPrev>
           이전
-        </R.NavigationButton>
-        <R.NavigationButton
+        </PrivacyStepStyle.NavigationButton>
+        <PrivacyStepStyle.NavigationButton
           onClick={onNext}
           disabled={!isPrivacyCollectionAgreed || !isPrivacyThirdPartyAgreed}
         >
           다음
-        </R.NavigationButton>
-      </R.ButtonContainer>
-    </R.AnimatedContainer>
+        </PrivacyStepStyle.NavigationButton>
+      </PrivacyStepStyle.ButtonContainer>
+    </PrivacyStepStyle.AnimatedContainer>
   );
 };
