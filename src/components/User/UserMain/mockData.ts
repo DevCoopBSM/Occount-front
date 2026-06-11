@@ -1,7 +1,3 @@
-import type { AriPickProposal } from './api/types';
-
-export type { AriPickProposal, CreateAriPickRequest } from './api/types';
-
 export type ProductBadge = 'new' | 'hot' | null;
 
 export interface Product {
@@ -87,34 +83,4 @@ export const mockProducts: Product[] = [
   { id: 18, title: '물티슈', price: 1000, badge: null, category: '잡화' },
   { id: 19, title: '건전지', price: 2500, badge: null, category: '잡화' },
   { id: 20, title: '칫솔', price: 1800, badge: 'new', category: '잡화' },
-];
-
-export const mockAriPickProposals: AriPickProposal[] = [
-  {
-    proposal_id: 1,
-    name: '초코에몽',
-    reason: '달콤하고 든든해서 쉬는 시간에 마시기 좋습니다.',
-    proposer_id: 2025001,
-    proposal_date: '2025-07-12',
-    status: 'PENDING',
-    like_count: 18,
-  },
-  {
-    proposal_id: 2,
-    name: '불닭볶음면',
-    reason: '점심시간 이후 간식으로 찾는 학생들이 많습니다.',
-    proposer_id: 2025002,
-    proposal_date: '2025-07-10',
-    status: 'APPROVED',
-    like_count: 31,
-  },
-  {
-    proposal_id: 3,
-    name: '프로틴바',
-    reason: '운동하는 학생들이 간단하게 먹을 수 있는 상품이 필요합니다.',
-    proposer_id: 2025003,
-    proposal_date: '2025-07-08',
-    status: 'REJECTED',
-    like_count: 7,
-  },
 ];
