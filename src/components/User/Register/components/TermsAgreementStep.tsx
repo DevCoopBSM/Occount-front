@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, type ReactNode } from 'react';
+
+const renderWithBold = (text: string): ReactNode[] =>
+  text.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  );
 import { CheckboxIcon } from 'components/Icon/CheckboxIcon';
 import { ChevronDownIcon } from 'components/Icon/ChevronDownIcon';
 import { PRIVACY_TERMS_CONTENT } from '../constants/terms';
@@ -137,11 +142,9 @@ export const TermsAgreementStep: React.FC<TermsAgreementStepProps> = ({
             </TermsAgreementStepStyle.DetailItem>
 
             <TermsAgreementStepStyle.DropdownContent $isOpen={isDropdownOpen}>
-              <TermsAgreementStepStyle.DropdownText
-                dangerouslySetInnerHTML={{
-                  __html: PRIVACY_TERMS_CONTENT.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-                }}
-              />
+              <TermsAgreementStepStyle.DropdownText>
+                {renderWithBold(PRIVACY_TERMS_CONTENT)}
+              </TermsAgreementStepStyle.DropdownText>
             </TermsAgreementStepStyle.DropdownContent>
           </TermsAgreementStepStyle.TermsContainer>
 
