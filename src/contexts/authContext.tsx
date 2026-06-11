@@ -22,6 +22,7 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
+  isInitializing: boolean;
   unifiedLogin: (
     email: string,
     password: string,
@@ -117,6 +118,7 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const [isInitializing, setIsInitializing] = React.useState(!isDevMode() && !!getAccessToken());
 
   // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
@@ -334,14 +336,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // 개발 모드가 아닐 때만 사용자 정보 가져오기
     if (!isDevMode() && state.isLoggedIn) {
-      fetchUserInformation().catch(() => {
-        // 에러 무시 - 로그인 상태는 유지
+      fetchUserInformation().finally(() => {
+        setIsInitializing(false);
       });
     }
   }, [state.isLoggedIn, fetchUserInformation]);
 
   const contextValue: AuthContextType = {
     ...state,
+    isInitializing,
     unifiedLogin,
     logout,
     setErrorMessage: (msg: string) => dispatch({ type: actionTypes.SET_ERROR, payload: msg }),

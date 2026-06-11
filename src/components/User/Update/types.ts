@@ -1,8 +1,9 @@
 // 기본 열거형
 export enum UserType {
-  TEACHER = '교사',
   STUDENT = '학생',
   PARENT = '학부모',
+  TEACHER = '교사',
+  OTHER = '기타',
 }
 
 export enum Role {
@@ -15,122 +16,17 @@ export enum Role {
 
 // 기본 인터페이스
 export interface UserInfo {
-  userName: string;
-  userEmail: string;
-  userPassword: string;
+  username: string;
+  email: string;
+  phone: string;
+  user_type: keyof typeof UserType;
+  role: keyof typeof Role;
+  birth_date: string;
+  cooperative_number: string | null;
+  // v3 미제공으로 기존 camelCase 임시 유지 - API 추가 시 snake_case로 통일 예정
   userAddress: string;
-  userPin: string;
-  userType: UserType;
-  role: Role;
-  userPhone: string;
-  userBirthDate: string;
   investmentAmount: number;
-  todayTotalPayment?: number; // 추가: 오늘의 총 결제액 (선택적 필드)
-}
-
-// 폼 관련 인터페이스
-export interface FormData {
-  userInfo: UserInfo;
-  currentPassword: string;
-  passwordForm: {
-    newPassword: string;
-    confirmNewPassword: string;
-  };
-  pinForm: {
-    newPin: string;
-    confirmNewPin: string;
-  };
-  addressDetail: string;
-  investmentAmount: number;
-  maxInvestmentAmount: number;
-}
-
-// 상태 관련 인터페이스
-export interface Status {
-  isVerified: boolean;
-  isPasswordChangeMode: boolean;
-  isPinChangeMode: boolean;
-  isAddressSearched: boolean;
-  isInvestmentModalOpen: boolean;
-  isScriptLoaded: boolean;
-  isSuccessMessageVisible: boolean;
-}
-
-// 메시지 관련 인터페이스
-export interface Messages {
-  fetchError: string;
-  verificationError: string;
-  successMessage: string;
-  passwordWarnings: {
-    password: string;
-    confirm: string;
-  };
-  pinWarnings: {
-    pin: string;
-    confirm: string;
-  };
-}
-
-// 핸들러 관련 인터페이스
-export interface Handlers {
-  handleVerify: () => Promise<void>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleConfirmPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleConfirmPinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleAddressDetailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  openAddressSearch: () => void;
-  handleOpenInvestmentModal: () => void;
-  handleCloseInvestmentModal: () => void;
-  increaseAmount: () => void;
-  decreaseAmount: () => void;
-}
-
-// Setter 관련 인터페이스
-export interface Setters {
-  setCurrentPassword: (value: string) => void;
-  setIsPasswordChangeMode: (value: boolean) => void;
-  setIsPinChangeMode: (value: boolean) => void;
-  setInvestmentAmount: (amount: number) => void;
-}
-
-// 컴포넌트 Props 인터페이스
-export interface SecuritySectionProps {
-  isVerified: boolean;
-  isPasswordChangeMode: boolean;
-  isPinChangeMode: boolean;
-  setIsPasswordChangeMode: (value: boolean) => void;
-  setIsPinChangeMode: (value: boolean) => void;
-  passwordForm: {
-    newPassword: string;
-    confirmNewPassword: string;
-  };
-  pinForm: {
-    newPin: string;
-    confirmNewPin: string;
-  };
-  passwordWarnings: {
-    password: string;
-    confirm: string;
-  };
-  pinWarnings: {
-    pin: string;
-    confirm: string;
-  };
-  handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleConfirmPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleConfirmPinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-// 훅 반환 타입
-export interface UpdateFormReturn {
-  formData: FormData;
-  status: Status;
-  messages: Messages;
-  handlers: Handlers;
-  setters: Setters;
+  todayTotalPayment?: number;
 }
 
 // 투자 관련 인터페이스

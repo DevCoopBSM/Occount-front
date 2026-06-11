@@ -1,9 +1,11 @@
 export const UPDATE_MESSAGES = {
   VERIFY: {
-    SUCCESS: '인증에 성공했습니다. 이제 비밀번호와 PIN을 변경할 수 있습니다.',
+    SUCCESS: '인증에 성공했습니다.',
     FAIL: '비밀번호가 일치하지 않습니다.',
     ERROR: '인증 과정에서 오류가 발생했습니다.',
     REQUIRED: '인증이 필요한 작업입니다.',
+    OTP_SENT: '등록된 이메일로 인증 코드가 발송되었습니다.',
+    OTP_SUCCESS: '이메일 인증이 완료되었습니다.',
   },
   FETCH: {
     ERROR: '사용자 정보를 불러오는 데 실패했습니다.',

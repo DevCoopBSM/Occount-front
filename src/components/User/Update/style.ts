@@ -300,8 +300,9 @@ export const SuccessMessage = styled.p<{ isVisible: boolean }>`
 
 export const AuthContainer = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
+  width: 100%;
 
   @media (max-width: ${TABLET_BREAKPOINT}) {
     flex-direction: column;
@@ -310,11 +311,11 @@ export const AuthContainer = styled.div`
 `;
 
 export const InfoMessage = styled.div`
+  flex: 1;
   background-color: #fff8e5;
   border: 1px solid #f6df9b;
   border-radius: 14px;
   padding: 12px 14px;
-  margin-bottom: 14px;
   color: #6f5a1a;
   font-size: 13px;
   line-height: 1.6;
@@ -359,6 +360,69 @@ export const CheckboxContainer = styled.div`
     font-weight: 500;
     color: #333333;
   }
+`;
+
+export const SubSectionTitle = styled.h4`
+  margin: 0 0 8px;
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444444;
+
+  & + & {
+    margin-top: 16px;
+  }
+`;
+
+export const ResendButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Pretendard", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888888;
+  white-space: nowrap;
+  padding: 0 8px;
+  text-decoration: underline;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+export const SectionSubmitButton = styled.button`
+  ${baseButtonStyles}
+  width: 100%;
+  min-height: 46px;
+  padding: 0 18px;
+  margin-top: 4px;
+  background-color: #111111;
+  color: #ffffff;
+  font-size: 15px;
+  border-radius: 14px;
+
+  &:hover:not(:disabled) {
+    background-color: #333333;
+  }
+
+  @media (max-width: ${TABLET_BREAKPOINT}) {
+    min-height: 44px;
+    border-radius: 12px;
+  }
+`;
+
+export const SectionSuccessMessage = styled.p`
+  color: #256b32;
+  background-color: #eef9f0;
+  border: 1px solid #d3ecd7;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: "Pretendard", sans-serif;
 `;
 
 export const InvestmentContainer = styled.div`
