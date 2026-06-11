@@ -84,6 +84,7 @@ export const usePinChange = () => {
 
   const handleSubmit = async (): Promise<void> => {
     if (state.step !== 'passwordVerified') return;
+    if (!state.ticket) return;
     if (!state.newPin || pinWarning || state.newPin !== state.confirmNewPin) return;
 
     setIsLoading(true);
