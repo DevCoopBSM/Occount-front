@@ -6,6 +6,7 @@ interface PasswordValidation {
 }
 
 const PASSWORD_MIN_LENGTH = 8;
+const PIN_REGEX = /^\d{4,6}$/;
 const LOWERCASE_REGEX = /[a-z]/;
 const NUMBER_REGEX = /\d/;
 const SPECIAL_CHAR_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
@@ -23,6 +24,8 @@ export const validatePassword = (password: string): PasswordValidation => ({
   number: !hasNumbers(password),
   specialChar: !hasSpecialChar(password),
 });
+
+export const isPinValid = (pin: string): boolean => PIN_REGEX.test(pin);
 
 export const isPasswordValid = (password: string): boolean =>
   isLengthValid(password) &&
@@ -77,6 +80,14 @@ export const validateStep = (
         if (formData.userPassword !== formData.confirmPassword) {
           errors.confirmPassword = '비밀번호가 일치하지 않습니다.';
         }
+      }
+      break;
+    case 4:
+      if (!isPinValid(formData.pin || '')) {
+        errors.pin = 'PIN은 4~6자리 숫자여야 합니다.';
+      }
+      if (formData.pin !== formData.confirmPin) {
+        errors.confirmPin = 'PIN이 일치하지 않습니다.';
       }
       break;
   }

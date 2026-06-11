@@ -3,10 +3,10 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: calc(100vh - 80px);
+  align-items: flex-start;
+  min-height: calc(100vh - 80px);
   background-color: #ffffff;
-  padding: 0 20px;
+  padding: 60px 20px 40px;
   position: relative;
   overflow: visible;
 `;
@@ -20,7 +20,6 @@ export const LogoAndForm = styled.div`
   max-width: clamp(350px, 39.9vw, 766px);
   max-height: 100%;
   justify-content: center;
-  margin-top: -60px;
 `;
 
 export const LogoContainer = styled.div`

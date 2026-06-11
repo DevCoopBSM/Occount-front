@@ -27,7 +27,7 @@ interface AccountStepProps {
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSendEmailOtp: () => void;
   onVerifyEmailOtp: () => void;
-  onSubmit: () => void;
+  onNext: () => void;
   onPrev: () => void;
 }
 
@@ -44,7 +44,7 @@ export const AccountStep: React.FC<AccountStepProps> = ({
   onInputChange,
   onSendEmailOtp,
   onVerifyEmailOtp,
-  onSubmit,
+  onNext,
   onPrev,
 }) => {
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -236,8 +236,8 @@ export const AccountStep: React.FC<AccountStepProps> = ({
             <AccountStepStyle.NavigationButton onClick={onPrev} $isPrev>
               이전
             </AccountStepStyle.NavigationButton>
-            <AccountStepStyle.NavigationButton onClick={onSubmit} disabled={isSubmitting}>
-              {isSubmitting ? '가입 중...' : '회원가입'}
+            <AccountStepStyle.NavigationButton onClick={onNext} disabled={isSubmitting}>
+              다음
             </AccountStepStyle.NavigationButton>
           </AccountStepStyle.NavigationContainer>
         </AccountStepStyle.FormContainer>

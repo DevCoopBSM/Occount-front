@@ -4,6 +4,7 @@ import { apiClient } from 'api/client';
 import { TermsAgreementStep } from './components/TermsAgreementStep';
 import { VerificationStep } from './components/VerificationStep';
 import { AccountStep } from './components/AccountStep';
+import { PinStep } from './components/PinStep';
 import { useRegisterForm } from './hooks/useRegisterForm';
 import { useVerification } from './hooks/useVerification';
 import { useRegisterStep } from './hooks/useRegisterStep';
@@ -21,7 +22,8 @@ const Register: React.FC = () => {
   const [localErrors, setLocalErrors] = React.useState<{ [key: string]: string }>({});
 
   // Custom Hooks
-  const { formData, passwordErrors, passwordMatch, handleInputChange } = useRegisterForm();
+  const { formData, passwordErrors, passwordMatch, pinMatch, handleInputChange } =
+    useRegisterForm();
 
   const setError = (field: string, message: string) =>
     setLocalErrors((prev) => ({ ...prev, [field]: message }));
@@ -91,9 +93,10 @@ const Register: React.FC = () => {
         user_phone: userInfo.userPhone,
         user_email: formData.userEmail.trim(),
         password: formData.userPassword,
+        pin: formData.pin,
       };
 
-      await apiClient.post('auth/register', payload);
+      await apiClient.post('auth/register', payload, { skipAuthRedirect: true });
 
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
@@ -171,6 +174,28 @@ const Register: React.FC = () => {
             onInputChange={handleAccountInputChange}
             onSendEmailOtp={handleSendEmailOtp}
             onVerifyEmailOtp={handleVerifyEmailOtp}
+            onNext={() =>
+              nextStep(
+                step,
+                formData,
+                isVerified,
+                isPrivacyCollectionAgreed,
+                isPrivacyThirdPartyAgreed,
+                isEmailVerified
+              )
+            }
+            onPrev={prevStep}
+          />
+        );
+
+      case STEPS.PIN:
+        return (
+          <PinStep
+            formData={formData}
+            pinMatch={pinMatch}
+            isSubmitting={isSubmitting}
+            errors={mergedErrors}
+            onInputChange={handleAccountInputChange}
             onSubmit={handleSubmit}
             onPrev={prevStep}
           />
@@ -186,7 +211,8 @@ const Register: React.FC = () => {
       <RegisterStyle.ContentContainer>
         {step !== STEPS.TERMS_AGREEMENT &&
           step !== STEPS.VERIFICATION &&
-          step !== STEPS.ACCOUNT && (
+          step !== STEPS.ACCOUNT &&
+          step !== STEPS.PIN && (
             <RegisterStyle.LogoContainer>
               <RegisterStyle.LogoImg src="/assets/occount-logo.svg" alt="logo" />
               <RegisterStyle.LogoSubText>

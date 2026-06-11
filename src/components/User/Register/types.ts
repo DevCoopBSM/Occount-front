@@ -10,6 +10,8 @@ export interface FormData {
   userPassword: string;
   confirmPassword?: string;
   emailOtp: string;
+  pin: string;
+  confirmPin: string;
 }
 
 export interface RegisterRequest {
@@ -18,6 +20,7 @@ export interface RegisterRequest {
   user_phone?: string | null;
   user_email: string;
   password: string;
+  pin: string;
 }
 
 export interface ErrorState extends Partial<FormData> {
