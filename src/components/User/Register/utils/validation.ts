@@ -5,11 +5,17 @@ interface PasswordValidation {
   specialChar: boolean;
 }
 
-export const isLengthValid = (password: string): boolean => password.length >= 8;
-export const hasLowerCase = (password: string): boolean => /[a-z]/.test(password);
-export const hasNumbers = (password: string): boolean => /\d/.test(password);
-export const hasSpecialChar = (password: string): boolean =>
-  /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+const PASSWORD_MIN_LENGTH = 8;
+const LOWERCASE_REGEX = /[a-z]/;
+const NUMBER_REGEX = /\d/;
+const SPECIAL_CHAR_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+const EMAIL_FORMAT_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SCHOOL_EMAIL_REGEX = /^(24|25|26)[._]\d{2,3}@bssm\.hs\.kr$/i;
+
+export const isLengthValid = (password: string): boolean => password.length >= PASSWORD_MIN_LENGTH;
+export const hasLowerCase = (password: string): boolean => LOWERCASE_REGEX.test(password);
+export const hasNumbers = (password: string): boolean => NUMBER_REGEX.test(password);
+export const hasSpecialChar = (password: string): boolean => SPECIAL_CHAR_REGEX.test(password);
 
 export const validatePassword = (password: string): PasswordValidation => ({
   length: !isLengthValid(password),
@@ -24,12 +30,10 @@ export const isPasswordValid = (password: string): boolean =>
   hasNumbers(password) &&
   hasSpecialChar(password);
 
-const SCHOOL_EMAIL_REGEX = /^(24|25|26)[._]\d{2,3}@bssm\.hs\.kr$/i;
-
 export const validateEmail = (email: string): string => {
   const normalizedEmail = email.trim();
   if (!normalizedEmail) return '이메일을 입력해주세요.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+  if (!EMAIL_FORMAT_REGEX.test(normalizedEmail)) {
     return '올바른 이메일 형식이 아닙니다.';
   }
   if (!SCHOOL_EMAIL_REGEX.test(normalizedEmail)) {

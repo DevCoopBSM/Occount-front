@@ -7,24 +7,40 @@ import { AccountStep } from './components/AccountStep';
 import { useRegisterForm } from './hooks/useRegisterForm';
 import { useVerification } from './hooks/useVerification';
 import { useRegisterStep } from './hooks/useRegisterStep';
+import { useEmailOtpVerification } from './hooks/useEmailOtpVerification';
 import { STEPS } from './constants/steps';
 import { RegisterRequest } from './types';
-import { validateEmail, validateStep } from './utils/validation';
-import * as R from './style';
+import { validateStep } from './utils/validation';
+import * as RegisterStyle from './style';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [isPrivacyCollectionAgreed, setIsPrivacyCollectionAgreed] = React.useState(false);
   const [isPrivacyThirdPartyAgreed, setIsPrivacyThirdPartyAgreed] = React.useState(false);
-  const [isEmailOtpSent, setIsEmailOtpSent] = React.useState(false);
-  const [isEmailVerified, setIsEmailVerified] = React.useState(false);
-  const [isSendingEmailOtp, setIsSendingEmailOtp] = React.useState(false);
-  const [isVerifyingEmailOtp, setIsVerifyingEmailOtp] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [localErrors, setLocalErrors] = React.useState<{ [key: string]: string }>({});
 
   // Custom Hooks
   const { formData, passwordErrors, passwordMatch, handleInputChange } = useRegisterForm();
+
+  const setError = (field: string, message: string) =>
+    setLocalErrors((prev) => ({ ...prev, [field]: message }));
+  const clearError = (field: string) => setLocalErrors((prev) => ({ ...prev, [field]: '' }));
+
+  const {
+    isEmailOtpSent,
+    isEmailVerified,
+    isSendingEmailOtp,
+    isVerifyingEmailOtp,
+    handleSendEmailOtp,
+    handleVerifyEmailOtp,
+  } = useEmailOtpVerification({
+    getEmail: () => formData.userEmail,
+    getOtpCode: () => formData.emailOtp,
+    onEmailChange: () => {},
+    setError,
+    clearError,
+  });
 
   const {
     isVerified,
@@ -40,72 +56,8 @@ const Register: React.FC = () => {
   const mergedErrors = { ...errors, ...localErrors };
 
   const handleAccountInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.name === 'userEmail') {
-      setIsEmailOtpSent(false);
-      setIsEmailVerified(false);
-    }
-    setLocalErrors((prev) => ({ ...prev, [e.target.name]: '' }));
+    clearError(e.target.name);
     handleInputChange(e);
-  };
-
-  const handleSendEmailOtp = async () => {
-    if (isSendingEmailOtp || isEmailVerified) return;
-
-    const email = formData.userEmail.trim();
-    const emailError = validateEmail(email);
-    if (emailError) {
-      setLocalErrors((prev) => ({ ...prev, userEmail: emailError }));
-      return;
-    }
-
-    setIsSendingEmailOtp(true);
-    try {
-      await apiClient.post('auth/email/send-otp', {
-        email,
-      });
-      setIsEmailOtpSent(true);
-      setLocalErrors((prev) => ({ ...prev, userEmail: '', emailOtp: '' }));
-    } catch (error: any) {
-      setLocalErrors((prev) => ({
-        ...prev,
-        userEmail:
-          error.response?.data?.message ||
-          '인증번호 발송에 실패했습니다. 잠시 후 다시 시도해주세요.',
-      }));
-    } finally {
-      setIsSendingEmailOtp(false);
-    }
-  };
-
-  const handleVerifyEmailOtp = async () => {
-    if (isVerifyingEmailOtp || isEmailVerified) return;
-
-    const email = formData.userEmail.trim();
-    const otpCode = formData.emailOtp.trim();
-
-    if (otpCode.length !== 6) {
-      setLocalErrors((prev) => ({ ...prev, emailOtp: '6자리 인증번호를 입력해주세요.' }));
-      return;
-    }
-
-    setIsVerifyingEmailOtp(true);
-    try {
-      await apiClient.post('auth/email/verify-otp', {
-        email,
-        otp_code: otpCode,
-      });
-      setIsEmailVerified(true);
-      setLocalErrors((prev) => ({ ...prev, emailOtp: '' }));
-    } catch (error: any) {
-      setLocalErrors((prev) => ({
-        ...prev,
-        emailOtp:
-          error.response?.data?.message ||
-          '인증번호 확인에 실패했습니다. 번호를 확인하고 다시 시도해주세요.',
-      }));
-    } finally {
-      setIsVerifyingEmailOtp(false);
-    }
   };
 
   // 회원가입 제출 처리
@@ -230,19 +182,21 @@ const Register: React.FC = () => {
   };
 
   return (
-    <R.Container>
-      <R.ContentContainer>
+    <RegisterStyle.Container>
+      <RegisterStyle.ContentContainer>
         {step !== STEPS.TERMS_AGREEMENT &&
           step !== STEPS.VERIFICATION &&
           step !== STEPS.ACCOUNT && (
-            <R.LogoContainer>
-              <R.LogoImg src="/assets/occount-logo.svg" alt="logo" />
-              <R.LogoSubText>회원가입 후 오카운트의 더 다양한 기능을 만나보세요!</R.LogoSubText>
-            </R.LogoContainer>
+            <RegisterStyle.LogoContainer>
+              <RegisterStyle.LogoImg src="/assets/occount-logo.svg" alt="logo" />
+              <RegisterStyle.LogoSubText>
+                회원가입 후 오카운트의 더 다양한 기능을 만나보세요!
+              </RegisterStyle.LogoSubText>
+            </RegisterStyle.LogoContainer>
           )}
         {renderStep()}
-      </R.ContentContainer>
-    </R.Container>
+      </RegisterStyle.ContentContainer>
+    </RegisterStyle.Container>
   );
 };
 

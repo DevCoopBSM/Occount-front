@@ -233,7 +233,16 @@ export const PasswordRequirements = styled.div`
   margin-top: clamp(6px, 0.42vw, 8px);
 `;
 
-export const RequirementItem = styled.div<{ $state: 'success' | 'error' | 'neutral' }>`
+export type RequirementState = 'success' | 'error' | 'neutral';
+
+export const REQUIREMENT_STATE_STYLE: Record<RequirementState, { color: string; opacity: number }> =
+  {
+    success: { color: '#28a745', opacity: 1 }, // TODO: color token으로 대체 예정
+    error: { color: '#dc2626', opacity: 1 },
+    neutral: { color: '#6c757d', opacity: 0.6 },
+  };
+
+export const RequirementItem = styled.div<{ $state: RequirementState }>`
   display: flex;
   align-items: center;
   gap: clamp(6px, 0.52vw, 8px);
@@ -241,13 +250,12 @@ export const RequirementItem = styled.div<{ $state: 'success' | 'error' | 'neutr
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(11px, 0.73vw, 13px);
   font-weight: 400;
-  color: ${(props) =>
-    props.$state === 'success' ? '#28a745' : props.$state === 'error' ? '#dc2626' : '#6c757d'};
+  color: ${({ $state }) => REQUIREMENT_STATE_STYLE[$state].color};
   transition: color 0.2s ease;
-  opacity: ${(props) => (props.$state === 'neutral' ? 0.6 : 1)};
+  opacity: ${({ $state }) => REQUIREMENT_STATE_STYLE[$state].opacity};
 `;
 
-export const CheckIcon = styled.span<{ $state: 'success' | 'error' | 'neutral' }>`
+export const CheckIcon = styled.span<{ $state: RequirementState }>`
   width: clamp(12px, 0.94vw, 14px);
   height: clamp(12px, 0.94vw, 14px);
   display: inline-flex;
@@ -257,8 +265,7 @@ export const CheckIcon = styled.span<{ $state: 'success' | 'error' | 'neutral' }
   font-weight: 600;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  color: ${(props) =>
-    props.$state === 'success' ? '#28a745' : props.$state === 'error' ? '#dc2626' : '#6c757d'};
+  color: ${({ $state }) => REQUIREMENT_STATE_STYLE[$state].color};
 `;
 
 export const NavigationContainer = styled.div`
