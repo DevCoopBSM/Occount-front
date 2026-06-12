@@ -1,9 +1,10 @@
 export const STEPS = {
-  USER_TYPE: 1,
-  PRIVACY: 2,
-  VERIFICATION: 3,
-  ACCOUNT: 4,
-  ADDITIONAL_INFO: 5,
+  TERMS_AGREEMENT: 1,
+  VERIFICATION: 2,
+  ACCOUNT: 3,
+  PIN: 4,
 } as const;
 
-export const TOTAL_STEPS = 5;
+export type StepType = (typeof STEPS)[keyof typeof STEPS];
+
+export const TOTAL_STEPS = 4;

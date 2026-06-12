@@ -6,6 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosHeaders,
 } from 'axios';
+import { isDevMode } from './DevMode';
 
 const currentDomain = window.location.hostname;
 const currentProtocol = window.location.protocol;
@@ -13,14 +14,6 @@ const currentProtocol = window.location.protocol;
 interface AxiosInstanceWithSuspense extends AxiosInstance {
   suspense: <T = any>(config: AxiosRequestConfig) => Promise<T>;
 }
-
-// 개발 모드 체크 함수
-const isDevMode = (): boolean => {
-  return (
-    process.env.NODE_ENV === 'development' &&
-    (localStorage.getItem('DEV_MODE') === 'true' || process.env.REACT_APP_DEV_MODE === 'true')
-  );
-};
 
 // 개발 모드용 Mock 응답 생성 함수
 const createMockResponse = (config: InternalAxiosRequestConfig): AxiosResponse => {

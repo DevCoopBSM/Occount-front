@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { FormData, UserType } from '../types';
-import { validateEmail, validatePassword } from '../utils/validation';
+import { FormData } from '../types';
+import { validatePassword } from '../utils/validation';
+
+const DIGITS_ONLY = /\D/g;
+const OTP_MAX_LENGTH = 6;
+const PIN_MAX_LENGTH = 6;
 
 interface PasswordValidationState {
   length: boolean;
@@ -11,39 +15,30 @@ interface PasswordValidationState {
 
 export const useRegisterForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    userName: '',
     userEmail: '',
     userPassword: '',
-    userAddress: '',
-    userPin: '',
-    userCode: '',
-    addressDetail: '',
     confirmPassword: '',
+    emailOtp: '',
+    pin: '',
+    confirmPin: '',
   });
-  const [emailPrefix, setEmailPrefix] = useState('');
+  const [pinMatch, setPinMatch] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState<PasswordValidationState>({
-    length: false,
-    lowerCase: false,
-    number: false,
-    specialChar: false,
+    length: true,
+    lowerCase: true,
+    number: true,
+    specialChar: true,
   });
-  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [passwordMatch, setPasswordMatch] = useState(false);
 
-  const handleEmailChange = (value: string, userType: UserType) => {
-    if (userType === UserType.STUDENT || userType === UserType.TEACHER) {
-      setEmailPrefix(value);
-      const fullEmail = `${value}@bssm.hs.kr`;
-      setFormData((prev) => ({ ...prev, userEmail: fullEmail }));
-
-      const emailError = validateEmail(fullEmail, userType);
-      if (emailError) {
-        // 이메일 에러 처리 로직
-      }
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, userType: UserType) => {
-    const { name, value } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    const value =
+      name === 'emailOtp'
+        ? e.target.value.replace(DIGITS_ONLY, '').slice(0, OTP_MAX_LENGTH)
+        : name === 'pin' || name === 'confirmPin'
+          ? e.target.value.replace(DIGITS_ONLY, '').slice(0, PIN_MAX_LENGTH)
+          : e.target.value;
 
     setFormData((prev) => {
       const newFormData = { ...prev, [name]: value };
@@ -53,22 +48,22 @@ export const useRegisterForm = () => {
         setPasswordMatch(value === newFormData.confirmPassword);
       } else if (name === 'confirmPassword') {
         setPasswordMatch(newFormData.userPassword === value);
+      } else if (name === 'pin') {
+        setPinMatch(value === newFormData.confirmPin);
+      } else if (name === 'confirmPin') {
+        setPinMatch(newFormData.pin === value);
       }
 
       return newFormData;
     });
-
-    if (name === 'userEmail') {
-      handleEmailChange(value, userType);
-    }
   };
 
   return {
     formData,
     setFormData,
-    emailPrefix,
     passwordErrors,
     passwordMatch,
+    pinMatch,
     handleInputChange,
   };
 };

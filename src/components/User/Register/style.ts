@@ -12,23 +12,35 @@ interface NavigationButtonProps {
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background-color: #FFFFFF;  // 배경색을 흰색으로 변경
+  min-height: calc(100vh - 80px);
+  background-color: #ffffff;
+  padding: 0 20px;
+  position: relative;
 `;
 
 export const LogoContainer = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
+  position: relative;
+  gap: clamp(6px, 0.31vw, 6px);
 `;
 
 export const LogoImg = styled.img`
-  width: 300px;
-  height: auto;
-  margin-bottom: 40px;
+  width: clamp(150px, 20.94vw, 402px);
+  height: clamp(40px, 4.17vw, 113px);
+  object-fit: contain;
+`;
+
+export const LogoSubText = styled.p`
+  color: #111111;
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(14px, 1.25vw, 24px);
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
 `;
 
 export const LogoText = styled.h1`
@@ -366,11 +378,12 @@ export const UserInfoItem = styled.p`
 `;
 
 export const ContentContainer = styled.div`
-  width: 100%;
-  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: clamp(30px, 3.13vw, 60px);
+  width: 100%;
+  max-width: clamp(350px, 39.9vw, 766px);
 `;
 
 export const AnimatedContainer = styled(animated.div)`

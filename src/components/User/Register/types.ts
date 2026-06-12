@@ -5,39 +5,22 @@ export enum UserType {
   OTHER = 'OTHER',
 }
 
-// 스텝 관련 타입 추가
-export const STEPS = {
-  USER_TYPE: 1,
-  PRIVACY: 2,
-  VERIFICATION: 3,
-  ACCOUNT: 4,
-  ADDITIONAL_INFO: 5,
-} as const;
-
-export type StepType = (typeof STEPS)[keyof typeof STEPS];
-
 export interface FormData {
-  userName: string;
   userEmail: string;
   userPassword: string;
   confirmPassword?: string;
-  userAddress: string;
-  userPin: string;
-  confirmPin?: string;
-  userCode?: string;
-  addressDetail: string;
+  emailOtp: string;
+  pin: string;
+  confirmPin: string;
 }
 
 export interface RegisterRequest {
-  userName: string;
-  userEmail: string;
-  userPassword: string;
-  userAddress: string;
-  userPin: string;
-  userType: UserType;
-  userCiNumber: string;
-  userPhone: string;
-  userBirthDate: string;
+  user_ci_number: string;
+  username: string;
+  user_phone?: string | null;
+  user_email: string;
+  password: string;
+  pin: string;
 }
 
 export interface ErrorState extends Partial<FormData> {
@@ -46,14 +29,10 @@ export interface ErrorState extends Partial<FormData> {
   userEmail?: string;
   userPassword?: string;
   confirmPassword?: string;
-  userAddress?: string;
-  userPin?: string;
-  confirmPin?: string;
-  userCode?: string;
+  emailOtp?: string;
   verification?: string;
   privacyAgreement?: string;
   privacyThirdParty?: string;
-  addressDetail?: string;
 }
 
 export interface UserInfo {
