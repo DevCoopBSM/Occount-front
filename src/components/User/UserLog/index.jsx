@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Icon from 'components/Icon';
 import { useSwipeable } from 'react-swipeable';
 import { fetchAllOrders, fetchAllCharges } from 'utils/orderApi';
@@ -206,7 +206,7 @@ function UserLog() {
 
   useEffect(() => {
     fetchUserLog();
-  }, []);
+  }, [fetchUserLog]);
 
   const mapChargeToLogItem = (charge) => {
     const d = new Date(charge.charge_date);
@@ -244,7 +244,7 @@ function UserLog() {
     };
   };
 
-  const fetchUserLog = async () => {
+  const fetchUserLog = useCallback(async () => {
     try {
       // 개발 모드일 때 Mock 데이터 사용
       if (isDevMode()) {
@@ -261,7 +261,7 @@ function UserLog() {
       setUseLogData([]);
       setChargeLogData([]);
     }
-  };
+  }, [mapOrderToLogItem, mapChargeToLogItem]);
 
   const getLogDate = (item) => {
     const dateArray = item.payDate || item.chargeDate;

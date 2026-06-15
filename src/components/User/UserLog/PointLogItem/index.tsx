@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import * as _ from './style';
-import { useAuth } from 'contexts/authContext';
-import RefundFormModal from './RefundFormModal';
-import { handleRefundRequest } from './refundService';
-import { LogItem, MockLogItem, PointLogItemProps, RefundAccount, UserLogItem } from './types';
+import { MockLogItem, PointLogItemProps, UserLogItem } from './types';
 
 const isMockLogItem = (item: UserLogItem): item is MockLogItem => {
   return (
@@ -16,16 +13,8 @@ const isMockLogItem = (item: UserLogItem): item is MockLogItem => {
   );
 };
 
-function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
+function PointLogItem({ type, data }: PointLogItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [refundAccount, setRefundAccount] = useState<RefundAccount>({
-    bank: '',
-    accountNumber: '',
-    holderName: '',
-    holderPhoneNumber: '',
-  });
-  const [showRefundForm, setShowRefundForm] = useState(false);
-  const { refetchUser } = useAuth();
 
   const item = data[0];
   const itemId = item.chargeId ?? item.payId;
@@ -36,16 +25,6 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
 
   const handleItemClick = () => {
     setIsExpanded(!isExpanded);
-  };
-
-  const closeModal = () => {
-    setShowRefundForm(false);
-    setRefundAccount({
-      bank: '',
-      accountNumber: '',
-      holderName: '',
-      holderPhoneNumber: '',
-    });
   };
 
   const formatDate = (dateArray: number[] | undefined): Date => {
@@ -67,17 +46,9 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
     item.chargedPoint ??
     item.payedPoint ??
     (isMockLogItem(item) ? (item.chargeAmount ?? item.paymentAmount ?? 0) : 0);
-  const serializedInnerPoint = innerPoint.toString();
   const itemType = item.chargeType ?? item.payType;
 
-  const currentDate = new Date();
-  const timeDiff = Math.abs(currentDate.getTime() - date.getTime());
-  const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  const isOverWeek = dayDiff > 7;
-
-  const getBackgroundColor = () => {
-    return '#ffffff';
-  };
+  const getBackgroundColor = useCallback(() => '#ffffff', []);
 
   const getTransactionType = () => {
     if (type !== 1) {
@@ -117,63 +88,6 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
     }
   };
 
-  const getRefundStatus = () => {
-    if (item.refundState) return '환불 완료';
-    if (isOverWeek) return '1주일 초과';
-    if (itemType && parseInt(itemType) >= 2) {
-      return itemType === '3' ? '환불 신청 시 계좌 정보가 필요합니다.' : '환불가능';
-    }
-    if (itemType === '1' && item.reason) {
-      return `${item.reason}`;
-    }
-    return '충전 내역';
-  };
-
-  // refetchUser를 Promise<void>로 변환하는 함수
-  const refetchUserAndIgnoreResult = async () => {
-    await refetchUser();
-  };
-
-  const renderRefundButton = () => {
-    if (itemType && parseInt(itemType) >= 2 && !item.refundState && !isOverWeek) {
-      return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <_.ModalButton
-            onClick={() => {
-              if (itemType === '3') {
-                setShowRefundForm(true);
-              } else {
-                const refundItem: LogItem = {
-                  ...item,
-                  type: itemType || '',
-                  date: date.toISOString(),
-                  inner_point: serializedInnerPoint,
-                  chargeId: item.chargeId ?? 0,
-                };
-                const refundAccountForRequest: RefundAccount = {
-                  bank: refundAccount.bank,
-                  accountNumber: refundAccount.accountNumber, // number를 accountNumber로 매핑
-                  holderName: refundAccount.holderName,
-                };
-                handleRefundRequest(
-                  refundItem,
-                  refundAccountForRequest,
-                  type.toString(),
-                  fetchUserLog,
-                  refetchUserAndIgnoreResult,
-                  closeModal
-                );
-              }
-            }}
-          >
-            환불 신청
-          </_.ModalButton>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div>
       <_.PointLogWrap onClick={handleItemClick} style={{ background: getBackgroundColor() }}>
@@ -211,36 +125,6 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
             </_.DetailValue>
           </_.DetailRow>
         </_.DetailWrap>
-      )}
-      {showRefundForm && (
-        <RefundFormModal
-          isOpen={showRefundForm}
-          closeModal={closeModal}
-          refundAccount={refundAccount}
-          setRefundAccount={setRefundAccount}
-          handleRefundRequest={() => {
-            const refundItem: LogItem = {
-              ...item,
-              type: itemType || '',
-              date: date.toISOString(),
-              inner_point: serializedInnerPoint,
-              chargeId: item.chargeId ?? 0,
-            };
-            const refundAccountForRequest: RefundAccount = {
-              bank: refundAccount.bank,
-              accountNumber: refundAccount.accountNumber,
-              holderName: refundAccount.holderName,
-            };
-            handleRefundRequest(
-              refundItem,
-              refundAccountForRequest,
-              type.toString(),
-              fetchUserLog,
-              refetchUserAndIgnoreResult,
-              closeModal
-            );
-          }}
-        />
       )}
     </div>
   );
