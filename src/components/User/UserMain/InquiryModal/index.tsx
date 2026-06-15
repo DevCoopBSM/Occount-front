@@ -45,6 +45,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
   const [selectedDetail, setSelectedDetail] = useState<InquiryDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [viewMode, setViewMode] = useState<InquiryViewMode>('form');
   const [category, setCategory] = useState<InquiryCategory | ''>('');
@@ -105,6 +106,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   const handleOpenDetail = async (inquiryId: number) => {
     setIsDetailLoading(true);
+    setDetailError(false);
     setViewMode('detail');
     try {
       const detail = await fetchInquiryDetail(inquiryId);
@@ -112,6 +114,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     } catch (err) {
       console.error('Failed to fetch inquiry detail:', err);
       setSelectedDetail(null);
+      setDetailError(true);
     } finally {
       setIsDetailLoading(false);
     }
@@ -325,9 +328,13 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
               목록으로
             </S.TextActionButton>
           </S.ModalHeaderRow>
-          {isDetailLoading || !selectedDetail ? (
+          {isDetailLoading ? (
             <S.TransparentModalContent>
               <S.LoadingSpinner>로딩 중...</S.LoadingSpinner>
+            </S.TransparentModalContent>
+          ) : detailError || !selectedDetail ? (
+            <S.TransparentModalContent>
+              <S.ErrorMessage>문의 내용을 불러오지 못했습니다. 다시 시도해 주세요.</S.ErrorMessage>
             </S.TransparentModalContent>
           ) : (
             <S.DetailContainer>
