@@ -247,3 +247,13 @@ export const LogSection = styled.div`
 `;
 
 // PointLogItem 컴포넌트의 스타일을 조정하여 사용 내역과 충전 내역의 배경색을 다르게 설정하세요
+
+export const EmptyState = styled.div`
+  width: 100%;
+  padding: 60px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaaaaa;
+  font-size: 14px;
+`;
