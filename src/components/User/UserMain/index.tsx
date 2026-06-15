@@ -105,16 +105,20 @@ function Main() {
   useEffect(() => {
     if (USE_MOCK_DATA) {
       setProducts(fallbackProducts);
-    } else {
-      const loadProducts = async () => {
-        try {
-          setProducts(await fetchItemList());
-        } catch {
-          setProducts(fallbackProducts);
-        }
-      };
-      loadProducts();
+      return;
     }
+
+    let mounted = true;
+    const loadProducts = async () => {
+      try {
+        const fetched = await fetchItemList();
+        if (mounted) setProducts(fetched);
+      } catch {
+        if (mounted) setProducts(fallbackProducts);
+      }
+    };
+    loadProducts();
+    return () => { mounted = false; };
   }, []);
 
   useEffect(() => {
@@ -330,10 +334,11 @@ function Main() {
                 <S.ProductCardRow key={rowIndex}>
                   {row.map((product) => (
                     <S.ProductCard key={product.itemId}>
-                      {(product.isNew || product.isHot) && (
-                        <S.ProductBadge type={product.isNew ? 'new' : 'hot'}>
-                          {product.isNew ? 'NEW' : 'HOT'}
-                        </S.ProductBadge>
+                      {product.isNew && (
+                        <S.ProductBadge type="new">NEW</S.ProductBadge>
+                      )}
+                      {product.isHot && (
+                        <S.ProductBadge type="hot">HOT</S.ProductBadge>
                       )}
                       <S.ProductInfo>
                         <h3>{product.itemName}</h3>
