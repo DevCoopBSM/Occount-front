@@ -185,15 +185,9 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const InquiriesClipWrapper = styled.div`
+export const InquiriesContainer = styled.div`
   overflow: hidden;
   width: 100%;
-`;
-
-export const InquiriesContainer = styled.div`
-  overflow: visible;
-  width: 100%;
-  padding: 2px 4px;
 `;
 
 export const InquiriesContent = styled.div`
@@ -234,8 +228,7 @@ export const InquiryItem = styled.div<InquiryItemProps>`
 
   &:hover {
     border-color: #fcc800;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 0 1px #fcc800;
   }
 
   @media (max-width: 600px) {

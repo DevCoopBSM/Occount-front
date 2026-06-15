@@ -239,41 +239,39 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
             </S.EmptyState>
           ) : (
             <>
-              <S.InquiriesClipWrapper>
-                <S.InquiriesContainer {...handlers}>
-                  <S.InquiriesContent
-                    style={{
-                      transform: `translateX(${-100 * currentPage}%)`,
-                      width: `${100 * totalPages}%`,
-                    }}
-                  >
-                    {Array.from({ length: totalPages }, (_, pageIndex) => (
-                      <S.LogPage key={pageIndex}>
-                        {safeInquiries
-                          .slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage)
-                          .map((inquiry) => (
-                            <S.InquiryItem
-                              key={inquiry.inquiry_id}
-                              onClick={() => handleOpenDetail(inquiry.inquiry_id)}
-                              $status={inquiry.status}
-                            >
-                              <S.InquiryTitle>
-                                {inquiry.title}
-                                <S.InquiryCategory>
-                                  {CATEGORY_LABEL[inquiry.category]}
-                                </S.InquiryCategory>
-                              </S.InquiryTitle>
-                              <S.InquiryDate>{formatDate(inquiry.created_at)}</S.InquiryDate>
-                              <S.StatusBadge $status={inquiry.status}>
-                                {STATUS_LABEL[inquiry.status]}
-                              </S.StatusBadge>
-                            </S.InquiryItem>
-                          ))}
-                      </S.LogPage>
-                    ))}
-                  </S.InquiriesContent>
-                </S.InquiriesContainer>
-              </S.InquiriesClipWrapper>
+              <S.InquiriesContainer {...handlers}>
+                <S.InquiriesContent
+                  style={{
+                    transform: `translateX(${-100 * currentPage}%)`,
+                    width: `${100 * totalPages}%`,
+                  }}
+                >
+                  {Array.from({ length: totalPages }, (_, pageIndex) => (
+                    <S.LogPage key={pageIndex}>
+                      {safeInquiries
+                        .slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage)
+                        .map((inquiry) => (
+                          <S.InquiryItem
+                            key={inquiry.inquiry_id}
+                            onClick={() => handleOpenDetail(inquiry.inquiry_id)}
+                            $status={inquiry.status}
+                          >
+                            <S.InquiryTitle>
+                              {inquiry.title}
+                              <S.InquiryCategory>
+                                {CATEGORY_LABEL[inquiry.category]}
+                              </S.InquiryCategory>
+                            </S.InquiryTitle>
+                            <S.InquiryDate>{formatDate(inquiry.created_at)}</S.InquiryDate>
+                            <S.StatusBadge $status={inquiry.status}>
+                              {STATUS_LABEL[inquiry.status]}
+                            </S.StatusBadge>
+                          </S.InquiryItem>
+                        ))}
+                    </S.LogPage>
+                  ))}
+                </S.InquiriesContent>
+              </S.InquiriesContainer>
               {totalPages > 1 && (
                 <S.Pagination>
                   <S.PageNumber
