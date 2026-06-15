@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import Modal from 'components/Modal';
-import axiosInstance from 'utils/Axios';
+import { fetchInquiryList, fetchInquiryDetail, createInquiry } from 'utils/inquiryApi';
+import type { InquiryCategory, InquiryDetail, InquiryListItem, InquiryStatus } from 'types/inquiry';
 import * as S from './style';
 import { AxiosError } from 'axios';
-
-interface Inquiry {
-  inquiryId: number;
-  inquiryTitle: string;
-  inquiryContent: string;
-  inquiryType: string;
-  inquiryAnswer: string | null;
-  userEmail: string;
-  createdAt: [number, number, number, number, number];
-  answeredAt: [number, number, number, number, number] | null;
-}
 
 interface InquiryModalProps {
   isOpen: boolean;
@@ -22,39 +12,50 @@ interface InquiryModalProps {
   user: any;
 }
 
-type InquiryViewMode = 'form' | 'list';
+type InquiryViewMode = 'form' | 'list' | 'detail';
 
-const getCategoryInKorean = (inquiryType: string): string => {
-  switch (inquiryType) {
-    case 'SERVICE_SUGGEST':
-      return '서비스 건의';
-    case 'SERVICE_ERROR':
-      return '서비스 장애';
-    case 'SERVICE_ETC':
-      return '기타';
-    default:
-      return inquiryType;
-  }
+const CATEGORY_LABEL: Record<InquiryCategory, string> = {
+  PAYMENT: '결제 관련',
+  ACCOUNT: '계정 관련',
+  SERVICE: '서비스 오류',
+  OTHER: '기타',
 };
 
-const formatDate = (dateArray: [number, number, number, number, number]): string => {
-  const [year, month, day, hour, minute] = dateArray;
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+const STATUS_LABEL: Record<InquiryStatus, string> = {
+  RECEIVED: '접수됨',
+  IN_PROGRESS: '처리중',
+  COMPLETED: '완료',
+};
+
+const formatDate = (raw: string): string => {
+  // 마이크로초(소수점 6자리) 포함 문자열을 밀리초(3자리)로 잘라 파싱
+  const normalized = raw.replace(/(\.\d{3})\d+/, '$1');
+  const d = new Date(normalized);
+  if (Number.isNaN(d.getTime())) return raw;
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hour = String(d.getHours()).padStart(2, '0');
+  const minute = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hour}:${minute}`;
 };
 
 const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, user }) => {
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [inquiries, setInquiries] = useState<InquiryListItem[]>([]);
+  const [selectedDetail, setSelectedDetail] = useState<InquiryDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [viewMode, setViewMode] = useState<InquiryViewMode>('form');
-  const [category, setCategory] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [expandedInquiries, setExpandedInquiries] = useState<{ [key: number]: boolean }>({});
+  const [category, setCategory] = useState<InquiryCategory | ''>('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [inquiriesPerPage] = useState<number>(5);
+  const [currentPage, setCurrentPage] = useState(0);
+  const inquiriesPerPage = 5;
   const safeInquiries = Array.isArray(inquiries) ? inquiries : [];
   const totalPages = Math.max(1, Math.ceil(safeInquiries.length / inquiriesPerPage));
 
@@ -67,48 +68,61 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden';
       setViewMode('form');
       setCurrentPage(0);
-      setExpandedInquiries({});
+      setSelectedDetail(null);
       setError(null);
       setIsLoading(false);
+    } else {
+      document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
-  const fetchInquiries = async () => {
+  const loadInquiries = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axiosInstance.suspense<{ inquiryList: Inquiry[] }>({
-        url: 'v2/inquiry/user',
-        method: 'GET',
-      });
-      setInquiries(Array.isArray(response?.inquiryList) ? response.inquiryList : []);
-    } catch (error) {
-      console.error('Failed to fetch inquiries:', error);
-      setError(error instanceof Error ? error : new Error('An unknown error occurred'));
+      const list = await fetchInquiryList();
+      setInquiries(list);
+    } catch (err) {
+      console.error('Failed to fetch inquiries:', err);
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
       setInquiries([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const toggleInquiry = (inquiryId: number) => {
-    setExpandedInquiries((prev) => ({ ...prev, [inquiryId]: !prev[inquiryId] }));
+  const handleOpenListView = async () => {
+    setCurrentPage(0);
+    setSelectedDetail(null);
+    setViewMode('list');
+    await loadInquiries();
+  };
+
+  const handleOpenDetail = async (inquiryId: number) => {
+    setIsDetailLoading(true);
+    setDetailError(false);
+    setViewMode('detail');
+    try {
+      const detail = await fetchInquiryDetail(inquiryId);
+      setSelectedDetail(detail);
+    } catch (err) {
+      console.error('Failed to fetch inquiry detail:', err);
+      setSelectedDetail(null);
+      setDetailError(true);
+    } finally {
+      setIsDetailLoading(false);
+    }
   };
 
   const handlePageChange = (newPage: number) => {
     const maxPage = totalPages - 1;
-    if (newPage >= 0 && newPage <= maxPage) {
-      setCurrentPage(newPage);
-    }
-  };
-
-  const openListView = async () => {
-    setCurrentPage(0);
-    setExpandedInquiries({});
-    setViewMode('list');
-    await fetchInquiries();
+    if (newPage >= 0 && newPage <= maxPage) setCurrentPage(newPage);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,23 +133,23 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     }
 
     setIsSubmitting(true);
+    setFieldErrors({});
     try {
-      await axiosInstance.suspense({
-        url: 'v2/inquiry/new',
-        method: 'POST',
-        data: { category, title, content },
-      });
+      await createInquiry({ category, title, content });
       alert('문의가 성공적으로 제출되었습니다.');
       setCategory('');
       setTitle('');
       setContent('');
-      setViewMode('list');
-      await fetchInquiries();
-    } catch (error: unknown) {
-      console.error('문의 제출 실패:', error);
-      if (error instanceof AxiosError && error.response) {
-        const errorMessage = error.response.data;
-        alert(`문의 제출 실패: ${errorMessage}`);
+      await handleOpenListView();
+    } catch (err: unknown) {
+      console.error('문의 제출 실패:', err);
+      if (err instanceof AxiosError && err.response?.status === 400) {
+        const data = err.response.data;
+        if (data && typeof data === 'object') {
+          setFieldErrors(data as Record<string, string>);
+        } else {
+          alert('입력값을 확인해주세요.');
+        }
       } else {
         alert('문의 제출에 실패했습니다. 다시 시도해주세요.');
       }
@@ -174,35 +188,42 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
         width: '92%',
       }}
     >
-      {viewMode === 'form' ? (
+      {viewMode === 'form' && (
         <>
           <S.ModalHeaderRow>
             <S.ModalHeader>문의 작성</S.ModalHeader>
-            <S.TextActionButton type="button" onClick={openListView}>
+            <S.TextActionButton type="button" onClick={handleOpenListView}>
               내 문의 보기
             </S.TextActionButton>
           </S.ModalHeaderRow>
           <S.InquiryForm onSubmit={handleSubmit}>
             <S.InquirySelect
               value={category}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setCategory(e.target.value as InquiryCategory)
+              }
             >
               <option value="">카테고리 선택</option>
-              <option value="SERVICE_SUGGEST">서비스 건의</option>
-              <option value="SERVICE_ERROR">서비스 장애</option>
-              <option value="SERVICE_ETC">기타</option>
+              {(Object.keys(CATEGORY_LABEL) as InquiryCategory[]).map((key) => (
+                <option key={key} value={key}>
+                  {CATEGORY_LABEL[key]}
+                </option>
+              ))}
             </S.InquirySelect>
+            {fieldErrors.category && <S.FieldError>{fieldErrors.category}</S.FieldError>}
             <S.InquiryInput
               type="text"
               placeholder="제목"
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
             />
+            {fieldErrors.title && <S.FieldError>{fieldErrors.title}</S.FieldError>}
             <S.InquiryTextarea
               placeholder="내용"
               value={content}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
             />
+            {fieldErrors.content && <S.FieldError>{fieldErrors.content}</S.FieldError>}
             <S.ModalFooter>
               <S.SubmitButton type="submit" disabled={isSubmitting}>
                 {isSubmitting ? '제출 중...' : '제출하기'}
@@ -213,10 +234,15 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
             </S.ModalFooter>
           </S.InquiryForm>
         </>
-      ) : (
+      )}
+
+      {viewMode === 'list' && (
         <>
           <S.ModalHeaderRow>
             <S.InquiriesHeader>내 문의 목록</S.InquiriesHeader>
+            <S.TextActionButton type="button" onClick={() => setViewMode('form')}>
+              문의 작성
+            </S.TextActionButton>
           </S.ModalHeaderRow>
           {isLoading ? (
             <S.TransparentModalContent>
@@ -235,44 +261,30 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
               <S.InquiriesContainer {...handlers}>
                 <S.InquiriesContent
                   style={{
-                    transform: `translateX(${-100 * currentPage}%)`,
                     width: `${100 * totalPages}%`,
+                    transform: `translateX(${(-currentPage * 100) / totalPages}%)`,
                   }}
                 >
                   {Array.from({ length: totalPages }, (_, pageIndex) => (
-                    <S.LogPage key={pageIndex}>
+                    <S.LogPage key={pageIndex} style={{ width: `${100 / totalPages}%` }}>
                       {safeInquiries
                         .slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage)
                         .map((inquiry) => (
                           <S.InquiryItem
-                            key={inquiry.inquiryId}
-                            onClick={() => toggleInquiry(inquiry.inquiryId)}
-                            $hasAnswer={!!inquiry.inquiryAnswer}
+                            key={inquiry.inquiry_id}
+                            onClick={() => handleOpenDetail(inquiry.inquiry_id)}
+                            $status={inquiry.status}
                           >
                             <S.InquiryTitle>
-                              {inquiry.inquiryTitle}
+                              {inquiry.title}
                               <S.InquiryCategory>
-                                {getCategoryInKorean(inquiry.inquiryType)}
+                                {CATEGORY_LABEL[inquiry.category]}
                               </S.InquiryCategory>
                             </S.InquiryTitle>
-                            <S.InquiryDate>{formatDate(inquiry.createdAt)}</S.InquiryDate>
-                            {expandedInquiries[inquiry.inquiryId] && (
-                              <>
-                                <S.InquiryContent>{inquiry.inquiryContent}</S.InquiryContent>
-                                <S.InquiryAnswer $hasAnswer={!!inquiry.inquiryAnswer}>
-                                  {inquiry.inquiryAnswer ? (
-                                    <>
-                                      <div>{inquiry.inquiryAnswer}</div>
-                                      <S.AnswerDate>
-                                        답변 일시: {formatDate(inquiry.answeredAt!)}
-                                      </S.AnswerDate>
-                                    </>
-                                  ) : (
-                                    '답변 대기 중'
-                                  )}
-                                </S.InquiryAnswer>
-                              </>
-                            )}
+                            <S.InquiryDate>{formatDate(inquiry.created_at)}</S.InquiryDate>
+                            <S.StatusBadge $status={inquiry.status}>
+                              {STATUS_LABEL[inquiry.status]}
+                            </S.StatusBadge>
                           </S.InquiryItem>
                         ))}
                     </S.LogPage>
@@ -299,6 +311,57 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 </S.Pagination>
               )}
             </>
+          )}
+          <S.ModalFooter>
+            <S.CloseButton type="button" onClick={onRequestClose}>
+              닫기
+            </S.CloseButton>
+          </S.ModalFooter>
+        </>
+      )}
+
+      {viewMode === 'detail' && (
+        <>
+          <S.ModalHeaderRow>
+            <S.InquiriesHeader>문의 상세</S.InquiriesHeader>
+            <S.TextActionButton type="button" onClick={handleOpenListView}>
+              목록으로
+            </S.TextActionButton>
+          </S.ModalHeaderRow>
+          {isDetailLoading ? (
+            <S.TransparentModalContent>
+              <S.LoadingSpinner>로딩 중...</S.LoadingSpinner>
+            </S.TransparentModalContent>
+          ) : detailError || !selectedDetail ? (
+            <S.TransparentModalContent>
+              <S.ErrorMessage>문의 내용을 불러오지 못했습니다. 다시 시도해 주세요.</S.ErrorMessage>
+            </S.TransparentModalContent>
+          ) : (
+            <S.DetailContainer>
+              <S.DetailHeader>
+                <S.DetailTitle>{selectedDetail.title}</S.DetailTitle>
+                <S.StatusBadge $status={selectedDetail.status}>
+                  {STATUS_LABEL[selectedDetail.status]}
+                </S.StatusBadge>
+              </S.DetailHeader>
+              <S.DetailMeta>
+                <span>{CATEGORY_LABEL[selectedDetail.category]}</span>
+                <span>{formatDate(selectedDetail.created_at)}</span>
+              </S.DetailMeta>
+              <S.DetailContent>{selectedDetail.content}</S.DetailContent>
+              <S.InquiryAnswer $status={selectedDetail.status}>
+                {selectedDetail.status === 'COMPLETED' ? (
+                  <>
+                    <S.AnswerLabel>답변</S.AnswerLabel>
+                    <S.AnswerDate>처리 완료: {formatDate(selectedDetail.updated_at)}</S.AnswerDate>
+                  </>
+                ) : selectedDetail.status === 'IN_PROGRESS' ? (
+                  <S.AnswerLabel>처리 중입니다.</S.AnswerLabel>
+                ) : (
+                  <S.AnswerLabel>답변 대기 중</S.AnswerLabel>
+                )}
+              </S.InquiryAnswer>
+            </S.DetailContainer>
           )}
           <S.ModalFooter>
             <S.CloseButton type="button" onClick={onRequestClose}>

@@ -103,7 +103,7 @@ export const PRIVACY_CONTENT = {
   ],
   PRIVACY_OFFICER: {
     title: '이사장',
-    name: '김민경',
+    name: '홍형숙',
     contact: '이메일: wonching76@naver.com',
   },
 } as const;

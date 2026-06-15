@@ -94,7 +94,6 @@ function Header() {
               <H.NavItem onClick={() => handleNavigation('/item-list')}>상품 목록</H.NavItem>
               <H.NavItem onClick={() => handleNavigation('/userlog')}>결제 내역</H.NavItem>
               <H.NavItem onClick={() => handleNavigation('/notice')}>공지사항</H.NavItem>
-              <H.NavItem onClick={() => handleNavigation('/contact')}>문의 및 건의</H.NavItem>
             </H.Navigation>
 
             <H.RightSection>
@@ -115,9 +114,6 @@ function Header() {
                     </H.MobileMenuItem>
                     <H.MobileMenuItem onClick={() => handleNavigation('/notice')}>
                       공지사항
-                    </H.MobileMenuItem>
-                    <H.MobileMenuItem onClick={() => handleNavigation('/contact')}>
-                      문의 및 건의
                     </H.MobileMenuItem>
                   </H.MobileMenuPanel>
                 )}
