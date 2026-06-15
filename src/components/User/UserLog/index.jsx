@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Icon from 'components/Icon';
-import { axiosInstance } from 'utils/Axios';
 import { useSwipeable } from 'react-swipeable';
+import { fetchAllOrders, fetchAllCharges } from 'utils/orderApi';
 import PointLogItem from './PointLogItem';
 import * as S from './style';
 
@@ -10,139 +10,190 @@ const isDevMode = () => {
   return process.env.NODE_ENV === 'development' && process.env.REACT_APP_DEV_MODE === 'true';
 };
 
-// Mock 데이터
+// Mock 데이터 (v3 orders API 응답 구조)
 const getMockPayLogs = () => [
   {
-    payId: 1,
-    storeName: '부산소마고',
-    paymentAmount: 7500,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 21, 12, 30, 0],
-    status: '결제완료',
+    order_id: 1,
+    status: 'COMPLETED',
+    order_date: '2026-06-15T12:30:00',
+    total_amount: 7500,
+    lines: [
+      {
+        item_id: 1,
+        item_name_snapshot: '삼각김밥',
+        unit_price: 1500,
+        quantity: 3,
+        total_price: 4500,
+      },
+      {
+        item_id: 2,
+        item_name_snapshot: '음료수',
+        unit_price: 3000,
+        quantity: 1,
+        total_price: 3000,
+      },
+    ],
+    payment: {
+      payment_log_id: 1,
+      payment_status: 'SUCCEEDED',
+      points_used: 7500,
+      card_amount: 0,
+      transaction_id: null,
+      approval_number: null,
+    },
   },
   {
-    payId: 2,
-    storeName: '학식당',
-    paymentAmount: 6800,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 21, 11, 15, 0],
-    status: '결제완료',
+    order_id: 2,
+    status: 'COMPLETED',
+    order_date: '2026-06-15T11:15:00',
+    total_amount: 6800,
+    lines: [
+      {
+        item_id: 3,
+        item_name_snapshot: '컵라면',
+        unit_price: 1200,
+        quantity: 2,
+        total_price: 2400,
+      },
+      {
+        item_id: 4,
+        item_name_snapshot: '샌드위치',
+        unit_price: 4400,
+        quantity: 1,
+        total_price: 4400,
+      },
+    ],
+    payment: {
+      payment_log_id: 2,
+      payment_status: 'SUCCEEDED',
+      points_used: 0,
+      card_amount: 6800,
+      transaction_id: 'TXN-001',
+      approval_number: '00012345',
+    },
   },
   {
-    payId: 3,
-    storeName: '자판기',
-    paymentAmount: 1200,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 21, 15, 20, 0],
-    status: '결제완료',
+    order_id: 3,
+    status: 'COMPLETED',
+    order_date: '2026-06-14T15:20:00',
+    total_amount: 1200,
+    lines: [
+      { item_id: 5, item_name_snapshot: '과자', unit_price: 1200, quantity: 1, total_price: 1200 },
+    ],
+    payment: {
+      payment_log_id: 3,
+      payment_status: 'SUCCEEDED',
+      points_used: 1200,
+      card_amount: 0,
+      transaction_id: null,
+      approval_number: null,
+    },
   },
   {
-    payId: 4,
-    storeName: '카페베네',
-    paymentAmount: 3200,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 21, 16, 45, 0],
-    status: '결제완료',
+    order_id: 4,
+    status: 'CANCELLED',
+    order_date: '2026-06-14T16:45:00',
+    total_amount: 3200,
+    lines: [
+      {
+        item_id: 6,
+        item_name_snapshot: '아이스크림',
+        unit_price: 1600,
+        quantity: 2,
+        total_price: 3200,
+      },
+    ],
+    payment: null,
   },
   {
-    payId: 5,
-    storeName: '편의점GS25',
-    paymentAmount: 1800,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 20, 18, 10, 0],
-    status: '결제완료',
+    order_id: 5,
+    status: 'COMPLETED',
+    order_date: '2026-06-13T18:10:00',
+    total_amount: 1800,
+    lines: [
+      { item_id: 7, item_name_snapshot: '초콜릿', unit_price: 900, quantity: 2, total_price: 1800 },
+    ],
+    payment: {
+      payment_log_id: 5,
+      payment_status: 'SUCCEEDED',
+      points_used: 1800,
+      card_amount: 0,
+      transaction_id: null,
+      approval_number: null,
+    },
   },
   {
-    payId: 6,
-    storeName: '학식당',
-    paymentAmount: 8200,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 20, 12, 15, 0],
-    status: '결제완료',
+    order_id: 6,
+    status: 'COMPLETED',
+    order_date: '2026-06-13T12:15:00',
+    total_amount: 8200,
+    lines: [
+      {
+        item_id: 8,
+        item_name_snapshot: '도시락',
+        unit_price: 5500,
+        quantity: 1,
+        total_price: 5500,
+      },
+      {
+        item_id: 9,
+        item_name_snapshot: '음료수',
+        unit_price: 2700,
+        quantity: 1,
+        total_price: 2700,
+      },
+    ],
+    payment: {
+      payment_log_id: 6,
+      payment_status: 'SUCCEEDED',
+      points_used: 3000,
+      card_amount: 5200,
+      transaction_id: 'TXN-002',
+      approval_number: '00056789',
+    },
   },
   {
-    payId: 7,
-    storeName: '도서관카페',
-    paymentAmount: 1200,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 20, 14, 30, 0],
-    status: '결제완료',
-  },
-  {
-    payId: 8,
-    storeName: '부산소마고',
-    paymentAmount: 6500,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 19, 13, 20, 0],
-    status: '결제완료',
-  },
-  {
-    payId: 9,
-    storeName: '자판기',
-    paymentAmount: 1200,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 19, 16, 45, 0],
-    status: '결제완료',
-  },
-  {
-    payId: 10,
-    storeName: '학식당',
-    paymentAmount: 7800,
-    paymentMethod: '아리페이',
-    payDate: [2024, 4, 18, 12, 10, 0],
-    status: '결제완료',
+    order_id: 7,
+    status: 'FAILED',
+    order_date: '2026-06-12T14:30:00',
+    total_amount: 1200,
+    lines: [
+      { item_id: 5, item_name_snapshot: '과자', unit_price: 1200, quantity: 1, total_price: 1200 },
+    ],
+    payment: null,
   },
 ];
 
 const getMockChargeLogs = () => [
   {
-    chargeId: 1,
-    chargeAmount: 100000,
-    chargeMethod: '카드결제',
-    chargeDate: [2024, 4, 21, 9, 0, 0],
-    status: '충전완료',
+    charge_id: 1,
+    charge_date: '2026-06-15T09:00:00',
+    charge_reason: 'PURCHASE',
+    detail_reason: '포인트 충전',
+    payment_id: 5001,
+    before_point: 0,
+    change_amount: 100000,
+    after_point: 100000,
   },
   {
-    chargeId: 2,
-    chargeAmount: 50000,
-    chargeMethod: '계좌이체',
-    chargeDate: [2024, 4, 18, 15, 30, 0],
-    status: '충전완료',
+    charge_id: 2,
+    charge_date: '2026-06-10T15:30:00',
+    charge_reason: 'PURCHASE',
+    detail_reason: '포인트 충전',
+    payment_id: 5002,
+    before_point: 100000,
+    change_amount: 50000,
+    after_point: 150000,
   },
   {
-    chargeId: 3,
-    chargeAmount: 30000,
-    chargeMethod: '카드결제',
-    chargeDate: [2024, 4, 15, 13, 45, 0],
-    status: '충전완료',
-  },
-  {
-    chargeId: 4,
-    chargeAmount: 50000,
-    chargeMethod: '계좌이체',
-    chargeDate: [2024, 4, 10, 10, 20, 0],
-    status: '충전완료',
-  },
-  {
-    chargeId: 5,
-    chargeAmount: 20000,
-    chargeMethod: '카드결제',
-    chargeDate: [2024, 4, 8, 14, 15, 0],
-    status: '충전완료',
-  },
-  {
-    chargeId: 6,
-    chargeAmount: 10000,
-    chargeMethod: '계좌이체',
-    chargeDate: [2024, 4, 5, 11, 30, 0],
-    status: '충전완료',
-  },
-  {
-    chargeId: 7,
-    chargeAmount: 5000,
-    chargeMethod: '카드결제',
-    chargeDate: [2024, 4, 3, 16, 45, 0],
-    status: '충전완료',
+    charge_id: 3,
+    charge_date: '2026-06-05T13:45:00',
+    charge_reason: 'PURCHASE',
+    detail_reason: '포인트 충전',
+    payment_id: 5003,
+    before_point: 150000,
+    change_amount: 30000,
+    after_point: 180000,
   },
 ];
 
@@ -157,22 +208,54 @@ function UserLog() {
     fetchUserLog();
   }, []);
 
+  const mapChargeToLogItem = (charge) => {
+    const d = new Date(charge.charge_date);
+    return {
+      chargeId: charge.charge_id,
+      chargeDate: [
+        d.getFullYear(),
+        d.getMonth() + 1,
+        d.getDate(),
+        d.getHours(),
+        d.getMinutes(),
+        d.getSeconds(),
+      ],
+      chargedPoint: charge.change_amount,
+      chargeReason: charge.charge_reason,
+    };
+  };
+
+  const mapOrderToLogItem = (order) => {
+    const d = new Date(order.order_date);
+    return {
+      payId: order.order_id,
+      payDate: [
+        d.getFullYear(),
+        d.getMonth() + 1,
+        d.getDate(),
+        d.getHours(),
+        d.getMinutes(),
+        d.getSeconds(),
+      ],
+      payedPoint: order.total_amount,
+      orderLines: order.lines,
+      orderPayment: order.payment,
+      orderStatus: order.status,
+    };
+  };
+
   const fetchUserLog = async () => {
     try {
       // 개발 모드일 때 Mock 데이터 사용
       if (isDevMode()) {
-        setUseLogData(getMockPayLogs());
-        setChargeLogData(getMockChargeLogs());
+        setUseLogData(getMockPayLogs().map(mapOrderToLogItem));
+        setChargeLogData(getMockChargeLogs().map(mapChargeToLogItem));
         return;
       }
 
-      const [paylogResponse, chargelogResponse] = await Promise.all([
-        axiosInstance.get('v2/transaction/paylog'),
-        axiosInstance.get('v2/transaction/chargelog'),
-      ]);
-
-      setUseLogData(paylogResponse.data.payLogList || []);
-      setChargeLogData(chargelogResponse.data.chargeLogList || []);
+      const [allOrders, allCharges] = await Promise.all([fetchAllOrders(), fetchAllCharges()]);
+      setUseLogData(allOrders.map(mapOrderToLogItem));
+      setChargeLogData(allCharges.map(mapChargeToLogItem));
     } catch (error) {
       console.error(error);
       setUseLogData([]);
@@ -289,37 +372,60 @@ function UserLog() {
       </S.TabContainerWrapper>
 
       <S.UseLogWrap {...handlers}>
-        <S.LogContainer>
-          <S.LogColumn>
-            {leftColumnData.map((item, index) => (
-              <PointLogItem
-                key={
-                  item.logType === 'usage'
-                    ? `use-${item.payId ?? index}`
-                    : `charge-${item.chargeId ?? index}`
-                }
-                type={item.logType === 'usage' ? 0 : 1}
-                data={[item]}
-                fetchUserLog={fetchUserLog}
-              />
-            ))}
-          </S.LogColumn>
-          <S.LogColumn>
-            {rightColumnData.map((item, index) => (
-              <PointLogItem
-                key={
-                  item.logType === 'usage'
-                    ? `use-${item.payId ?? index}`
-                    : `charge-${item.chargeId ?? index}`
-                }
-                type={item.logType === 'usage' ? 0 : 1}
-                data={[item]}
-                fetchUserLog={fetchUserLog}
-              />
-            ))}
-          </S.LogColumn>
-        </S.LogContainer>
+        {displayData.length === 0 ? (
+          <S.EmptyState>내역이 없습니다.</S.EmptyState>
+        ) : (
+          <S.LogContainer>
+            <S.LogColumn>
+              {leftColumnData.map((item, index) => (
+                <PointLogItem
+                  key={
+                    item.logType === 'usage'
+                      ? `use-${item.payId ?? index}`
+                      : `charge-${item.chargeId ?? index}`
+                  }
+                  type={item.logType === 'usage' ? 0 : 1}
+                  data={[item]}
+                  fetchUserLog={fetchUserLog}
+                />
+              ))}
+            </S.LogColumn>
+            <S.LogColumn>
+              {rightColumnData.map((item, index) => (
+                <PointLogItem
+                  key={
+                    item.logType === 'usage'
+                      ? `use-${item.payId ?? index}`
+                      : `charge-${item.chargeId ?? index}`
+                  }
+                  type={item.logType === 'usage' ? 0 : 1}
+                  data={[item]}
+                  fetchUserLog={fetchUserLog}
+                />
+              ))}
+            </S.LogColumn>
+          </S.LogContainer>
+        )}
       </S.UseLogWrap>
+      {totalPages > 1 && (
+        <S.Pagination>
+          <S.PageNumber
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            &lt; 이전
+          </S.PageNumber>
+          <S.PageIndicator>
+            {currentPage + 1} / {totalPages}
+          </S.PageIndicator>
+          <S.PageNumber
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages - 1}
+          >
+            다음 &gt;
+          </S.PageNumber>
+        </S.Pagination>
+      )}
     </S.CompeleteWrap>
   );
 }

@@ -1,5 +1,9 @@
+import type { OrderLine, OrderPayment, OrderStatus } from 'types/order';
+
+export type { OrderLine, OrderPayment };
+
 export interface LogItem {
-  chargeId: number;
+  chargeId?: number;
   payId?: number;
   type: string;
   date: string;
@@ -12,6 +16,12 @@ export interface LogItem {
   payType?: string;
   refundState?: boolean;
   reason?: string;
+  // v3 order fields
+  orderLines?: OrderLine[];
+  orderPayment?: OrderPayment | null;
+  orderStatus?: OrderStatus;
+  // v3 charge fields
+  chargeReason?: string;
 }
 
 export interface MockLogItem extends LogItem {
