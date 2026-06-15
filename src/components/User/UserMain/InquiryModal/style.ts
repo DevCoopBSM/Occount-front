@@ -1,12 +1,29 @@
 import styled from 'styled-components';
+import type { InquiryStatus } from 'types/inquiry';
 
 interface InquiryItemProps {
-  $hasAnswer?: boolean;
+  $status: InquiryStatus;
 }
 
 interface InquiryAnswerProps {
-  $hasAnswer?: boolean;
+  $status: InquiryStatus;
 }
+
+interface StatusBadgeProps {
+  $status: InquiryStatus;
+}
+
+const STATUS_BG: Record<InquiryStatus, string> = {
+  RECEIVED: '#f5f5f5',
+  IN_PROGRESS: '#fff8e1',
+  COMPLETED: '#f0fff4',
+};
+
+const STATUS_COLOR: Record<InquiryStatus, string> = {
+  RECEIVED: '#888888',
+  IN_PROGRESS: '#f49e15',
+  COMPLETED: '#2e7d32',
+};
 
 export const ErrorMessage = styled.div`
   color: red;
@@ -168,9 +185,15 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const InquiriesContainer = styled.div`
+export const InquiriesClipWrapper = styled.div`
   overflow: hidden;
   width: 100%;
+`;
+
+export const InquiriesContainer = styled.div`
+  overflow: visible;
+  width: 100%;
+  padding: 2px 4px;
 `;
 
 export const InquiriesContent = styled.div`
@@ -205,12 +228,12 @@ export const InquiryItem = styled.div<InquiryItemProps>`
   padding: 16px;
   margin-bottom: 12px;
   cursor: pointer;
-  background-color: ${(props) => (props.$hasAnswer ? '#f8fff8' : '#ffffff')};
+  background-color: ${(props) => STATUS_BG[props.$status]};
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
   &:hover {
-    border-color: #FCC800;
+    border-color: #fcc800;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
@@ -251,7 +274,7 @@ export const InquiryContent = styled.p`
 `;
 
 export const InquiryAnswer = styled.div<InquiryAnswerProps>`
-  color: ${(props) => (props.$hasAnswer ? '#000' : '#999')};
+  color: ${(props) => STATUS_COLOR[props.$status]};
   margin-top: 10px;
   padding: 10px;
   background-color: #f9f9f9;
@@ -260,6 +283,64 @@ export const InquiryAnswer = styled.div<InquiryAnswerProps>`
   @media (max-width: 600px) {
     font-size: 14px;
   }
+`;
+
+export const StatusBadge = styled.span<StatusBadgeProps>`
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: ${(props) => STATUS_BG[props.$status]};
+  color: ${(props) => STATUS_COLOR[props.$status]};
+  border: 1px solid ${(props) => STATUS_COLOR[props.$status]}33;
+`;
+
+export const DetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+`;
+
+export const DetailHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const DetailTitle = styled.h3`
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #111111;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+`;
+
+export const DetailMeta = styled.div`
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #999;
+`;
+
+export const DetailContent = styled.p`
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px 16px;
+`;
+
+export const AnswerLabel = styled.div`
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 export const AnswerDate = styled.span`
