@@ -80,7 +80,23 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
   };
 
   const getTransactionType = () => {
-    if (type !== 1) return '포인트 사용';
+    if (type !== 1) {
+      // 주문 상태 표시
+      switch (item.orderStatus) {
+        case 'COMPLETED':
+          return '결제완료';
+        case 'CANCELLED':
+          return '취소됨';
+        case 'FAILED':
+          return '결제실패';
+        case 'PROCESSING':
+          return '처리중';
+        default:
+          return '포인트 사용';
+      }
+    }
+    // 충전 내역: v3 chargeReason 우선, 없으면 구버전 itemType 폴백
+    if (item.chargeReason) return item.chargeReason;
     switch (itemType) {
       case '1':
         return '오프라인 충전';
@@ -102,7 +118,7 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
     if (itemType === '1' && item.reason) {
       return `${item.reason}`;
     }
-    return '오프라인 충전된 내역';
+    return '충전 내역';
   };
 
   // refetchUser를 Promise<void>로 변환하는 함수
@@ -186,19 +202,6 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
               })}
             </_.DetailValue>
           </_.DetailRow>
-          <_.DetailRow>
-            <_.DetailLabel>금액:</_.DetailLabel>
-            <_.DetailValue>{innerPoint.toLocaleString()}원</_.DetailValue>
-          </_.DetailRow>
-          {type === 1 && (
-            <>
-              <_.DetailRow>
-                <_.DetailLabel>상태:</_.DetailLabel>
-                <_.DetailValue>{getRefundStatus()}</_.DetailValue>
-              </_.DetailRow>
-              {renderRefundButton()}
-            </>
-          )}
         </_.DetailWrap>
       )}
       {showRefundForm && (
