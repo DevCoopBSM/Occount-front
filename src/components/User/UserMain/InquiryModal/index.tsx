@@ -67,12 +67,18 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden';
       setViewMode('form');
       setCurrentPage(0);
       setSelectedDetail(null);
       setError(null);
       setIsLoading(false);
+    } else {
+      document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   const loadInquiries = async () => {
