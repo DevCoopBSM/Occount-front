@@ -243,7 +243,6 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 <S.InquiriesContent
                   style={{
                     transform: `translateX(${-100 * currentPage}%)`,
-                    width: `${100 * totalPages}%`,
                   }}
                 >
                   {Array.from({ length: totalPages }, (_, pageIndex) => (
