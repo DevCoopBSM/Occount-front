@@ -51,7 +51,12 @@ export const PRIVACY_SECTIONS = {
 
 export const PRIVACY_CONTENT = {
   REQUIRED_ITEMS: {
-    purposes: ['회원 가입 및 관리', '매점 서비스 제공', '본인 확인 및 인증', '결제 서비스 제공'],
+    purposes: [
+      '회원 가입 및 관리',
+      '매점 서비스 제공',
+      '본인 확인 및 인증',
+      '결제 서비스 제공',
+    ],
     items: [
       '이름, 생년월일, 이메일',
       '전화번호, 주소',
@@ -61,11 +66,19 @@ export const PRIVACY_CONTENT = {
   },
   VERIFICATION_ITEMS: {
     purposes: ['본인 확인 및 인증'],
-    items: ['이름, 생년월일, 성별', '내/외국인 정보', '휴대폰 번호', 'CI/DI 정보'],
+    items: [
+      '이름, 생년월일, 성별',
+      '내/외국인 정보',
+      '휴대폰 번호',
+      'CI/DI 정보',
+    ],
   },
   RETENTION: {
     period: '회원 탈퇴 시 또는 조합원 자격 소실 시점으로부터 1년',
-    legal_obligations: ['전자상거래법: 거래기록 5년', '통신비밀보호법: 로그기록 3개월'],
+    legal_obligations: [
+      '전자상거래법: 거래기록 5년',
+      '통신비밀보호법: 로그기록 3개월',
+    ],
     disposal_methods: [
       '전자적 파일: 복구 불가능한 방법으로 영구 삭제',
       '기타 기록물: 파 또는 소각',
@@ -103,14 +116,16 @@ export const PRIVACY_CONTENT = {
   ],
   PRIVACY_OFFICER: {
     title: '이사장',
-    name: '김민경',
+    name: '홍형숙',
     contact: '이메일: wonching76@naver.com',
   },
 } as const;
 
 export const PRIVACY_NOTICE = {
-  rights: '위 개인정보 수집·이용 및 제3자 제공에 대한 동의를 거부할 권리가 있습니다.',
-  consequences: '다만, 동의를 거부할 경우 회원가입 및 O-ring 서비스 이용이 불가능합니다.',
+  rights:
+    '위 개인정보 수집·이용 및 제3자 제공에 대한 동의를 거부할 권리가 있습니다.',
+  consequences:
+    '다만, 동의를 거부할 경우 회원가입 및 O-ring 서비스 이용이 불가능합니다.',
 } as const;
 
 export const PRIVACY_AGREEMENTS = {
