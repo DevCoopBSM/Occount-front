@@ -267,7 +267,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       dispatch({ type: actionTypes.SET_USER, payload: userUpdates });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        dispatch({ type: actionTypes.LOGOUT });
+        setAccessToken(null);
+        sessionStorage.clear();
+        window.location.href = '/login';
+        return;
+      }
       console.error('Error fetching user information:', error);
     }
   }, []);

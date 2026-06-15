@@ -866,6 +866,8 @@ export const ScrollBar = styled.div`
   gap: 5px;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  overflow: hidden;
 `;
 
 export const ScrollDot = styled.div<{ active?: boolean }>`
