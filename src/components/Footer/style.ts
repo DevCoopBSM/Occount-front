@@ -166,6 +166,8 @@ export const UtilityLink = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
+  width: auto;
+  height: auto;
 `;
 
 export const UtilityLinkText = styled.span`

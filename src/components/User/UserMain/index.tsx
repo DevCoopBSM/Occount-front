@@ -196,10 +196,12 @@ function Main() {
           {/* 잔액 조회 카드 */}
           <S.BalanceCard>
             <S.BalanceContentLeft>
-              <S.BalanceTitle>
-                <span className="name">{isLoggedIn ? user?.name || '사용자' : '사용자'}</span>
-                <span className="suffix">님의 잔액</span>
-              </S.BalanceTitle>
+              {isLoggedIn && (
+                <S.BalanceTitle>
+                  <span className="name">{user?.name || '사용자'}</span>
+                  <span className="suffix">님의 잔액</span>
+                </S.BalanceTitle>
+              )}
               <S.BalanceInfo>
                 <span className="amount">{isLoggedIn ? formatPoint : '로그인 필요'}</span>
                 {isLoggedIn && <span className="unit">원</span>}
