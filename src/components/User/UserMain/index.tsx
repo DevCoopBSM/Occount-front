@@ -118,7 +118,9 @@ function Main() {
       }
     };
     loadProducts();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -334,12 +336,8 @@ function Main() {
                 <S.ProductCardRow key={rowIndex}>
                   {row.map((product) => (
                     <S.ProductCard key={product.itemId}>
-                      {product.isNew && (
-                        <S.ProductBadge type="new">NEW</S.ProductBadge>
-                      )}
-                      {product.isHot && (
-                        <S.ProductBadge type="hot">HOT</S.ProductBadge>
-                      )}
+                      {product.isNew && <S.ProductBadge type="new">NEW</S.ProductBadge>}
+                      {product.isHot && <S.ProductBadge type="hot">HOT</S.ProductBadge>}
                       <S.ProductInfo>
                         <h3>{product.itemName}</h3>
                         <div className="price">
