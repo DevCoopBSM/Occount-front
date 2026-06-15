@@ -95,6 +95,34 @@ export const DetailValue = styled.div`
   text-align: right;
 `;
 
+export const Divider = styled.div`
+  border-top: 1px solid #e0e0e0;
+  margin: 8px 0;
+`;
+
+export const OrderLineRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 4px;
+`;
+
+export const OrderLineName = styled.span`
+  flex: 1;
+`;
+
+export const OrderLineQty = styled.span`
+  color: #999;
+  margin: 0 8px;
+`;
+
+export const OrderLinePrice = styled.span`
+  font-weight: 500;
+  color: #333;
+`;
+
 export const DetailInput = styled.input`
   width: 100%;
   padding: 8px;

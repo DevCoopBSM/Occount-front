@@ -124,6 +124,39 @@ function PointLogItem({ type, data }: PointLogItemProps) {
               })}
             </_.DetailValue>
           </_.DetailRow>
+          {type === 0 && item.orderLines && item.orderLines.length > 0 && (
+            <>
+              <_.Divider />
+              {item.orderLines.map((line) => (
+                <_.OrderLineRow key={line.item_id}>
+                  <_.OrderLineName>{line.item_name_snapshot}</_.OrderLineName>
+                  <_.OrderLineQty>x{line.quantity}</_.OrderLineQty>
+                  <_.OrderLinePrice>{line.total_price.toLocaleString()}원</_.OrderLinePrice>
+                </_.OrderLineRow>
+              ))}
+              {item.orderPayment && (
+                <>
+                  <_.Divider />
+                  {item.orderPayment.points_used > 0 && (
+                    <_.DetailRow>
+                      <_.DetailLabel>포인트:</_.DetailLabel>
+                      <_.DetailValue>
+                        {item.orderPayment.points_used.toLocaleString()}원
+                      </_.DetailValue>
+                    </_.DetailRow>
+                  )}
+                  {item.orderPayment.card_amount > 0 && (
+                    <_.DetailRow>
+                      <_.DetailLabel>카드:</_.DetailLabel>
+                      <_.DetailValue>
+                        {item.orderPayment.card_amount.toLocaleString()}원
+                      </_.DetailValue>
+                    </_.DetailRow>
+                  )}
+                </>
+              )}
+            </>
+          )}
           {type === 1 && item.detailReason && (
             <_.DetailRow>
               <_.DetailLabel>사유:</_.DetailLabel>
