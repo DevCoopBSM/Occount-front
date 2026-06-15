@@ -26,7 +26,7 @@ export const fetchAllCharges = async (): Promise<Charge[]> => {
       params: { page, size, sort: 'chargeId,desc' },
     });
     const data = response.data;
-    allCharges.push(...data.charges);
+    allCharges.push(...data.charges.filter((c: Charge) => c.change_amount > 0));
     if (page >= data.total_pages - 1) break;
     page++;
   }

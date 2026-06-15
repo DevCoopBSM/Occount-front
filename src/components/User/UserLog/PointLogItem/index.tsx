@@ -124,6 +124,12 @@ function PointLogItem({ type, data }: PointLogItemProps) {
               })}
             </_.DetailValue>
           </_.DetailRow>
+          {type === 1 && item.detailReason && (
+            <_.DetailRow>
+              <_.DetailLabel>사유:</_.DetailLabel>
+              <_.DetailValue>{item.detailReason}</_.DetailValue>
+            </_.DetailRow>
+          )}
         </_.DetailWrap>
       )}
     </div>

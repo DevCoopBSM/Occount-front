@@ -211,6 +211,7 @@ const mapChargeToLogItem = (charge) => {
     ],
     chargedPoint: charge.change_amount,
     chargeReason: charge.charge_reason,
+    detailReason: charge.detail_reason,
   };
 };
 

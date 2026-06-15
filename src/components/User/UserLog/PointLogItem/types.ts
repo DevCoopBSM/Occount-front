@@ -22,6 +22,7 @@ export interface LogItem {
   orderStatus?: OrderStatus;
   // v3 charge fields
   chargeReason?: string;
+  detailReason?: string;
 }
 
 export interface MockLogItem extends LogItem {
