@@ -246,12 +246,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
-      const [infoRes, pointRes] = await Promise.all([
-        axiosInstance.get('users/pre-order-info', {
-          skipAuthRedirect: true,
-          skipGlobalError: true,
-        } as any),
-        axiosInstance.get('wallet/point', { skipAuthRedirect: true, skipGlobalError: true } as any),
+      const skipOpts = { skipAuthRedirect: true, skipGlobalError: true } as any;
+      const [infoRes, pointRes, barcodeRes] = await Promise.all([
+        axiosInstance.get('users/pre-order-info', skipOpts),
+        axiosInstance.get('wallet/point', skipOpts),
+        axiosInstance.get('users/barcode', skipOpts),
       ]);
 
       const userUpdates: Partial<User> = {};
@@ -262,8 +261,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (typeof infoRes.data.username === 'string') {
         userUpdates.name = infoRes.data.username;
       }
-      if (typeof infoRes.data.userCode === 'string') {
-        userUpdates.code = infoRes.data.userCode;
+      if (typeof barcodeRes.data.user_barcode === 'string') {
+        userUpdates.code = barcodeRes.data.user_barcode;
       }
 
       dispatch({ type: actionTypes.SET_USER, payload: userUpdates });
