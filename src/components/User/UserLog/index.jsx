@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Icon from 'components/Icon';
 import { useSwipeable } from 'react-swipeable';
-import { fetchOrders, fetchCharges } from 'utils/orderApi';
+import { fetchAllOrders, fetchAllCharges } from 'utils/orderApi';
 import PointLogItem from './PointLogItem';
 import * as S from './style';
 
@@ -221,7 +221,7 @@ function UserLog() {
         d.getSeconds(),
       ],
       chargedPoint: charge.change_amount,
-      chargeReason: charge.detail_reason,
+      chargeReason: charge.charge_reason,
     };
   };
 
@@ -253,9 +253,9 @@ function UserLog() {
         return;
       }
 
-      const [ordersResponse, chargesResponse] = await Promise.all([fetchOrders(), fetchCharges()]);
-      setUseLogData((ordersResponse.orders || []).map(mapOrderToLogItem));
-      setChargeLogData((chargesResponse.charges || []).map(mapChargeToLogItem));
+      const [allOrders, allCharges] = await Promise.all([fetchAllOrders(), fetchAllCharges()]);
+      setUseLogData(allOrders.map(mapOrderToLogItem));
+      setChargeLogData(allCharges.map(mapChargeToLogItem));
     } catch (error) {
       console.error(error);
       setUseLogData([]);

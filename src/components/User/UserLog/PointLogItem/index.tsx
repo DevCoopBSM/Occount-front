@@ -96,7 +96,15 @@ function PointLogItem({ type, data, fetchUserLog }: PointLogItemProps) {
       }
     }
     // 충전 내역: v3 chargeReason 우선, 없으면 구버전 itemType 폴백
-    if (item.chargeReason) return item.chargeReason;
+    if (item.chargeReason) {
+      const reasonMap: Record<string, string> = {
+        PURCHASE: '포인트 충전',
+        REFUND: '환불',
+        ADMIN: '관리자 지급',
+        EVENT: '이벤트',
+      };
+      return reasonMap[item.chargeReason] ?? '기타 충전';
+    }
     switch (itemType) {
       case '1':
         return '오프라인 충전';
