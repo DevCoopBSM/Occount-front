@@ -9,10 +9,6 @@ function Footer() {
     navigate('/');
   };
 
-  const handleContactClick = () => {
-    navigate('/contact');
-  };
-
   const handleGithubClick = () => {
     window.open('https://github.com/DevCoopBSM', '_blank');
   };
@@ -41,7 +37,7 @@ function Footer() {
             <S.InfoLabelContainer>
               <S.InfoLabel>
                 <S.InfoLabelTitle>사회적협동조합 대표</S.InfoLabelTitle>
-                <S.InfoLabelValue>김민경</S.InfoLabelValue>
+                <S.InfoLabelValue>홍형숙</S.InfoLabelValue>
               </S.InfoLabel>
               <S.InfoLabel>
                 <S.InfoLabelTitle>사업자 등록번호</S.InfoLabelTitle>
@@ -55,10 +51,6 @@ function Footer() {
           </S.InfoContainer>
 
           <S.UtilityLinkContainer>
-            <S.UtilityLink onClick={handleContactClick}>
-              <S.UtilityLinkText>문의 및 건의</S.UtilityLinkText>
-              <Icon name="chevronForward" size={24} color="#ffffff" />
-            </S.UtilityLink>
             <S.UtilityLink onClick={handleGithubClick}>
               <S.UtilityLinkText>GITHUB</S.UtilityLinkText>
               <Icon name="externalLink" size={24} color="#ffffff" />
