@@ -41,7 +41,8 @@ function PointLogItem({ type, data }: PointLogItemProps) {
     return new Date();
   };
 
-  const date = formatDate(item.chargeDate ?? item.payDate);
+  const rawDateArray = item.chargeDate ?? item.payDate;
+  const date = rawDateArray ? formatDate(rawDateArray) : null;
   const innerPoint =
     item.chargedPoint ??
     item.payedPoint ??
@@ -94,9 +95,15 @@ function PointLogItem({ type, data }: PointLogItemProps) {
         <_.LeftSection>
           <_.DateText>
             {date
-              .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
-              .replace(/\. /g, '/')
-              .replace(/\./g, '')}
+              ? date
+                  .toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })
+                  .replace(/\. /g, '/')
+                  .replace(/\./g, '')
+              : '날짜 없음'}
           </_.DateText>
           <_.AmountText>{`${innerPoint.toLocaleString()}원`}</_.AmountText>
         </_.LeftSection>
@@ -109,19 +116,27 @@ function PointLogItem({ type, data }: PointLogItemProps) {
             <_.DetailLabel>날짜:</_.DetailLabel>
             <_.DetailValue>
               {date
-                .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
-                .replace(/\./g, '.')
-                .slice(0, -1)}
+                ? date
+                    .toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })
+                    .replace(/\./g, '.')
+                    .slice(0, -1)
+                : '날짜 없음'}
             </_.DetailValue>
           </_.DetailRow>
           <_.DetailRow>
             <_.DetailLabel>시간:</_.DetailLabel>
             <_.DetailValue>
-              {date.toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-              })}
+              {date
+                ? date.toLocaleTimeString('ko-KR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })
+                : '-'}
             </_.DetailValue>
           </_.DetailRow>
           {type === 0 && item.orderLines && item.orderLines.length > 0 && (

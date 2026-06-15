@@ -216,17 +216,19 @@ const mapChargeToLogItem = (charge) => {
 };
 
 const mapOrderToLogItem = (order) => {
-  const d = new Date(order.order_date);
+  const d = order.order_date ? new Date(order.order_date) : null;
   return {
     payId: order.order_id,
-    payDate: [
-      d.getFullYear(),
-      d.getMonth() + 1,
-      d.getDate(),
-      d.getHours(),
-      d.getMinutes(),
-      d.getSeconds(),
-    ],
+    payDate: d
+      ? [
+          d.getFullYear(),
+          d.getMonth() + 1,
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes(),
+          d.getSeconds(),
+        ]
+      : null,
     payedPoint: order.total_amount,
     orderLines: order.lines,
     orderPayment: order.payment,
@@ -269,7 +271,7 @@ function UserLog() {
       const [year, month, day, hour, minute, second] = dateArray;
       return new Date(year, month - 1, day, hour, minute, second);
     }
-    return new Date(0);
+    return new Date(0); // 날짜 없음은 맨 뒤로
   };
 
   const addLogMeta = (item, logType) => ({
