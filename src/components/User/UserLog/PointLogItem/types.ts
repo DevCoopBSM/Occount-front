@@ -1,19 +1,6 @@
-export interface OrderLine {
-  item_id: number;
-  item_name_snapshot: string;
-  unit_price: number;
-  quantity: number;
-  total_price: number;
-}
+import type { OrderLine, OrderPayment, OrderStatus } from 'types/order';
 
-export interface OrderPayment {
-  payment_log_id: number;
-  payment_status: string;
-  points_used: number;
-  card_amount: number;
-  transaction_id: string | null;
-  approval_number: string | null;
-}
+export type { OrderLine, OrderPayment };
 
 export interface LogItem {
   chargeId?: number;
@@ -32,7 +19,7 @@ export interface LogItem {
   // v3 order fields
   orderLines?: OrderLine[];
   orderPayment?: OrderPayment | null;
-  orderStatus?: string;
+  orderStatus?: OrderStatus;
   // v3 charge fields
   chargeReason?: string;
 }
