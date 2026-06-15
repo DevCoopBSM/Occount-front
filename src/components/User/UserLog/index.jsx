@@ -197,6 +197,42 @@ const getMockChargeLogs = () => [
   },
 ];
 
+const mapChargeToLogItem = (charge) => {
+  const d = new Date(charge.charge_date);
+  return {
+    chargeId: charge.charge_id,
+    chargeDate: [
+      d.getFullYear(),
+      d.getMonth() + 1,
+      d.getDate(),
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds(),
+    ],
+    chargedPoint: charge.change_amount,
+    chargeReason: charge.charge_reason,
+  };
+};
+
+const mapOrderToLogItem = (order) => {
+  const d = new Date(order.order_date);
+  return {
+    payId: order.order_id,
+    payDate: [
+      d.getFullYear(),
+      d.getMonth() + 1,
+      d.getDate(),
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds(),
+    ],
+    payedPoint: order.total_amount,
+    orderLines: order.lines,
+    orderPayment: order.payment,
+    orderStatus: order.status,
+  };
+};
+
 function UserLog() {
   const [currentPage, setCurrentPage] = useState(0);
   const [useLogData, setUseLogData] = useState([]);
@@ -204,49 +240,8 @@ function UserLog() {
   const [itemsPerPage] = useState(12);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'usage', 'charge'
 
-  useEffect(() => {
-    fetchUserLog();
-  }, [fetchUserLog]);
-
-  const mapChargeToLogItem = (charge) => {
-    const d = new Date(charge.charge_date);
-    return {
-      chargeId: charge.charge_id,
-      chargeDate: [
-        d.getFullYear(),
-        d.getMonth() + 1,
-        d.getDate(),
-        d.getHours(),
-        d.getMinutes(),
-        d.getSeconds(),
-      ],
-      chargedPoint: charge.change_amount,
-      chargeReason: charge.charge_reason,
-    };
-  };
-
-  const mapOrderToLogItem = (order) => {
-    const d = new Date(order.order_date);
-    return {
-      payId: order.order_id,
-      payDate: [
-        d.getFullYear(),
-        d.getMonth() + 1,
-        d.getDate(),
-        d.getHours(),
-        d.getMinutes(),
-        d.getSeconds(),
-      ],
-      payedPoint: order.total_amount,
-      orderLines: order.lines,
-      orderPayment: order.payment,
-      orderStatus: order.status,
-    };
-  };
-
   const fetchUserLog = useCallback(async () => {
     try {
-      // 개발 모드일 때 Mock 데이터 사용
       if (isDevMode()) {
         setUseLogData(getMockPayLogs().map(mapOrderToLogItem));
         setChargeLogData(getMockChargeLogs().map(mapChargeToLogItem));
@@ -261,7 +256,11 @@ function UserLog() {
       setUseLogData([]);
       setChargeLogData([]);
     }
-  }, [mapOrderToLogItem, mapChargeToLogItem]);
+  }, []);
+
+  useEffect(() => {
+    fetchUserLog();
+  }, [fetchUserLog]);
 
   const getLogDate = (item) => {
     const dateArray = item.payDate || item.chargeDate;
