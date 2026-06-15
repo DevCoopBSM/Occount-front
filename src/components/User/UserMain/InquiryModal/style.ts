@@ -25,6 +25,13 @@ const STATUS_COLOR: Record<InquiryStatus, string> = {
   COMPLETED: '#2e7d32',
 };
 
+export const FieldError = styled.p`
+  margin: -10px 0 10px 2px;
+  font-size: 13px;
+  color: #e53935;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+`;
+
 export const ErrorMessage = styled.div`
   color: red;
   margin-bottom: 10px;
@@ -415,8 +422,7 @@ export const PageIndicator = styled.span`
 `;
 
 export const LogPage = styled.div`
-  flex: 0 0 100%;
-  width: 100%;
+  flex-shrink: 0;
 `;
 
 export const LogColumn = styled.div`

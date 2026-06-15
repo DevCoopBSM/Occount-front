@@ -51,6 +51,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [currentPage, setCurrentPage] = useState(0);
   const inquiriesPerPage = 5;
@@ -123,6 +124,7 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
     }
 
     setIsSubmitting(true);
+    setFieldErrors({});
     try {
       await createInquiry({ category, title, content });
       alert('문의가 성공적으로 제출되었습니다.');
@@ -132,8 +134,13 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
       await handleOpenListView();
     } catch (err: unknown) {
       console.error('문의 제출 실패:', err);
-      if (err instanceof AxiosError && err.response) {
-        alert(`문의 제출 실패: ${err.response.data}`);
+      if (err instanceof AxiosError && err.response?.status === 400) {
+        const data = err.response.data;
+        if (data && typeof data === 'object') {
+          setFieldErrors(data as Record<string, string>);
+        } else {
+          alert('입력값을 확인해주세요.');
+        }
       } else {
         alert('문의 제출에 실패했습니다. 다시 시도해주세요.');
       }
@@ -194,17 +201,20 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
                 </option>
               ))}
             </S.InquirySelect>
+            {fieldErrors.category && <S.FieldError>{fieldErrors.category}</S.FieldError>}
             <S.InquiryInput
               type="text"
               placeholder="제목"
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
             />
+            {fieldErrors.title && <S.FieldError>{fieldErrors.title}</S.FieldError>}
             <S.InquiryTextarea
               placeholder="내용"
               value={content}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
             />
+            {fieldErrors.content && <S.FieldError>{fieldErrors.content}</S.FieldError>}
             <S.ModalFooter>
               <S.SubmitButton type="submit" disabled={isSubmitting}>
                 {isSubmitting ? '제출 중...' : '제출하기'}
@@ -242,11 +252,12 @@ const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onRequestClose, use
               <S.InquiriesContainer {...handlers}>
                 <S.InquiriesContent
                   style={{
-                    transform: `translateX(${-100 * currentPage}%)`,
+                    width: `${100 * totalPages}%`,
+                    transform: `translateX(${(-currentPage * 100) / totalPages}%)`,
                   }}
                 >
                   {Array.from({ length: totalPages }, (_, pageIndex) => (
-                    <S.LogPage key={pageIndex}>
+                    <S.LogPage key={pageIndex} style={{ width: `${100 / totalPages}%` }}>
                       {safeInquiries
                         .slice(pageIndex * inquiriesPerPage, (pageIndex + 1) * inquiriesPerPage)
                         .map((inquiry) => (
