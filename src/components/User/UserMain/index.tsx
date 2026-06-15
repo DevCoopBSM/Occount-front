@@ -9,7 +9,18 @@ import Barcode from 'react-barcode';
 import Toast from 'common/Toast';
 import Icon from 'components/Icon';
 import { fetchNotices, Notice as ApiNotice } from './Notice/notices';
-import { mockAnnouncements, mockNotices, mockProducts, NoticeItem, Product } from './mockData';
+import { mockAnnouncements, mockNotices, mockProducts, NoticeItem } from './mockData';
+import { fetchItemList, Item } from 'components/User/ItemList/itemListApi';
+
+const fallbackProducts: Item[] = mockProducts.map((p) => ({
+  itemId: p.id,
+  itemName: p.title,
+  itemCode: `MOCK-${p.id}`,
+  itemPrice: p.price ?? 0,
+  category: p.category,
+  isNew: p.badge === 'new',
+  isHot: p.badge === 'hot',
+}));
 
 interface User {
   point: number;
@@ -31,7 +42,7 @@ function Main() {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState<boolean>(false);
   const [showInvestmentModal, setShowInvestmentModal] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체보기');
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Item[]>([]);
   const [allNotices, setAllNotices] = useState<NoticeItem[]>([]);
   const [showLoginToast, setShowLoginToast] = useState<boolean>(false);
 
@@ -93,7 +104,27 @@ function Main() {
 
   useEffect(() => {
     if (USE_MOCK_DATA) {
-      setProducts(mockProducts);
+      setProducts(fallbackProducts);
+      return;
+    }
+
+    let mounted = true;
+    const loadProducts = async () => {
+      try {
+        const fetched = await fetchItemList();
+        if (mounted) setProducts(fetched);
+      } catch {
+        if (mounted) setProducts(fallbackProducts);
+      }
+    };
+    loadProducts();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (USE_MOCK_DATA) {
       // 모든 공지사항을 하나로 통합 (중요도 높은 것부터 표시)
       const combinedNotices = [...mockNotices, ...mockAnnouncements].sort((a, b) => {
         // 중요도가 높은 것 먼저, 그 다음 최신순
@@ -150,7 +181,7 @@ function Main() {
   }, [products, selectedCategory]);
 
   const productRows = useMemo(() => {
-    const rows: Product[][] = [];
+    const rows: Item[][] = [];
     for (let i = 0; i < filteredProducts.length; i += 2) {
       rows.push(filteredProducts.slice(i, i + 2));
     }
@@ -304,21 +335,14 @@ function Main() {
               productRows.map((row, rowIndex) => (
                 <S.ProductCardRow key={rowIndex}>
                   {row.map((product) => (
-                    <S.ProductCard key={product.id}>
-                      {product.badge && (
-                        <S.ProductBadge type={product.badge}>
-                          {product.badge === 'new' ? 'NEW' : 'HOT'}
-                        </S.ProductBadge>
-                      )}
+                    <S.ProductCard key={product.itemId}>
+                      {product.isNew && <S.ProductBadge type="new">NEW</S.ProductBadge>}
+                      {product.isHot && <S.ProductBadge type="hot">HOT</S.ProductBadge>}
                       <S.ProductInfo>
-                        <h3>{product.title}</h3>
+                        <h3>{product.itemName}</h3>
                         <div className="price">
-                          <span>
-                            {product.price !== undefined
-                              ? product.price.toLocaleString()
-                              : '가격 정보 없음'}
-                          </span>
-                          {product.price !== undefined && <span>원</span>}
+                          <span>{product.itemPrice.toLocaleString()}</span>
+                          <span>원</span>
                         </div>
                       </S.ProductInfo>
                     </S.ProductCard>
