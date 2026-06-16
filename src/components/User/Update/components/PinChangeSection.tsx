@@ -12,6 +12,8 @@ export const PinChangeSection: React.FC<PinChangeSectionProps> = ({ pinChange })
     isLoading,
     pinWarning,
     confirmWarning,
+    remainingSeconds,
+    formatTime,
     handlePasswordChange,
     handleVerifyPassword,
     handlePinChange,
@@ -52,6 +54,9 @@ export const PinChangeSection: React.FC<PinChangeSectionProps> = ({ pinChange })
   // step === 'passwordVerified'
   return (
     <>
+      <S.ExpiryTimer>
+        인증 유효 시간: <span>{formatTime(remainingSeconds)}</span>
+      </S.ExpiryTimer>
       <S.InputContainer>
         <S.InputLabel>새 PIN</S.InputLabel>
         <S.RegisterInput
