@@ -5,7 +5,7 @@ import { GlobalStyle } from './common/GlobalStyle';
 import { AuthProvider } from 'contexts/authContext';
 import MainRouter from './routers/MainRouter';
 import Loading from './common/Loading';
-import InstallPrompt from './components/PWA/InstallPrompt';
+// import InstallPrompt from './components/PWA/InstallPrompt';
 import { setLoadingFunction } from './utils/Axios';
 
 const AppContent = () => {
@@ -21,7 +21,7 @@ const AppContent = () => {
         <GlobalStyle />
         <Loading />
         <MainRouter />
-        <InstallPrompt />
+        {/* <InstallPrompt /> */}
       </BrowserRouter>
     </AuthProvider>
   );
