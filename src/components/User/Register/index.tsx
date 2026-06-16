@@ -94,6 +94,7 @@ const Register: React.FC = () => {
         user_email: formData.userEmail.trim(),
         password: formData.userPassword,
         pin: formData.pin,
+        birth_date: userInfo.userBirthDate,
       };
 
       await apiClient.post('auth/register', payload, { skipAuthRedirect: true });

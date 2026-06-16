@@ -21,6 +21,7 @@ export interface RegisterRequest {
   user_email: string;
   password: string;
   pin: string;
+  birth_date?: string;
 }
 
 export interface ErrorState extends Partial<FormData> {
