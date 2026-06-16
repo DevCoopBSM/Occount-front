@@ -48,7 +48,7 @@ function PwChange() {
     } catch (error) {
       const status = error.response?.status;
       if (status === 429) {
-        showError('요청 한도 초과', '잠시 후 다시 시도해주세요.');
+        showError('요청 한도 초과', error.response?.data?.message || '잠시 후 다시 시도해주세요.');
       } else {
         showError('발송 실패', '인증번호 발송에 실패했습니다. 이메일을 확인해주세요.');
       }
