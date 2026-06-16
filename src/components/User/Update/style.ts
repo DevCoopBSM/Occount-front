@@ -485,3 +485,15 @@ export const WarningMessage = styled.p`
   margin: 8px 0 0;
   font-family: "Pretendard", sans-serif;
 `;
+
+export const ExpiryTimer = styled.p`
+  color: #1a6fc4;
+  font-size: 12px;
+  font-family: "Pretendard", sans-serif;
+  margin: 0 0 4px;
+
+  span {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+`;

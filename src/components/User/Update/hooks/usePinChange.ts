@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, useEffect, useRef, type ChangeEvent } from 'react';
 import axiosInstance from 'utils/Axios';
 import { VALIDATION_PATTERNS } from '../constants/validation';
 import { UPDATE_MESSAGES } from '../constants/messages';
@@ -17,6 +17,12 @@ type PinChangeState =
     }
   | { step: 'success' };
 
+const formatTime = (seconds: number): string => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+};
+
 export const usePinChange = () => {
   const [state, setState] = useState<PinChangeState>({
     step: 'passwordRequired',
@@ -26,6 +32,38 @@ export const usePinChange = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pinWarning, setPinWarning] = useState('');
   const [confirmWarning, setConfirmWarning] = useState('');
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const startTimer = (seconds: number) => {
+    clearTimer();
+    setRemainingSeconds(seconds);
+    timerRef.current = setInterval(() => {
+      setRemainingSeconds((prev) => {
+        if (prev <= 1) {
+          clearTimer();
+          setState({
+            step: 'passwordRequired',
+            password: '',
+            error: '인증 시간이 만료되었습니다. 다시 시도해주세요.',
+          });
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    return () => clearTimer();
+  }, []);
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (state.step !== 'passwordRequired') return;
@@ -43,6 +81,7 @@ export const usePinChange = () => {
       const response = await axiosInstance.post('/users/pin/change-ticket', {
         password: state.password,
       });
+      startTimer(response.data.expires_in);
       setState({
         step: 'passwordVerified',
         ticket: response.data.ticket,
@@ -93,6 +132,7 @@ export const usePinChange = () => {
         ticket: state.ticket,
         new_pin: state.newPin,
       });
+      clearTimer();
       setState({ step: 'success' });
     } catch (error: any) {
       setState({
@@ -109,6 +149,8 @@ export const usePinChange = () => {
     isLoading,
     pinWarning,
     confirmWarning,
+    remainingSeconds,
+    formatTime,
     handlePasswordChange,
     handleVerifyPassword,
     handlePinChange,
