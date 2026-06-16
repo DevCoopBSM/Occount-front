@@ -26,13 +26,13 @@ export const PinChangeSection: React.FC<PinChangeSectionProps> = ({ pinChange })
   if (state.step === 'passwordRequired') {
     return (
       <S.InputContainer>
-        <S.InputLabel>현재 비밀번호</S.InputLabel>
+        <S.InputLabel>오카운트 계정 PW로 인증해 주세요 (PIN 번호 X)</S.InputLabel>
         <S.AuthContainer>
           <S.RegisterInput
             type="password"
             value={state.password}
             onChange={handlePasswordChange}
-            placeholder="현재 비밀번호"
+            placeholder="계정 비밀번호 입력"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
