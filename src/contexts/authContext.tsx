@@ -51,6 +51,28 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const getTokenExpiry = (token: string): number | null => {
+  try {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    return typeof payload.exp === 'number' ? payload.exp : null;
+  } catch {
+    return null;
+  }
+};
+
+const isTokenExpired = (token: string): boolean => {
+  const exp = getTokenExpiry(token);
+  if (exp === null) return true;
+  return Date.now() / 1000 >= exp;
+};
+
+const isTokenValid = (): boolean => {
+  const token = getAccessToken();
+  if (!token) return false;
+  return !isTokenExpired(token);
+};
+
 // 개발 모드용 Mock 사용자 데이터
 const getMockUser = (): User => ({
   point: 100000,
@@ -72,7 +94,7 @@ const createBypassAxios = () => {
 };
 
 const initialState: AuthState = {
-  isLoggedIn: isDevMode() || !!getAccessToken(),
+  isLoggedIn: isDevMode() || isTokenValid(),
   isAdminLoggedIn: !!sessionStorage.getItem('isAdminLoggedIn'),
   user: isDevMode() ? getMockUser() : null,
   errorMessage: '',
@@ -130,7 +152,7 @@ const authReducer = (state: AuthState, action: ActionType): AuthState => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const [isInitializing, setIsInitializing] = React.useState(!isDevMode() && !!getAccessToken());
+  const [isInitializing, setIsInitializing] = React.useState(!isDevMode() && isTokenValid());
 
   // 컴포넌트 마운트 시 개발 모드 초기화
   useEffect(() => {
@@ -361,6 +383,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
     }
   }, [state.isLoggedIn, fetchUserInformation]);
+
+  // JWT 만료 시 자동 로그아웃
+  useEffect(() => {
+    if (!state.isLoggedIn || isDevMode()) return;
+
+    const token = getAccessToken();
+    if (!token) return;
+
+    const exp = getTokenExpiry(token);
+    if (exp === null) return;
+
+    const msUntilExpiry = exp * 1000 - Date.now();
+
+    if (msUntilExpiry <= 0) {
+      dispatch({ type: actionTypes.LOGOUT });
+      setAccessToken(null);
+      sessionStorage.clear();
+      window.location.href = '/login';
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      dispatch({ type: actionTypes.LOGOUT });
+      setAccessToken(null);
+      sessionStorage.clear();
+      window.location.href = '/login';
+    }, msUntilExpiry);
+
+    return () => clearTimeout(timer);
+  }, [state.isLoggedIn]);
 
   const contextValue: AuthContextType = {
     ...state,
