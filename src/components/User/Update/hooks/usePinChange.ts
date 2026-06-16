@@ -144,9 +144,15 @@ export const usePinChange = () => {
     }
   };
 
+  const isSubmitDisabled =
+    state.step !== 'passwordVerified' ||
+    !VALIDATION_PATTERNS.PIN.test(state.newPin) ||
+    state.newPin !== state.confirmNewPin;
+
   return {
     state,
     isLoading,
+    isSubmitDisabled,
     pinWarning,
     confirmWarning,
     remainingSeconds,

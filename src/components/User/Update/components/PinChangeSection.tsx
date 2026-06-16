@@ -10,6 +10,7 @@ export const PinChangeSection: React.FC<PinChangeSectionProps> = ({ pinChange })
   const {
     state,
     isLoading,
+    isSubmitDisabled,
     pinWarning,
     confirmWarning,
     remainingSeconds,
@@ -82,7 +83,11 @@ export const PinChangeSection: React.FC<PinChangeSectionProps> = ({ pinChange })
         {confirmWarning && <S.WarningMessage>{confirmWarning}</S.WarningMessage>}
       </S.InputContainer>
       {state.error && <S.WarningMessage>{state.error}</S.WarningMessage>}
-      <S.SectionSubmitButton type="button" onClick={handleSubmit} disabled={isLoading}>
+      <S.SectionSubmitButton
+        type="button"
+        onClick={handleSubmit}
+        disabled={isLoading || isSubmitDisabled}
+      >
         {isLoading ? '변경 중...' : 'PIN 변경'}
       </S.SectionSubmitButton>
     </>
